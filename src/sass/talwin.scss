@@ -68,7 +68,7 @@
         position: relative;
         width: var.$preview-width;
         height: var.$preview-height;
-        background: var(--sc-transparency-pattern);
+        background: var(--tw-transparency-pattern);
         flex-shrink: 0;
         // margin-right: var.$preview-margin-right;
 
@@ -156,7 +156,7 @@
 
         // Hue slider.
         &--hue::-webkit-slider-runnable-track {
-            background: var(--sc-hue);
+            background: var(--tw-hue);
         }
 
         &--hue::-moz-range-track {
