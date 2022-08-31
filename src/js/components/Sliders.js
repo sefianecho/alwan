@@ -1,4 +1,5 @@
-import { createElement } from "../utils/dom";
+import { createElement, removeElement } from "../utils/dom";
+import { isSet } from "../utils/util";
 
 const SLIDER_CLASSNAME = 'talwin__slider';
 const HUE_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--hue';
@@ -23,6 +24,24 @@ export const Sliders = (parent, talwin) => {
     const self = {
         hue: build(HUE_SLIDER_CLASSNAME, 360),
         alpha: null,
+
+        /**
+         * Init. Sliders.
+         *
+         * @param {Object} options - New options.
+         */
+        init(options) {
+            let opacity = options.opacity;
+
+            if (isSet(opacity)) {
+
+                let alpha = self.alpha;
+
+                if (opacity !== !!alpha) {
+                    self.alpha = opacity ? build(ALPHA_SLIDER_CLASSNAME, 1, 0.01) : removeElement(alpha, true);
+                }
+            }
+        }
     }
 
 
