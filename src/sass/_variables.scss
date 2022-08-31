@@ -1,0 +1,92 @@
+$primary-color: #117ce0;
+$transparency-pattern-svg: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 20 20"><path fill="%23d1d3d4" d="M0 0h10v10H0Z"/><path fill="%23fff" d="M0 10h10v10H0Z"/><path fill="%23d1d3d4" d="M10 10h10v10H10Z"/><path fill="%23fff" d="M10 0h10v10H10Z"/></svg>');
+$box-shadow: 0 0 3px rgba(0,0,0,0.7);
+
+
+// Talwin container.
+$talwin-max-width: 280px;
+$talwin-background-light: #fff;
+$border-color-light: #ccc;
+
+$talwin-background-dark: #222;
+$border-color-dark: #444;
+
+$talwin-forground-dark: #fff;
+
+// Marker.
+$marker-width: 14px;
+$marker-height: $marker-width;
+$marker-box-shadow: $box-shadow;
+$marker-border: 2px solid #fff;
+
+// Palette.
+$palette-height: 150px;
+
+// Container
+$container-border-color:#ccc;
+$container-padding: 1rem;
+
+// Preview.
+$preview-width: 40px;
+$preview-height: $preview-width;
+$preview-margin-right: 1rem;
+$preview-border-radius: 0.25rem;
+
+// Sliders.
+// ------------------------------------------------
+$alpha-slider-margin-top: 0.65rem;
+
+// Track.
+$track-height: 15px;
+
+// Thumb.
+$thumb-height: 22px;
+$thumb-width: 14px;
+$thumb-background: #fff;
+$thumb-border-radius: 3px;
+$thumb-box-shadow: $box-shadow;
+$thumb-border-color:#949494;
+
+$thumb-background-dark: #353535;
+$thumb-border-color-dark: #5f5f5f;
+
+// Input label.
+$input-label-margin-right: 0.25rem;
+$input-label-color: #555;
+$input-label-font-size: 13px;
+$input-label-font-family: system-ui;
+
+$input-label-color-dark: #d8d8d8;
+
+// Input.
+$input-padding: 0.5rem;
+$input-color: #222;
+$input-border: 1px solid #ccc;
+$input-margin-bottom: 0.25rem;
+$input-font-family: monospace;
+
+$input-background-dark: #181818;
+
+// Swatches container.
+$swatches-background-light: #f5f5f5;
+$swatches-container-padding: 1rem 0.5rem 0 0.5rem;
+$swatches-max-height: 100px;
+
+$swatches-background-dark: #333;
+
+// Swatch button.
+$swatch-width: 20px;
+$swatch-height: 20px;
+$swatch-margin: 0 0.5rem 1rem 0.5rem;
+$swatch-border-radius: 0.125rem;
+
+// Buttons.
+$button-padding: 0.5rem 0.25rem;
+$button-border-radius: 0.25rem;
+$button-hover-background: #f0f0f0;
+$button-hover-background-dark: #444;
+
+// Reference button.
+$ref-button-height: 1.5rem;
+$ref-button-width: 1.5rem;
+$ref-button-border-radius: 0.25rem;
