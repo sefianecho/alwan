@@ -2,7 +2,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: {
-        talwin: './src/index.js'
+        talwin: './src/js/index.js'
     },
     plugins: [
         new MiniCssExtractPlugin({
@@ -36,6 +36,7 @@ module.exports = {
         library: {
             type: 'umd',
             name: 'Talwin',
+            export: 'default',
             umdNamedDefine: true
         }
     }
