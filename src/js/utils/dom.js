@@ -75,3 +75,12 @@ export const getParent = el => el.parentElement;
  * @returns {Node}
  */
 export const replaceElement = (newChild, oldChild) => getParent(oldChild).replaceChild(newChild, oldChild) && newChild;
+
+/**
+ * Removes an element from the DOM.
+ *
+ * @param {HTMLElement} element - Any html node.
+ * @param {Boolean} destroy - Remove Reference. 
+ * @returns {Element|null}
+ */
+export const removeElement = (element, destroy) => element && getParent(element).removeChild(element) && (destroy ? null : element);
