@@ -50,6 +50,15 @@ export const createElement = (tagName, className, parent, data, callback) => {
 
 
 /**
+ * Gets element bounds.
+ *
+ * @param {HTMLElement} el Element.
+ * @returns {Object}
+ */
+export const getBounds = (el) => el && el.getBoundingClientRect();
+
+
+/**
  * Gets an element's parent.
  *
  * @param {Element} el - Any html element.
