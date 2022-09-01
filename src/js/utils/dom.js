@@ -1,4 +1,4 @@
-import { ROOT } from "../constants";
+import { BODY, ROOT, SCROLL } from "../constants";
 import { objectIterator } from "./object";
 import { isString } from "./util";
 
@@ -84,3 +84,27 @@ export const replaceElement = (newChild, oldChild) => getParent(oldChild).replac
  * @returns {Element|null}
  */
 export const removeElement = (element, destroy) => element && getParent(element).removeChild(element) && (destroy ? null : element);
+
+
+/**
+ * Gets any scrollable ancestor of an element.
+ * Document is always included.
+ *
+ * @param {HTMLElement} el - Subject element.
+ * @returns {Array}
+ */
+export const getScrollableAncestors = el => {
+    el = getParent(el);
+  
+    let scrollableElements = [ROOT];
+  
+    while (el !== BODY) {
+      let overflow = getComputedStyle(el).overflow;
+      if (overflow === 'auto' || overflow === SCROLL) {
+        scrollableElements.push(el);
+      }
+      el = getParent(el);
+    }
+  
+    return scrollableElements;
+}

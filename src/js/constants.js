@@ -9,6 +9,7 @@ export const TOUCH_START = 'touchstart';
 export const TOUCH_MOVE = 'touchmove';
 export const TOUCH_END = 'touchend';
 export const TOUCH_CANCEL = 'touchcancel';
+export const SCROLL = 'scroll';
 
 export const HEX_FORMAT = 'hex';
 export const RGB_FORMAT = 'rgb';
