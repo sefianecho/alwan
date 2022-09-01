@@ -1,5 +1,6 @@
 import { createElement } from "../utils/dom";
 import { App } from "./App";
+import { Inputs } from "./Inputs";
 import { Palette } from "./Palette";
 import { Preview } from "./Preview";
 import { Reference } from "./Reference"
@@ -11,7 +12,6 @@ const CONTAINER_CLASSNAME = 'talwin__container';
  * Creates a container element.
  *
  * @param {HTMLElement} parent - Element to append the created container to.
- * @param {CallableFunction} fn - Callback function.
  * @returns {HTMLElement}
  */
 const createContainer = (parent) => createElement('', CONTAINER_CLASSNAME, parent);
@@ -30,6 +30,7 @@ export const createComponents = (reference, talwin) => {
     let preview = Preview(container, talwin);
     let sliders = Sliders(container, talwin);
 
+    let inputs = Inputs(createContainer(root), talwin);
 
     return {
         ref,
@@ -37,5 +38,6 @@ export const createComponents = (reference, talwin) => {
         palette,
         preview,
         sliders,
+        inputs,
     }
 }
