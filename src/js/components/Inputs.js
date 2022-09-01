@@ -52,6 +52,7 @@ export const Inputs = (parent, talwin) => {
         }
 
         config.format = formats.includes(format) ? format : formats[formatIndex];
+        parent.style.display = length ? '' : 'none';
     }
 
     /**
