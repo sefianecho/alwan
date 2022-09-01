@@ -108,3 +108,25 @@ export const getScrollableAncestors = el => {
   
     return scrollableElements;
 }
+
+
+/**
+ * Check if an element is visible in the viewport of all scrollable elements.
+ *
+ * @param {HTMLElement} el - Any html element.
+ * @param {Array} scrollableElements - scrollable elements.
+ * @returns {boolean}
+ */
+export const isInViewport = (el, scrollableElements) =>
+    scrollableElements.every(scrollable => {
+        let isVisible = true;
+
+        if (scrollable !== ROOT) {
+            let {top: elTop, bottom: elBottom} = getBounds(el);
+            let {top: scrollableTop, bottom: scrollableBottom} = getBounds(scrollable);
+
+            isVisible = elTop >= scrollableTop && scrollableBottom >= elBottom;
+        }
+
+        return isVisible;
+    });
