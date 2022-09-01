@@ -4,10 +4,11 @@ import { merge } from "./utils/object";
 import '../sass/talwin.scss';
 import { createComponents } from "./components";
 import { EventBinder } from "./core/events/EventBinder";
+import { defaults } from "./defaults";
 
 export default class Talwin {
 
-    static defaults = {}
+    static defaults = defaults;
 
     constructor(reference, options) {
         
