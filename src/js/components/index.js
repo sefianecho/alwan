@@ -5,6 +5,7 @@ import { Palette } from "./Palette";
 import { Preview } from "./Preview";
 import { Reference } from "./Reference"
 import { Sliders } from "./Sliders";
+import { Swatches } from "./Swatches";
 
 const CONTAINER_CLASSNAME = 'talwin__container';
 
@@ -31,6 +32,7 @@ export const createComponents = (reference, talwin) => {
     let sliders = Sliders(container, talwin);
 
     let inputs = Inputs(createContainer(root), talwin);
+    let swatches = Swatches(root, talwin);
 
     return {
         ref,
@@ -39,5 +41,6 @@ export const createComponents = (reference, talwin) => {
         preview,
         sliders,
         inputs,
+        swatches
     }
 }
