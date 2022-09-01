@@ -1,6 +1,7 @@
 import { createElement } from "../utils/dom";
 import { App } from "./App";
 import { Palette } from "./Palette";
+import { Preview } from "./Preview";
 import { Reference } from "./Reference"
 import { Sliders } from "./Sliders";
 
@@ -26,6 +27,7 @@ export const createComponents = (reference, talwin) => {
     let palette = Palette(root, talwin);
 
     let container = createContainer(root);
+    let preview = Preview(container, talwin);
     let sliders = Sliders(container, talwin);
 
 
@@ -33,6 +35,7 @@ export const createComponents = (reference, talwin) => {
         ref,
         app,
         palette,
+        preview,
         sliders,
     }
 }
