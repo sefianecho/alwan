@@ -1,7 +1,6 @@
 import { BODY, HTML, max } from "../constants";
 import { getBounds } from "../utils/dom";
 
-
 const TOP = 1;
 const RIGHT = 2;
 const BOTTOM = 3;
