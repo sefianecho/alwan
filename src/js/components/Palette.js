@@ -1,18 +1,23 @@
 import { MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds } from "../utils/dom"
 import { Marker } from "./Marker";
 
+const PALETTE_CLASSNAME = 'talwin__palette';
+const OVERLAY_CLASSNAME = 'tw-overlay';
+
+
 export const Palette = (parent, talwin) => {
 
-    const el = createElement('', 'talwin__palette', parent, { tabindex: '0' });
-    const overlay = createElement('', 'tw-overlay', parent);
+    const el = createElement('', PALETTE_CLASSNAME, parent, { tabindex: '0' });
+    const overlay = createElement('', OVERLAY_CLASSNAME, parent);
     const { style } = overlay;
     const marker = Marker(el);
-    const { on } = talwin._e;
 
     const { width: WIDTH, height: HEIGHT } = getBounds(el);
 
 
+    let listeners = [];
     let bounds;
 
     let isDragging = false;
@@ -92,12 +97,13 @@ export const Palette = (parent, talwin) => {
     /**
      * Bind events.
      */
-    on(el, [MOUSE_DOWN, TOUCH_START], dragStart);
-    on(ROOT, [MOUSE_MOVE, TOUCH_MOVE], dragMove, { passive: false });
-    on(ROOT, [MOUSE_UP, TOUCH_END, TOUCH_CANCEL], dragEnd);
+    bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
+    bindEvent(listeners, ROOT, [MOUSE_MOVE, TOUCH_MOVE], dragMove, { passive: false });
+    bindEvent(listeners, ROOT, [MOUSE_UP, TOUCH_END, TOUCH_CANCEL], dragEnd);
+
 
     return {
-        el,
+        $: el,
         marker,
     }
 }
