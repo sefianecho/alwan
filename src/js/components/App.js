@@ -1,5 +1,5 @@
 import { BODY, RESIZE, SCROLL } from "../constants";
-import { bindEvent, off, on, unbindEvent } from "../core/events/EventBinder";
+import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
 import { createElement, getElement, getScrollableAncestors, isInViewport } from "../utils/dom";
 
@@ -23,6 +23,7 @@ export const App = (talwin) => {
     let popper;
 
     const root = createElement('', TALWIN_CLASSNAME, BODY);
+    const { config } = talwin;
 
     /**
      * Initializes app component.
@@ -104,8 +105,47 @@ export const App = (talwin) => {
         listeners = eventBinder(listeners, window, RESIZE, updatePopper);
     }
 
+    /**
+     * Open color picker.
+     */
+    const _open = () => {
+        if (! isOpen && ! config.disabled) {
+            popper && popper.update();
+            root.classList.add('open');
+            isOpen = true;
+        }
+    }
+
+    /**
+     * Close color picker.
+     */
+    const _close = () => {
+        if (isOpen && config.toggle) {
+            root.classList.remove('open');
+            isOpen = false;
+        }
+    }
+
+    /**
+     * Open/Close color picker.
+     */
+    const _toggle = () => {
+        isOpen ? _close() : _open();
+    }
+
+    /**
+     * Gets the state of the picker, opened or closed.
+     *
+     * @returns {Boolean}
+     */
+    const _isOpen = () => isOpen;
+
     return {
         root,
-        _init
+        _init,
+        _isOpen,
+        _open,
+        _close,
+        _toggle
     }
 }
