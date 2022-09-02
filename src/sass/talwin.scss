@@ -12,13 +12,13 @@
     background: var(--talwin-bg, var.$talwin-background-light);
     border: 1px solid var(--tw-bc, var.$border-color-light);
 
-    // &:not(.open) {
-    //     visibility: hidden;
-    // }
+    &:not(.open) {
+        visibility: hidden;
+    }
 
-    // &:not(.sc-pop, .open) {
-    //     height: 0;
-    // }
+    &:not(.tw-popper, .open) {
+        height: 0;
+    }
 
     &[data-theme="dark"] {
         --talwin-bg: #{var.$talwin-background-dark};
@@ -245,7 +245,7 @@
         }
     }
 
-    &.sc-pop {
+    &.tw-popper {
         position: fixed;
         z-index: 9999;
         border: 0;
