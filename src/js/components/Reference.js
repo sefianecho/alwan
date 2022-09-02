@@ -1,5 +1,9 @@
+import { CLICK, KEY_DOWN, TAB } from "../constants";
+import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { createElement, replaceElement } from "../utils/dom";
-import { isSet } from "../utils/util";
+
+
+const PRESET_BUTTON_CLASSNAME = 'tw-ref';
 
 /**
  * Creates a Reference component.
@@ -7,37 +11,42 @@ import { isSet } from "../utils/util";
  * @param {Element} originalRef - User Reference Element.
  * @returns {Object}
  */
-export const Reference = (originalRef) => {
+export const Reference = (originalRef, talwin) => {
+
+    let listeners = [];
 
     const self = {
-        el: originalRef
-    }
-
-    /**
-     * Sets/Unsets the pre-styled button.
-     *
-     * @param {Object} options - Picker options.
-     */
-    self.init = options => {
-
-        let { preset } = options;
-
-        if (isSet(preset)) {
-
-            let el = self.el;
-    
-            if (preset !== (el !== originalRef)) {
-                if (preset) {
-                    // Replace the user provided reference element with a preset button.
-                    el = replaceElement( createElement('button', 'tw-ref', null, { type: 'button' }), originalRef);
-    
-                } else {
-                    // Set back user reference element.
-                    el = replaceElement(originalRef, el);
-                }
-    
-                self.el = el;
+        $: originalRef,
+        /**
+         * Sets/Unsets the pre-styled button.
+         *
+         * @param {Object} options - Picker options.
+         */
+        _init(options) {
+            let { preset, toggle } = options;
+            let { _ui: { app, palette }} = talwin;
+            let ref = self.$;
+            listeners = unbindEvent(listeners, ref);
+            
+            if (preset !== (ref !== originalRef)) {
+                ref = preset ?
+                        // Replace the user provided reference element with a preset button.
+                        replaceElement( createElement('button', PRESET_BUTTON_CLASSNAME, null, { type: 'button' }), originalRef)
+                        // Set back user reference element.
+                        : replaceElement(originalRef, ref);
             }
+
+            if (toggle) {
+                bindEvent(listeners, ref, CLICK, app._toggle);
+                bindEvent(listeners, ref, KEY_DOWN, e => {
+                    if (app._isOpen() && e.key === TAB && ! e.shiftKey) {
+                        e.preventDefault();
+                        palette.$.focus();
+                    }
+                });
+            }
+            ref.style.display = toggle ? '' : 'none';
+            self.$ = ref;
         }
     }
 
