@@ -1,4 +1,4 @@
-import { MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, PALETTE, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds } from "../utils/dom"
 import { Marker } from "./Marker";
@@ -6,7 +6,13 @@ import { Marker } from "./Marker";
 const PALETTE_CLASSNAME = 'talwin__palette';
 const OVERLAY_CLASSNAME = 'tw-overlay';
 
-
+/**
+ * Picker palette.
+ *
+ * @param {Element} parent - Element to append the palette element to.
+ * @param {Object} talwin - Talwin instance.
+ * @returns {Object}
+ */
 export const Palette = (parent, talwin) => {
 
     const el = createElement('', PALETTE_CLASSNAME, parent, { tabindex: '0' });
@@ -92,6 +98,7 @@ export const Palette = (parent, talwin) => {
 		y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
 
         marker.moveTo(x, y);
+        talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, PALETTE);
     }
 
     /**
