@@ -1,4 +1,5 @@
 import { CLICK, COLOR_FORMATS, HEX_FORMAT, max } from "../constants";
+import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
 
@@ -10,11 +11,11 @@ const LABEL_CLASSNAME = 'tw-label';
 export const Inputs = (parent, talwin) => {
     const self = {};
     const { config } = talwin;
-    const { on } = talwin._e;
     let container;
     let switchButton;
     let formats = [];
     let formatIndex;
+    let listeners = [];
 
     /**
      * Init. Inputs.
@@ -102,7 +103,7 @@ export const Inputs = (parent, talwin) => {
         }
     }
 
-    on(parent, CLICK, changeFormat);
+    bindEvent(listeners, parent, CLICK, changeFormat);
 
     return self;
 }
