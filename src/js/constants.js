@@ -2,6 +2,11 @@ export const ROOT = document;
 export const BODY = ROOT.body;
 export const HTML = ROOT.documentElement;
 
+export const PALETTE = 1;
+export const HUE_SLIDER = 2;
+export const ALPHA_SLIDER = 3;
+export const INPUTS = 4;
+
 export const CLICK = 'click';
 export const MOUSE_DOWN = 'mousedown';
 export const MOUSE_MOVE = 'mousemove';

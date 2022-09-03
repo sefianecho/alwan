@@ -130,3 +130,15 @@ export const isInViewport = (el, scrollableElements) =>
 
         return isVisible;
     });
+
+
+/**
+ * Sets a CSS custom property.
+ *
+ * @param {HTMLElement} el  - Element to set its custom property.
+ * @param {string} property - Property name.
+ * @param {string} value    - Property value.
+ */
+export const setCustomProperty = (el, property, value) => {
+    el && el.style.setProperty('--' + property, value);
+}
