@@ -72,7 +72,7 @@ export const parseColor = (colorString, asString) => {
 			color = HEXToRGB(colorString);
 		} else {
             // Parse RGB string.
-            let [r, g, b, a] = colorString.slice(colorString.indexOf('(') + 1, -1)
+            let [r, g, b, a] = colorString.match(/\((.+)\)/)[1]
                                           .split(',')
                                           .map(value => float(value));
 
