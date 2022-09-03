@@ -73,3 +73,25 @@ export const HEXToRGB = hexColor => ({
     b: int(hexColor.slice(5, 7), 16),
     a: 1
 });
+
+
+/**
+ * Converts a decimal number to hexadecimal number.
+ * The result must be two digits.
+ *
+ * @param {Number} number Decimal number.
+ * @returns {string}
+ */
+const toHex = number => {
+	let hexNumber = number.toString(16);
+	return hexNumber.length < 2 ? '0' + hexNumber : hexNumber;
+}
+
+
+/**
+ * Converts RGB color object to Hex string color.
+ *
+ * @param {Object} rgb - RGB color object.
+ * @returns {String}
+ */
+export const RGBToHEX = ({ r, g, b, a }) => '#' + toHex(r) + toHex(g) + toHex(b) + (a < 1 ? toHex(round(a * 255)) : '');
