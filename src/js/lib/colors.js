@@ -95,3 +95,24 @@ const toHex = number => {
  * @returns {String}
  */
 export const RGBToHEX = ({ r, g, b, a }) => '#' + toHex(r) + toHex(g) + toHex(b) + (a < 1 ? toHex(round(a * 255)) : '');
+
+
+/**
+ * Converts HSV to HSL.
+ *
+ * @param {Object} hsv - HSV color object.
+ * @returns {Object}
+ */
+export const HSVToHSL = (hsv) => {
+
+    let v = hsv.v;
+    let l = v * (1 - hsv.s / 2);
+    let s = ! l || l === 1 ? 0 : (v - l) / min(l, 1 - l);
+
+    return {
+        h: hsv.h,
+        s: round(s * 100),
+        l: round(l * 100),
+        a: round(hsv.a * 100) / 100
+    }
+}
