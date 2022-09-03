@@ -1,4 +1,4 @@
-import { HSL_FORMAT, max, min, round } from "../constants";
+import { HSL_FORMAT, int, max, min, round } from "../constants";
 import { isString } from "../utils/util";
 
 /**
@@ -60,3 +60,16 @@ export const toString = (color, format) => {
 
     return colorString;
 }
+
+/**
+ * Converts hex color string to RGB color object.
+ *
+ * @param {string} hexColor - Hexadecimal color string.
+ * @returns {Object}
+ */
+export const HEXToRGB = hexColor => ({
+    r: int(hexColor.slice(1, 3), 16),
+    g: int(hexColor.slice(3, 5), 16),
+    b: int(hexColor.slice(5, 7), 16),
+    a: 1
+});
