@@ -18,6 +18,7 @@ export const TOUCH_CANCEL = 'touchcancel';
 export const SCROLL = 'scroll';
 export const RESIZE = 'resize';
 export const KEY_DOWN = 'keydown';
+export const INPUT = 'input';
 
 export const HEX_FORMAT = 'hex';
 export const RGB_FORMAT = 'rgb';
