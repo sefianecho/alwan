@@ -24,4 +24,4 @@ export const TAB = 'Tab';
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
 
 
-export const { max } = Math;
+export const { max, min, round } = Math;
