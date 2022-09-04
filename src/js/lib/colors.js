@@ -103,7 +103,9 @@ export const RGBToHEX = ({ r, g, b, a }) => '#' + toHex(r) + toHex(g) + toHex(b)
  * @param {Object} hsv - HSV color object.
  * @returns {Object}
  */
-export const HSVToHSL = (hsv) => {
+export const HSVToHSL = (hsv, percentage) => {
+
+    percentage = percentage ? '%' : 0;
 
     let v = hsv.v;
     let l = v * (1 - hsv.s / 2);
@@ -111,8 +113,8 @@ export const HSVToHSL = (hsv) => {
 
     return {
         h: hsv.h,
-        s: round(s * 100),
-        l: round(l * 100),
+        s: round(s * 100) + percentage,
+        l: round(l * 100) + percentage,
         a: round(hsv.a * 100) / 100
     }
 }

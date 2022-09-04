@@ -78,7 +78,7 @@ export const Color = (talwin) => {
 
         let isHex = format === HEX_FORMAT;
         let color = isHex ? RGBToHEX(RGB)
-                : format === HSL_FORMAT ? HSVToHSL(HSV)
+                : format === HSL_FORMAT ? HSVToHSL(HSV, true)
                 : RGB;
 
         return asString || isHex ? { [format]: toString(color, format) } : color;
