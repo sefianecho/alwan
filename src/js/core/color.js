@@ -1,7 +1,8 @@
 import { EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, ONLY_INPUTS, RGB_FORMAT } from "../constants";
-import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "../lib/colors";
+import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../lib/colors";
+import { parseColor } from "../lib/parser";
 import { setCustomProperty } from "../utils/dom";
-import { merge } from "../utils/object";
+import { isEqual, merge } from "../utils/object";
 
 /**
  * Color state.
@@ -82,7 +83,36 @@ export const Color = (talwin) => {
         return asString ? { [format]: toString(color, format) } : color;
     }
 
+
+    /**
+     * Updates color by a string instead of HSV object.
+     *
+     * @param {String} colorString - Color string.
+     * @param {Boolean} fromInput - String comming from the picker input fields.
+     */
+    const updateByString = (colorString, updater) => {
+
+        let { c: parsedColor, f: format } = parseColor(colorString);
+        let currentColor = getColor(format);
+        let isChanged = ! isEqual(parsedColor, currentColor);
+        let rgb, hsv;
+
+        if (isChanged) {
+            if (format === HSL_FORMAT) {
+                hsv = HSLToHSV(parsedColor);
+            } else {
+                rgb = parsedColor;
+                hsv = RGBToHSV(parsedColor);
+            }
+
+            update(hsv, updater, rgb);
+        }
+        
+        return isChanged;
+    }
+
     return {
         update,
+        updateByString
     }
 }

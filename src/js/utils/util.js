@@ -1,4 +1,4 @@
-import { float, max, min } from "../constants";
+import { max, min } from "../constants";
 
 /**
  * Checks if a value is a string.
