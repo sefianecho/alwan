@@ -1,4 +1,4 @@
-import { MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, PALETTE, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { EXCLUDE_PALETTE_HUE, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds } from "../utils/dom"
 import { Marker } from "./Marker";
@@ -98,7 +98,7 @@ export const Palette = (parent, talwin) => {
 		y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
 
         marker.moveTo(x, y);
-        talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, PALETTE);
+        talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, EXCLUDE_PALETTE_HUE);
     }
 
     /**

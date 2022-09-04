@@ -1,5 +1,5 @@
-import { ALL, ALPHA, ALPHA_SLIDER, INPUTS, PALETTE, RGB_FORMAT } from "../constants";
-import { HSVToRGB, toString } from "../lib/colors";
+import { EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, ONLY_INPUTS, RGB_FORMAT } from "../constants";
+import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "../lib/colors";
 import { setCustomProperty } from "../utils/dom";
 import { merge } from "../utils/object";
 
@@ -22,14 +22,16 @@ export const Color = (talwin) => {
 
     let rgbString = '';
 
+    let config = talwin.config;
+
     /**
      * Updates color and UI.
      *
      * @param {Object} newHSV - HSV color object.
-     * @param {Number} from - A number indicates which component is updating the color.
+     * @param {Number} updater - A number indicates which component to update.
      * @param {Object} rgb - RGB color object.
      */
-    const update = (newHSV, from, rgb) => {
+    const update = (newHSV, updater, rgb) => {
 
         merge(HSV, newHSV);
         RGB = rgb || HSVToRGB(HSV);
@@ -43,27 +45,44 @@ export const Color = (talwin) => {
         setCustomProperty(components.preview.el, 'tw-color', rgbString);
         setCustomProperty(components.ref.$, 'tw-color', rgbString);
 
-        if (from !== ALPHA_SLIDER) {
+        if (updater !== ONLY_INPUTS) {
             // Change the gradient color stop of the alpha slider.
-            setCustomProperty(sliders.alpha, 'rgb', RGB.r + ',' + RGB.g + ',' + RGB.b);
+            setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
             
-            if (from !== PALETTE) {
+            if (updater !== EXCLUDE_PALETTE_HUE) {
                 // Set palette's hue.
                 setCustomProperty(palette.$, 'hue', HSV.h);
             }
         }
 
-        if (from !== INPUTS) {
-            // components.inputs.update();
+        if (updater !== EXCLUDE_INPUTS) {
+            components.inputs.update(getColor('', config.singleInput));
         }
 
-        if (! from || from === INPUTS) {
+        if (! updater || updater === EXCLUDE_INPUTS) {
             // sliders.val(HSV);
             // palette.update(HSV);
         }
     }
 
+    /**
+     * Gets color object.
+     *
+     * @param {String} format - Color format.
+     * @param {Boolean} asString - Get color as a string.
+     * @returns {Object}
+     */
+    const getColor = (format, asString) => {
+        format = format || config.format;
+
+        let color = format === HEX_FORMAT ? RGBToHEX(RGB)
+                : format === HSL_FORMAT ? HSVToHSL(HSV)
+                : RGB;
+
+        return asString ? { [format]: toString(color, format) } : color;
+    }
+
     return {
-        update
+        update,
     }
 }

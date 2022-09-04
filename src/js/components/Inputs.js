@@ -1,7 +1,8 @@
-import { CLICK, COLOR_FORMATS, HEX_FORMAT, max } from "../constants";
+import { CLICK, COLOR_FORMATS, HEX_FORMAT, max, ONLY_INPUTS } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
+import { objectIterator } from "../utils/object";
 
 const INPUTS_CLASSNAME = 'talwin__inputs';
 const INPUT_CLASSNAME = 'talwin__input';
@@ -61,7 +62,7 @@ export const Inputs = (parent, talwin) => {
      */
     const build = () => {
         if (container) {
-            let inputList = [];
+            let inputs = {};
             let { singleInput, opacity, format } = config;
             let fields = singleInput || format == HEX_FORMAT ? [format]
                         : (format + (opacity ? 'a' : '')).split('');
@@ -79,12 +80,12 @@ export const Inputs = (parent, talwin) => {
                  * </label>
                  */
                 createElement('label', LABEL_CLASSNAME, container, false, (label => {
-                    inputList[index] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
+                    inputs[field] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
                     createElement('span', '', label, { text: field });
                 }));
             });
 
-            self.el = inputList;
+            self.$ = inputs;
         }
     }
 
@@ -100,7 +101,19 @@ export const Inputs = (parent, talwin) => {
             formatIndex = (formatIndex + 1) % formats.length;
             config.format = formats[formatIndex];
             build();
+            talwin._clr.update({}, ONLY_INPUTS);
         }
+    }
+
+    /**
+     * Updates Input(s) value(s).
+     *
+     * @param {Object} color - Color object.
+     */
+    self.update = color => {
+        objectIterator(color, (key, value) => {
+            self.$[key].value = value;
+        });
     }
 
     bindEvent(listeners, parent, CLICK, changeFormat);
