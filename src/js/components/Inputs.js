@@ -36,6 +36,7 @@ export const Inputs = (parent, talwin) => {
             container = removeElement(container, true);
             switchButton = removeElement(switchButton, true);
             formats = COLOR_FORMATS;
+            self.$ = {};
         } else {
 
             if (! container) {
@@ -139,8 +140,8 @@ export const Inputs = (parent, talwin) => {
      * @param {Object} color - Color object.
      */
     self.update = color => {
-        objectIterator(color, (key, value) => {
-            self.$[key].value = value;
+        objectIterator(self.$, (key, input) => {
+            input.value = color[key];
         });
     }
 
