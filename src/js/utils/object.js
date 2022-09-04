@@ -27,3 +27,12 @@ export const objectIterator = (object, fn) => {
  * @returns 
  */
 export const merge = (target, ...sources) => Object.assign(target, ...sources);
+
+/**
+ * Checks if two object are equals.
+ *
+ * @param {Object} object1 - Any object.
+ * @param {Object} object2 - Any object.
+ * @returns {Boolean}
+ */
+export const isEqual = (object1, object2) => objectIterator(object1, (key, val) => object2[key] !== val );
