@@ -1,3 +1,6 @@
+import { CLICK } from "../constants";
+import { bindEvent } from "../core/events/EventBinder";
+import { parseColor } from "../lib/parser";
 import { createElement, removeElement } from "../utils/dom";
 
 const SWATCHES_CLASSNAME = 'talwin__swatches';
@@ -7,6 +10,7 @@ export const Swatches = (parent, talwin) => {
 
     const self = {};
     let container;
+    let listeners = [];
 
 
     self.init = (options) => {
@@ -22,7 +26,7 @@ export const Swatches = (parent, talwin) => {
             swatches.forEach((color, index) => {
                 buttons[index] = createElement('button', SWATCHE_CLASSNAME, container, {
                     type: 'button',
-                    style: '--tw-color:' + color,
+                    style: '--tw-color:' + parseColor(color, true),
                     'data-index': index + ''
                 });
             });
@@ -30,6 +34,21 @@ export const Swatches = (parent, talwin) => {
 
         self.el = buttons;
     }
+
+    /**
+     * Sets color from a swatch button.
+     *
+     * @param {Event} e - Click.
+     */
+    const setColorFromSwatch = e => {
+        const target = e.target;
+        if (target !== container) {
+            talwin.setColor(talwin.config.swatches[target.dataset.index]);
+        }
+    }
+
+
+    bindEvent(listeners, parent, CLICK, setColorFromSwatch);
 
     return self;
 }
