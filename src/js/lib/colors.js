@@ -116,3 +116,51 @@ export const HSVToHSL = (hsv) => {
         a: round(hsv.a * 100) / 100
     }
 }
+
+/**
+ * Converts HSL to HSV.
+ *
+ * @param {Object} hsl - HSL color object.
+ * @returns {Object}
+ */
+export const HSLToHSV = (hsl) => {
+	let s = hsl.s / 100,
+		l = hsl.l / 100,
+		v = l + s * min(l, 1 - l);
+	
+	return {
+		h: hsl.h,
+		s: v ? 2 * (1 - l / v) : 0,
+		v,
+		a: hsl.a
+	}
+}
+
+
+/**
+ * Converts RGB to HSV.
+ *
+ * @param {Object} rgb - RGB color object.
+ * @returns {Object}
+ */
+export const RGBToHSV = rgb => {
+	let R = rgb.r / 255,
+		G = rgb.g / 255,
+		B = rgb.b / 255,
+		Cmax = max(R, G, B),
+		Cmin = min(R, G, B),
+		range = Cmax - Cmin,
+		saturation = Cmax === 0 ? 0 : range / Cmax,
+		hue = range === 0 ? 0
+            : Cmax === R ? ((G - B) / range) % 6
+            : Cmax === G ? ((B - R) / range) + 2
+            : Cmax === B ? ((R - G) / range) + 4
+            : 0;
+
+	return {
+		h: round( ( 360 + hue * 60 ) % 360 ),
+		s: saturation,
+		v: Cmax,
+		a: round( rgb.a * 100 ) / 100
+	}
+}
