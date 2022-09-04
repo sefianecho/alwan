@@ -1,8 +1,8 @@
-import { EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, ONLY_INPUTS, RGB_FORMAT } from "../constants";
+import { BODY, EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, ONLY_INPUTS, RGB_FORMAT, ROOT } from "../constants";
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../lib/colors";
 import { parseColor } from "../lib/parser";
-import { setCustomProperty } from "../utils/dom";
-import { isEqual, merge } from "../utils/object";
+import { createElement, removeElement, setCustomProperty } from "../utils/dom";
+import { isEqual, merge, objectIterator } from "../utils/object";
 
 /**
  * Color state.
@@ -43,7 +43,7 @@ export const Color = (talwin) => {
         let sliders = components.sliders;
 
         // Preview color.
-        setCustomProperty(components.preview.el, 'tw-color', rgbString);
+        setCustomProperty(components.preview.$, 'tw-color', rgbString);
         setCustomProperty(components.ref.$, 'tw-color', rgbString);
 
         if (updater !== ONLY_INPUTS) {
@@ -78,7 +78,7 @@ export const Color = (talwin) => {
 
         let isHex = format === HEX_FORMAT;
         let color = isHex ? RGBToHEX(RGB)
-                : format === HSL_FORMAT ? HSVToHSL(HSV, true)
+                : format === HSL_FORMAT ? HSVToHSL(HSV, !asString)
                 : RGB;
 
         return asString || isHex ? { [format]: toString(color, format) } : color;
@@ -112,8 +112,36 @@ export const Color = (talwin) => {
         return isChanged;
     }
 
+    /**
+     * Copies color to the clipboard.
+     *
+     * @returns {Boolean}
+     */
+    const copy = () => objectIterator(getColor('', true), (format, color) => {
+
+            let clipboard = navigator.clipboard;
+
+            if (clipboard) {
+                clipboard.writeText(color);
+            } else {
+                // Incase browser doesn't support navigator.clipboard,
+                // Create a new input element and append it to the body,
+                // set its value as the color.
+                createElement('input', '', BODY, { value: color }, input => {
+
+                    input.select();
+                    ROOT.execCommand('copy');
+
+                    // Color text is copied so remove the input.
+                    removeElement(input);
+                });
+            }
+        });
+
+
     return {
         update,
-        updateByString
+        updateByString,
+        copy
     }
 }

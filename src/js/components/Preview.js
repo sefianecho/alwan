@@ -1,11 +1,17 @@
+import { CLICK } from "../constants";
+import { bindEvent } from "../core/events/EventBinder";
 import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
 
 const PREVIEW_CLASSNAME = 'talwin__preview';
 
 export const Preview = (parent, talwin) => {
+    
     let isCopied = false;
+    let listeners = [];
+
     const container = createElement('', 'tw-mr1', parent);
+
     const self = {
         el: null,
         cp: null,
@@ -17,7 +23,7 @@ export const Preview = (parent, talwin) => {
          */
         init(options) {
             let { preview, copy } = options;
-            let previewArea = self.el;
+            let previewArea = self.$;
             let copyButton = self.cp;
 
             if (preview !== !!previewArea) {
@@ -39,7 +45,7 @@ export const Preview = (parent, talwin) => {
 
             container.style.display = copyButton || previewArea ? '' : 'none';
 
-            self.el = previewArea;
+            self.$ = previewArea;
             self.cp = copyButton;
         }
     }
@@ -55,6 +61,21 @@ export const Preview = (parent, talwin) => {
         button.innerHTML = '';
         createElement('svg', '', button, isCopied ? checkSVGAttrs : clipboardSVGAttrs);
     }
+
+    /**
+     * Copies color string to clipboard.
+     *
+     * @param {Event} e - Click.
+     */
+    const copyColor = e => {
+        if (e.target === self.cp) {
+            isCopied = talwin._clr.copy();
+            setCopyButtonIcon();
+        }
+    }
+
+
+    bindEvent(listeners, container, CLICK, copyColor);
 
     return self;
 }
