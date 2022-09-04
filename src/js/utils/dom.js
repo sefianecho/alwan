@@ -43,9 +43,13 @@ export const createElement = (tagName, className, parent, data, callback) => {
         }
     });
 
+    if (parent) {
+        parent.appendChild(element);
+    }
+
     callback && callback(element);
 
-    return parent ? parent.appendChild(element) : element;
+    return element;
 }
 
 
