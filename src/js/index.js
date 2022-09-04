@@ -5,18 +5,62 @@ import { defaults } from "./defaults";
 import { createComponents } from "./core";
 import '../sass/talwin.scss';
 import { Color } from "./core/color";
+import { boundNumber, isString } from "./utils/util";
+import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
+import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "./lib/colors";
 
 export default class Talwin {
 
     static defaults = defaults;
 
     constructor(reference, options) {
-        
         reference = getElement(reference);
-        
         const talwin = this;
         talwin.config = merge({}, Talwin.defaults, options);
         talwin._clr = Color(talwin);
         talwin._ui = createComponents(reference, talwin);
+    }
+
+    /**
+     * Sets a color.
+     *
+     * @param {String|Object} color - Color.
+     */
+    setColor(color) {
+
+        if (! isString(color)) {
+            // Get color format from color object.
+            let format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => format.split('')
+                                                                                   .every(channel => color[channel] && ! isNaN(color[channel])));
+            if (format) {
+                let a = color.a;
+                color.a = a != null ? a : 1;
+
+                if (format === HSV_FORMAT) {
+                    // Get current format.
+                    format = this.config.format;
+
+                    // H must be a value between 0 and 360.
+                    color.h = (color.h % 360 + 360) % 360;
+                    // S and V must be a value between 0 and 1.
+                    color.s = boundNumber(color.s) / 100;
+                    color.v = boundNumber(color.v) / 100;
+
+                    // Convert HSV to the selected color format.
+                    if (format === HSL_FORMAT) {
+                        color = HSVToHSL(color);
+                    } else {
+                        color = HSVToRGB(color);
+
+                        if (format === HEX_FORMAT) {
+                            color = RGBToHEX(color);
+                        }
+                    }
+                }
+                color = toString(color, format);
+            }
+        }
+
+        this._clr.updateByString(color);
     }
 }
