@@ -72,6 +72,17 @@ export const Sliders = (parent, talwin) => {
         talwin._clr.update(hsv);
     }
 
+    /**
+     * Sets sliders values.
+     *
+     * @param {Object} hsv - HSV color object.
+     */
+    self.val = hsv => {
+        let { alpha, hue } = self;
+        hue.value = 360 - hsv.h;
+        alpha && (alpha.value = hsv.a);
+    }
+
 
 
     bindEvent(listeners, container, INPUT, handleChange);
