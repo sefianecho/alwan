@@ -76,11 +76,12 @@ export const Color = (talwin) => {
     const getColor = (format, asString) => {
         format = format || config.format;
 
-        let color = format === HEX_FORMAT ? RGBToHEX(RGB)
+        let isHex = format === HEX_FORMAT;
+        let color = isHex ? RGBToHEX(RGB)
                 : format === HSL_FORMAT ? HSVToHSL(HSV)
                 : RGB;
 
-        return asString ? { [format]: toString(color, format) } : color;
+        return asString || isHex ? { [format]: toString(color, format) } : color;
     }
 
 
