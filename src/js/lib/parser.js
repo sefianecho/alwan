@@ -1,7 +1,7 @@
-import { float, HSL_FORMAT, int, min, RGB_FORMAT, round } from "../constants";
+import { float, HSL_FORMAT, RGB_FORMAT, round } from "../constants";
 import { createElement } from "../utils/dom";
 import { boundNumber } from "../utils/util";
-import { HEXToRGB } from "./colors";
+import { HEXToRGB, toString } from "./colors";
 
 const ctx = createElement('canvas').getContext('2d');
 const HSL_REGEX = /^hsla?\(\s*([+-]?\d*\.?\d+)(\w*)?(?:(?:\s+([+-]?\d*\.?\d+)%\s*([+-]?\d*\.?\d+)%(?:\s*\/\s*([+-]?\d*\.?\d+%?))?)|(?:\s*,\s*([+-]?\d*\.?\d+)%\s*,\s*([+-]?\d*\.?\d+)%(?:\s*,\s*([+-]?\d*\.?\d+%?))?))\s*\)?$/i;
