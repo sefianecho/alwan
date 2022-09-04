@@ -1,5 +1,5 @@
 import { CLICK } from "../constants";
-import { bindEvent } from "../core/events/EventBinder";
+import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { parseColor } from "../lib/parser";
 import { createElement, removeElement } from "../utils/dom";
 
@@ -18,6 +18,7 @@ export const Swatches = (parent, talwin) => {
         let buttons = [];
 
         container = removeElement(container, true);
+        listeners = unbindEvent(listeners, container);
 
         if (swatches.length) {
 
@@ -30,6 +31,8 @@ export const Swatches = (parent, talwin) => {
                     'data-index': index + ''
                 });
             });
+
+            bindEvent(listeners, container, CLICK, setColorFromSwatch);
         }
 
         self.el = buttons;
@@ -46,9 +49,6 @@ export const Swatches = (parent, talwin) => {
             talwin.setColor(talwin.config.swatches[target.dataset.index]);
         }
     }
-
-
-    bindEvent(listeners, parent, CLICK, setColorFromSwatch);
 
     return self;
 }

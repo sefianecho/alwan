@@ -33,10 +33,13 @@ const binder = (eventData, unbind) => {
  * @returns {Array}
  */
 export const bindEvent = (listeners, targetElement, events, handler, options) => {
-    options = options || false;
-    let eventData = [targetElement, events, handler, options];
-    binder(eventData);
-    listeners.push(eventData);
+
+    if (targetElement) {
+        options = options || false;
+        let eventData = [targetElement, events, handler, options];
+        binder(eventData);
+        listeners.push(eventData);
+    }
 
     return listeners;
 }
