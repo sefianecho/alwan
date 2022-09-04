@@ -1,4 +1,4 @@
-import { CLICK, COLOR_FORMATS, HEX_FORMAT, max, ONLY_INPUTS } from "../constants";
+import { CLICK, COLOR_FORMATS, EXCLUDE_INPUTS, HEX_FORMAT, INPUT, max, ONLY_INPUTS } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
@@ -11,11 +11,12 @@ const LABEL_CLASSNAME = 'tw-label';
 
 export const Inputs = (parent, talwin) => {
     const self = {};
-    const { config } = talwin;
+    const { config, _clr: colorState } = talwin;
     let container;
     let switchButton;
     let formats = [];
     let formatIndex;
+    let inputList;
     let listeners = [];
 
     /**
@@ -69,6 +70,7 @@ export const Inputs = (parent, talwin) => {
 
 
             container.innerHTML = '';
+            inputList = [];
 
             fields.forEach((field, index) => {
                 /**
@@ -80,7 +82,7 @@ export const Inputs = (parent, talwin) => {
                  * </label>
                  */
                 createElement('label', LABEL_CLASSNAME, container, false, (label => {
-                    inputs[field] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
+                    inputs[field] = inputList[index] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
                     createElement('span', '', label, { text: field });
                 }));
             });
@@ -88,6 +90,32 @@ export const Inputs = (parent, talwin) => {
             self.$ = inputs;
         }
     }
+
+    /**
+     * Handles changes in inputs.
+     *
+     * @param {Event} e - Input event.
+     */
+    const handleChange = e => {
+        let value = e.target.value;
+
+        if (value.trim()) {
+            let colorString = '';
+            let format = formats[formatIndex];
+            
+            if (config.singleInput || format === HEX_FORMAT) {
+                colorString = value;
+            } else {
+                // InputList has 3 or 4 inputs, Input for each color channel in the hsl and rgb,
+                // format, the reduce method adds comma between each input value.
+                // [30, 20, 10, 0.5] => '30,20,10,0.5'
+                colorString = format + '(' + inputList.reduce((string, currentInput) => (string && string + ',') + currentInput.value, '') + ')';
+            }
+
+            colorState.updateByString(colorString, EXCLUDE_INPUTS);
+        }
+    }
+
 
     /**
      * Changes color format.
@@ -101,7 +129,7 @@ export const Inputs = (parent, talwin) => {
             formatIndex = (formatIndex + 1) % formats.length;
             config.format = formats[formatIndex];
             build();
-            talwin._clr.update({}, ONLY_INPUTS);
+            colorState.update({}, ONLY_INPUTS);
         }
     }
 
@@ -117,6 +145,7 @@ export const Inputs = (parent, talwin) => {
     }
 
     bindEvent(listeners, parent, CLICK, changeFormat);
+    bindEvent(listeners, parent, INPUT, handleChange);
 
     return self;
 }
