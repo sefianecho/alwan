@@ -35,4 +35,4 @@ export const merge = (target, ...sources) => Object.assign(target, ...sources);
  * @param {Object} object2 - Any object.
  * @returns {Boolean}
  */
-export const isEqual = (object1, object2) => objectIterator(object1, (key, val) => object2[key] !== val );
+export const isEqual = (object1, object2) => objectIterator(object1, (key, val) => !object2 || object2[key] !== val);
