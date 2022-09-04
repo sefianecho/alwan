@@ -102,6 +102,15 @@ export const Palette = (parent, talwin) => {
     }
 
     /**
+     * Updates palette.
+     *
+     * @param {Object} hsv - HSV color object.
+     */
+    const update = hsv => {
+        marker.moveTo(hsv.s * WIDTH, (1 - hsv.v) * HEIGHT);
+    }
+
+    /**
      * Bind events.
      */
     bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
@@ -111,6 +120,7 @@ export const Palette = (parent, talwin) => {
 
     return {
         $: el,
+        update,
         marker,
     }
 }

@@ -62,7 +62,7 @@ export const Color = (talwin) => {
 
         if (! updater || updater === EXCLUDE_INPUTS) {
             // sliders.val(HSV);
-            // palette.update(HSV);
+            palette.update(HSV);
         }
     }
 
