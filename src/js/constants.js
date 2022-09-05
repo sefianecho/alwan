@@ -25,6 +25,11 @@ export const HSL_FORMAT = 'hsl';
 export const HSV_FORMAT = 'hsv';
 
 export const TAB = 'Tab';
+export const ARROW_RIGHT = 'ArrowRight';
+export const ARROW_LEFT = 'ArrowLeft';
+export const ARROW_UP = 'ArrowUp';
+export const ARROW_DOWN = 'ArrowDown';
+export const ENTER = 'Enter';
 
 // Picker supported color formats.
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];

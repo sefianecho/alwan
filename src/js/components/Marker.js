@@ -34,6 +34,7 @@ export const Marker = parent => {
     const getPosition = () => ({ x: markerX, y: markerY });
 
     return {
+        $: el,
         moveTo,
         getPosition
     }

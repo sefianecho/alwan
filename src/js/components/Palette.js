@@ -1,4 +1,4 @@
-import { EXCLUDE_PALETTE_HUE, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, EXCLUDE_PALETTE_HUE, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds } from "../utils/dom"
 import { Marker } from "./Marker";
@@ -22,6 +22,18 @@ export const Palette = (parent, talwin) => {
 
     const { width: WIDTH, height: HEIGHT } = getBounds(el);
 
+    const stepX = WIDTH / 100;
+    const stepY = HEIGHT / 100;
+
+    const moveX = {
+        [ARROW_RIGHT]: stepX,
+        [ARROW_LEFT]: -stepX
+    }
+
+    const moveY = {
+        [ARROW_UP]: -stepY,
+        [ARROW_DOWN]: stepY
+    }
 
     let listeners = [];
     let bounds;
@@ -45,6 +57,7 @@ export const Palette = (parent, talwin) => {
 
         style.display = 'block';
         isDragging = true;
+        el.focus();
     }
 
     /**
@@ -111,6 +124,34 @@ export const Palette = (parent, talwin) => {
     }
 
     /**
+     * Moves marker (picker) using keyboard's arrow keys.
+     *
+     * @param {Event} e - Keydown.
+     * @param {String} key - Key.
+     */
+    const keyboard = (e, key) => {
+        if (moveX[key] || moveY[key]) {
+
+            e.preventDefault();
+            let {x, y} = marker.getPosition();
+            let markerX = x, markerY = y;
+
+            x += moveX[key] || 0;
+            y += moveY[key] || 0;
+
+            // Make sure x and y don't go out of bounds.
+            x = x > WIDTH ? WIDTH : x < 0 ? 0 : x;
+            y = y > HEIGHT ? HEIGHT : y < 0 ? 0 : y;
+
+            // If the marker changes its position then calculate and set the color.
+            if (x !== markerX || y !== markerY) {
+                marker.moveTo(x, y);
+                talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
+            }
+        }
+    }
+
+    /**
      * Bind events.
      */
     bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
@@ -121,6 +162,7 @@ export const Palette = (parent, talwin) => {
     return {
         $: el,
         update,
+        keyboard,
         marker,
     }
 }
