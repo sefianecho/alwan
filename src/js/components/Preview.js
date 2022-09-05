@@ -1,4 +1,4 @@
-import { CLICK } from "../constants";
+import { BLUR, CLICK, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_LEAVE } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
@@ -39,7 +39,7 @@ export const Preview = (parent, talwin) => {
                 copyButton = removeElement(copyButton, true);
             } else if (! copyButton) {
                 copyButton = createElement('button', 'tw-btn', previewArea || container, { type: 'button' }, thisButton => {
-                    setCopyButtonIcon(thisButton);
+                    updateSVG(thisButton);
                 });
             }
 
@@ -56,26 +56,49 @@ export const Preview = (parent, talwin) => {
      *
      * @param {HTMLElement} button - Button.
      */
-    const setCopyButtonIcon = (button) => {
+    const updateSVG = (button) => {
         button = button || self.cp;
         button.innerHTML = '';
         createElement('svg', '', button, isCopied ? checkSVGAttrs : clipboardSVGAttrs);
     }
 
     /**
-     * Copies color string to clipboard.
+     * Copies selected color to the clipboard then updates copy,
+     * button's Icon and styles.
      *
-     * @param {Event} e - Click.
+     * @param {Event} e - Click or Focusin or Focusout or Mouseleave.
      */
-    const copyColor = e => {
-        if (e.target === self.cp) {
-            isCopied = talwin._clr.copy();
-            setCopyButtonIcon();
+    const copyColorAndUpdateView = e => {
+        if (self.cp) {
+            let type = e.type;
+            let method;
+
+            // On click copy color and update svg to display a Check icon.
+            if (! isCopied && type === CLICK) {
+                isCopied = talwin._clr.copy();
+                updateSVG();
+            }else {
+                // On focus add a focus class.
+                if (type === FOCUS_IN) {
+                    method = 'add';
+                } else {
+                    // On focusout remove the focus class.
+                    method = 'remove';
+
+                    // If the copy button lose focus or mouse leaves it,
+                    // then reset the svg to a Clipboard icon.
+                    if (isCopied) {
+                        isCopied = false;
+                        updateSVG();
+                    }
+                }
+                self.cp.classList[method](FOCUS_CLASSNAME);
+            }
         }
     }
 
 
-    bindEvent(listeners, container, CLICK, copyColor);
+    bindEvent(listeners, container, [CLICK, MOUSE_LEAVE, FOCUS_IN, BLUR], copyColorAndUpdateView);
 
     return self;
 }

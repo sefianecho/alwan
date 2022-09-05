@@ -18,6 +18,9 @@ export const SCROLL = 'scroll';
 export const RESIZE = 'resize';
 export const KEY_DOWN = 'keydown';
 export const INPUT = 'input';
+export const MOUSE_LEAVE = 'mouseleave';
+export const FOCUS_IN = 'focusin';
+export const BLUR = 'blur';
 
 export const HEX_FORMAT = 'hex';
 export const RGB_FORMAT = 'rgb';
@@ -30,6 +33,8 @@ export const ARROW_LEFT = 'ArrowLeft';
 export const ARROW_UP = 'ArrowUp';
 export const ARROW_DOWN = 'ArrowDown';
 export const ENTER = 'Enter';
+
+export const FOCUS_CLASSNAME = 'tw-focus';
 
 // Picker supported color formats.
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
