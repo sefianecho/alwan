@@ -1,7 +1,7 @@
-import { BODY, RESIZE, SCROLL } from "../constants";
+import { BODY, ENTER, KEY_DOWN, RESIZE, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
-import { createElement, getElement, getScrollableAncestors, isInViewport } from "../utils/dom";
+import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport } from "../utils/dom";
 
 
 const TALWIN_CLASSNAME = 'talwin';
@@ -139,6 +139,36 @@ export const App = (talwin) => {
      * @returns {Boolean}
      */
     const _isOpen = () => isOpen;
+
+    /**
+     * Handles keyboard navigation and interaction.
+     *
+     * @param {Event} e - Keydown.
+     */
+    const handleKeyboard = e => {
+        let { key, target, shiftKey } = e;
+        let { _ui: { palette, ref } } = talwin;
+        let isPalette = target === palette.$;
+        /**
+         * Pressing the Enter key in an input, closes the picker.
+         */
+        if (key === ENTER && target.type === 'text') {
+            _close();
+        } else if (key === TAB) {
+            // Pressing the Tab + shift on the palette,
+            // or pressing the Tab on the last focusable element in the picker,
+            // will send the focus back to the reference.
+            if ((! shiftKey && target === getLastFocusableElement(root)) || (isPalette && shiftKey)) {
+                e.preventDefault();
+                ref.$.focus();
+            }
+        } else if (isPalette) {
+            palette.keyboard(e, key);
+        }
+    }
+
+
+    bindEvent(listeners, root, KEY_DOWN, handleKeyboard);
 
     return {
         root,
