@@ -3,15 +3,17 @@ import { objectIterator } from "./object";
 import { isString } from "./util";
 
 /**
- * Gets an HTML element
+ * Gets a DOM element.
  *
  * @param {String|Element} ref - CSS selector or DOM element.
+ * @param {Element} context - Element to search from.
+ * @param {Boolean} all - Get all elements.
  * @returns {Element|null}
  */
-export const getElement = (ref, context) =>
-isString(ref) ? ref && (context || ROOT).querySelector(ref)
-    : ref instanceof Element ? ref
-    : null;
+export const getElement = (ref, context, all) =>
+    isString(ref) ? ref && (context || ROOT)['querySelector' + (all ? 'All' : '')](ref)
+        : ref instanceof Element ? ref
+        : null;
 
 /**
  * Creates a new HTML Element.
@@ -145,4 +147,15 @@ export const isInViewport = (el, scrollableElements) =>
  */
 export const setCustomProperty = (el, property, value) => {
     el && el.style.setProperty('--' + property, value);
+}
+
+/**
+ * Gets the last focusable element in an element (context).
+ *
+ * @param {Element} context - Element which the last focusable elment is an ancestor.
+ * @returns {Element}
+ */
+export const getLastFocusableElement = context => {
+    let focusableElements = getElement('button,input', context, true);
+    return focusableElements[focusableElements.length - 1];
 }
