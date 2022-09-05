@@ -1,4 +1,4 @@
-import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, EXCLUDE_PALETTE_HUE, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BLUR, EXCLUDE_PALETTE_HUE, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds } from "../utils/dom"
 import { Marker } from "./Marker";
@@ -86,6 +86,18 @@ export const Palette = (parent, talwin) => {
 
 
     /**
+     * Updates color and moves marker.
+     *
+     * @param {Number} x - X coordinate.
+     * @param {Number} y - Y coordinate.
+     */
+    const updateColor = (x, y) => {
+        marker.moveTo(x, y);
+        talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, EXCLUDE_PALETTE_HUE);
+    }
+
+
+    /**
      * Moves Marker and Updates color.
      *
      * @param {Event} e - Drag start or drag move events.
@@ -110,8 +122,7 @@ export const Palette = (parent, talwin) => {
 		x = x < 0 ? 0 : x > WIDTH ? WIDTH : x;
 		y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
 
-        marker.moveTo(x, y);
-        talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, EXCLUDE_PALETTE_HUE);
+        updateColor();
     }
 
     /**
@@ -130,6 +141,10 @@ export const Palette = (parent, talwin) => {
      * @param {String} key - Key.
      */
     const keyboard = (e, key) => {
+
+        // This adds a focus class if any key is pressed.
+        handleFocus(e);
+
         if (moveX[key] || moveY[key]) {
 
             e.preventDefault();
@@ -145,10 +160,32 @@ export const Palette = (parent, talwin) => {
 
             // If the marker changes its position then calculate and set the color.
             if (x !== markerX || y !== markerY) {
-                marker.moveTo(x, y);
-                talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
+                updateColor();
             }
         }
+    }
+
+    /**
+     * Handles palette's focus.
+     *
+     * @param {Event} e - Blur or Focusin.
+     */
+    const handleFocus = e => {
+        let method;
+
+        // If palette lose focus, remove the focus class,
+        // and remove browser keyboard focus.
+        if (e.type === BLUR) {
+            method = 'remove';
+            el.blur();
+        } else {
+            // If focus is coming from keyboard then add focus class.
+            if (! isDragging) {
+                method = 'add';
+            }
+        }
+
+        method && el.classList[method](FOCUS_CLASSNAME);
     }
 
     /**
@@ -157,7 +194,7 @@ export const Palette = (parent, talwin) => {
     bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
     bindEvent(listeners, ROOT, [MOUSE_MOVE, TOUCH_MOVE], dragMove, { passive: false });
     bindEvent(listeners, ROOT, [MOUSE_UP, TOUCH_END, TOUCH_CANCEL], dragEnd);
-
+    bindEvent(listeners, el, [BLUR, FOCUS_IN], handleFocus);
 
     return {
         $: el,
