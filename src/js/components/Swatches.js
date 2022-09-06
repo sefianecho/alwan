@@ -9,6 +9,10 @@ const SWATCHE_CLASSNAME = 'talwin__swatch';
 export const Swatches = (parent, talwin) => {
 
     const self = {};
+
+    const { _clr: { value, updateByString }, _e: { emit } } = talwin;
+
+
     let container;
     let listeners = [];
 
@@ -44,9 +48,11 @@ export const Swatches = (parent, talwin) => {
      * @param {Event} e - Click.
      */
     const setColorFromSwatch = e => {
-        const target = e.target;
-        if (target !== container) {
-            talwin.setColor(talwin.config.swatches[target.dataset.index]);
+        let target = e.target;
+
+        if (target !== container && updateByString(talwin.config.swatches[target.dataset.index])) {
+            emit('color', value, target);
+            emit('change', value, target);
         }
     }
 
