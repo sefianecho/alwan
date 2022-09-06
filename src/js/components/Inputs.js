@@ -1,22 +1,57 @@
 import { CHANGE, CLICK, COLOR_FORMATS, FOCUS_IN, HEX_FORMAT, INPUT, max } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
-import { createElement, removeElement } from "../utils/dom";
+import { createElement, removeElement, setVisibility } from "../utils/dom";
 import { objectIterator } from "../utils/object";
 
 const INPUTS_CLASSNAME = 'talwin__inputs';
 const INPUT_CLASSNAME = 'talwin__input';
 const LABEL_CLASSNAME = 'tw-label';
 
-
+/**
+ * Inputs component.
+ *
+ * @param {Element} parent - Element to append the inputs container element to.
+ * @param {Object} talwin - Talwin instance.
+ * @returns {Object}
+ */
 export const Inputs = (parent, talwin) => {
-    const self = {};
+
     const { config, _clr: colorState, _e: { emit } } = talwin;
+    /**
+     * Component API.
+     */
+    const self = {};
+
+    /**
+     * Inputs wrapper element.
+     */
     let container;
+
+    /**
+     * Switch button.
+     * @type {Element}
+     */
     let switchButton;
+
+    /**
+     * Picker formats.
+     */
     let formats = [];
+
+    /**
+     * Index of the current format.
+     */
     let formatIndex;
+
+    /**
+     * Array of inputs.
+     */
     let inputList;
+
+    /**
+     * Event listeners.
+     */
     let listeners = [];
 
     /**
@@ -28,15 +63,17 @@ export const Inputs = (parent, talwin) => {
         let { inputs, format } = options;
         let length;
 
+        // Get only valid formats.
         formats = COLOR_FORMATS.filter(format => inputs[format]);
         length = formats.length;
-        formatIndex = 0;
 
+        
         if (! length) {
+            // No input, remove inputs.
             container = removeElement(container, true);
             switchButton = removeElement(switchButton, true);
-            formats = COLOR_FORMATS;
-            self.$ = {};
+            // Normalize format value.
+            format = COLOR_FORMATS.includes(format) ? format : COLOR_FORMATS[0];
         } else {
 
             if (! container) {
@@ -46,32 +83,39 @@ export const Inputs = (parent, talwin) => {
             if (length === 1) {
                 switchButton = removeElement(switchButton, true);
             } else if (!switchButton) {
+                // For more than one input format, add a switch button.
                 switchButton = createElement('button', 'tw-btn', parent, { type: 'button' }, (thisButton) => {
                     createElement('svg', '', thisButton, switchSVGAttrs);
                 });
             }
 
             formatIndex = max(formats.indexOf(format), 0);
-            build();
+            format = formats[formatIndex];
         }
 
-        config.format = formats.includes(format) ? format : formats[formatIndex];
-        parent.style.display = length ? '' : 'none';
+        build(format);
+        config.format = format;
+        // Show/Hide parent container.
+        setVisibility(parent, length);
     }
 
     /**
      * Build Inputs.
      */
-    const build = () => {
+    const build = (format) => {
+
+        self.$ = {};
+        inputList = [];
+
         if (container) {
-            let inputs = {};
-            let { singleInput, opacity, format } = config;
+            let { singleInput, opacity } = config;
+            // Each letter in the format variable represent a color channel,
+            // For multiple inputs, each color channel has an input field.
+            // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
             let fields = singleInput || format == HEX_FORMAT ? [format]
                         : (format + (opacity ? 'a' : '')).split('');
 
-
             container.innerHTML = '';
-            inputList = [];
 
             fields.forEach((field, index) => {
                 /**
@@ -83,12 +127,12 @@ export const Inputs = (parent, talwin) => {
                  * </label>
                  */
                 createElement('label', LABEL_CLASSNAME, container, false, (label => {
-                    inputs[field] = inputList[index] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
+                    self.$[field] = inputList[index] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
                     createElement('span', '', label, { text: field });
                 }));
             });
 
-            self.$ = inputs;
+            colorState.update({});
         }
     }
 
@@ -130,8 +174,7 @@ export const Inputs = (parent, talwin) => {
             // this index will point to the next format.
             formatIndex = (formatIndex + 1) % formats.length;
             config.format = formats[formatIndex];
-            build();
-            colorState.update({});
+            build(formats[formatIndex]);
         }
     }
 
@@ -142,8 +185,10 @@ export const Inputs = (parent, talwin) => {
      */
     const triggerChangeEvent = e => {
         if (e.type === FOCUS_IN) {
+            // Save color state, when inputs receive focus.
             colorState.start();
         } else {
+            // Trigger change event if color state is changed.
             colorState.end(self.$);
         }
     }
@@ -159,6 +204,9 @@ export const Inputs = (parent, talwin) => {
         });
     }
 
+    /**
+     * Bind events.
+     */
     bindEvent(listeners, parent, CLICK, changeFormat);
     bindEvent(listeners, parent, INPUT, handleChange);
     bindEvent(listeners, parent, [FOCUS_IN, CHANGE], triggerChangeEvent);
