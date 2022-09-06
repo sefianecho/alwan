@@ -1,4 +1,4 @@
-import { BODY, EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, ONLY_INPUTS, RGB_FORMAT, ROOT } from "../constants";
+import { BODY, EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, ONLY_INPUTS, RGB_FORMAT, ROOT } from "../constants";
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../lib/colors";
 import { parseColor } from "../lib/parser";
 import { createElement, removeElement, setCustomProperty } from "../utils/dom";
@@ -138,10 +138,51 @@ export const Color = (talwin) => {
             }
         });
 
+    /**
+     * Outputs a color object.
+     *
+     * @param {Object} colorObject - RGB, HSL or HSV color object.
+     * @param {String} colorString - Color string.
+     * @param {String} format - Color format.
+     * @param {Boolean} asArray - Output color values in an array.
+     * @returns {Ojbect|Array}
+     */
+    const output = (colorObject, colorString, format, asArray) => {
+        if (config.opacity) {
+            format += 'a';
+        }
+
+        let output = asArray ? [] : {};
+
+        if (format !== HSV_FORMAT) {
+            output.toString = () => colorString || toString(colorObject, format);
+        }
+
+        /**
+         * This puts colorObject values in an object or an array.
+         *
+         * @param {Object|Array} color - The output color.
+         * @param {String} channel - Color channel.
+         * @param {index} index - Array index.
+         */
+        return format.split('').reduce((color, channel, index) =>
+                (color[asArray ? index : channel] = colorObject[channel]) && color, output);
+    }
+
+    /**
+     * Picker value.
+     */
+    const value = {
+        HSV: () => output(HSV, '', HSV_FORMAT, false),
+        RGB: asArray => output(RGB, rgbString, RGB_FORMAT, asArray),
+        HSL: asArray => output(HSVToHSL(HSV), '', HSL_FORMAT, asArray),
+        HEX: () => RGBToHEX(RGB)
+    }
 
     return {
         update,
         updateByString,
-        copy
+        copy,
+        value
     }
 }
