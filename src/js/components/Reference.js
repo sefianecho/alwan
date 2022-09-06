@@ -24,7 +24,6 @@ export const Reference = (originalRef, talwin) => {
          */
         _init(options) {
             let { preset, toggle } = options;
-            let { _ui: { app, palette }} = talwin;
             let ref = self.$;
             listeners = unbindEvent(listeners, ref);
             
@@ -37,17 +36,35 @@ export const Reference = (originalRef, talwin) => {
             }
 
             if (toggle) {
-                bindEvent(listeners, ref, CLICK, app._toggle);
-                bindEvent(listeners, ref, KEY_DOWN, e => {
-                    if (app._isOpen() && e.key === TAB && ! e.shiftKey) {
-                        e.preventDefault();
-                        palette.$.focus();
-                    }
-                });
+                bindEvent(listeners, ref, CLICK, togglePicker);
+                bindEvent(listeners, ref, KEY_DOWN, handleFocus);
             }
             ref.style.display = toggle ? '' : 'none';
             self.$ = ref;
         }
+    }
+
+    /**
+     * Handles focus, pressing tab send focus to the picker if it's open.
+     *
+     * @param {Event} e - Keydown.
+     */
+    const handleFocus = e => {
+        let components = talwin._ui;
+
+        if (components.app.isOpen() && e.key === TAB && ! e.shiftKey) {
+            e.preventDefault();
+            components.palette.$.focus();
+        }
+    }
+
+    /**
+     * Toggle picker.
+     *
+     * @param {Event} e - Click.
+     */
+    const togglePicker = e => {
+        talwin.toggle();
     }
 
     return self;
