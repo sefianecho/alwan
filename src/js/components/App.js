@@ -18,19 +18,19 @@ const LIGHT_THEME = 'light';
 export const App = (talwin) => {
 
     let listeners = [];
-    let isOpen = false;
+    let _isOpen = false;
     let scrollableAncestors = [];
     let popper;
 
     const root = createElement('', TALWIN_CLASSNAME, BODY);
-    const { config } = talwin;
+    const { config, _e: { emit } } = talwin;
 
     /**
      * Initializes app component.
      *
      * @param {Object} options - Talwin options.
      */
-    const _init = (options) => {
+    const init = (options) => {
         let { theme, popover, target, position, margin } = options;
         let refElement = talwin._ui.ref.$;
         let targetElement = getElement(target);
@@ -80,13 +80,13 @@ export const App = (talwin) => {
      * @param {Event} e - Scroll or Resize event.
      */
     const updatePopper = e => {
-        if (isOpen) {
+        if (_isOpen) {
             popper.update();
 
             // Close picker if the reference element is not visible in the viewport,
             // of nested scrollable elements.
             if (! isInViewport(talwin._ui.ref.el, scrollableAncestors)) {
-                _close();
+                close(true);
             }
         }
     }
@@ -108,29 +108,31 @@ export const App = (talwin) => {
     /**
      * Open color picker.
      */
-    const _open = () => {
-        if (! isOpen && ! config.disabled) {
+    const open = (silent) => {
+        if (! _isOpen) {
             popper && popper.update();
+            ! silent && emit('open');
             root.classList.add('open');
-            isOpen = true;
+            _isOpen = true;
         }
     }
 
     /**
      * Close color picker.
      */
-    const _close = () => {
-        if (isOpen && config.toggle) {
+    const close = (silent) => {
+        if (_isOpen && config.toggle) {
+            ! silent && emit('close');
             root.classList.remove('open');
-            isOpen = false;
+            _isOpen = false;
         }
     }
 
     /**
      * Open/Close color picker.
      */
-    const _toggle = () => {
-        isOpen ? _close() : _open();
+    const toggle = (triggerEvent) => {
+        _isOpen ? close(triggerEvent) : open(triggerEvent);
     }
 
     /**
@@ -138,7 +140,7 @@ export const App = (talwin) => {
      *
      * @returns {Boolean}
      */
-    const _isOpen = () => isOpen;
+    const isOpen = () => _isOpen;
 
     /**
      * Handles keyboard navigation and interaction.
@@ -153,7 +155,7 @@ export const App = (talwin) => {
          * Pressing the Enter key in an input, closes the picker.
          */
         if (key === ENTER && target.type === 'text') {
-            _close();
+            close(true);
         } else if (key === TAB) {
             // Pressing the Tab + shift on the palette,
             // or pressing the Tab on the last focusable element in the picker,
@@ -172,10 +174,10 @@ export const App = (talwin) => {
 
     return {
         root,
-        _init,
-        _isOpen,
-        _open,
-        _close,
-        _toggle
+        init,
+        isOpen,
+        open,
+        close,
+        toggle
     }
 }
