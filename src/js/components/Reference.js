@@ -13,8 +13,14 @@ const PRESET_BUTTON_CLASSNAME = 'tw-ref';
  */
 export const Reference = (originalRef, talwin) => {
 
+    /**
+     * Event Listeners.
+     */
     let listeners = [];
 
+    /**
+     * Reference API.
+     */
     const self = {
         $: originalRef,
         /**
@@ -22,7 +28,7 @@ export const Reference = (originalRef, talwin) => {
          *
          * @param {Object} options - Picker options.
          */
-        _init(options) {
+        init(options) {
             let { preset, toggle } = options;
             let ref = self.$;
             listeners = unbindEvent(listeners, ref);
