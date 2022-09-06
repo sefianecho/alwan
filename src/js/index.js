@@ -87,10 +87,18 @@ export default class Talwin {
             }
         }
 
-        this._clr.updateByString(color);
+        this._clr.updateByString(color, true);
     }
 
     getColor() {
         return this._clr.value;
+    }
+
+    addSwatch(color) {
+        this._ui.swatches.add(color);
+    }
+
+    removeSwatch(swatch) {
+        this._ui.swatches.remove(swatch);
     }
 }

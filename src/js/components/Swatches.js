@@ -1,45 +1,92 @@
-import { CLICK } from "../constants";
-import { bindEvent, unbindEvent } from "../core/events/EventBinder";
+import { CLICK, int } from "../constants";
+import { bindEvent } from "../core/events/EventBinder";
 import { parseColor } from "../lib/parser";
-import { createElement, removeElement } from "../utils/dom";
+import { createElement, getParent, removeElement, setVisibility } from "../utils/dom";
 
 const SWATCHES_CLASSNAME = 'talwin__swatches';
 const SWATCHE_CLASSNAME = 'talwin__swatch';
 
+/**
+ * Swatches component.
+ *
+ * @param {Element} parent - Element to append the palette element to.
+ * @param {Object} talwin - Picker Instance.
+ * @returns 
+ */
 export const Swatches = (parent, talwin) => {
 
     const self = {};
-
     const { _clr: { value, updateByString }, _e: { emit } } = talwin;
 
+    let container = createElement('', SWATCHES_CLASSNAME, parent);
 
-    let container;
+    let swatches;
+
     let listeners = [];
 
+    /**
+     * Creates a swatch button.
+     *
+     * @param {String} color - Swatch Color.
+     * @param {Number} index - Swatch Index.
+     * @returns {Element}
+     */
+    const createSwatchButton = (color, index) => createElement('button', SWATCHE_CLASSNAME, container, {
+            type: 'button',
+            style: '--tw-color:' + parseColor(color, true),
+            'data-index': index + ''
+        });
 
+    /**
+     * Initialize swatches.
+     *
+     * @param {Object} options - Talwin options.
+     */
     self.init = (options) => {
-        let { swatches } = options;
         let buttons = [];
+        swatches = options.swatches;
 
-        container = removeElement(container, true);
-        listeners = unbindEvent(listeners, container);
+        setVisibility(container, swatches);
+        container.innerHTML = '';
 
-        if (swatches.length) {
+        swatches.forEach((color, index) => {
+            buttons[index] = createSwatchButton(color, index);
+        });
 
-            container = createElement('', SWATCHES_CLASSNAME, parent);
+        self.$ = buttons;
+    }
 
-            swatches.forEach((color, index) => {
-                buttons[index] = createElement('button', SWATCHE_CLASSNAME, container, {
-                    type: 'button',
-                    style: '--tw-color:' + parseColor(color, true),
-                    'data-index': index + ''
-                });
-            });
+    /**
+     * Adds a swatch button.
+     *
+     * @param {String} color - Color.
+     */
+    self.add = color => {
+        let index = swatches.push(color) - 1;
+        self.$[index] = createSwatchButton(color, index);
 
-            bindEvent(listeners, container, CLICK, setColorFromSwatch);
+        // If swatches array is empty, hide container.
+        setVisibility(container, swatches);
+    }
+
+    /**
+     * Removes a swatch button.
+     *
+     * @param {String|Number} swatch - Color or Swatch Index.
+     */
+    self.remove = swatch => {
+        let index = swatches.findIndex((color, index) => swatch === color || int(swatch) === index);
+
+        if (index > -1) {
+            // Remove color from swatches array.
+            swatches.splice(index, 1);
+            // Remove swatch button.
+            removeElement(self.$[index]);
+            self.$.splice(index, 1);
+
+            // If swatches array is empty then hide the container.
+            setVisibility(container, swatches);
         }
-
-        self.el = buttons;
     }
 
     /**
@@ -50,11 +97,13 @@ export const Swatches = (parent, talwin) => {
     const setColorFromSwatch = e => {
         let target = e.target;
 
-        if (target !== container && updateByString(talwin.config.swatches[target.dataset.index], true)) {
+        if (getParent(target) === container && updateByString(swatches[target.dataset.index], true)) {
             emit('color', value, target);
             emit('change', value, target);
         }
     }
+
+    bindEvent(listeners, parent, CLICK, setColorFromSwatch);
 
     return self;
 }
