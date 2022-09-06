@@ -1,7 +1,7 @@
-import { INPUT } from "../constants";
+import { CHANGE, INPUT } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, removeElement } from "../utils/dom";
-import { isSet } from "../utils/util";
+import { isset } from "../utils/util";
 
 const SLIDER_CLASSNAME = 'talwin__slider';
 const HUE_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--hue';
@@ -18,6 +18,8 @@ export const Sliders = (parent, talwin) => {
 
     let listeners = [];
     const container = createElement('', 'tw-w100', parent);
+
+    const { _clr: colorState, _e: { emit }} = talwin;
 
     /**
      * Builds a slider.
@@ -42,7 +44,7 @@ export const Sliders = (parent, talwin) => {
         init(options) {
             let opacity = options.opacity;
 
-            if (isSet(opacity)) {
+            if (isset(opacity)) {
 
                 let alpha = self.alpha;
 
@@ -56,7 +58,7 @@ export const Sliders = (parent, talwin) => {
     /**
      * Handles changes in a slider value.
      *
-     * @param {Event} e - Input event.
+     * @param {Event} e - Input or Change event.
      */
     const handleChange = e => {
         let slider = e.target;
@@ -69,7 +71,8 @@ export const Sliders = (parent, talwin) => {
             hsv.a = value;
         }
 
-        talwin._clr.update(hsv);
+        colorState.update(hsv);
+        emit(e.type === CHANGE ? 'change' : 'color', colorState.value, slider);
     }
 
     /**
@@ -85,7 +88,7 @@ export const Sliders = (parent, talwin) => {
 
 
 
-    bindEvent(listeners, container, INPUT, handleChange);
+    bindEvent(listeners, container, [INPUT, CHANGE], handleChange);
 
     return self;
 }
