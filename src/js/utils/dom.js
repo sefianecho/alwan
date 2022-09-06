@@ -159,3 +159,21 @@ export const getLastFocusableElement = context => {
     let focusableElements = getElement('button,input', context, true);
     return focusableElements[focusableElements.length - 1];
 }
+
+/**
+ * Hides/Shows element.
+ * Truthy value or non empty array shows the element,
+ * else hides it.
+ * 
+ * @param {Element} el - Element to show/hide.
+ * @param {Array|Boolean} cond - Condition.
+ */
+export const setVisibility = (el, cond) => {
+    let length = cond.length;
+
+    if (length != null) {
+        cond = length;
+    }
+
+    el.style.display = cond ? '' : 'none';
+}
