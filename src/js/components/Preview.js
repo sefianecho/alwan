@@ -1,21 +1,38 @@
 import { BLUR, CLICK, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_LEAVE } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
-import { createElement, removeElement } from "../utils/dom";
+import { createElement, removeElement, setVisibility } from "../utils/dom";
 
 const PREVIEW_CLASSNAME = 'talwin__preview';
 
+/**
+ * Preview component.
+ *
+ * @param {Element} parent - Element to append preview are to.
+ * @param {Object} talwin - Instance.
+ * @returns {Object}
+ */
 export const Preview = (parent, talwin) => {
     
-    let isCopied = false;
+    /**
+     * Event Listeners.
+     */
     let listeners = [];
 
+    /**
+     * Copy state.
+     */
+    let isCopied = false;
+
+    /**
+     * Preview area wrapper element.
+     */
     const container = createElement('', 'tw-mr1', parent);
 
+    /**
+     * Preview API.
+     */
     const self = {
-        el: null,
-        cp: null,
-
         /**
          * Init. Preview, copy button.
          *
@@ -26,6 +43,8 @@ export const Preview = (parent, talwin) => {
             let previewArea = self.$;
             let copyButton = self.cp;
 
+            // Either preview option is true and previewArea doen't exist,
+            // or preview option is false and previewArea does exist.
             if (preview !== !!previewArea) {
 
                 previewArea = preview ? createElement('', PREVIEW_CLASSNAME, container) : removeElement(previewArea, true);
@@ -43,7 +62,8 @@ export const Preview = (parent, talwin) => {
                 });
             }
 
-            container.style.display = copyButton || previewArea ? '' : 'none';
+            // Hide container if both copyButton and previewArea don't exist,
+            setVisibility(container, copyButton || previewArea);
 
             self.$ = previewArea;
             self.cp = copyButton;
@@ -97,7 +117,9 @@ export const Preview = (parent, talwin) => {
         }
     }
 
-
+    /**
+     * Events binding.
+     */
     bindEvent(listeners, container, [CLICK, MOUSE_LEAVE, FOCUS_IN, BLUR], copyColorAndUpdateView);
 
     return self;
