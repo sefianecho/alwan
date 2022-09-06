@@ -50,7 +50,7 @@ export const Swatches = (parent, talwin) => {
     const setColorFromSwatch = e => {
         let target = e.target;
 
-        if (target !== container && updateByString(talwin.config.swatches[target.dataset.index])) {
+        if (target !== container && updateByString(talwin.config.swatches[target.dataset.index], true)) {
             emit('color', value, target);
             emit('change', value, target);
         }

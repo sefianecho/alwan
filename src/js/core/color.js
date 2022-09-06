@@ -1,8 +1,9 @@
-import { BODY, EXCLUDE_INPUTS, EXCLUDE_PALETTE_HUE, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, ONLY_INPUTS, RGB_FORMAT, ROOT } from "../constants";
+import { BODY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT, ROOT } from "../constants";
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../lib/colors";
 import { parseColor } from "../lib/parser";
 import { createElement, removeElement, setCustomProperty } from "../utils/dom";
 import { isEqual, merge, objectIterator } from "../utils/object";
+import { isset } from "../utils/util";
 
 /**
  * Color state.
@@ -29,7 +30,7 @@ export const Color = (talwin) => {
      * Updates color and UI.
      *
      * @param {Object} newHSV - HSV color object.
-     * @param {Number} updater - A number indicates which component to update.
+     * @param {Object|Boolean} updater - Exclude some components from updating.
      * @param {Object} rgb - RGB color object.
      */
     const update = (newHSV, updater, rgb) => {
@@ -39,28 +40,21 @@ export const Color = (talwin) => {
         rgbString = toString(RGB, RGB_FORMAT);
 
         let components = talwin._ui;
-        let palette = components.palette;
-        let sliders = components.sliders;
+        let { palette, sliders, inputs } = components;
 
         // Preview color.
         setCustomProperty(components.preview.$, 'tw-color', rgbString);
         setCustomProperty(components.ref.$, 'tw-color', rgbString);
+        // Change the gradient color stop of the alpha slider.
+        (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
+        // Set palette's hue.
+        isset(newHSV.h) && setCustomProperty(palette.$, 'hue', HSV.h);
 
-        if (updater !== ONLY_INPUTS) {
-            // Change the gradient color stop of the alpha slider.
-            setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
-            
-            if (updater !== EXCLUDE_PALETTE_HUE) {
-                // Set palette's hue.
-                setCustomProperty(palette.$, 'hue', HSV.h);
-            }
+        if (updater !== inputs) {
+            inputs.val(getColor('', config.singleInput));
         }
 
-        if (updater !== EXCLUDE_INPUTS) {
-            components.inputs.update(getColor('', config.singleInput));
-        }
-
-        if (! updater || updater === EXCLUDE_INPUTS) {
+        if (updater) {
             sliders.val(HSV);
             palette.update(HSV);
         }

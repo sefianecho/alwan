@@ -2,9 +2,6 @@ export const ROOT = document;
 export const BODY = ROOT.body;
 export const HTML = ROOT.documentElement;
 
-export const EXCLUDE_PALETTE_HUE = 1;
-export const ONLY_INPUTS = 2;
-export const EXCLUDE_INPUTS = 3;
 
 export const CLICK = 'click';
 export const MOUSE_DOWN = 'mousedown';

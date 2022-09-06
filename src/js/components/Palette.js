@@ -1,4 +1,4 @@
-import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BLUR, EXCLUDE_PALETTE_HUE, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BLUR, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds } from "../utils/dom"
 import { Marker } from "./Marker";
@@ -95,7 +95,7 @@ export const Palette = (parent, talwin) => {
      */
     const updateColor = (x, y) => {
         marker.moveTo(x, y);
-        colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, EXCLUDE_PALETTE_HUE);
+        colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
         emit('color', colorState.value, el);
     }
 

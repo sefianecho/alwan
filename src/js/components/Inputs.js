@@ -1,4 +1,4 @@
-import { CLICK, COLOR_FORMATS, EXCLUDE_INPUTS, HEX_FORMAT, INPUT, max, ONLY_INPUTS } from "../constants";
+import { CLICK, COLOR_FORMATS, HEX_FORMAT, INPUT, max } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
@@ -113,7 +113,7 @@ export const Inputs = (parent, talwin) => {
                 colorString = format + '(' + inputList.reduce((string, currentInput) => (string && string + ',') + currentInput.value, '') + ')';
             }
 
-            if (colorState.updateByString(colorString, EXCLUDE_INPUTS)) {
+            if (colorState.updateByString(colorString, self)) {
                 emit('color', colorState.value, self.$);
             }
         }
@@ -132,7 +132,7 @@ export const Inputs = (parent, talwin) => {
             formatIndex = (formatIndex + 1) % formats.length;
             config.format = formats[formatIndex];
             build();
-            colorState.update({}, ONLY_INPUTS);
+            colorState.update({});
         }
     }
 
