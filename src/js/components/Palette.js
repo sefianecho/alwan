@@ -153,7 +153,7 @@ export const Palette = (parent, talwin) => {
         if (moveX[key] || moveY[key]) {
 
             e.preventDefault();
-            let {x, y} = marker.getPosition();
+            let {x, y} = marker.point();
             let markerX = x, markerY = y;
 
             x += moveX[key] || 0;

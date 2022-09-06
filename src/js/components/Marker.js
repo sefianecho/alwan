@@ -11,12 +11,31 @@ const MARKER_CLASSNAME = 'talwin__marker';
  */
 export const Marker = parent => {
 
+    /**
+     * Marker.
+     */
     const el = createElement('', MARKER_CLASSNAME, parent);
+
+    
     const { width, height } = getBounds(el);
+    /**
+     * Cache center X coordinate.
+     */
     let centerX = width / 2 - 1;
+
+    /**
+     * Cache center Y coordinate.
+     */
     let centerY = height / 2 - 1;
 
+    /**
+     * Marker X coordinate.
+     */
     let markerX = 0;
+
+    /**
+     * Marker Y coordinate.
+     */
     let markerY = 0;
 
     /**
@@ -31,11 +50,17 @@ export const Marker = parent => {
         el.style.transform = `translate(${x - centerX}px, ${y - centerY}px)`;
     }
 
-    const getPosition = () => ({ x: markerX, y: markerY });
+    /**
+     * Gets marker coordinates.
+     *
+     * @returns {Object}
+     */
+    const point = () => ({ x: markerX, y: markerY });
+
 
     return {
         $: el,
         moveTo,
-        getPosition
+        point
     }
 }
