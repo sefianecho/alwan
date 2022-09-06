@@ -8,6 +8,7 @@ import { Color } from "./core/color";
 import { boundNumber, isString } from "./utils/util";
 import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
 import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "./lib/colors";
+import { EventListener } from "./core/events/EventListener";
 
 export default class Talwin {
 
@@ -17,8 +18,33 @@ export default class Talwin {
         reference = getElement(reference);
         const talwin = this;
         talwin.config = merge({}, Talwin.defaults, options);
+        talwin._e = EventListener();
         talwin._clr = Color(talwin);
         talwin._ui = createComponents(reference, talwin);
+    }
+
+    isOpen() {
+        return this._ui.app.isOpen();
+    }
+
+    open() {
+        this._ui.app.open();
+    }
+
+    close() {
+        this._ui.app.close();
+    }
+
+    toggle() {
+        this._ui.app.toggle();
+    }
+
+    on(type, handler) {
+        this._e.on(type, handler);
+    }
+
+    off(type, handler) {
+        this._e.off(type, handler);
     }
 
     /**
