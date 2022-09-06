@@ -14,7 +14,7 @@ export const isString = value => typeof value === 'string';
  * @param {Any} value - Value.
  * @returns {Boolean}
  */
-export const isSet = value => value != null;
+export const isset = value => value != null;
 
 
 /**
