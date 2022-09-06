@@ -1,6 +1,6 @@
 import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BLUR, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
-import { createElement, getBounds } from "../utils/dom"
+import { createElement, getBounds, setVisibility } from "../utils/dom"
 import { Marker } from "./Marker";
 
 const PALETTE_CLASSNAME = 'talwin__palette';
@@ -17,31 +17,68 @@ export const Palette = (parent, talwin) => {
 
     const { _clr: colorState, _e: { emit }} = talwin;
 
+    /**
+     * Palette element.
+     */
     const el = createElement('', PALETTE_CLASSNAME, parent, { tabindex: '0' });
+
+    /**
+     * Overlay element, used to set focus only on palette,
+     * if marker is moving.
+     */
     const overlay = createElement('', OVERLAY_CLASSNAME, parent);
-    const { style } = overlay;
+    setVisibility(overlay, false);
+
+    /**
+     * Marker component.
+     */
     const marker = Marker(el);
 
+    /**
+     * Palette dimensions
+     */
     const { width: WIDTH, height: HEIGHT } = getBounds(el);
 
+    /**
+     * Amount of pixel to move marker horizontally using keyboard.
+     */
     const stepX = WIDTH / 100;
+
+    /**
+     * Amount of pixel to move marker vertically using keyboard.
+     */
     const stepY = HEIGHT / 100;
 
+    /**
+     * Move marker one step horizontally using keyboard.
+     */
     const moveX = {
         [ARROW_RIGHT]: stepX,
         [ARROW_LEFT]: -stepX
     }
 
+    /**
+     * Move marker one step vertically using keyboard.
+     */
     const moveY = {
         [ARROW_UP]: -stepY,
         [ARROW_DOWN]: stepY
     }
 
+    /**
+     * Palette event listeners.
+     */
     let listeners = [];
+
+    /**
+     * Palette element bounds.
+     */
     let bounds;
 
+    /**
+     * State of the palette.
+     */
     let isDragging = false;
-
 
     /**
      * Marker start moving.
@@ -53,11 +90,14 @@ export const Palette = (parent, talwin) => {
         if (e.touches && e.touches.length > 1) {
 			return;
 		}
+        // Save color state.
         colorState.start();
+        // Cache palette's bounds.
         bounds = getBounds(el);
         moveAndUpdateColor(e);
-        style.display = 'block';
         isDragging = true;
+        // Display overlay.
+        setVisibility(overlay, isDragging);
         el.focus();
     }
 
@@ -82,9 +122,11 @@ export const Palette = (parent, talwin) => {
      */
     const dragEnd = e => {
         if (isDragging) {
+            // Trigger change event if color changes.
             colorState.end(el);
-            style.display = '';
             isDragging = false;
+            // Hide overlay.
+            setVisibility(overlay, isDragging);
         }
     }
 
@@ -203,8 +245,8 @@ export const Palette = (parent, talwin) => {
 
     return {
         $: el,
+        marker,
         update,
         keyboard,
-        marker,
     }
 }
