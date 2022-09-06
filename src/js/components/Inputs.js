@@ -11,7 +11,7 @@ const LABEL_CLASSNAME = 'tw-label';
 
 export const Inputs = (parent, talwin) => {
     const self = {};
-    const { config, _clr: colorState } = talwin;
+    const { config, _clr: colorState, _e: { emit } } = talwin;
     let container;
     let switchButton;
     let formats = [];
@@ -113,7 +113,9 @@ export const Inputs = (parent, talwin) => {
                 colorString = format + '(' + inputList.reduce((string, currentInput) => (string && string + ',') + currentInput.value, '') + ')';
             }
 
-            colorState.updateByString(colorString, EXCLUDE_INPUTS);
+            if (colorState.updateByString(colorString, EXCLUDE_INPUTS)) {
+                emit('color', colorState.value, self.$);
+            }
         }
     }
 
@@ -139,7 +141,7 @@ export const Inputs = (parent, talwin) => {
      *
      * @param {Object} color - Color object.
      */
-    self.update = color => {
+    self.val = color => {
         objectIterator(self.$, (key, input) => {
             input.value = color[key];
         });
