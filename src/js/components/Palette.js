@@ -53,10 +53,9 @@ export const Palette = (parent, talwin) => {
         if (e.touches && e.touches.length > 1) {
 			return;
 		}
-
+        colorState.start();
         bounds = getBounds(el);
         moveAndUpdateColor(e);
-
         style.display = 'block';
         isDragging = true;
         el.focus();
@@ -82,8 +81,11 @@ export const Palette = (parent, talwin) => {
      * @param {Event} e - Mouseup or Touchend or touchcancel events.
      */
     const dragEnd = e => {
-        style.display = '';
-        isDragging = false;
+        if (isDragging) {
+            colorState.end(el);
+            style.display = '';
+            isDragging = false;
+        }
     }
 
 

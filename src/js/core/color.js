@@ -24,7 +24,10 @@ export const Color = (talwin) => {
 
     let rgbString = '';
 
-    let config = talwin.config;
+    let { config, _e: event } = talwin;
+
+    let colorStart;
+
 
     /**
      * Updates color and UI.
@@ -93,6 +96,7 @@ export const Color = (talwin) => {
         let rgb, hsv;
 
         if (isChanged) {
+
             if (format === HSL_FORMAT) {
                 hsv = HSLToHSV(parsedColor);
             } else {
@@ -102,7 +106,7 @@ export const Color = (talwin) => {
 
             update(hsv, updater, rgb);
         }
-        
+
         return isChanged;
     }
 
@@ -173,10 +177,30 @@ export const Color = (talwin) => {
         HEX: () => RGBToHEX(RGB)
     }
 
+    /**
+     * Set color start.
+     */
+    const start = () => {
+        colorStart = getColor();
+    }
+
+    /**
+     * Triggers change event if colorStart doesn't equal to the current color.
+     *
+     * @param {Element} source - Element that changed color state.
+     */
+    const end = (source) => {
+        if (! isEqual(colorStart, getColor())) {
+            event.emit('change', value, source);
+        }
+    }
+
     return {
+        value,
         update,
         updateByString,
         copy,
-        value
+        start,
+        end,
     }
 }

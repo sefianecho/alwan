@@ -1,4 +1,4 @@
-import { CLICK, COLOR_FORMATS, HEX_FORMAT, INPUT, max } from "../constants";
+import { CHANGE, CLICK, COLOR_FORMATS, FOCUS_IN, HEX_FORMAT, INPUT, max } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
 import { createElement, removeElement } from "../utils/dom";
@@ -119,7 +119,6 @@ export const Inputs = (parent, talwin) => {
         }
     }
 
-
     /**
      * Changes color format.
      *
@@ -137,6 +136,19 @@ export const Inputs = (parent, talwin) => {
     }
 
     /**
+     * Triggers change event when the color changes.
+     *
+     * @param {Event} e - Focusin or Change.
+     */
+    const triggerChangeEvent = e => {
+        if (e.type === FOCUS_IN) {
+            colorState.start();
+        } else {
+            colorState.end(self.$);
+        }
+    }
+
+    /**
      * Updates Input(s) value(s).
      *
      * @param {Object} color - Color object.
@@ -149,6 +161,7 @@ export const Inputs = (parent, talwin) => {
 
     bindEvent(listeners, parent, CLICK, changeFormat);
     bindEvent(listeners, parent, INPUT, handleChange);
+    bindEvent(listeners, parent, [FOCUS_IN, CHANGE], triggerChangeEvent);
 
     return self;
 }
