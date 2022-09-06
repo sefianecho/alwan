@@ -16,10 +16,17 @@ const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--al
  */
 export const Sliders = (parent, talwin) => {
 
-    let listeners = [];
-    const container = createElement('', 'tw-w100', parent);
+    let { _clr: colorState, _e: { emit }} = talwin;
 
-    const { _clr: colorState, _e: { emit }} = talwin;
+    /**
+     * Event listeners.
+     */
+    let listeners = [];
+
+    /**
+     * Sliders wrapper element.
+     */
+    const container = createElement('', 'tw-w100', parent);
 
     /**
      * Builds a slider.
@@ -32,6 +39,9 @@ export const Sliders = (parent, talwin) => {
     const build = (className, max, step) => 
          createElement('input', className, container, { type: 'range', max, step });
  
+    /**
+     * Component API.
+     */
     const self = {
         hue: build(HUE_SLIDER_CLASSNAME, 360),
         alpha: null,
@@ -52,6 +62,17 @@ export const Sliders = (parent, talwin) => {
                     self.alpha = opacity ? build(ALPHA_SLIDER_CLASSNAME, 1, 0.01) : removeElement(alpha, true);
                 }
             }
+        },
+
+        /**
+         * Sets sliders values.
+         *
+         * @param {Object} hsv - HSV color object.
+         */
+        val(hsv) {
+            let { alpha, hue } = self;
+            hue.value = 360 - hsv.h;
+            alpha && (alpha.value = hsv.a);
         }
     }
 
@@ -76,18 +97,8 @@ export const Sliders = (parent, talwin) => {
     }
 
     /**
-     * Sets sliders values.
-     *
-     * @param {Object} hsv - HSV color object.
+     * Events binding.
      */
-    self.val = hsv => {
-        let { alpha, hue } = self;
-        hue.value = 360 - hsv.h;
-        alpha && (alpha.value = hsv.a);
-    }
-
-
-
     bindEvent(listeners, container, [INPUT, CHANGE], handleChange);
 
     return self;
