@@ -1,6 +1,6 @@
 import { CLICK, KEY_DOWN, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
-import { createElement, replaceElement } from "../utils/dom";
+import { createElement, replaceElement, setVisibility } from "../utils/dom";
 
 
 const PRESET_BUTTON_CLASSNAME = 'tw-ref';
@@ -45,7 +45,8 @@ export const Reference = (originalRef, talwin) => {
                 bindEvent(listeners, ref, CLICK, togglePicker);
                 bindEvent(listeners, ref, KEY_DOWN, handleFocus);
             }
-            ref.style.display = toggle ? '' : 'none';
+
+            setVisibility(ref, toggle);
             self.$ = ref;
         }
     }
