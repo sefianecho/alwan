@@ -89,4 +89,8 @@ export default class Talwin {
 
         this._clr.updateByString(color);
     }
+
+    getColor() {
+        return this._clr.value;
+    }
 }
