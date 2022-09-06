@@ -15,6 +15,8 @@ const OVERLAY_CLASSNAME = 'tw-overlay';
  */
 export const Palette = (parent, talwin) => {
 
+    const { _clr: colorState, _e: { emit }} = talwin;
+
     const el = createElement('', PALETTE_CLASSNAME, parent, { tabindex: '0' });
     const overlay = createElement('', OVERLAY_CLASSNAME, parent);
     const { style } = overlay;
@@ -93,7 +95,8 @@ export const Palette = (parent, talwin) => {
      */
     const updateColor = (x, y) => {
         marker.moveTo(x, y);
-        talwin._clr.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, EXCLUDE_PALETTE_HUE);
+        colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT }, EXCLUDE_PALETTE_HUE);
+        emit('color', colorState.value, el);
     }
 
 
@@ -122,7 +125,7 @@ export const Palette = (parent, talwin) => {
 		x = x < 0 ? 0 : x > WIDTH ? WIDTH : x;
 		y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
 
-        updateColor();
+        updateColor(x, y);
     }
 
     /**
