@@ -177,3 +177,14 @@ export const setVisibility = (el, cond) => {
 
     el.style.display = cond ? '' : 'none';
 }
+
+/**
+ * Adds/Remove class based on a condition.
+ *
+ * @param {Element} el - Any Element.
+ * @param {String} classname - CSS Class Selector.
+ * @param {Boolean} cond - Condition.
+ */
+export const updateClass = (el, classname, cond) => {
+    classname && el.classList[cond ? 'add' : 'remove'](classname);
+}
