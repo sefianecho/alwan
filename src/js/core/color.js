@@ -20,7 +20,7 @@ export const Color = (talwin) => {
         a: 1
     }
 
-    let RGB;
+    let RGB = HSVToRGB(HSV);
 
     let rgbString = '';
 
@@ -37,29 +37,30 @@ export const Color = (talwin) => {
      * @param {Object} rgb - RGB color object.
      */
     const update = (newHSV, updater, rgb) => {
-
-        merge(HSV, newHSV);
-        RGB = rgb || HSVToRGB(HSV);
-        rgbString = toString(RGB, RGB_FORMAT);
-
-        let components = talwin._ui;
-        let { palette, sliders, inputs } = components;
-
-        // Preview color.
-        setCustomProperty(components.preview.$, 'tw-color', rgbString);
-        setCustomProperty(components.ref.$, 'tw-color', rgbString);
-        // Change the gradient color stop of the alpha slider.
-        (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
-        // Set palette's hue.
-        isset(newHSV.h) && setCustomProperty(palette.$, 'hue', HSV.h);
-
-        if (updater !== inputs) {
-            inputs.val(getColor('', config.singleInput));
-        }
-
-        if (updater) {
-            sliders.val(HSV);
-            palette.update(HSV);
+        if (! config.disabled) {
+            merge(HSV, newHSV);
+            RGB = rgb || HSVToRGB(HSV);
+            rgbString = toString(RGB, RGB_FORMAT);
+    
+            let components = talwin._ui;
+            let { palette, sliders, inputs } = components;
+    
+            // Preview color.
+            setCustomProperty(components.preview.$, 'tw-color', rgbString);
+            setCustomProperty(components.ref.$, 'tw-color', rgbString);
+            // Change the gradient color stop of the alpha slider.
+            (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
+            // Set palette's hue.
+            isset(newHSV.h) && setCustomProperty(palette.$, 'hue', HSV.h);
+    
+            if (updater !== inputs) {
+                inputs.val(getColor('', config.singleInput));
+            }
+    
+            if (updater) {
+                sliders.val(HSV);
+                palette.update(HSV);
+            }
         }
     }
 
@@ -125,8 +126,9 @@ export const Color = (talwin) => {
                 // Incase browser doesn't support navigator.clipboard,
                 // Create a new input element and append it to the body,
                 // set its value as the color.
-                createElement('input', '', BODY, { value: color }, input => {
+                createElement('input', '', BODY, null, input => {
 
+                    input.value = color;
                     input.select();
                     ROOT.execCommand('copy');
 

@@ -18,7 +18,7 @@ export default class Talwin {
         reference = getElement(reference);
         const talwin = this;
         talwin.config = merge({}, Talwin.defaults, options);
-        talwin._e = EventListener();
+        talwin._e = EventListener(talwin);
         talwin._clr = Color(talwin);
         talwin._ui = createComponents(reference, talwin);
     }
@@ -100,5 +100,13 @@ export default class Talwin {
 
     removeSwatch(swatch) {
         this._ui.swatches.remove(swatch);
+    }
+
+    enable() {
+        this._ui.app.disable(false);
+    }
+
+    disable() {
+        this._ui.app.disable(true);
     }
 }

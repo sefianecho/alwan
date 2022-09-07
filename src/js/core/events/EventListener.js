@@ -5,7 +5,7 @@ import { objectIterator } from "../../utils/object";
  *
  * @returns {Object}
  */
-export const EventListener = () => {
+export const EventListener = ({ config }) => {
     /**
      * Picker event listeners.
      */
@@ -24,7 +24,9 @@ export const EventListener = () => {
          * @param  {...any} args - Event arguments.
          */
         emit: (type, ...args) => {
-            listeners[type] && listeners[type].forEach(handler => handler(...args));
+            if (! config.disabled && listeners[type]) {
+                listeners[type].forEach(handler => handler(...args));
+            }
         },
 
         /**

@@ -1,7 +1,8 @@
 import { BODY, ENTER, KEY_DOWN, RESIZE, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
-import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport } from "../utils/dom";
+import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, removeElement, updateClass } from "../utils/dom";
+import { isset } from "../utils/util";
 
 
 const TALWIN_CLASSNAME = 'talwin';
@@ -16,13 +17,14 @@ const LIGHT_THEME = 'light';
  * @returns {Object}
  */
 export const App = (talwin) => {
+    
+    let root = createElement('', TALWIN_CLASSNAME, BODY);
 
     let listeners = [];
     let _isOpen = false;
     let scrollableAncestors = [];
     let popper;
 
-    const root = createElement('', TALWIN_CLASSNAME, BODY);
     const { config, _e: { emit } } = talwin;
 
     /**
@@ -31,11 +33,10 @@ export const App = (talwin) => {
      * @param {Object} options - Talwin options.
      */
     const init = (options) => {
-        let { theme, popover, target, position, margin } = options;
+        let { theme, popover, target, position, margin, disabled } = options;
         let refElement = talwin._ui.ref.$;
         let targetElement = getElement(target);
         let targetReference = targetElement || refElement;
-        let method = 'add';
 
         popper = null;
         popperEvents(unbindEvent);
@@ -64,13 +65,14 @@ export const App = (talwin) => {
             // On window resize reposition the popper.
             popperEvents(bindEvent);
         } else {
-            method = 'remove';
             targetReference.insertAdjacentElement( (targetElement ? 'before' : 'after') + 'end', root);
         }
 
         // If it's popover then the method will be 'add', if it's not,
         // then the method will be 'remove'.
-        root.classList[method](CLASS_NAME_POP);
+        updateClass(root, CLASS_NAME_POP, popover);
+
+        disable(disabled);
     }
 
 
@@ -85,7 +87,7 @@ export const App = (talwin) => {
 
             // Close picker if the reference element is not visible in the viewport,
             // of nested scrollable elements.
-            if (! isInViewport(talwin._ui.ref.el, scrollableAncestors)) {
+            if (! isInViewport(talwin._ui.ref.$, scrollableAncestors)) {
                 close(true);
             }
         }
@@ -109,10 +111,10 @@ export const App = (talwin) => {
      * Open color picker.
      */
     const open = (silent) => {
-        if (! _isOpen) {
+        if (! _isOpen && ! config.disabled) {
             popper && popper.update();
             ! silent && emit('open');
-            root.classList.add('open');
+            updateClass(root, 'open', true);
             _isOpen = true;
         }
     }
@@ -123,7 +125,7 @@ export const App = (talwin) => {
     const close = (silent) => {
         if (_isOpen && config.toggle) {
             ! silent && emit('close');
-            root.classList.remove('open');
+            updateClass(root, 'open', false);
             _isOpen = false;
         }
     }
@@ -169,15 +171,39 @@ export const App = (talwin) => {
         }
     }
 
+    /**
+     * Disable/Enable Picker.
+     *
+     * @param {Boolean} state - Picker state disabled (true) or enabled (false).
+     */
+    const disable = state => {
+
+        state = !!state;
+        let ref = talwin._ui.ref.$;
+
+        config.disabled = state
+
+        if (state) {
+            close(true);
+        }
+
+        if (isset(ref.disabled)) {
+            ref.disabled = state;
+        } else {
+            updateClass(ref, 'tw-disabled', state);
+        }
+    }
+
 
     bindEvent(listeners, root, KEY_DOWN, handleKeyboard);
 
     return {
-        root,
+        $: root,
         init,
         isOpen,
         open,
         close,
-        toggle
+        toggle,
+        disable
     }
 }
