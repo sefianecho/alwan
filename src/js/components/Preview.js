@@ -1,7 +1,7 @@
-import { BLUR, CLICK, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_LEAVE } from "../constants";
+import { CLICK, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, MOUSE_LEAVE } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
-import { createElement, removeElement, setVisibility } from "../utils/dom";
+import { createElement, removeElement, setVisibility, updateClass } from "../utils/dom";
 
 const PREVIEW_CLASSNAME = 'talwin__preview';
 
@@ -89,9 +89,9 @@ export const Preview = (parent, talwin) => {
      * @param {Event} e - Click or Focusin or Focusout or Mouseleave.
      */
     const copyColorAndUpdateView = e => {
-        if (self.cp) {
+        if (self.cp && ! talwin.config.disabled) {
             let type = e.type;
-            let method;
+            let isFocusIn = type === FOCUS_IN;
 
             // On click copy color and update svg to display a Check icon.
             if (! isCopied && type === CLICK) {
@@ -99,12 +99,7 @@ export const Preview = (parent, talwin) => {
                 updateSVG();
             }else {
                 // On focus add a focus class.
-                if (type === FOCUS_IN) {
-                    method = 'add';
-                } else {
-                    // On focusout remove the focus class.
-                    method = 'remove';
-
+                if (! isFocusIn) {
                     // If the copy button lose focus or mouse leaves it,
                     // then reset the svg to a Clipboard icon.
                     if (isCopied) {
@@ -112,7 +107,8 @@ export const Preview = (parent, talwin) => {
                         updateSVG();
                     }
                 }
-                self.cp.classList[method](FOCUS_CLASSNAME);
+
+                updateClass(self.cp, FOCUS_CLASSNAME, isFocusIn);
             }
         }
     }
@@ -120,7 +116,7 @@ export const Preview = (parent, talwin) => {
     /**
      * Events binding.
      */
-    bindEvent(listeners, container, [CLICK, MOUSE_LEAVE, FOCUS_IN, BLUR], copyColorAndUpdateView);
+    bindEvent(listeners, container, [CLICK, MOUSE_LEAVE, FOCUS_IN, FOCUS_OUT], copyColorAndUpdateView);
 
     return self;
 }

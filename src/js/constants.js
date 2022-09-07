@@ -18,7 +18,7 @@ export const INPUT = 'input';
 export const CHANGE = 'change';
 export const MOUSE_LEAVE = 'mouseleave';
 export const FOCUS_IN = 'focusin';
-export const BLUR = 'blur';
+export const FOCUS_OUT = 'focusout';
 
 export const HEX_FORMAT = 'hex';
 export const RGB_FORMAT = 'rgb';

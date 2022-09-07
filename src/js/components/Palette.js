@@ -1,6 +1,6 @@
-import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, BLUR, FOCUS_CLASSNAME, FOCUS_IN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
-import { createElement, getBounds, setVisibility } from "../utils/dom"
+import { createElement, getBounds, setVisibility, updateClass } from "../utils/dom"
 import { Marker } from "./Marker";
 
 const PALETTE_CLASSNAME = 'talwin__palette';
@@ -218,21 +218,18 @@ export const Palette = (parent, talwin) => {
      * @param {Event} e - Blur or Focusin.
      */
     const handleFocus = e => {
-        let method;
-
+        // Update class condition removes class if its false,
+        // add class if true.
+        let cond = false;
         // If palette lose focus, remove the focus class,
         // and remove browser keyboard focus.
-        if (e.type === BLUR) {
-            method = 'remove';
+        if (e.type === FOCUS_OUT) {
             el.blur();
         } else {
-            // If focus is coming from keyboard then add focus class.
-            if (! isDragging) {
-                method = 'add';
-            }
+            cond = ! isDragging;
         }
 
-        method && el.classList[method](FOCUS_CLASSNAME);
+        updateClass(el, FOCUS_CLASSNAME, cond);
     }
 
     /**
@@ -241,7 +238,7 @@ export const Palette = (parent, talwin) => {
     bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
     bindEvent(listeners, ROOT, [MOUSE_MOVE, TOUCH_MOVE], dragMove, { passive: false });
     bindEvent(listeners, ROOT, [MOUSE_UP, TOUCH_END, TOUCH_CANCEL], dragEnd);
-    bindEvent(listeners, el, [BLUR, FOCUS_IN], handleFocus);
+    bindEvent(listeners, el, [FOCUS_OUT, FOCUS_IN], handleFocus);
 
     return {
         $: el,
