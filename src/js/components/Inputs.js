@@ -199,7 +199,7 @@ export const Inputs = (parent, talwin) => {
      * @param {Object} color - Color object.
      */
     self.val = color => {
-        objectIterator(self.$, (key, input) => {
+        objectIterator(self.$, (input, key) => {
             input.value = color[key];
         });
     }

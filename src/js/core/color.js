@@ -116,7 +116,7 @@ export const Color = (talwin) => {
      *
      * @returns {Boolean}
      */
-    const copy = () => objectIterator(getColor('', true), (format, color) => {
+    const copy = () => objectIterator(getColor('', true), color => {
 
             let clipboard = navigator.clipboard;
 

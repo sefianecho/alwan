@@ -9,7 +9,7 @@ export const objectIterator = (object, fn) => {
 
     for (const key in object) {
         if (Object.hasOwnProperty.call(object, key)) {
-            if (fn(key, object[key], object)) {
+            if (fn(object[key], key, object)) {
                 return false;
             }
         }

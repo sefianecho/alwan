@@ -53,7 +53,7 @@ export const EventListener = ({ config }) => {
                 // Remove all handlers of this event if handler is omitted.
                 listeners[type] = handler ? handlersArray.filter(attachedHandler => attachedHandler !== handler) : [];
             } else if (type == null) {
-                objectIterator(listeners, (type) => {
+                objectIterator(listeners, (handlers, type) => {
                     listeners[type] = [];
                 });
             }

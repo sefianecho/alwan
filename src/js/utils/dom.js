@@ -35,7 +35,7 @@ export const createElement = (tagName, className, parent, data, callback) => {
         element.className = className;
     }
 
-    objectIterator(data, (key, value) => {
+    objectIterator(data, (value, key) => {
         if (key === 'html') {
             element.innerHTML = value;
         } else if (key === 'text') {
