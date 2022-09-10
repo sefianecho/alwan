@@ -1,4 +1,4 @@
-import { CLICK, KEY_DOWN, TAB } from "../constants";
+import { CLICK, KEY_DOWN, ROOT, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { createElement, replaceElement, setVisibility } from "../utils/dom";
 
@@ -43,25 +43,10 @@ export const Reference = (originalRef, talwin) => {
 
             if (toggle) {
                 bindEvent(listeners, ref, CLICK, togglePicker);
-                bindEvent(listeners, ref, KEY_DOWN, handleFocus);
             }
 
             setVisibility(ref, toggle);
             self.$ = ref;
-        }
-    }
-
-    /**
-     * Handles focus, pressing tab send focus to the picker if it's open.
-     *
-     * @param {Event} e - Keydown.
-     */
-    const handleFocus = e => {
-        let components = talwin._ui;
-
-        if (components.app.isOpen() && e.key === TAB && ! e.shiftKey) {
-            e.preventDefault();
-            components.palette.$.focus();
         }
     }
 
