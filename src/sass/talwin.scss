@@ -8,20 +8,22 @@
 .talwin {
     width: 100%;
     max-width: var.$talwin-max-width;
-    overflow-y: auto;
     background: var(--talwin-bg, var.$talwin-background-light);
-    border: 1px solid var(--tw-bc, var.$border-color-light);
-
+    border: 1px solid var(--talwin-bc, var.$talwin-border-color-light);
+    
     &:not(.open) {
         visibility: hidden;
     }
-
+    
     &:not(.tw-popper, .open) {
+        overflow: hidden;
         height: 0;
+        border: 0;
     }
 
     &[data-theme="dark"] {
         --talwin-bg: #{var.$talwin-background-dark};
+        --talwin-bc: #{var.$talwin-border-color-dark};
         --tw-swatches-bg: #{var.$swatches-background-dark};
         --tw-bc: #{var.$border-color-dark};
         --tw-thumb: #{var.$thumb-background-dark};
@@ -36,7 +38,7 @@
         display: flex;
         align-items: center;
         padding: var.$container-padding;
-        border-bottom: 1px solid var(--sc-bc, var.$border-color-light);
+        border-top: 1px solid var(--tw-bc, var.$border-color-light);
     }
 
     &__palette {
@@ -46,8 +48,8 @@
         background: linear-gradient(to bottom, transparent, #000),
                     linear-gradient(to right, #fff, hsl(var(--hue, 0), 100%, 50%));
 
-        &.sc-focus:focus {
-            & .sc-picker__marker {
+        &.tw-focus:focus {
+            & .talwin__marker {
                 border-color: var.$primary-color;
             }
         }
@@ -70,7 +72,6 @@
         height: var.$preview-height;
         background: var(--tw-transparency-pattern);
         flex-shrink: 0;
-        // margin-right: var.$preview-margin-right;
 
         .tw-btn {
             position: relative;
@@ -202,7 +203,7 @@
         text-align: center;
         color: var(--talwin-fg, var.$input-color);
         font-family: var.$input-font-family;
-        border:  1px solid var(--sc-tw, var.$border-color-light);
+        border:  1px solid var(--tw-bc, var.$border-color-light);
         margin-bottom: var.$input-margin-bottom;
         background-color: var(--tw-input-bg);
 
@@ -255,7 +256,6 @@
     }
 
     .tw-overlay {
-        display: none;
         position: fixed;
         top: 0;
         left: 0;
@@ -264,15 +264,12 @@
         background-color: transparent;
         z-index: 9999999999;
         cursor: move;
-        &.sc-focus {
-            display: block;
-        }
     }
 
     .tw-btn {
         display: inline-block;
         background: transparent;
-        color: var(--sc-picker-fg);
+        color: var(--talwin-fg);
         border: 0;
         cursor: pointer;
         padding: var.$button-padding;
@@ -288,8 +285,8 @@
         }
     }
 
-    .tw-mr1 {
-        margin-right: 1rem;
+    .tw-mr {
+        margin-right: var.$preview-margin-right;
     }
     
     .tw-w100 {
@@ -326,4 +323,8 @@
         outline: 1px dashed var(--tw-color);
         outline-offset: 2px;
     }
+}
+
+.tw-disabled {
+    cursor: not-allowed;
 }

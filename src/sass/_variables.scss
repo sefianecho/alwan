@@ -6,6 +6,8 @@ $box-shadow: 0 0 3px rgba(0,0,0,0.7);
 // Talwin container.
 $talwin-max-width: 280px;
 $talwin-background-light: #fff;
+$talwin-border-color-light: #ccc;
+$talwin-border-color-dark: #aaa;
 $border-color-light: #ccc;
 
 $talwin-background-dark: #222;
@@ -89,4 +91,4 @@ $button-hover-background-dark: #444;
 // Reference button.
 $ref-button-height: 1.5rem;
 $ref-button-width: 1.5rem;
-$ref-button-border-radius: 0.25rem;
+$ref-button-border-radius: 4px;//0.25rem;
