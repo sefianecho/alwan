@@ -1,4 +1,4 @@
-import { CHANGE, CLICK, COLOR_FORMATS, FOCUS_IN, HEX_FORMAT, INPUT, max } from "../constants";
+import { CHANGE, CLICK, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN, max } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
 import { createElement, removeElement, setVisibility } from "../utils/dom";
@@ -194,6 +194,17 @@ export const Inputs = (parent, talwin) => {
     }
 
     /**
+     * Closes picker.
+     *
+     * @param {Event} e - Keydown.
+     */
+    const closePicker = e => {
+        if (e.key === ENTER) {
+            talwin.close();
+        }
+    }
+
+    /**
      * Updates Input(s) value(s).
      *
      * @param {Object} color - Color object.
@@ -210,6 +221,7 @@ export const Inputs = (parent, talwin) => {
     bindEvent(listeners, parent, CLICK, changeFormat);
     bindEvent(listeners, parent, INPUT, handleChange);
     bindEvent(listeners, parent, [FOCUS_IN, CHANGE], triggerChangeEvent);
+    bindEvent(listeners, parent, KEY_DOWN, closePicker);
 
     return self;
 }
