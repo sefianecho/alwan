@@ -169,7 +169,8 @@ export const getLastFocusableElement = context => {
  * @param {Array|Boolean} cond - Condition.
  */
 export const setVisibility = (el, cond) => {
-    let length = cond.length;
+
+    let length = cond && cond.length;
 
     if (length != null) {
         cond = length;
