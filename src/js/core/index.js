@@ -6,6 +6,7 @@ import { Reference } from "../components/Reference";
 import { Sliders } from "../components/Sliders";
 import { Swatches } from "../components/Swatches";
 import { createElement } from "../utils/dom";
+import { merge, objectIterator } from "../utils/object";
 
 
 const CONTAINER_CLASSNAME = 'talwin__container';
@@ -30,18 +31,19 @@ export const createComponents = (reference, talwin) => {
 
     let ref = Reference(reference, talwin);
     let app = App(talwin);
-    let root = app.root;
+
+    let root = app.$;
 
     let palette = Palette(root, talwin);
 
     let container = createContainer(root);
+    
     let preview = Preview(container, talwin);
     let sliders = Sliders(container, talwin);
-
     let inputs = Inputs(createContainer(root), talwin);
     let swatches = Swatches(root, talwin);
 
-    let components = {
+    return {
         ref,
         app,
         palette,
@@ -50,7 +52,30 @@ export const createComponents = (reference, talwin) => {
         inputs,
         swatches
     }
+}
 
+/**
+ * Initialize components.
+ *
+ * @param {Object} talwin - Instance.
+ * @param {Object} options - Talwin options.
+ */
+export const initialize = (talwin, options) => {
 
-    return components;
+    let config = talwin.config;
+
+    merge(config, options);
+
+    objectIterator(talwin._ui, component => {
+        let init = component.init;
+
+        if (init) {
+            init(config);
+        }
+    });
+
+    /**
+     * Initialize color.
+     */
+    talwin.setColor(config.color);
 }

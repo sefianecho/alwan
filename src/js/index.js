@@ -2,7 +2,7 @@
 import { getElement } from "./utils/dom";
 import { merge } from "./utils/object";
 import { defaults } from "./defaults";
-import { createComponents } from "./core";
+import { createComponents, initialize } from "./core";
 import '../sass/talwin.scss';
 import { Color } from "./core/color";
 import { boundNumber, isString } from "./utils/util";
@@ -21,6 +21,11 @@ export default class Talwin {
         talwin._e = EventListener(talwin);
         talwin._clr = Color(talwin);
         talwin._ui = createComponents(reference, talwin);
+        initialize(talwin);
+    }
+
+    setOptions(options) {
+        initialize(this, options);
     }
 
     isOpen() {
