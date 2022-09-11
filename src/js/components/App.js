@@ -18,17 +18,41 @@ const LIGHT_THEME = 'light';
  * @returns {Object}
  */
 export const App = (talwin) => {
-    
+
+    let { config, _e: { emit } } = talwin;
+
+    /**
+     * Top container.
+     *
+     * @type {HTMLElement}
+     */
     let root = createElement('', TALWIN_CLASSNAME, BODY);
 
+    /**
+     * App API.
+     */
     let self = {
         e: []
     }
 
+    /**
+     * Picker visibility state.
+     */
     let _isOpen = false;
+
+    /**
+     * Reference element scrollable ancestors.
+     *
+     * @type {Array<Element>}
+     */
     let scrollableAncestors = [];
+
+    /**
+     * Popper object.
+     *
+     * @type {Object}
+     */
     let popper;
-    const { config, _e: { emit } } = talwin;
 
     /**
      * Initializes app component.
@@ -44,8 +68,7 @@ export const App = (talwin) => {
         if (id) {
             root.id = id;
         }
-
-
+        // Remove all popper events.
         popperEvents(unbindEvent);
 
         /**
@@ -171,7 +194,9 @@ export const App = (talwin) => {
 
 
     /**
-     * Open color picker.
+     * Opens the color picker.
+     *
+     * @param {Boolean} silent - Whether to trigger the open event or not.
      */
     const open = (silent) => {
         if (! _isOpen && ! config.disabled) {
@@ -183,7 +208,9 @@ export const App = (talwin) => {
     }
 
     /**
-     * Close color picker.
+     * Closes the color picker.
+     *
+     * @param {Boolean} silent - Whether to trigger the close event or not.
      */
     const close = (silent) => {
         if (_isOpen && config.toggle) {
@@ -194,10 +221,10 @@ export const App = (talwin) => {
     }
 
     /**
-     * Open/Close color picker.
+     * Toggles (opens/closes) the color picker.
      */
-    const toggle = (triggerEvent) => {
-        _isOpen ? close(triggerEvent) : open(triggerEvent);
+    const toggle = () => {
+        _isOpen ? close() : open();
     }
 
     /**
