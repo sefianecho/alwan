@@ -1,3 +1,4 @@
+import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants";
 import { objectIterator } from "../../utils/object";
 
 /**
@@ -10,10 +11,10 @@ export const EventListener = ({ config }) => {
      * Picker event listeners.
      */
     const listeners = {
-        'open': [],
-        'close': [],
-        'change': [],
-        'color': []
+        [OPEN]: [],
+        [CLOSE]: [],
+        [CHANGE]: [],
+        [COLOR]: []
     }
 
     return {

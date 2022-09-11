@@ -1,3 +1,4 @@
+import { ADD_METHOD, REMOVE_METHOD } from "../../constants";
 import { isString } from "../../utils/util";
 
 /**
@@ -9,7 +10,7 @@ import { isString } from "../../utils/util";
  */
 export const binder = (eventData, unbind) => {
 
-    let method = (unbind ? 'remove': 'add') + 'EventListener';
+    let method = (unbind ? REMOVE_METHOD: ADD_METHOD) + 'EventListener';
     let [targetElement, events, handler, options] = eventData;
 
     // If its a single event then put it inside an array.

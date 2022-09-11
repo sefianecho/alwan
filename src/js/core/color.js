@@ -1,4 +1,4 @@
-import { BODY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT, ROOT } from "../constants";
+import { BODY, CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, INPUT, RGB_FORMAT, ROOT } from "../constants";
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../lib/colors";
 import { parseColor } from "../lib/parser";
 import { createElement, removeElement, setCustomProperty } from "../utils/dom";
@@ -46,8 +46,8 @@ export const Color = (talwin) => {
             let { palette, sliders, inputs } = components;
     
             // Preview color.
-            setCustomProperty(components.preview.$, 'tw-color', rgbString);
-            setCustomProperty(components.ref.$, 'tw-color', rgbString);
+            setCustomProperty(components.preview.$, COLOR_PROPERTY, rgbString);
+            setCustomProperty(components.ref.$, COLOR_PROPERTY, rgbString);
             // Change the gradient color stop of the alpha slider.
             (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
             // Set palette's hue.
@@ -87,7 +87,7 @@ export const Color = (talwin) => {
      * Updates color by a string instead of HSV object.
      *
      * @param {String} colorString - Color string.
-     * @param {Boolean} fromInput - String comming from the picker input fields.
+     * @param {Boolean|Object} updater - Exclude some components from updating.
      */
     const updateByString = (colorString, updater) => {
 
@@ -126,7 +126,7 @@ export const Color = (talwin) => {
                 // Incase browser doesn't support navigator.clipboard,
                 // Create a new input element and append it to the body,
                 // set its value as the color.
-                createElement('input', '', BODY, null, input => {
+                createElement(INPUT, '', BODY, null, input => {
 
                     input.value = color;
                     input.select();
@@ -193,7 +193,7 @@ export const Color = (talwin) => {
      */
     const end = (source) => {
         if (! isEqual(colorStart, getColor())) {
-            event.emit('change', value, source);
+            event.emit(CHANGE, value, source);
         }
     }
 

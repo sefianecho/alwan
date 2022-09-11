@@ -1,7 +1,7 @@
-import { CLICK, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, MOUSE_LEAVE } from "../constants";
+import { BUTTON, BUTTON_CLASSNAME, CLICK, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, MOUSE_LEAVE, SVG } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
-import { createElement, removeElement, setVisibility, updateClass } from "../utils/dom";
+import { createElement, removeElement, setElementsHTML, setVisibility, updateClass } from "../utils/dom";
 
 const PREVIEW_CLASSNAME = 'talwin__preview';
 
@@ -57,7 +57,7 @@ export const Preview = (parent, talwin) => {
             if (! copy) {
                 copyButton = removeElement(copyButton, true);
             } else if (! copyButton) {
-                copyButton = createElement('button', 'tw-btn', previewArea || container, { type: 'button' }, thisButton => {
+                copyButton = createElement(BUTTON, BUTTON_CLASSNAME, previewArea || container, { type: BUTTON }, thisButton => {
                     updateSVG(thisButton);
                 });
             }
@@ -78,8 +78,9 @@ export const Preview = (parent, talwin) => {
      */
     const updateSVG = (button) => {
         button = button || self.cp;
-        button.innerHTML = '';
-        createElement('svg', '', button, isCopied ? checkSVGAttrs : clipboardSVGAttrs);
+        // Remove button content.
+        setElementsHTML(button);
+        createElement(SVG, '', button, isCopied ? checkSVGAttrs : clipboardSVGAttrs);
     }
 
     /**

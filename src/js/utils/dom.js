@@ -1,4 +1,4 @@
-import { BODY, ROOT, SCROLL } from "../constants";
+import { ADD_METHOD, BODY, BUTTON, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
 import { objectIterator } from "./object";
 import { isString } from "./util";
 
@@ -28,7 +28,7 @@ export const getElement = (ref, context, all) =>
 export const createElement = (tagName, className, parent, data, callback) => {
 
     data = data || {}
-    const ns = `http://www.w3.org/${tagName === 'svg' ? '2000/svg' : '1999/xhtml'}`;
+    const ns = `http://www.w3.org/${tagName === SVG ? '2000/svg' : '1999/xhtml'}`;
     const element = document.createElementNS(ns, tagName || 'div');
 
     if (className) {
@@ -37,7 +37,7 @@ export const createElement = (tagName, className, parent, data, callback) => {
 
     objectIterator(data, (value, key) => {
         if (key === 'html') {
-            element.innerHTML = value;
+            setElementsHTML(element, value);
         } else if (key === 'text') {
             element.innerText = value;
         } else {
@@ -156,7 +156,7 @@ export const setCustomProperty = (el, property, value) => {
  * @returns {Element}
  */
 export const getLastFocusableElement = context => {
-    let focusableElements = getElement('button,input', context, true);
+    let focusableElements = getElement(BUTTON + ',' + INPUT, context, true);
     return focusableElements[focusableElements.length - 1];
 }
 
@@ -186,5 +186,15 @@ export const setVisibility = (el, cond) => {
  * @param {Boolean} cond - Condition.
  */
 export const updateClass = (el, classname, cond) => {
-    classname && el.classList[cond ? 'add' : 'remove'](classname);
+    classname && el.classList[cond ? ADD_METHOD : REMOVE_METHOD](classname);
+}
+
+/**
+ * Sets element's inner html.
+ *
+ * @param {Element} el - Any Element.
+ * @param {String} html - HTML string.
+ */
+export const setElementsHTML = (el, html) => {
+    el.innerHTML = html || '';
 }

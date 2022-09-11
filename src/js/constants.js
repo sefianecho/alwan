@@ -2,7 +2,12 @@ export const ROOT = document;
 export const BODY = ROOT.body;
 export const HTML = ROOT.documentElement;
 
+export const BUTTON = 'button';
+export const SVG = 'svg';
 
+export const OPEN = 'open';
+export const CLOSE = 'close';
+export const COLOR = 'color';
 export const CLICK = 'click';
 export const MOUSE_DOWN = 'mousedown';
 export const MOUSE_MOVE = 'mousemove';
@@ -34,6 +39,12 @@ export const ENTER = 'Enter';
 export const ESCAPE = 'Escape';
 
 export const FOCUS_CLASSNAME = 'tw-focus';
+export const BUTTON_CLASSNAME = 'tw-btn';
+
+export const COLOR_PROPERTY = 'tw-' + COLOR;
+
+export const REMOVE_METHOD = 'remove';
+export const ADD_METHOD = 'add';
 
 // Picker supported color formats.
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];

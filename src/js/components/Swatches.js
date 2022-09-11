@@ -1,7 +1,7 @@
-import { CLICK, int } from "../constants";
+import { BUTTON, CHANGE, CLICK, COLOR, COLOR_PROPERTY, int } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { parseColor } from "../lib/parser";
-import { createElement, getParent, removeElement, setVisibility } from "../utils/dom";
+import { createElement, getParent, removeElement, setElementsHTML, setVisibility } from "../utils/dom";
 
 const SWATCHES_CLASSNAME = 'talwin__swatches';
 const SWATCHE_CLASSNAME = 'talwin__swatch';
@@ -34,9 +34,9 @@ export const Swatches = (parent, talwin) => {
      * @param {Number} index - Swatch Index.
      * @returns {Element}
      */
-    const createSwatchButton = (color, index) => createElement('button', SWATCHE_CLASSNAME, container, {
-            type: 'button',
-            style: '--tw-color:' + parseColor(color, true),
+    const createSwatchButton = (color, index) => createElement(BUTTON, SWATCHE_CLASSNAME, container, {
+            type: BUTTON,
+            style: COLOR_PROPERTY + parseColor(color, true),
             'data-index': index + ''
         });
 
@@ -59,7 +59,8 @@ export const Swatches = (parent, talwin) => {
             swatches = options.swatches;
     
             setVisibility(container, swatches);
-            container.innerHTML = '';
+            // Empty the container from all swatch buttons.
+            setElementsHTML(container);
     
             swatches.forEach((color, index) => {
                 buttons[index] = createSwatchButton(color, index);
@@ -109,8 +110,8 @@ export const Swatches = (parent, talwin) => {
         let target = e.target;
 
         if (getParent(target) === container && updateByString(swatches[target.dataset.index], true)) {
-            emit('color', value, target);
-            emit('change', value, target);
+            emit(COLOR, value, target);
+            emit(CHANGE, value, target);
         }
     }
 

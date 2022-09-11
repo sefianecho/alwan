@@ -1,4 +1,4 @@
-import { CLICK } from "../constants";
+import { BUTTON, CLICK } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { createElement, replaceElement, setVisibility } from "../utils/dom";
 
@@ -36,7 +36,7 @@ export const Reference = (originalRef, talwin) => {
             if (preset !== (ref !== originalRef)) {
                 ref = preset ?
                         // Replace the user provided reference element with a preset button.
-                        replaceElement( createElement('button', PRESET_BUTTON_CLASSNAME + (classname ? ' ' + classname : ''), null, { type: 'button', id: originalRef.id }), originalRef)
+                        replaceElement( createElement(BUTTON, PRESET_BUTTON_CLASSNAME + (classname ? ' ' + classname : ''), null, { type: BUTTON, id: originalRef.id }), originalRef)
                         // Set back user reference element.
                         : replaceElement(originalRef, ref);
             }

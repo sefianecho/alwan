@@ -1,8 +1,11 @@
-import { CHANGE, INPUT } from "../constants";
+import { CHANGE, COLOR, INPUT } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, removeElement } from "../utils/dom";
 import { isset } from "../utils/util";
 
+/**
+ * Sliders component constants.
+ */
 const SLIDER_CLASSNAME = 'talwin__slider';
 const HUE_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--hue';
 const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--alpha'; 
@@ -32,7 +35,7 @@ export const Sliders = (parent, talwin) => {
      * @returns {HTMLElement}
      */
     const build = (className, max, step) => 
-         createElement('input', className, container, { type: 'range', max, step });
+         createElement(INPUT, className, container, { type: 'range', max, step });
  
     /**
      * Component API.
@@ -93,7 +96,8 @@ export const Sliders = (parent, talwin) => {
         }
 
         colorState.update(hsv);
-        emit(e.type === CHANGE ? 'change' : 'color', colorState.value, slider);
+        // Either fire change or color event.
+        emit(e.type === CHANGE ? CHANGE : COLOR, colorState.value, slider);
     }
 
     /**

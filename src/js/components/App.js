@@ -1,15 +1,19 @@
-import { BODY, ESCAPE, KEY_DOWN, MOUSE_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
+import { BODY, CLOSE, ESCAPE, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
-import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, removeElement, updateClass } from "../utils/dom";
+import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, updateClass } from "../utils/dom";
 import { merge } from "../utils/object";
 import { isset } from "../utils/util";
 
-
+/**
+ * App component constants.
+ */
 const TALWIN_CLASSNAME = 'talwin';
-const CLASS_NAME_POP = 'tw-popper';
+const POPPER_CLASSNAME = 'tw-popper';
 const DARK_THEME = 'dark';
 const LIGHT_THEME = 'light';
+const DISABLED_CLASSNAME = 'tw-disabled';
+
 
 /**
  * App component.
@@ -19,7 +23,7 @@ const LIGHT_THEME = 'light';
  */
 export const App = (talwin) => {
 
-    let { config, _e: { emit } } = talwin;
+    let { config, _e: { emit }, _clr: colorState } = talwin;
 
     /**
      * Top container.
@@ -102,7 +106,7 @@ export const App = (talwin) => {
         }
         // If it's popover then the method will be 'add', if it's not,
         // then the method will be 'remove'.
-        updateClass(root, CLASS_NAME_POP, popover);
+        updateClass(root, POPPER_CLASSNAME, popover);
     }
 
 
@@ -200,10 +204,13 @@ export const App = (talwin) => {
      */
     const open = (silent) => {
         if (! _isOpen && ! config.disabled) {
+            // Update inptus.
+            colorState.update({}, true);
             reposition();
-            ! silent && emit('open');
-            updateClass(root, 'open', true);
+            // Add open class.
+            updateClass(root, OPEN, true);
             _isOpen = true;
+            ! silent && emit(OPEN);
         }
     }
 
@@ -214,9 +221,10 @@ export const App = (talwin) => {
      */
     const close = (silent) => {
         if (_isOpen && config.toggle) {
-            ! silent && emit('close');
-            updateClass(root, 'open', false);
+            // Remove open class.
+            updateClass(root, OPEN, false);
             _isOpen = false;
+            ! silent && emit(CLOSE);
         }
     }
 
@@ -253,7 +261,7 @@ export const App = (talwin) => {
         if (isset(ref.disabled)) {
             ref.disabled = state;
         } else {
-            updateClass(ref, 'tw-disabled', state);
+            updateClass(ref, DISABLED_CLASSNAME, state);
         }
     }
 

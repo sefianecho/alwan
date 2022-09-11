@@ -1,8 +1,11 @@
-import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, KEY_DOWN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, COLOR, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, KEY_DOWN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds, setVisibility, updateClass } from "../utils/dom"
 import { Marker } from "./Marker";
 
+/**
+ * Palette component constants.
+ */
 const PALETTE_CLASSNAME = 'talwin__palette';
 const OVERLAY_CLASSNAME = 'tw-overlay';
 
@@ -140,7 +143,7 @@ export const Palette = (parent, talwin) => {
     const updateColor = (x, y) => {
         marker.moveTo(x, y);
         colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
-        emit('color', colorState.value, el);
+        emit(COLOR, colorState.value, el);
     }
 
 

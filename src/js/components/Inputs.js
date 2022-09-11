@@ -1,9 +1,12 @@
-import { CHANGE, CLICK, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN, max } from "../constants";
+import { BUTTON, BUTTON_CLASSNAME, CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN, max, SVG } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { switchSVGAttrs } from "../lib/svg";
-import { createElement, removeElement, setVisibility } from "../utils/dom";
+import { createElement, removeElement, setElementsHTML, setVisibility } from "../utils/dom";
 import { objectIterator } from "../utils/object";
 
+/**
+ * Inputs constants.
+ */
 const INPUTS_CLASSNAME = 'talwin__inputs';
 const INPUT_CLASSNAME = 'talwin__input';
 const LABEL_CLASSNAME = 'tw-label';
@@ -84,8 +87,8 @@ export const Inputs = (parent, talwin) => {
                 switchButton = removeElement(switchButton, true);
             } else if (!switchButton) {
                 // For more than one input format, add a switch button.
-                switchButton = createElement('button', 'tw-btn', parent, { type: 'button' }, (thisButton) => {
-                    createElement('svg', '', thisButton, switchSVGAttrs);
+                switchButton = createElement(BUTTON, BUTTON_CLASSNAME, parent, { type: BUTTON }, (thisButton) => {
+                    createElement(SVG, '', thisButton, switchSVGAttrs);
                 });
             }
 
@@ -115,7 +118,8 @@ export const Inputs = (parent, talwin) => {
             let fields = singleInput || format == HEX_FORMAT ? [format]
                         : (format + (opacity ? 'a' : '')).split('');
 
-            container.innerHTML = '';
+            // Empty the container from any inputs.
+            setElementsHTML(container);
 
             fields.forEach((field, index) => {
                 /**
@@ -127,7 +131,7 @@ export const Inputs = (parent, talwin) => {
                  * </label>
                  */
                 createElement('label', LABEL_CLASSNAME, container, false, (label => {
-                    self.$[field] = inputList[index] = createElement('input', INPUT_CLASSNAME, label, { type: 'text' });
+                    self.$[field] = inputList[index] = createElement(INPUT, INPUT_CLASSNAME, label, { type: 'text' });
                     createElement('span', '', label, { text: field });
                 }));
             });
@@ -158,7 +162,7 @@ export const Inputs = (parent, talwin) => {
             }
 
             if (colorState.updateByString(colorString, self)) {
-                emit('color', colorState.value, self.$);
+                emit(COLOR, colorState.value, self.$);
             }
         }
     }
