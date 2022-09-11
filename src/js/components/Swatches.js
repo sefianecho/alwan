@@ -62,7 +62,7 @@ export const Swatches = (parent, talwin) => {
             // Empty the container from all swatch buttons.
             setElementsHTML(container);
     
-            swatches.forEach(color => {
+            swatches.forEach((color, index) => {
                 buttons[index] = createSwatchButton(color);;
             });
 
