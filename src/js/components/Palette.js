@@ -1,4 +1,4 @@
-import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
+import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, KEY_DOWN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, getBounds, setVisibility, updateClass } from "../utils/dom"
 import { Marker } from "./Marker";
@@ -182,40 +182,9 @@ export const Palette = (parent, talwin) => {
     }
 
     /**
-     * Moves marker (picker) using keyboard's arrow keys.
-     *
-     * @param {Event} e - Keydown.
-     * @param {String} key - Key.
-     */
-    const keyboard = (e, key) => {
-
-        // This adds a focus class if any key is pressed.
-        handleFocus(e);
-
-        if (moveX[key] || moveY[key]) {
-
-            e.preventDefault();
-            let {x, y} = marker.point();
-            let markerX = x, markerY = y;
-
-            x += moveX[key] || 0;
-            y += moveY[key] || 0;
-
-            // Make sure x and y don't go out of bounds.
-            x = x > WIDTH ? WIDTH : x < 0 ? 0 : x;
-            y = y > HEIGHT ? HEIGHT : y < 0 ? 0 : y;
-
-            // If the marker changes its position then calculate and set the color.
-            if (x !== markerX || y !== markerY) {
-                updateColor();
-            }
-        }
-    }
-
-    /**
      * Handles palette's focus.
      *
-     * @param {Event} e - Blur or Focusin.
+     * @param {Event} e - Focusout or Focusin.
      */
     const handleFocus = e => {
         // Update class condition removes class if its false,
@@ -233,17 +202,49 @@ export const Palette = (parent, talwin) => {
     }
 
     /**
+     * Handles picking color using keyboard.
+     *
+     * @param {Event} e - Keydown.
+     */
+    const handleKeyboard = e => {
+
+        // Add focus class.
+        updateClass(el, FOCUS_CLASSNAME, true);
+
+        let key = e.key;
+
+        if (moveX[key] || moveY[key]) {
+
+            e.preventDefault();
+            let {x, y} = marker.point();
+            let markerX = x, markerY = y;
+
+            x += moveX[key] || 0;
+            y += moveY[key] || 0;
+
+            // Make sure x and y don't go out of bounds.
+            x = x > WIDTH ? WIDTH : x < 0 ? 0 : x;
+            y = y > HEIGHT ? HEIGHT : y < 0 ? 0 : y;
+
+            // If the marker changes its position then calculate and set the color.
+            if (x !== markerX || y !== markerY) {
+                updateColor(x, y);
+            }
+        }
+    }
+
+    /**
      * Bind events.
      */
     bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
     bindEvent(listeners, ROOT, [MOUSE_MOVE, TOUCH_MOVE], dragMove, { passive: false });
     bindEvent(listeners, ROOT, [MOUSE_UP, TOUCH_END, TOUCH_CANCEL], dragEnd);
     bindEvent(listeners, el, [FOCUS_OUT, FOCUS_IN], handleFocus);
+    bindEvent(listeners, el, KEY_DOWN, handleKeyboard);
 
     return {
         $: el,
         marker,
-        update,
-        keyboard,
+        update
     }
 }
