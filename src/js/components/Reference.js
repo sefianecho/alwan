@@ -1,6 +1,6 @@
 import { BUTTON, CLICK } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
-import { createElement, replaceElement, setVisibility } from "../utils/dom";
+import { createElement, replaceElement, setVisibility, updateClass } from "../utils/dom";
 
 
 const PRESET_BUTTON_CLASSNAME = 'tw-ref';
@@ -28,7 +28,7 @@ export const Reference = (originalRef, talwin) => {
          * @param {Object} options - Picker options.
          */
         init(options) {
-            let { preset, toggle, classname } = options;
+            let { preset, classname } = options;
             let { $: ref, e: events } = self;
 
             events = unbindEvent(events, ref);
@@ -41,16 +41,13 @@ export const Reference = (originalRef, talwin) => {
                         : replaceElement(originalRef, ref);
             }
 
-            // Set classname to the reference.
+            // Add classes in the reference element.
             if (classname) {
-                ref.className = PRESET_BUTTON_CLASSNAME + ' ' + classname;
+                classname.split(/\s+/).map(cls => { updateClass(ref, cls, true) });
             }
 
-            if (toggle) {
-                bindEvent(events, ref, CLICK, togglePicker);
-            }
-
-            setVisibility(ref, toggle);
+            // Add click event to reference.
+            bindEvent(events, ref, CLICK, togglePicker);
             self.$ = ref;
             self.e = events;
         }
