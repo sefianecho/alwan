@@ -1,7 +1,7 @@
 import { BODY, CLOSE, ESCAPE, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
-import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, updateClass } from "../utils/dom";
+import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, setVisibility, updateClass } from "../utils/dom";
 import { merge } from "../utils/object";
 import { isset } from "../utils/util";
 
@@ -64,7 +64,7 @@ export const App = (talwin) => {
      * @param {Object} options - Talwin options.
      */
     const init = (options) => {
-        let { theme, popover, target, position, margin, disabled, id } = options;
+        let { theme, popover, target, position, margin, disabled, id, toggle } = options;
         let refElement = talwin._ui.ref.$;
         let targetElement = getElement(target);
         let targetReference = targetElement || refElement;
@@ -107,6 +107,13 @@ export const App = (talwin) => {
         // If it's popover then the method will be 'add', if it's not,
         // then the method will be 'remove'.
         updateClass(root, POPPER_CLASSNAME, popover);
+
+        // Toggle option is false, picker is always open.
+        if (! toggle) {
+            open(true);
+        }
+
+        setVisibility(refElement, popover || toggle);
     }
 
 
@@ -260,9 +267,9 @@ export const App = (talwin) => {
 
         if (isset(ref.disabled)) {
             ref.disabled = state;
-        } else {
-            updateClass(ref, DISABLED_CLASSNAME, state);
         }
+
+        updateClass(ref, DISABLED_CLASSNAME, state);
     }
 
     return merge(self, {
