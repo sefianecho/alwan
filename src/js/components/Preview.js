@@ -22,7 +22,7 @@ export const Preview = (parent, talwin) => {
     /**
      * Preview area wrapper element.
      */
-    const container = createElement('', 'tw-mr1', parent);
+    const container = createElement('', 'tw-mr', parent);
 
     /**
      * Preview API.
