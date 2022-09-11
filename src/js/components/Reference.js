@@ -36,9 +36,14 @@ export const Reference = (originalRef, talwin) => {
             if (preset !== (ref !== originalRef)) {
                 ref = preset ?
                         // Replace the user provided reference element with a preset button.
-                        replaceElement( createElement(BUTTON, PRESET_BUTTON_CLASSNAME + (classname ? ' ' + classname : ''), null, { type: BUTTON, id: originalRef.id }), originalRef)
+                        replaceElement( createElement(BUTTON, PRESET_BUTTON_CLASSNAME, null, { type: BUTTON, id: originalRef.id }), originalRef)
                         // Set back user reference element.
                         : replaceElement(originalRef, ref);
+            }
+
+            // Set classname to the reference.
+            if (classname) {
+                ref.className = PRESET_BUTTON_CLASSNAME + ' ' + classname;
             }
 
             if (toggle) {
