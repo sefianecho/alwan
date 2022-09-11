@@ -1,4 +1,4 @@
-import { ADD_METHOD, BODY, BUTTON, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
+import { ADD_METHOD, BODY, BUTTON, INPUT, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
 import { objectIterator } from "./object";
 import { isString } from "./util";
 
