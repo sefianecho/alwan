@@ -96,8 +96,8 @@ export const Inputs = (parent, talwin) => {
             format = formats[formatIndex];
         }
 
-        build(format);
         config.format = format;
+        build(format);
         // Show/Hide parent container.
         setVisibility(parent, length);
     }
