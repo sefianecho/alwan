@@ -1,4 +1,4 @@
-import { BODY, ENTER, KEY_DOWN, RESIZE, SCROLL, TAB } from "../constants";
+import { BODY, ENTER, ESCAPE, KEY_DOWN, MOUSE_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
 import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, removeElement, updateClass } from "../utils/dom";
@@ -33,13 +33,18 @@ export const App = (talwin) => {
      * @param {Object} options - Talwin options.
      */
     const init = (options) => {
-        let { theme, popover, target, position, margin, disabled } = options;
+        let { theme, popover, target, position, margin, disabled, color } = options;
         let refElement = talwin._ui.ref.$;
         let targetElement = getElement(target);
         let targetReference = targetElement || refElement;
 
         popper = null;
         popperEvents(unbindEvent);
+
+        /**
+         * Set disable.
+         */
+        disable(disabled);
 
         /**
          * Set Theme.
@@ -50,12 +55,10 @@ export const App = (talwin) => {
          * Set Popper.
          */
         if (popover) {
-
             popper = scPop(targetReference, root, {
                 position,
                 margin
             });
-
             // If reference element inside a nested scrollable elements,
             // get all those scrollable elements in an array.
             scrollableAncestors = getScrollableAncestors(refElement);
@@ -67,12 +70,9 @@ export const App = (talwin) => {
         } else {
             targetReference.insertAdjacentElement( (targetElement ? 'before' : 'after') + 'end', root);
         }
-
         // If it's popover then the method will be 'add', if it's not,
         // then the method will be 'remove'.
         updateClass(root, CLASS_NAME_POP, popover);
-
-        disable(disabled);
     }
 
 
@@ -105,6 +105,49 @@ export const App = (talwin) => {
 
         // On window resize reposition the popper.
         listeners = eventBinder(listeners, window, RESIZE, updatePopper);
+        listeners = eventBinder(listeners, ROOT, [MOUSE_DOWN, KEY_DOWN], handlesAccessibility);
+    }
+
+    /**
+     * Hanldes accessibility.
+     * 
+     * If picker is displayed as a popover,
+     * send focus from reference element to the picker and vice versa,
+     * close picker on Escape key press or click away from the picker or the reference element.
+     *
+     * @param {Event}
+     */
+    const handlesAccessibility = e => {
+
+        if (_isOpen) {
+
+            let { target, type, key, shiftKey } = e;
+            let components = talwin._ui;
+            let refElement = components.ref.$;
+            let palette = components.palette.$;
+            let elementToFocus;
+            // Clicking outside the picker or pressing Escape key, results in,
+            // closing the picker.
+            if (key === ESCAPE || (type === MOUSE_DOWN && refElement !== target && ! root.contains(target))) {
+                close();
+            } else if (key === TAB) {
+                // Pressing Tab on reference element sends focus to the picker palette.
+                if (target === refElement && !shiftKey) {
+                    elementToFocus = palette;
+                // If picker is displayed as a popover,
+                // Pressing Tab + shift on the palette,
+                // or pressing Tab on the last focusable element in the picker,
+                // sends the focus back to the reference element.
+                } else if ((! shiftKey && target === getLastFocusableElement(root)) || (target === palette && shiftKey)) {
+                    elementToFocus = refElement;
+                }
+
+                if (elementToFocus) {
+                    e.preventDefault();
+                    elementToFocus.focus();
+                }
+            }
+        }
     }
 
     /**
@@ -145,33 +188,6 @@ export const App = (talwin) => {
     const isOpen = () => _isOpen;
 
     /**
-     * Handles keyboard navigation and interaction.
-     *
-     * @param {Event} e - Keydown.
-     */
-    const handleKeyboard = e => {
-        let { key, target, shiftKey } = e;
-        let { _ui: { palette, ref } } = talwin;
-        let isPalette = target === palette.$;
-        /**
-         * Pressing the Enter key in an input, closes the picker.
-         */
-        if (key === ENTER && target.type === 'text') {
-            close(true);
-        } else if (key === TAB) {
-            // Pressing the Tab + shift on the palette,
-            // or pressing the Tab on the last focusable element in the picker,
-            // will send the focus back to the reference.
-            if ((! shiftKey && target === getLastFocusableElement(root)) || (isPalette && shiftKey)) {
-                e.preventDefault();
-                ref.$.focus();
-            }
-        } else if (isPalette) {
-            palette.keyboard(e, key);
-        }
-    }
-
-    /**
      * Disable/Enable Picker.
      *
      * @param {Boolean} state - Picker state disabled (true) or enabled (false).
@@ -181,7 +197,7 @@ export const App = (talwin) => {
         state = !!state;
         let ref = talwin._ui.ref.$;
 
-        config.disabled = state
+        config.disabled = state;
 
         if (state) {
             close(true);
@@ -195,7 +211,7 @@ export const App = (talwin) => {
     }
 
 
-    bindEvent(listeners, root, KEY_DOWN, handleKeyboard);
+    // bindEvent(listeners, root, KEY_DOWN, handleKeyboard);
 
     return {
         $: root,
