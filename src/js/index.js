@@ -60,9 +60,12 @@ export default class Talwin {
      */
     setColor(color) {
 
+        let talwin = this;
+        let format;
+
         if (! isString(color)) {
             // Get color format from color object.
-            let format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => format.split('')
+            format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => format.split('')
                                                                                    .every(channel => color[channel] && ! isNaN(color[channel])));
             if (format) {
                 let a = color.a;
@@ -70,7 +73,7 @@ export default class Talwin {
 
                 if (format === HSV_FORMAT) {
                     // Get current format.
-                    format = this.config.format;
+                    format = talwin.config.format;
 
                     // H must be a value between 0 and 360.
                     color.h = (color.h % 360 + 360) % 360;
@@ -93,7 +96,9 @@ export default class Talwin {
             }
         }
 
-        this._clr.updateByString(color, true);
+        talwin._clr.updateByString(color, true);
+
+        return talwin;
     }
 
     getColor() {
@@ -116,8 +121,24 @@ export default class Talwin {
         this._ui.app.disable(true);
     }
 
-    // Reposition.
-    // Trigger.
+    reset() {
+        this.setColor(this.config.default);
+    }
+
+    reposition() {
+        this._ui.app.reposition();
+    }
+
+    trigger(event) {
+        let talwin = this;
+        let emit = talwin._e.emit;
+
+        if (event === 'color' || event === 'change') {
+            emit(event, talwin._clr.value, talwin);
+        } else {
+            emit(event);
+        }
+    }
 
     destroy() {
 
