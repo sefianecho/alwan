@@ -19,7 +19,7 @@ const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--al
  */
 export const Sliders = (parent, talwin) => {
 
-    let { _clr: colorState, _e: { emit }} = talwin;
+    let { _clr: { update: updateColor, value: pickerValue }, _e: { emit }} = talwin;
 
     /**
      * Sliders wrapper element.
@@ -54,16 +54,13 @@ export const Sliders = (parent, talwin) => {
          *
          * @param {Object} options - New options.
          */
-        init(options) {
-            let opacity = options.opacity;
+        init({ opacity }) {
 
-            if (isset(opacity)) {
+            let alpha = self.alpha;
 
-                let alpha = self.alpha;
-
-                if (opacity !== !!alpha) {
-                    self.alpha = opacity ? build(ALPHA_SLIDER_CLASSNAME, 1, 0.01) : removeElement(alpha, true);
-                }
+            if (opacity !== !!alpha) {
+                self.alpha = opacity ? build(ALPHA_SLIDER_CLASSNAME, 1, 0.01)
+                                     : removeElement(alpha, true) || updateColor({ a: 1 });
             }
         },
 
@@ -95,9 +92,9 @@ export const Sliders = (parent, talwin) => {
             hsv.a = value;
         }
 
-        colorState.update(hsv);
+        updateColor(hsv);
         // Either fire change or color event.
-        emit(e.type === CHANGE ? CHANGE : COLOR, colorState.value, slider);
+        emit(e.type === CHANGE ? CHANGE : COLOR, pickerValue, slider);
     }
 
     /**
