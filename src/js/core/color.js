@@ -173,10 +173,10 @@ export const Color = (talwin) => {
      * Picker value.
      */
     const value = {
-        HSV: () => output(HSV, '', HSV_FORMAT, false),
-        RGB: asArray => output(RGB, rgbString, RGB_FORMAT, asArray),
-        HSL: asArray => output(HSVToHSL(HSV), '', HSL_FORMAT, asArray),
-        HEX: () => RGBToHEX(RGB)
+        [HSV_FORMAT]: () => output(HSV, '', HSV_FORMAT, false),
+        [RGB_FORMAT]: asArray => output(RGB, rgbString, RGB_FORMAT, asArray),
+        [HSL_FORMAT]: asArray => output(HSVToHSL(HSV), '', HSL_FORMAT, asArray),
+        [HEX_FORMAT]: () => RGBToHEX(RGB)
     }
 
     /**
