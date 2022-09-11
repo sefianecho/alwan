@@ -7,7 +7,7 @@ import { isString } from "../../utils/util";
  * @param {Array} eventData - Event data (type, handler, options).
  * @param {String} method - Add or Remove event listener method.
  */
-const binder = (eventData, unbind) => {
+export const binder = (eventData, unbind) => {
 
     let method = (unbind ? 'remove': 'add') + 'EventListener';
     let [targetElement, events, handler, options] = eventData;

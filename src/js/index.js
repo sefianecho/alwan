@@ -1,6 +1,6 @@
 
 import { getElement } from "./utils/dom";
-import { merge } from "./utils/object";
+import { merge, objectIterator } from "./utils/object";
 import { defaults } from "./defaults";
 import { createComponents, initialize } from "./core";
 import '../sass/talwin.scss';
@@ -9,6 +9,7 @@ import { boundNumber, isString } from "./utils/util";
 import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
 import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "./lib/colors";
 import { EventListener } from "./core/events/EventListener";
+import { binder } from "./core/events/EventBinder";
 
 export default class Talwin {
 
@@ -113,5 +114,26 @@ export default class Talwin {
 
     disable() {
         this._ui.app.disable(true);
+    }
+
+    // Reposition.
+    // Trigger.
+
+    destroy() {
+
+        let talwin = this;
+        let components = talwin._ui;
+
+        components.ref.init({ preset: false, toggle: true });
+
+        objectIterator(components, components => {
+            components.e.forEach(listener => {
+                binder(listener, true);
+            });
+        });
+
+        objectIterator(talwin, (value, key) => {
+            talwin[key] = null;
+        });
     }
 }
