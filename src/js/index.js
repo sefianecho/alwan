@@ -32,7 +32,7 @@ export default class Talwin {
         talwin._e = EventListener(talwin);
         talwin._clr = Color(talwin);
         talwin._ui = createComponents(reference, talwin);
-        initialize(talwin);
+        initialize(talwin, talwin.config);
     }
 
     /**

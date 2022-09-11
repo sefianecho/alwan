@@ -62,7 +62,10 @@ export const createComponents = (reference, talwin) => {
  */
 export const initialize = (talwin, options) => {
 
+    options = options || {};
+
     let config = talwin.config;
+    let color = options.color;
 
     merge(config, options);
 
@@ -77,5 +80,7 @@ export const initialize = (talwin, options) => {
     /**
      * Initialize color.
      */
-    talwin.setColor(config.color);
+    if (color) {
+        talwin.setColor(color);
+    }
 }
