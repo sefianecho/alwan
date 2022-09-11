@@ -19,11 +19,6 @@ export const Sliders = (parent, talwin) => {
     let { _clr: colorState, _e: { emit }} = talwin;
 
     /**
-     * Event listeners.
-     */
-    let listeners = [];
-
-    /**
      * Sliders wrapper element.
      */
     const container = createElement('', 'tw-w100', parent);
@@ -43,6 +38,11 @@ export const Sliders = (parent, talwin) => {
      * Component API.
      */
     const self = {
+        /**
+         * Sliders events.
+         */
+        e: [],
+
         hue: build(HUE_SLIDER_CLASSNAME, 360),
         alpha: null,
 
@@ -99,7 +99,7 @@ export const Sliders = (parent, talwin) => {
     /**
      * Events binding.
      */
-    bindEvent(listeners, container, [INPUT, CHANGE], handleChange);
+    bindEvent(self.e, container, [INPUT, CHANGE], handleChange);
 
     return self;
 }

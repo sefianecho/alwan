@@ -28,11 +28,6 @@ export const Swatches = (parent, talwin) => {
     let swatches;
 
     /**
-     * Event listeners.
-     */
-    let listeners = [];
-
-    /**
      * Creates a swatch button.
      *
      * @param {String} color - Swatch Color.
@@ -49,6 +44,11 @@ export const Swatches = (parent, talwin) => {
      * Swatches API.
      */
     const self = {
+        /**
+         * Swatches events.
+         */
+        e: [],
+
         /**
          * Initialize swatches.
          *
@@ -117,7 +117,7 @@ export const Swatches = (parent, talwin) => {
     /**
      * Bind events.
      */
-    bindEvent(listeners, parent, CLICK, setColorFromSwatch);
+    bindEvent(self.e, parent, CLICK, setColorFromSwatch);
 
     return self;
 }

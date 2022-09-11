@@ -223,5 +223,7 @@ export const Inputs = (parent, talwin) => {
     bindEvent(listeners, parent, [FOCUS_IN, CHANGE], triggerChangeEvent);
     bindEvent(listeners, parent, KEY_DOWN, closePicker);
 
+    self.e = listeners;
+
     return self;
 }

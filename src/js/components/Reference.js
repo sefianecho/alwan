@@ -14,15 +14,14 @@ const PRESET_BUTTON_CLASSNAME = 'tw-ref';
 export const Reference = (originalRef, talwin) => {
 
     /**
-     * Event Listeners.
-     */
-    let listeners = [];
-
-    /**
      * Reference API.
      */
     const self = {
         $: originalRef,
+        /**
+         * Reference Events.
+         */
+        e: [],
         /**
          * Sets/Unsets the pre-styled button.
          *
@@ -30,8 +29,9 @@ export const Reference = (originalRef, talwin) => {
          */
         init(options) {
             let { preset, toggle } = options;
-            let ref = self.$;
-            listeners = unbindEvent(listeners, ref);
+            let { $: ref, e: events } = self;
+
+            events = unbindEvent(events, ref);
             
             if (preset !== (ref !== originalRef)) {
                 ref = preset ?
@@ -42,11 +42,12 @@ export const Reference = (originalRef, talwin) => {
             }
 
             if (toggle) {
-                bindEvent(listeners, ref, CLICK, togglePicker);
+                bindEvent(events, ref, CLICK, togglePicker);
             }
 
             setVisibility(ref, toggle);
             self.$ = ref;
+            self.e = events;
         }
     }
 

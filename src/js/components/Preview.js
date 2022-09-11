@@ -13,11 +13,6 @@ const PREVIEW_CLASSNAME = 'talwin__preview';
  * @returns {Object}
  */
 export const Preview = (parent, talwin) => {
-    
-    /**
-     * Event Listeners.
-     */
-    let listeners = [];
 
     /**
      * Copy state.
@@ -33,6 +28,11 @@ export const Preview = (parent, talwin) => {
      * Preview API.
      */
     const self = {
+        /**
+         * Preview events.
+         */
+        e: [],
+
         /**
          * Init. Preview, copy button.
          *
@@ -116,7 +116,7 @@ export const Preview = (parent, talwin) => {
     /**
      * Events binding.
      */
-    bindEvent(listeners, container, [CLICK, MOUSE_LEAVE, FOCUS_IN, FOCUS_OUT], copyColorAndUpdateView);
+    bindEvent(self.e, container, [CLICK, MOUSE_LEAVE, FOCUS_IN, FOCUS_OUT], copyColorAndUpdateView);
 
     return self;
 }

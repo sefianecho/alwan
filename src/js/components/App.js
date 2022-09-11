@@ -1,7 +1,8 @@
-import { BODY, ENTER, ESCAPE, KEY_DOWN, MOUSE_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
+import { BODY, ESCAPE, KEY_DOWN, MOUSE_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
 import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, removeElement, updateClass } from "../utils/dom";
+import { merge } from "../utils/object";
 import { isset } from "../utils/util";
 
 
@@ -20,7 +21,10 @@ export const App = (talwin) => {
     
     let root = createElement('', TALWIN_CLASSNAME, BODY);
 
-    let listeners = [];
+    let self = {
+        e: []
+    }
+
     let _isOpen = false;
     let scrollableAncestors = [];
     let popper;
@@ -99,6 +103,8 @@ export const App = (talwin) => {
      * @param {Function} eventBinder - Bind/Unbind events.
      */
     const popperEvents = (eventBinder) => {
+        let listeners = self.e;
+
         scrollableAncestors.forEach(scrollable => {
             listeners = eventBinder(listeners, scrollable, SCROLL, updatePopper);
         });
@@ -106,6 +112,8 @@ export const App = (talwin) => {
         // On window resize reposition the popper.
         listeners = eventBinder(listeners, window, RESIZE, updatePopper);
         listeners = eventBinder(listeners, ROOT, [MOUSE_DOWN, KEY_DOWN], handlesAccessibility);
+
+        self.e = listeners;
     }
 
     /**
@@ -210,10 +218,7 @@ export const App = (talwin) => {
         }
     }
 
-
-    // bindEvent(listeners, root, KEY_DOWN, handleKeyboard);
-
-    return {
+    return merge(self, {
         $: root,
         init,
         isOpen,
@@ -221,5 +226,5 @@ export const App = (talwin) => {
         close,
         toggle,
         disable
-    }
+    });
 }

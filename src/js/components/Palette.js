@@ -245,6 +245,7 @@ export const Palette = (parent, talwin) => {
     return {
         $: el,
         marker,
-        update
+        update,
+        e: listeners
     }
 }
