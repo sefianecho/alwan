@@ -3,15 +3,11 @@ import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
 import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, setVisibility, updateClass } from "../utils/dom";
 import { merge } from "../utils/object";
-import { isset } from "../utils/util";
-
 /**
  * App component constants.
  */
 const TALWIN_CLASSNAME = 'talwin';
 const POPPER_CLASSNAME = 'tw-popper';
-const DARK_THEME = 'dark';
-const LIGHT_THEME = 'light';
 const DISABLED_CLASSNAME = 'tw-disabled';
 
 
@@ -83,7 +79,7 @@ export const App = (talwin) => {
         /**
          * Set Theme.
          */
-        root.dataset.theme = theme === DARK_THEME ? DARK_THEME : LIGHT_THEME;
+        root.dataset.theme = theme;
 
         /**
          * Set Popper.
@@ -255,21 +251,10 @@ export const App = (talwin) => {
      * @param {Boolean} state - Picker state disabled (true) or enabled (false).
      */
     const disable = state => {
-
-        state = !!state;
-        let ref = talwin._ui.ref.$;
-
         config.disabled = state;
-
-        if (state) {
-            close(true);
-        }
-
-        if (isset(ref.disabled)) {
-            ref.disabled = state;
-        }
-
-        updateClass(ref, DISABLED_CLASSNAME, state);
+        state && close(true);
+        // Add/Remove disable class.
+        updateClass(talwin._ui.ref.$, DISABLED_CLASSNAME, state);
     }
 
     return merge(self, {
