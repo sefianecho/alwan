@@ -28,7 +28,6 @@ export const App = (talwin) => {
     let _isOpen = false;
     let scrollableAncestors = [];
     let popper;
-
     const { config, _e: { emit } } = talwin;
 
     /**
@@ -37,12 +36,16 @@ export const App = (talwin) => {
      * @param {Object} options - Talwin options.
      */
     const init = (options) => {
-        let { theme, popover, target, position, margin, disabled, color } = options;
+        let { theme, popover, target, position, margin, disabled, id } = options;
         let refElement = talwin._ui.ref.$;
         let targetElement = getElement(target);
         let targetReference = targetElement || refElement;
 
-        popper = null;
+        if (id) {
+            root.id = id;
+        }
+
+
         popperEvents(unbindEvent);
 
         /**
@@ -59,7 +62,7 @@ export const App = (talwin) => {
          * Set Popper.
          */
         if (popover) {
-            popper = scPop(targetReference, root, {
+            self.popper = popper = scPop(targetReference, root, {
                 position,
                 margin
             });
@@ -87,7 +90,7 @@ export const App = (talwin) => {
      */
     const updatePopper = e => {
         if (_isOpen) {
-            popper.update();
+            reposition();
 
             // Close picker if the reference element is not visible in the viewport,
             // of nested scrollable elements.
@@ -158,12 +161,21 @@ export const App = (talwin) => {
         }
     }
 
+
+    /**
+     * Repositions popper.
+     */
+    const reposition = () => {
+        popper && popper.update();
+    }
+
+
     /**
      * Open color picker.
      */
     const open = (silent) => {
         if (! _isOpen && ! config.disabled) {
-            popper && popper.update();
+            reposition();
             ! silent && emit('open');
             updateClass(root, 'open', true);
             _isOpen = true;
@@ -225,6 +237,7 @@ export const App = (talwin) => {
         open,
         close,
         toggle,
-        disable
+        disable,
+        reposition,
     });
 }
