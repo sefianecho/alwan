@@ -1,8 +1,11 @@
 import { BUTTON, CHANGE, CLICK, COLOR, COLOR_PROPERTY, int } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { parseColor } from "../lib/parser";
-import { createElement, getParent, removeElement, setElementsHTML, setVisibility } from "../utils/dom";
+import { createElement, getParent, removeElement, setCustomProperty, setElementsHTML, setVisibility } from "../utils/dom";
 
+/**
+ * Swatches constants.
+ */
 const SWATCHES_CLASSNAME = 'talwin__swatches';
 const SWATCHE_CLASSNAME = 'talwin__swatch';
 
@@ -11,7 +14,7 @@ const SWATCHE_CLASSNAME = 'talwin__swatch';
  *
  * @param {Element} parent - Element to append the palette element to.
  * @param {Object} talwin - Picker Instance.
- * @returns 
+ * @returns {Object}
  */
 export const Swatches = (parent, talwin) => {
 
@@ -31,14 +34,11 @@ export const Swatches = (parent, talwin) => {
      * Creates a swatch button.
      *
      * @param {String} color - Swatch Color.
-     * @param {Number} index - Swatch Index.
      * @returns {Element}
      */
-    const createSwatchButton = (color, index) => createElement(BUTTON, SWATCHE_CLASSNAME, container, {
+    const createSwatchButton = color => createElement(BUTTON, SWATCHE_CLASSNAME, container, {
             type: BUTTON,
-            style: COLOR_PROPERTY + parseColor(color, true),
-            'data-index': index + ''
-        });
+        }, button => { setCustomProperty(button, COLOR_PROPERTY, parseColor(color, true)) });
 
     /**
      * Swatches API.
@@ -62,10 +62,10 @@ export const Swatches = (parent, talwin) => {
             // Empty the container from all swatch buttons.
             setElementsHTML(container);
     
-            swatches.forEach((color, index) => {
-                buttons[index] = createSwatchButton(color, index);
+            swatches.forEach(color => {
+                buttons[index] = createSwatchButton(color);;
             });
-    
+
             self.$ = buttons;
         },
         /**
@@ -75,7 +75,7 @@ export const Swatches = (parent, talwin) => {
          */
         add(color) {
             let index = swatches.push(color) - 1;
-            self.$[index] = createSwatchButton(color, index);
+            self.$[index] = createSwatchButton(color);
     
             // If swatches array is empty, hide container.
             setVisibility(container, swatches);
@@ -87,14 +87,15 @@ export const Swatches = (parent, talwin) => {
          */
         remove(swatch) {
             let index = swatches.findIndex((color, index) => swatch === color || int(swatch) === index);
-    
+            let swatchButtons = self.$;
+
             if (index > -1) {
                 // Remove color from swatches array.
                 swatches.splice(index, 1);
                 // Remove swatch button.
-                removeElement(self.$[index]);
-                self.$.splice(index, 1);
-    
+                removeElement(swatchButtons[index]);
+                swatchButtons.splice(index, 1);
+
                 // If swatches array is empty then hide the container.
                 setVisibility(container, swatches);
             }
@@ -109,7 +110,7 @@ export const Swatches = (parent, talwin) => {
     const setColorFromSwatch = e => {
         let target = e.target;
 
-        if (getParent(target) === container && updateByString(swatches[target.dataset.index], true)) {
+        if (getParent(target) === container && updateByString(target.style.getPropertyValue('--' + COLOR_PROPERTY), true)) {
             emit(COLOR, value, target);
             emit(CHANGE, value, target);
         }
