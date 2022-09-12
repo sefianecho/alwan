@@ -20,7 +20,6 @@ const LABEL_CLASSNAME = 'tw-label';
  */
 export const Inputs = (parent, talwin) => {
 
-    const { config, _clr: colorState, _e: { emit } } = talwin;
     /**
      * Component API.
      */
@@ -56,6 +55,8 @@ export const Inputs = (parent, talwin) => {
      * Event listeners.
      */
     let listeners = [];
+
+    const { config, _clr: colorState, _e: { emit } } = talwin;
 
     /**
      * Init. Inputs.
@@ -162,7 +163,7 @@ export const Inputs = (parent, talwin) => {
             }
 
             if (colorState.updateByString(colorString, self)) {
-                emit(COLOR, colorState.value, self.$);
+                emit(COLOR, self.$);
             }
         }
     }

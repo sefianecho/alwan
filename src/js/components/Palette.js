@@ -143,7 +143,7 @@ export const Palette = (parent, talwin) => {
     const updateColor = (x, y) => {
         marker.moveTo(x, y);
         colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
-        emit(COLOR, colorState.value, el);
+        emit(COLOR, el);
     }
 
 

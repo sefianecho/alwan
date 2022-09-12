@@ -18,12 +18,15 @@ const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--al
  */
 export const Sliders = (parent, talwin) => {
 
-    let { _clr: { update: updateColor, value: pickerValue }, _e: { emit }} = talwin;
-
     /**
      * Sliders wrapper element.
      */
     const container = createElement('', 'tw-w100', parent);
+
+    /**
+     * Color state updater.
+     */
+    const updateColor = talwin._clr.update;
 
     /**
      * Builds a slider.
@@ -93,7 +96,7 @@ export const Sliders = (parent, talwin) => {
 
         updateColor(hsv);
         // Either fire change or color event.
-        emit(e.type === CHANGE ? CHANGE : COLOR, pickerValue, slider);
+        talwin._e.emit(e.type === CHANGE ? CHANGE : COLOR, slider);
     }
 
     /**

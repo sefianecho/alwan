@@ -198,7 +198,7 @@ export const Color = (talwin) => {
      */
     const end = (source) => {
         if (! isEqual(colorStart, getColor())) {
-            event.emit(CHANGE, value, source);
+            event.emit(CHANGE, source);
         }
     }
 

@@ -21,7 +21,7 @@ export const Marker = parent => {
     /**
      * Cache center X coordinate.
      */
-    let centerX = width / 2 - 1;
+    let centerX = width / 2;
 
     /**
      * Cache center Y coordinate.

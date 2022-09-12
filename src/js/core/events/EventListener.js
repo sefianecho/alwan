@@ -6,7 +6,8 @@ import { objectIterator } from "../../utils/object";
  *
  * @returns {Object}
  */
-export const EventListener = ({ config }) => {
+export const EventListener = (talwin) => {
+    const { config } = talwin;
     /**
      * Picker event listeners.
      */
@@ -22,11 +23,17 @@ export const EventListener = ({ config }) => {
          * Emits an event.
          *
          * @param {String} type - Event type.
-         * @param  {...any} args - Event arguments.
+         * @param  {Element|Object} source - Event Source.
          */
-        emit: (type, ...args) => {
+        emit: (type, source) => {
             if (! config.disabled && listeners[type]) {
-                listeners[type].forEach(handler => handler(...args));
+                listeners[type].forEach(handler => {
+                    if (type === COLOR || type === CHANGE) {
+                        handler(talwin._clr.value, source || talwin);
+                    } else {
+                        handler();
+                    }
+                });
             }
         },
 
