@@ -81,6 +81,14 @@ export const App = (talwin) => {
          */
         root.dataset.theme = theme;
 
+        // Toggle option is false, picker is always open.
+        if (! toggle) {
+            open(true);
+        }
+
+        // Hide reference if both popover and toggle are false.
+        setVisibility(refElement, popover || toggle);
+
         /**
          * Set Popper.
          */
@@ -103,13 +111,6 @@ export const App = (talwin) => {
         // If it's popover then the method will be 'add', if it's not,
         // then the method will be 'remove'.
         updateClass(root, POPPER_CLASSNAME, popover);
-
-        // Toggle option is false, picker is always open.
-        if (! toggle) {
-            open(true);
-        }
-
-        setVisibility(refElement, popover || toggle);
     }
 
 
