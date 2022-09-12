@@ -1,7 +1,6 @@
 import { CHANGE, COLOR, INPUT } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { createElement, removeElement } from "../utils/dom";
-import { isset } from "../utils/util";
 
 /**
  * Sliders component constants.
