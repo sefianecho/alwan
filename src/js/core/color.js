@@ -165,8 +165,13 @@ export const Color = (talwin) => {
          * @param {String} channel - Color channel.
          * @param {index} index - Array index.
          */
-        return format.split('').reduce((color, channel, index) =>
-                (color[asArray ? index : channel] = colorObject[channel]) && color, output);
+        return format.split('').reduce((color, channel, index) => {
+
+            color[asArray ? index : channel] = colorObject[channel];
+
+            return color;
+
+        }, output);
     }
 
     /**
