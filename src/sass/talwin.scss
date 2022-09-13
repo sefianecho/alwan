@@ -58,9 +58,9 @@
     &__marker {
         width: var.$marker-width;
         height: var.$marker-height;
-        border-radius: 100%;
+        border-radius: 99em;
         background: transparent;
-        box-sizing: content-box;
+        box-sizing: border-box;
         border: var.$marker-border;
         box-shadow: var.$marker-box-shadow;
         cursor: move;
