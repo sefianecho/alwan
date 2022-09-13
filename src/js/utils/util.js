@@ -1,4 +1,4 @@
-import { max, min } from "../constants";
+import { CHANGE, COLOR, max, min } from "../constants";
 
 /**
  * Checks if a value is a string.
@@ -26,3 +26,19 @@ export const isset = value => value != null;
  * @returns {number}
  */
 export const boundNumber = (number, upperBound, lowerBound) => min(max(number, lowerBound || 0), upperBound || 100);
+
+
+/**
+ * Sets color, if color state changes then trigger color and change events.
+ *
+ * @param {Object} talwin - Instance.
+ * @param {String} color - Color.
+ * @param {Element|Object} source - Event source.
+ */
+export const setColorAndTriggerEvents = (talwin, color, source) => {
+    if (talwin._clr.updateByString(color, true)) {
+        let emit = talwin._e.emit;
+        emit(COLOR, source);
+        emit(CHANGE, source);
+    }
+}

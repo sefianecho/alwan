@@ -5,8 +5,8 @@ import { defaults } from "./defaults";
 import { createComponents, initialize } from "./core";
 import '../sass/talwin.scss';
 import { Color } from "./core/color";
-import { boundNumber, isString } from "./utils/util";
-import { CHANGE, COLOR, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
+import { boundNumber, isString, setColorAndTriggerEvents } from "./utils/util";
+import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
 import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "./lib/colors";
 import { EventListener } from "./core/events/EventListener";
 import { binder } from "./core/events/EventBinder";
@@ -192,7 +192,7 @@ export default class Talwin {
      * Resets to default color.
      */
     reset() {
-        this.setColor(this.config.default);
+        setColorAndTriggerEvents(this, this.config.default);
     }
 
     /**
@@ -208,14 +208,7 @@ export default class Talwin {
      * @param {String} type - Event type.
      */
     trigger(type) {
-        let talwin = this;
-        let emit = talwin._e.emit;
-
-        if (type === COLOR || type === CHANGE) {
-            emit(type, talwin._clr.value, talwin);
-        } else {
-            emit(type);
-        }
+        this._e.emit(type);
     }
 
     /**

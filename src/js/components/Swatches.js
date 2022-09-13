@@ -1,7 +1,8 @@
-import { BUTTON, CHANGE, CLICK, COLOR, COLOR_PROPERTY, int } from "../constants";
+import { BUTTON, CLICK, COLOR_PROPERTY, int } from "../constants";
 import { bindEvent } from "../core/events/EventBinder";
 import { parseColor } from "../lib/parser";
 import { createElement, getParent, removeElement, setCustomProperty, setElementsHTML, setVisibility } from "../utils/dom";
+import { setColorAndTriggerEvents } from "../utils/util";
 
 /**
  * Swatches constants.
@@ -17,8 +18,6 @@ const SWATCHE_CLASSNAME = 'talwin__swatch';
  * @returns {Object}
  */
 export const Swatches = (parent, talwin) => {
-
-    const { _clr: { value, updateByString }, _e: { emit } } = talwin;
 
     /**
      * Buttons wrapper element.
@@ -110,9 +109,8 @@ export const Swatches = (parent, talwin) => {
     const setColorFromSwatch = e => {
         let target = e.target;
 
-        if (getParent(target) === container && updateByString(target.style.getPropertyValue('--' + COLOR_PROPERTY), true)) {
-            emit(COLOR, value, target);
-            emit(CHANGE, value, target);
+        if (getParent(target) === container) {
+            setColorAndTriggerEvents(talwin, target.style.getPropertyValue('--' + COLOR_PROPERTY), target);
         }
     }
 

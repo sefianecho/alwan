@@ -7,6 +7,7 @@ import { Sliders } from "../components/Sliders";
 import { Swatches } from "../components/Swatches";
 import { createElement } from "../utils/dom";
 import { merge, objectIterator } from "../utils/object";
+import { setColorAndTriggerEvents } from "../utils/util";
 
 
 const CONTAINER_CLASSNAME = 'talwin__container';
@@ -81,6 +82,6 @@ export const initialize = (talwin, options) => {
      * Initialize color.
      */
     if (color) {
-        talwin.setColor(color);
+        setColorAndTriggerEvents(talwin, color);
     }
 }
