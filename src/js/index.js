@@ -14,6 +14,8 @@ import { binder } from "./core/events/EventBinder";
 
 export default class Talwin {
 
+    static version = VERSION;
+
     /**
      * Talwin defaults.
      */
