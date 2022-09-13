@@ -116,8 +116,8 @@ talwin.on('event', function(argument) {
 |------- | --------------- | ------------------------------ |
 | `open` | ``   | Fires when the picker get opened |
 | `close` | ``  | Fires when the picker get closed |
-| `change` | `colorObject` and `source` | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event  |
-| `color` | `colorObject` and `source` | Similar to the `input` event, fires every time the color changes |
+| `change` | (`colorObject`, `source`) | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event  |
+| `color` | (`colorObject`, `source`) | Similar to the `input` event, fires every time the color changes |
 
 ### ColorObject
 Color object is the output of Talwin color picker, its properties are:
