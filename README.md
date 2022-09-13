@@ -207,3 +207,9 @@ picker.setColor('purple').trigger('change');
   Removes color from the `Options.swatches` array, also removes its button from the swatches container.
   
   *Note:* swatch argument can be a color string (must exist in `Options.swatches` array) or an index.
+- **reset**()
+
+  Reset default color.
+- **destroy**()
+
+  Removes any HTML elements created by this instance and destroy all functionality (free up memory).
