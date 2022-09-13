@@ -37,35 +37,26 @@ export const Palette = (parent, talwin) => {
      */
     const marker = Marker(el);
 
+    let { moveTo, point } = marker;
     /**
      * Palette dimensions
      */
-    const { width: WIDTH, height: HEIGHT } = getBounds(el);
-
-    /**
-     * Amount of pixel to move marker horizontally using keyboard.
-     */
-    const stepX = WIDTH / 100;
-
-    /**
-     * Amount of pixel to move marker vertically using keyboard.
-     */
-    const stepY = HEIGHT / 100;
+    let WIDTH, HEIGHT;
 
     /**
      * Move marker one step horizontally using keyboard.
      */
     const moveX = {
-        [ARROW_RIGHT]: stepX,
-        [ARROW_LEFT]: -stepX
+        [ARROW_RIGHT]: 1,
+        [ARROW_LEFT]: -1
     }
 
     /**
      * Move marker one step vertically using keyboard.
      */
     const moveY = {
-        [ARROW_UP]: -stepY,
-        [ARROW_DOWN]: stepY
+        [ARROW_UP]: -1,
+        [ARROW_DOWN]: 1
     }
 
     /**
@@ -97,6 +88,7 @@ export const Palette = (parent, talwin) => {
         colorState.start();
         // Cache palette's bounds.
         bounds = getBounds(el);
+        updateDimensions(bounds);
         moveAndUpdateColor(e);
         isDragging = true;
         // Display overlay.
@@ -141,7 +133,7 @@ export const Palette = (parent, talwin) => {
      * @param {Number} y - Y coordinate.
      */
     const updateColor = (x, y) => {
-        marker.moveTo(x, y);
+        moveTo(x, y);
         colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
         emit(COLOR, el);
     }
@@ -181,7 +173,8 @@ export const Palette = (parent, talwin) => {
      * @param {Object} hsv - HSV color object.
      */
     const update = hsv => {
-        marker.moveTo(hsv.s * WIDTH, (1 - hsv.v) * HEIGHT);
+        updateDimensions();
+        moveTo(hsv.s * WIDTH, (1 - hsv.v) * HEIGHT);
     }
 
     /**
@@ -217,13 +210,19 @@ export const Palette = (parent, talwin) => {
         let key = e.key;
 
         if (moveX[key] || moveY[key]) {
-
             e.preventDefault();
-            let {x, y} = marker.point();
-            let markerX = x, markerY = y;
 
-            x += moveX[key] || 0;
-            y += moveY[key] || 0;
+            updateDimensions();
+
+            let {x, y} = point();
+            let markerX = x, markerY = y;
+            // Amount of pixel to move marker horizontally using keyboard.
+            let stepX = WIDTH / 100;
+            // Amount of pixel to move marker vertically using keyboard.
+            let stepY = HEIGHT / 100;
+
+            x += (moveX[key] || 0) * stepX;
+            y += (moveY[key] || 0) * stepY;
 
             // Make sure x and y don't go out of bounds.
             x = x > WIDTH ? WIDTH : x < 0 ? 0 : x;
@@ -234,6 +233,16 @@ export const Palette = (parent, talwin) => {
                 updateColor(x, y);
             }
         }
+    }
+
+
+    /**
+     * Updates palette's width and height values.
+     *
+     * @param {Object} bounds - Palette's Bounding rect.
+     */
+    const updateDimensions = bounds => {
+        ({ width: WIDTH, height: HEIGHT } = bounds || getBounds(el));
     }
 
     /**
