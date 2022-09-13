@@ -1,4 +1,4 @@
-# talwin
+# Talwin
 
 <div align="center">
   <picture>
