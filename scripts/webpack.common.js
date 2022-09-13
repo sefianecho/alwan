@@ -7,7 +7,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'css/talwin.css'
+            filename: 'css/[name].min.css'
         }),
         new webpack.DefinePlugin({
             VERSION: JSON.stringify(require('../package.json').version)
