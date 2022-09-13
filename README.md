@@ -92,7 +92,7 @@ You can try these options in the [demo](https://sofianchouaib.github.io/sc-picke
 | disabled | `boolean` | `false` | Disable the picker, users won't be able to pick colors. |
 | format | `string` | `rgb` | Initial color format. |
 | singleInput | `boolean` | `false` | For the formats 'hsl' and 'rgb', choose a single input to display the color string,<br />if false, display an input for each color channel. |
-| inputs | `object` | `{ hex: true, rgb: true, hsl: true }` | Choose color formats for the picker input |
+| inputs | `object` | `{ hex: true, rgb: true,  hsl: true  }` | Choose color formats for the picker input |
 | opacity | `boolean` | `true` | Support alpha channel and display opacity slider. |
 | preview | `boolean` | `true` | Preview the color. |
 | copy | `boolean` | `true` | Add/Remove a copy button. |
@@ -122,19 +122,19 @@ talwin.on('event', function(argument) {
 ### ColorObject
 Color object is the output of Talwin color picker, its properties are:
 
-- **hsv**()
+- **hsv**() : `object`
 
 Gets an HSV color object.
-- **rgb**(asArray: `boolean`)
+- **rgb**(asArray: `boolean`) : `object`
 
 Get an RGB color object or an Array if `asArray` is set to true,
 call the method `toString()` on this object to get an RGB string.
-- **hsl**(asArray: `boolean`)
+- **hsl**(asArray: `boolean`) : `object`
 
 Get an HSL color object or an Array if `asArray` is set to true,
 call the method `toString()` on this object to get an HSL string.
 
-- **hex**()
+- **hex**() `string`
 
 Gets a hex color.
 
@@ -212,4 +212,4 @@ picker.setColor('purple').trigger('change');
   Reset default color.
 - **destroy**()
 
-  Removes any HTML elements created by this instance and destroy all functionality (free up memory).
+  Removes the color picker functionality completely(free up memory).
