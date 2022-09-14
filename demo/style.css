@@ -138,7 +138,7 @@ label {
     background-color: #fff;
     cursor: pointer;
     padding: 1rem;
-    /* font-size: 1rem; */
+    font-size: 1rem;
     transition: background 0.15s ease-in-out;
 }
 
