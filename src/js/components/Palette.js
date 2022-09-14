@@ -37,7 +37,11 @@ export const Palette = (parent, talwin) => {
      */
     const marker = Marker(el);
 
+    /**
+     * Marker Methods.
+     */
     let { moveTo, point } = marker;
+
     /**
      * Palette dimensions
      */

@@ -16,8 +16,11 @@ export const Marker = parent => {
      */
     const el = createElement('', MARKER_CLASSNAME, parent);
 
-    
+    /**
+     * Marker dimensions.
+     */
     const { width, height } = getBounds(el);
+
     /**
      * Cache center X coordinate.
      */
