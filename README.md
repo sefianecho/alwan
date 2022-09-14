@@ -6,11 +6,17 @@
     <img alt="sc picker dark theme" src="images/talwin.jpg">
   </picture>
 
+
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="images/dark-talwin-dark-theme.jpg">
     <img alt="sc picker dark theme" src="images/dark-talwin.jpg">
   </picture>
 </div>
+<div>
+<img alt="minified size" src="https://img.shields.io/bundlephobia/min/talwin">
+<img alt="minizipped size" src="https://img.shields.io/bundlephobia/minzip/talwin">
+</div>
+
 
 A simple, zero dependencies, pure vanilla javascript, lightweight (only ~13Kb) color picker.
 
@@ -206,7 +212,7 @@ picker.setColor('purple').trigger('change');
   
   Removes color from the `Options.swatches` array, also removes its button from the swatches container.
   
-  *Note:* swatch argument can be a color string (must exist in `Options.swatches` array) or an index.
+  *Note:* swatch argument can be a color string in the `Options.swatches` array or an index.
 - **reset**()
 
   Reset to default color.
