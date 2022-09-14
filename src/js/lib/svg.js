@@ -18,10 +18,10 @@ const switchSVG = '<path d="M10 1L5 8h10l-5-7zm0 18l5-7H5l5 7z"></path>';
  * @param {String} width - SVG Width.
  * @param {String} height - SVG Height.
  * @param {String} viewBox - SVG ViewBox.
- * @param {String} content - SVG Content.
+ * @param {String} html - SVG Content.
  * @returns {Object}
  */
-const svgAttrs = (width, height, viewBox, content) => ({ width, height, viewBox, content });
+const svgAttrs = (width, height, viewBox, html) => ({ width, height, viewBox, html });
 
 
 export const clipboardSVGAttrs = merge(svgAttrs('18', '18', '0 0 24 24', clipboardSVG), staticAttrs);
