@@ -3,7 +3,7 @@
  *
  * @param {Object} object - Any object.
  * @param {CallableFunction} fn - Any Callback function.
- * @returns 
+ * @returns {Boolean}
  */
 export const objectIterator = (object, fn) => {
 
@@ -24,7 +24,7 @@ export const objectIterator = (object, fn) => {
  *
  * @param {Object} target - Object that will receive the new properties.
  * @param  {...Object} sources - Objects containing additional properties to merge in.
- * @returns 
+ * @returns {Object}
  */
 export const merge = (target, ...sources) => Object.assign(target, ...sources);
 
