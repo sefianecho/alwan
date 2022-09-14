@@ -13,6 +13,9 @@ import { isset } from "../utils/util";
  */
 export const Color = (talwin) => {
 
+    /**
+     * HSV color object.
+     */
     let HSV = {
         h: 0,
         s: 0,
@@ -20,14 +23,23 @@ export const Color = (talwin) => {
         a: 1
     }
 
+    /**
+     * RGB color object.
+     */
     let RGB = HSVToRGB(HSV);
 
+    /**
+     * RGB string.
+     */
     let rgbString = '';
 
-    let { config, _e: event } = talwin;
-
+    /**
+     * Color object used for detecting a color change.
+     */
     let colorStart;
 
+    
+    let { config, _e: event } = talwin;
 
     /**
      * Updates color and UI.
