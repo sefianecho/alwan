@@ -12,7 +12,7 @@ module.exports = merge(common, {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Talwin: a simple lightweight color picker',
-            template: 'index.html',
+            template: 'template.html',
             inject: 'body'
         })
     ],
