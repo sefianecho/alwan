@@ -12,9 +12,11 @@
     <img alt="sc picker dark theme" src="images/dark-talwin.jpg">
   </picture>
 </div>
+
+
 <div>
-<img alt="minified size" src="https://img.shields.io/bundlephobia/min/talwin">
-<img alt="minizipped size" src="https://img.shields.io/bundlephobia/minzip/talwin">
+  <img alt="minified size" src="https://img.shields.io/bundlephobia/min/talwin">
+  <img alt="minizipped size" src="https://img.shields.io/bundlephobia/minzip/talwin">
 </div>
 
 
