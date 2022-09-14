@@ -34,7 +34,7 @@ npm install talwin
 or
 
 ```
-yarn add sc-picker
+yarn add talwin
 ```
 
 Import files
@@ -49,18 +49,18 @@ Add it to your page.
 - Jsdelivr CDN
 ```html
 <!-- Style -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sc-picker/dist/css/picker.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/talwin/dist/css/talwin.min.css">
 
 <!-- Script -->
-<script src="https://cdn.jsdelivr.net/npm/sc-picker/dist/js/picker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/talwin/dist/js/talwin.min.js"></script>
 ```
 - Unpkg CDN
 ```html
 <!-- Style -->
-<link rel="stylesheet" href="https://unpkg.com/sc-picker/dist/css/picker.min.css">
+<link rel="stylesheet" href="https://unpkg.com/talwin/dist/css/talwin.min.css">
 
 <!-- Script -->
-<script src="https://unpkg.com/sc-picker/dist/js/picker.min.js"></script>
+<script src="https://unpkg.com/talwin/dist/js/talwin.min.js"></script>
 ```
 
 ## Usage
@@ -114,8 +114,8 @@ talwin.on('event', function(argument) {
 ```
 | Event  | Argument | Description                    |
 |------- | --------------- | ------------------------------ |
-| `open` | ``   | Fires when the picker get opened |
-| `close` | ``  | Fires when the picker get closed |
+| `open` | `-`   | Fires when the picker get opened |
+| `close` | `-`  | Fires when the picker get closed |
 | `change` | (`colorObject`, `source`) | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event  |
 | `color` | (`colorObject`, `source`) | Similar to the `input` event, fires every time the color changes |
 
@@ -209,7 +209,7 @@ picker.setColor('purple').trigger('change');
   *Note:* swatch argument can be a color string (must exist in `Options.swatches` array) or an index.
 - **reset**()
 
-  Reset default color.
+  Reset to default color.
 - **destroy**()
 
   Removes the color picker functionality completely(free up memory).
