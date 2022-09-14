@@ -194,7 +194,7 @@ export const App = (talwin) => {
 
 
     /**
-     * Repositions popper.
+     * Repositions the popper.
      */
     const reposition = () => {
         popper && popper.update();
@@ -208,7 +208,7 @@ export const App = (talwin) => {
      */
     const open = (silent) => {
         if (! _isOpen && ! config.disabled) {
-            // Update inptus.
+            // Update inputs.
             colorState.update({}, true);
             reposition();
             // Add open class.
