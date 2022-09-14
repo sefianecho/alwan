@@ -62,7 +62,7 @@ export const Swatches = (parent, talwin) => {
             setElementsHTML(container);
     
             swatches.forEach((color, index) => {
-                buttons[index] = createSwatchButton(color);;
+                buttons[index] = createSwatchButton(color);
             });
 
             self.$ = buttons;
