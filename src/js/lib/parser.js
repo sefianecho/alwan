@@ -59,18 +59,18 @@ export const parseColor = (colorString, asString) => {
         }
     }
 
-	// colorString is not an HSL string.
-	if (! color) {
+    // colorString is not an HSL string.
+    if (! color) {
 
-		ctx.fillStyle = '#000';
-		ctx.fillStyle = colorString;
-		colorString = ctx.fillStyle;
-		// ColorString is either hex or rgb string,
-		// if it's hex convert it to rgb object,
-		// if it's rgb then parse it to object.
-		if (HEX_REGEX.test(colorString)) {
-			color = HEXToRGB(colorString);
-		} else {
+        ctx.fillStyle = '#000';
+        ctx.fillStyle = colorString;
+        colorString = ctx.fillStyle;
+        // ColorString is either hex or rgb string,
+        // if it's hex convert it to rgb object,
+        // if it's rgb then parse it to object.
+        if (HEX_REGEX.test(colorString)) {
+            color = HEXToRGB(colorString);
+        } else {
             // Parse RGB string.
             let [r, g, b, a] = colorString.match(/\((.+)\)/)[1]
                                           .split(',')

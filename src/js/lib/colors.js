@@ -43,7 +43,7 @@ export const toString = (color, format) => {
 
     let colorString = color;
 
-	if (! isString(color)) {
+    if (! isString(color)) {
 
         let a = '',
             opacity = '',
@@ -55,8 +55,8 @@ export const toString = (color, format) => {
         }
 
         let percent = format === HSL_FORMAT ? '%' : '';
-		colorString = format + a + '(' + color[format[0]] + comma + color[format[1]] + percent + comma + color[format[2]] + percent + opacity + ')';
-	}
+        colorString = format + a + '(' + color[format[0]] + comma + color[format[1]] + percent + comma + color[format[2]] + percent + opacity + ')';
+    }
 
     return colorString;
 }
@@ -83,8 +83,8 @@ export const HEXToRGB = hexColor => ({
  * @returns {string}
  */
 const toHex = number => {
-	let hexNumber = number.toString(16);
-	return hexNumber.length < 2 ? '0' + hexNumber : hexNumber;
+    let hexNumber = number.toString(16);
+    return hexNumber.length < 2 ? '0' + hexNumber : hexNumber;
 }
 
 
@@ -126,16 +126,16 @@ export const HSVToHSL = (hsv, percentage) => {
  * @returns {Object}
  */
 export const HSLToHSV = (hsl) => {
-	let s = hsl.s / 100,
-		l = hsl.l / 100,
-		v = l + s * min(l, 1 - l);
-	
-	return {
-		h: hsl.h,
-		s: v ? 2 * (1 - l / v) : 0,
-		v,
-		a: hsl.a
-	}
+    let s = hsl.s / 100,
+        l = hsl.l / 100,
+        v = l + s * min(l, 1 - l);
+
+    return {
+        h: hsl.h,
+        s: v ? 2 * (1 - l / v) : 0,
+        v,
+        a: hsl.a
+    }
 }
 
 
@@ -146,23 +146,23 @@ export const HSLToHSV = (hsl) => {
  * @returns {Object}
  */
 export const RGBToHSV = rgb => {
-	let R = rgb.r / 255,
-		G = rgb.g / 255,
-		B = rgb.b / 255,
-		Cmax = max(R, G, B),
-		Cmin = min(R, G, B),
-		range = Cmax - Cmin,
-		saturation = Cmax === 0 ? 0 : range / Cmax,
-		hue = range === 0 ? 0
+    let R = rgb.r / 255,
+        G = rgb.g / 255,
+        B = rgb.b / 255,
+        Cmax = max(R, G, B),
+        Cmin = min(R, G, B),
+        range = Cmax - Cmin,
+        saturation = Cmax === 0 ? 0 : range / Cmax,
+        hue = range === 0 ? 0
             : Cmax === R ? ((G - B) / range) % 6
             : Cmax === G ? ((B - R) / range) + 2
             : Cmax === B ? ((R - G) / range) + 4
             : 0;
 
-	return {
-		h: round( ( 360 + hue * 60 ) % 360 ),
-		s: saturation,
-		v: Cmax,
-		a: round( rgb.a * 100 ) / 100
-	}
+    return {
+        h: round( ( 360 + hue * 60 ) % 360 ),
+        s: saturation,
+        v: Cmax,
+        a: round( rgb.a * 100 ) / 100
+    }
 }
