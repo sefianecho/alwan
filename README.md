@@ -25,7 +25,7 @@ A simple, zero dependencies, pure vanilla javascript, lightweight (only ~13Kb) c
 - No dependencies.
 
 ## Demo
-
+[Click here to try it](https://sofianchouaib.github.io/talwin/)
 ## Getting started
 Install using package manager:
 ```shell
