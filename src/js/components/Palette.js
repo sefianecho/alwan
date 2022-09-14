@@ -33,6 +33,22 @@ export const Palette = (parent, talwin) => {
     setVisibility(overlay, false);
 
     /**
+     * Move marker one step horizontally using the keyboard.
+     */
+    const moveX = {
+        [ARROW_RIGHT]: 1,
+        [ARROW_LEFT]: -1
+    }
+
+    /**
+     * Move marker one step vertically using the keyboard.
+     */
+    const moveY = {
+        [ARROW_UP]: -1,
+        [ARROW_DOWN]: 1
+    }
+
+    /**
      * Marker component.
      */
     const marker = Marker(el);
@@ -48,33 +64,17 @@ export const Palette = (parent, talwin) => {
     let WIDTH, HEIGHT;
 
     /**
-     * Move marker one step horizontally using keyboard.
-     */
-    const moveX = {
-        [ARROW_RIGHT]: 1,
-        [ARROW_LEFT]: -1
-    }
-
-    /**
-     * Move marker one step vertically using keyboard.
-     */
-    const moveY = {
-        [ARROW_UP]: -1,
-        [ARROW_DOWN]: 1
-    }
-
-    /**
      * Palette event listeners.
      */
     let listeners = [];
 
     /**
-     * Palette element bounds.
+     * Palette bounds.
      */
     let bounds;
 
     /**
-     * State of the palette.
+     * State of the marker.
      */
     let isDragging = false;
 
@@ -86,8 +86,8 @@ export const Palette = (parent, talwin) => {
      */
     const dragStart = e => {
         if (e.touches && e.touches.length > 1) {
-			return;
-		}
+            return;
+        }
         // Save color state.
         colorState.start();
         // Cache palette's bounds.
@@ -108,8 +108,8 @@ export const Palette = (parent, talwin) => {
      */
     const dragMove = e => {
         if (!isDragging || (e.touches && e.touches.length > 1)) {
-			return;
-		}
+            return;
+        }
         moveAndUpdateColor(e);
     }
 
@@ -165,8 +165,8 @@ export const Palette = (parent, talwin) => {
         y = e.clientY - top;
 
         // Make sure x and y don't go out of bounds.
-		x = x < 0 ? 0 : x > WIDTH ? WIDTH : x;
-		y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
+        x = x < 0 ? 0 : x > WIDTH ? WIDTH : x;
+        y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
 
         updateColor(x, y);
     }
