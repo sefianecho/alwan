@@ -130,21 +130,13 @@ talwin.on('event', function(argument) {
 ### ColorObject
 Color object is the output of Talwin color picker, its properties are:
 
-- **hsv**() : `object`
-
-Gets an HSV color object.
-- **rgb**(asArray: `boolean`) : `object`
-
-Get an RGB color object or an Array if `asArray` is set to true,
+- **hsv**() : `object` — Gets an HSV color object.
+- **rgb**(asArray: `boolean`) : `object` — Get an RGB color object or an Array if `asArray` is set to true,
 call the method `toString()` on this object to get an RGB string.
-- **hsl**(asArray: `boolean`) : `object`
-
-Get an HSL color object or an Array if `asArray` is set to true,
+- **hsl**(asArray: `boolean`) : `object` — Get an HSL color object or an Array if `asArray` is set to true,
 call the method `toString()` on this object to get an HSL string.
 
-- **hex**() `string`
-
-Gets a hex color.
+- **hex**() `string` — Gets a hex color.
 
 ```javascript
 // e.g.
@@ -165,59 +157,26 @@ talwin.on('change', function(color) {
 ```
 
 # Methods
-- **setColor**(color: `string | object`) : `object`
-
-Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events
-if you want to trigger events add `.trigger(change | color)` to it
+- **setColor**(color: `string | object`) : `object` — Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events.
+If you want to trigger events add `.trigger(change | color)` to it
 ```javascript
 // Set color 'purple' and trigger 'change' event.
 picker.setColor('purple').trigger('change');
 ```
-- **getColor**() : `object`
-
-  Returns the color object.
-- **open**()
-
-  Open/Show picker.
-- **isOpen**() : `boolean`
-  
-  Returns the state of the picker opened `true` or closed `false`.
-- **toggle**()
-  
-  Toggle picker, if its hidden show it else hide it.
-- **setOptions**(options: `object`)
-  
-  Sets one or more options for the picker.
-- **trigger**(event: `string`)
-  
-  Triggers an event.
-- **on**(event: `string`, handler: `callback`)
-
-  Attaches an event handler function.
-- **off**(event: `string`, handler: `callback`)
-  
-  Removes an event handler, if the handler argument is omitted then all handlers attach to this event will be removed,
-  calling this method without arguments will remove all handlers of all events.
-- **disable**()
-  
-  Disables picker (users won't be able to pick a color).
-- **enable**()
-  
-  Enables picker.
-- **reposition**()
-
-  Updates picker position only if it's a popover.
-- **addSwatch**(color: `string`)
-  
-  Adds a swatch button.
-- **removeSwatch**(swatch: `string | number`)
-  
-  Removes color from the `Options.swatches` array, also removes its button from the swatches container.
+- **getColor**() : `object` — Returns the color object.
+- **open**() — Open/Show picker.
+- **isOpen**() : `boolean` — Returns the state of the picker opened `true` or closed `false`.
+- **toggle**() — Toggle picker, if its hidden show it else hide it.
+- **setOptions**(options: `object`) — Sets one or more options for the picker.
+- **trigger**(event: `string`) — Triggers an event.
+- **on**(event: `string`, handler: `callback`) — Attaches an event handler function.
+- **off**(event: `string`, handler: `callback`) — Removes an event handler, if the handler argument is omitted then all handlers attach to this event will be removed, calling this method without arguments will remove all handlers of all events.
+- **disable**() — Disables picker (users won't be able to pick a color).
+- **enable**() — Enables picker.
+- **reposition**() — Updates picker position only if it's a popover.
+- **addSwatch**(color: `string`) — Adds a swatch button.
+- **removeSwatch**(swatch: `string | number`) — Removes color from the `Options.swatches` array, also removes its button from the swatches container.
   
   *Note:* swatch argument can be a color string in the `Options.swatches` array or an index.
-- **reset**()
-
-  Reset to default color.
-- **destroy**()
-
-  Removes the color picker functionality completely(free up memory).
+- **reset**() — Reset to default color.
+- **destroy**() — Removes the color picker functionality completely(free up memory).
