@@ -56,14 +56,14 @@ export const Inputs = (parent, alwan) => {
      */
     let listeners = [];
 
-    const { config, _s: colorState, _e: { emit } } = alwan;
+    const { config, _s: colorState, _e: { _emit } } = alwan;
 
     /**
      * Init. Inputs.
      *
      * @param {Object} options - Options.
      */
-    self.init = (options) => {
+    self._init = (options) => {
         let { inputs, format } = options;
         let length;
 
@@ -137,7 +137,7 @@ export const Inputs = (parent, alwan) => {
                 }));
             });
 
-            colorState.update({});
+            colorState._update({});
         }
     }
 
@@ -162,8 +162,8 @@ export const Inputs = (parent, alwan) => {
                 colorString = format + '(' + inputList.reduce((string, currentInput) => (string && string + ',') + currentInput.value, '') + ')';
             }
 
-            if (colorState.updateByString(colorString, self)) {
-                emit(COLOR, self.$);
+            if (colorState._updateFromString(colorString, self)) {
+                _emit(COLOR, self.$);
             }
         }
     }
@@ -191,10 +191,10 @@ export const Inputs = (parent, alwan) => {
     const triggerChangeEvent = e => {
         if (e.type === FOCUS_IN) {
             // Save color state, when inputs receive focus.
-            colorState.start();
+            colorState._saveColor();
         } else {
             // Trigger change event if color state is changed.
-            colorState.end(self.$);
+            colorState._triggerChange(self.$);
         }
     }
 
@@ -214,7 +214,7 @@ export const Inputs = (parent, alwan) => {
      *
      * @param {Object} color - Color object.
      */
-    self.val = color => {
+    self._setValue = color => {
         objectIterator(self.$, (input, key) => {
             input.value = color[key];
         });

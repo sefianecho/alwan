@@ -1,19 +1,19 @@
 $primary-color: #117ce0;
-$transparency-pattern-svg: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 20 20"><path fill="%23d1d3d4" d="M0 0h10v10H0Z"/><path fill="%23fff" d="M0 10h10v10H0Z"/><path fill="%23d1d3d4" d="M10 10h10v10H10Z"/><path fill="%23fff" d="M10 0h10v10H10Z"/></svg>');
+$pattern-svg: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 20 20"><path fill="%23d1d3d4" d="M0 0h10v10H0Z"/><path fill="%23fff" d="M0 10h10v10H0Z"/><path fill="%23d1d3d4" d="M10 10h10v10H10Z"/><path fill="%23fff" d="M10 0h10v10H10Z"/></svg>');
 $box-shadow: 0 0 3px rgba(0,0,0,0.7);
 
 
-// Talwin container.
-$talwin-max-width: 280px;
-$talwin-background-light: #fff;
-$talwin-border-color-light: #ccc;
-$talwin-border-color-dark: #aaa;
+// Alwan container.
+$alwan-max-width: 280px;
+$alwan-background-light: #fff;
+$alwan-border-color-light: #ccc;
+$alwan-border-color-dark: #aaa;
 $border-color-light: #ccc;
 
-$talwin-background-dark: #222;
+$alwan-background-dark: #222;
 $border-color-dark: #444;
 
-$talwin-forground-dark: #fff;
+$alwan-forground-dark: #fff;
 
 // Marker.
 $marker-width: 18px;
@@ -91,4 +91,4 @@ $button-hover-background-dark: #444;
 // Reference button.
 $ref-button-height: 1.5rem;
 $ref-button-width: 1.5rem;
-$ref-button-border-radius: 4px;//0.25rem;
+$ref-button-border-radius: 0.25rem;

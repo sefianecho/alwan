@@ -19,7 +19,7 @@ const DISABLED_CLASSNAME = 'tw-disabled';
  */
 export const App = (alwan) => {
 
-    let { config, _e: { emit }, _s: colorState } = alwan;
+    let { config, _e: { _emit }, _s: colorState } = alwan;
 
     /**
      * Top container.
@@ -38,7 +38,7 @@ export const App = (alwan) => {
     /**
      * Picker visibility state.
      */
-    let _isOpen = false;
+    let isOpen = false;
 
     /**
      * Reference element scrollable ancestors.
@@ -59,9 +59,9 @@ export const App = (alwan) => {
      *
      * @param {Object} options - Alwan options.
      */
-    const init = (options) => {
+    const _init = (options) => {
         let { theme, popover, target, position, margin, disabled, id, toggle } = options;
-        let refElement = alwan._ui.ref.$;
+        let refElement = alwan._c.ref.$;
         let targetElement = getElement(target);
         let targetReference = targetElement || refElement;
 
@@ -74,7 +74,7 @@ export const App = (alwan) => {
         /**
          * Set disable.
          */
-        disable(disabled);
+        _setDisable(disabled);
 
         /**
          * Set Theme.
@@ -83,7 +83,7 @@ export const App = (alwan) => {
 
         // Toggle option is false, picker is always open.
         if (! toggle) {
-            open(true);
+            _open(true);
         }
 
         // Hide reference if both popover and toggle are false.
@@ -120,13 +120,13 @@ export const App = (alwan) => {
      * @param {Event} e - Scroll or Resize event.
      */
     const updatePopper = e => {
-        if (_isOpen) {
-            reposition();
+        if (isOpen) {
+            _reposition();
 
             // Close picker if the reference element is not visible in the viewport,
             // of nested scrollable elements.
-            if (! isInViewport(alwan._ui.ref.$, scrollableAncestors)) {
-                close(true);
+            if (! isInViewport(alwan._c.ref.$, scrollableAncestors)) {
+                _close(true);
             }
         }
     }
@@ -161,17 +161,17 @@ export const App = (alwan) => {
      */
     const handlesAccessibility = e => {
 
-        if (_isOpen) {
+        if (isOpen) {
 
             let { target, type, key, shiftKey } = e;
-            let components = alwan._ui;
+            let components = alwan._c;
             let refElement = components.ref.$;
             let palette = components.palette.$;
             let elementToFocus;
             // Clicking outside the picker or pressing Escape key, results in,
             // closing the picker.
             if (key === ESCAPE || (type === MOUSE_DOWN && refElement !== target && ! root.contains(target))) {
-                close();
+                _close();
             } else if (key === TAB) {
                 // Pressing Tab on reference element sends focus to the picker palette.
                 if (target === refElement && !shiftKey) {
@@ -196,8 +196,8 @@ export const App = (alwan) => {
     /**
      * Repositions the popper.
      */
-    const reposition = () => {
-        popper && popper.update();
+    const _reposition = () => {
+        popper && popper._update();
     }
 
 
@@ -206,15 +206,15 @@ export const App = (alwan) => {
      *
      * @param {Boolean} silent - Whether to trigger the open event or not.
      */
-    const open = (silent) => {
-        if (! _isOpen && ! config.disabled) {
+    const _open = (silent) => {
+        if (! isOpen && ! config.disabled) {
             // Update inputs.
-            colorState.update({}, true);
-            reposition();
+            colorState._update({}, true);
+            _reposition();
             // Add open class.
             updateClass(root, OPEN, true);
-            _isOpen = true;
-            ! silent && emit(OPEN);
+            isOpen = true;
+            ! silent && _emit(OPEN);
         }
     }
 
@@ -223,20 +223,20 @@ export const App = (alwan) => {
      *
      * @param {Boolean} silent - Whether to trigger the close event or not.
      */
-    const close = (silent) => {
-        if (_isOpen && config.toggle) {
+    const _close = (silent) => {
+        if (isOpen && config.toggle) {
             // Remove open class.
             updateClass(root, OPEN, false);
-            _isOpen = false;
-            ! silent && emit(CLOSE);
+            isOpen = false;
+            ! silent && _emit(CLOSE);
         }
     }
 
     /**
      * Toggles (opens/closes) the color picker.
      */
-    const toggle = () => {
-        _isOpen ? close() : open();
+    const _toggle = () => {
+        isOpen ? _close() : _open();
     }
 
     /**
@@ -244,28 +244,28 @@ export const App = (alwan) => {
      *
      * @returns {Boolean}
      */
-    const isOpen = () => _isOpen;
+    const _isOpen = () => isOpen;
 
     /**
      * Disable/Enable Picker.
      *
      * @param {Boolean} state - Picker state disabled (true) or enabled (false).
      */
-    const disable = state => {
+    const _setDisable = state => {
         config.disabled = state;
-        state && close(true);
+        state && _close(true);
         // Add/Remove disable class.
-        updateClass(alwan._ui.ref.$, DISABLED_CLASSNAME, state);
+        updateClass(alwan._c.ref.$, DISABLED_CLASSNAME, state);
     }
 
     return merge(self, {
         $: root,
-        init,
-        isOpen,
-        open,
-        close,
-        toggle,
-        disable,
-        reposition,
+        _init,
+        _isOpen,
+        _open,
+        _close,
+        _toggle,
+        _setDisable,
+        _reposition,
     });
 }

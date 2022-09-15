@@ -17,8 +17,8 @@ const HEX_REGEX = /^#[0-9a-f]{6}$/i;
  */
 export const parseColor = (colorString, asString) => {
 
-    let color;
-    let format;
+    let _color;
+    let _format;
 
     colorString = colorString.trim();
     /**
@@ -54,13 +54,13 @@ export const parseColor = (colorString, asString) => {
             // Alpha value must be between 0 and 1.
             a = a ? boundNumber(a.slice(-1) === '%' ? float(a) / 100 : a, 1) : 1;
 
-            color  = { h, s, l, a };
-            format = HSL_FORMAT;
+            _color  = { h, s, l, a };
+            _format = HSL_FORMAT;
         }
     }
 
     // colorString is not an HSL string.
-    if (! color) {
+    if (! _color) {
 
         ctx.fillStyle = '#000';
         ctx.fillStyle = colorString;
@@ -69,14 +69,14 @@ export const parseColor = (colorString, asString) => {
         // if it's hex convert it to rgb object,
         // if it's rgb then parse it to object.
         if (HEX_REGEX.test(colorString)) {
-            color = HEXToRGB(colorString);
+            _color = HEXToRGB(colorString);
         } else {
             // Parse RGB string.
             let [r, g, b, a] = colorString.match(/\((.+)\)/)[1]
                                           .split(',')
                                           .map(value => float(value));
 
-            color = {
+            _color = {
                 r,
                 g,
                 b,
@@ -84,8 +84,8 @@ export const parseColor = (colorString, asString) => {
             }
         }
 
-        format = RGB_FORMAT;
+        _format = RGB_FORMAT;
     }
 
-    return asString ? toString(color, format) : { c: color, f: format };
+    return asString ? toString(_color, _format) : { _color, _format };
 }

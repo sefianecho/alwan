@@ -2,43 +2,43 @@
 @use 'variables' as var;
 
 :root {
-    --tw-transparency-pattern: #{var.$transparency-pattern-svg};
+    --lw-pattern: #{var.$pattern-svg};
 }
 
-.talwin {
+.alwan {
     width: 100%;
-    max-width: var.$talwin-max-width;
-    background: var(--talwin-bg, var.$talwin-background-light);
-    border: 1px solid var(--talwin-bc, var.$talwin-border-color-light);
+    max-width: var.$alwan-max-width;
+    background: var(--alwan-bg, var.$alwan-background-light);
+    border: 1px solid var(--alwan-bc, var.$alwan-border-color-light);
     
     &:not(.open) {
         visibility: hidden;
     }
     
-    &:not(.tw-popper, .open) {
+    &:not(.lw-popper, .open) {
         overflow: hidden;
         height: 0;
         border: 0;
     }
 
     &[data-theme="dark"] {
-        --talwin-bg: #{var.$talwin-background-dark};
-        --talwin-bc: #{var.$talwin-border-color-dark};
-        --tw-swatches-bg: #{var.$swatches-background-dark};
-        --tw-bc: #{var.$border-color-dark};
-        --tw-thumb: #{var.$thumb-background-dark};
-        --tw-thumb-bc: #{var.$thumb-border-color-dark};
-        --tw-label: #{var.$input-label-color-dark};
-        --tw-input-bg: #{var.$input-background-dark};
-        --talwin-fg: #{var.$talwin-forground-dark};
-        --tw-btn-hover: #{var.$button-hover-background-dark};
+        --alwan-bg: #{var.$alwan-background-dark};
+        --alwan-bc: #{var.$alwan-border-color-dark};
+        --lw-swatches-bg: #{var.$swatches-background-dark};
+        --lw-bc: #{var.$border-color-dark};
+        --lw-thumb: #{var.$thumb-background-dark};
+        --lw-thumb-bc: #{var.$thumb-border-color-dark};
+        --lw-label: #{var.$input-label-color-dark};
+        --lw-input-bg: #{var.$input-background-dark};
+        --alwan-fg: #{var.$alwan-forground-dark};
+        --lw-btn-hover: #{var.$button-hover-background-dark};
     }
 
     &__container {
         display: flex;
         align-items: center;
         padding: var.$container-padding;
-        border-top: 1px solid var(--tw-bc, var.$border-color-light);
+        border-top: 1px solid var(--lw-bc, var.$border-color-light);
     }
 
     &__palette {
@@ -48,8 +48,8 @@
         background: linear-gradient(to bottom, transparent, #000),
                     linear-gradient(to right, #fff, hsl(var(--hue, 0), 100%, 50%));
 
-        &.tw-focus:focus {
-            & .talwin__marker {
+        &.lw-focus:focus {
+            & .alwan__marker {
                 border-color: var.$primary-color;
             }
         }
@@ -70,10 +70,10 @@
         position: relative;
         width: var.$preview-width;
         height: var.$preview-height;
-        background: var(--tw-transparency-pattern);
+        background: var(--lw-pattern);
         flex-shrink: 0;
 
-        .tw-btn {
+        .lw-btn {
             position: relative;
             display: flex;
             justify-content: center;
@@ -84,7 +84,7 @@
             opacity: 0;
             border-radius: 0;
 
-            &.tw-focus:focus,
+            &.lw-focus:focus,
             &:hover {
                 opacity: 1;
                 z-index: 100;
@@ -100,8 +100,8 @@
         padding: 0;
         cursor: pointer;
         -webkit-appearance: none;
-        --tw-alpha: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--tw-transparency-pattern);
-        --tw-hue: linear-gradient(
+        --lw-alpha: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--lw-pattern);
+        --lw-hue: linear-gradient(
             -90deg,
             #ff0000,
             #ffff00,
@@ -137,9 +137,9 @@
             height: var.$thumb-height;
             width: var.$thumb-width;
             margin-top: - math.div(var.$thumb-height - var.$track-height, 2);
-            background-color: var(--tw-thumb, var.$thumb-background);
+            background-color: var(--lw-thumb, var.$thumb-background);
             border-radius: var.$thumb-border-radius;
-            border: 1px solid var(--tw-thumb-bc, var.$thumb-border-color);
+            border: 1px solid var(--lw-thumb-bc, var.$thumb-border-color);
             box-shadow: var.$thumb-box-shadow;
             cursor: ew-resize;
         }
@@ -148,8 +148,8 @@
             width: var.$thumb-width;
             height: var.$thumb-height;
             padding: 0;
-            background-color: var(--tw-thumb, var.$thumb-background);
-            border: 1px solid var(--tw-thumb-bc, var.$thumb-border-color);
+            background-color: var(--lw-thumb, var.$thumb-background);
+            border: 1px solid var(--lw-thumb-bc, var.$thumb-border-color);
             border-radius: var.$thumb-border-radius;
             box-shadow: var.$thumb-box-shadow;
             cursor: ew-resize;
@@ -157,11 +157,11 @@
 
         // Hue slider.
         &--hue::-webkit-slider-runnable-track {
-            background: var(--tw-hue);
+            background: var(--lw-hue);
         }
 
         &--hue::-moz-range-track {
-            background: var(--tw-hue)
+            background: var(--lw-hue)
         }
 
         // Opacity slider.
@@ -170,11 +170,11 @@
             margin-top: var.$alpha-slider-margin-top;
 
             &::-webkit-slider-runnable-track {
-                background: var(--tw-alpha);
+                background: var(--lw-alpha);
             }
 
             &::-moz-range-track {
-                background: var(--tw-alpha);
+                background: var(--lw-alpha);
             }
         }
     }
@@ -188,7 +188,7 @@
             text-align: center;
             margin-right: var.$input-label-margin-right;
             text-transform: uppercase;
-            color: var(--tw-label, var.$input-label-color);
+            color: var(--lw-label, var.$input-label-color);
             cursor: pointer;
             font-family: var.$input-label-font-family;
             font-size: var.$input-label-font-size;
@@ -201,11 +201,11 @@
         box-sizing: border-box;
         padding: var.$input-padding;
         text-align: center;
-        color: var(--talwin-fg, var.$input-color);
+        color: var(--alwan-fg, var.$input-color);
         font-family: var.$input-font-family;
-        border:  1px solid var(--tw-bc, var.$border-color-light);
+        border:  1px solid var(--lw-bc, var.$border-color-light);
         margin-bottom: var.$input-margin-bottom;
-        background-color: var(--tw-input-bg);
+        background-color: var(--lw-input-bg);
 
         &:focus {
             outline: 0;
@@ -221,7 +221,7 @@
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        background-color: var(--tw-swatches-bg, var.$swatches-background-light);
+        background-color: var(--lw-swatches-bg, var.$swatches-background-light);
         padding: var.$swatches-container-padding;
         max-height: var.$swatches-max-height;
         overflow-y: auto;
@@ -236,17 +236,17 @@
         border: 0;
         margin: var.$swatch-margin;
         cursor: pointer;
-        background-image: var(--tw-transparency-pattern);
+        background-image: var(--lw-pattern);
         border-radius: var.$swatch-border-radius;
         overflow: hidden;
 
         &:focus {
-            outline: 1px dashed var(--tw-color);
+            outline: 1px dashed var(--lw-color);
             outline-offset: 2px;
         }
     }
 
-    &.tw-popper {
+    &.lw-popper {
         position: fixed;
         z-index: 9999;
         border: 0;
@@ -255,7 +255,7 @@
                     0px 3px 14px 2px rgba(0, 0, 0, 0.12);
     }
 
-    .tw-overlay {
+    .lw-overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -266,16 +266,16 @@
         cursor: move;
     }
 
-    .tw-btn {
+    .lw-btn {
         display: inline-block;
         background: transparent;
-        color: var(--talwin-fg);
+        color: var(--alwan-fg);
         border: 0;
         cursor: pointer;
         padding: var.$button-padding;
     
         &:hover {
-            background-color: var(--tw-btn-hover, var.$button-hover-background);
+            background-color: var(--lw-btn-hover, var.$button-hover-background);
         }
     
         svg {
@@ -285,29 +285,29 @@
         }
     }
 
-    .tw-mr {
+    .lw-mr {
         margin-right: var.$preview-margin-right;
     }
     
-    .tw-w100 {
+    .lw-w100 {
         width: 100%;
     }
 }
 
 // To display color on top of the transparency pattern.
-.talwin__swatch::before,
-.talwin__preview::before,
-.tw-ref::before {
+.alwan__swatch::before,
+.alwan__preview::before,
+.lw-ref::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--tw-color);
+    background-color: var(--lw-color);
 }
 
-.tw-ref {
+.lw-ref {
     position: relative;
     display: inline-block;
     width: var.$ref-button-width;
@@ -317,14 +317,14 @@
     cursor: pointer;
     overflow: hidden;
     border-radius: var.$ref-button-border-radius;
-    background: var(--tw-transparency-pattern);
+    background: var(--lw-pattern);
 
     &:focus {
-        outline: 1px dashed var(--tw-color);
+        outline: 1px dashed var(--lw-color);
         outline-offset: 2px;
     }
 }
 
-.tw-disabled {
+.lw-disabled {
     cursor: not-allowed;
 }

@@ -47,7 +47,7 @@ export const Marker = parent => {
      * @param {Number} x - X coordinate.
      * @param {Number} y - Y coordinate.
      */
-    const moveTo = (x, y) => {
+    const _moveTo = (x, y) => {
         markerX = x;
         markerY = y;
         el.style.transform = `translate(${x - centerX}px, ${y - centerY}px)`;
@@ -58,12 +58,12 @@ export const Marker = parent => {
      *
      * @returns {Object}
      */
-    const point = () => ({ x: markerX, y: markerY });
+    const _getPosition = () => ({ x: markerX, y: markerY });
 
 
     return {
         $: el,
-        moveTo,
-        point
+        _moveTo,
+        _getPosition
     }
 }

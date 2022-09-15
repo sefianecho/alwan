@@ -311,6 +311,6 @@ export const scPop = (ref, pop, options) => {
     setPosition();
 
     return {
-        update: setPosition
+        _update: setPosition
     }
 }

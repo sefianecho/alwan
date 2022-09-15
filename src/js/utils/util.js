@@ -36,8 +36,8 @@ export const boundNumber = (number, upperBound, lowerBound) => min(max(number, l
  * @param {Element|Object} source - Event source.
  */
 export const setColorAndTriggerEvents = (alwan, color, source) => {
-    if (alwan._s.updateByString(color, true)) {
-        let emit = alwan._e.emit;
+    if (alwan._s._updateFromString(color, true)) {
+        let emit = alwan._e._emit;
         emit(COLOR, source);
         emit(CHANGE, source);
     }

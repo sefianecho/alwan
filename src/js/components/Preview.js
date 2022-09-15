@@ -38,7 +38,7 @@ export const Preview = (parent, alwan) => {
          *
          * @param {Object} options - Picker options.
          */
-        init(options) {
+        _init(options) {
             let { preview, copy } = options;
             let previewArea = self.$;
             let copyButton = self.cp;
@@ -96,7 +96,7 @@ export const Preview = (parent, alwan) => {
 
             // On click copy color and update svg to display a Check icon.
             if (! isCopied && type === CLICK) {
-                isCopied = alwan._s.copy();
+                isCopied = alwan._s._copyColor();
                 updateSVG();
             }else {
                 // On focus add a focus class.

@@ -25,11 +25,11 @@ export const EventListener = (alwan) => {
          * @param {String} type - Event type.
          * @param  {Element|Object} source - Event Source.
          */
-        emit: (type, source) => {
+        _emit: (type, source) => {
             if (! alwan.config.disabled && listeners[type]) {
                 listeners[type].forEach(handler => {
                     if (type === COLOR || type === CHANGE) {
-                        handler(alwan._s.value, source || alwan);
+                        handler(alwan._s._colorOutput, source || alwan);
                     } else {
                         handler();
                     }
@@ -43,7 +43,7 @@ export const EventListener = (alwan) => {
          * @param {String} type - Event type.
          * @param {CallableFunction} handler - Event handler.
          */
-        on: (type, handler) => {
+        _on: (type, handler) => {
             listeners[type] && listeners[type].push(handler);
         },
 
@@ -53,7 +53,7 @@ export const EventListener = (alwan) => {
          * @param {String} type - Event type.
          * @param {CallableFunction} handler - Event handler.
          */
-        off: (type, handler) => {
+        _off: (type, handler) => {
             let handlersArray = listeners[type];
 
             if (handlersArray) {

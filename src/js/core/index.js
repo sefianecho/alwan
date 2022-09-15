@@ -71,7 +71,7 @@ export const initialize = (alwan, options) => {
     merge(config, options);
 
     objectIterator(alwan._c, component => {
-        let init = component.init;
+        let init = component._init;
 
         if (init) {
             init(config);

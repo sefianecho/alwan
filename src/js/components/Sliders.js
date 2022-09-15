@@ -26,7 +26,7 @@ export const Sliders = (parent, alwan) => {
     /**
      * Color state updater.
      */
-    const updateColor = alwan._s.update;
+    const updateColor = alwan._s._update;
 
     /**
      * Builds a slider.
@@ -56,7 +56,7 @@ export const Sliders = (parent, alwan) => {
          *
          * @param {Object} options - New options.
          */
-        init({ opacity }) {
+        _init({ opacity }) {
 
             let alpha = self.alpha;
 
@@ -71,7 +71,7 @@ export const Sliders = (parent, alwan) => {
          *
          * @param {Object} hsv - HSV color object.
          */
-        val(hsv) {
+        _setValue(hsv) {
             let { alpha, hue } = self;
             hue.value = 360 - hsv.h;
             alpha && (alpha.value = hsv.a);
@@ -96,7 +96,7 @@ export const Sliders = (parent, alwan) => {
 
         updateColor(hsv);
         // Either fire change or color event.
-        alwan._e.emit(e.type === CHANGE ? CHANGE : COLOR, slider);
+        alwan._e._emit(e.type === CHANGE ? CHANGE : COLOR, slider);
     }
 
     /**

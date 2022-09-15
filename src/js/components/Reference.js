@@ -27,7 +27,7 @@ export const Reference = (originalRef, alwan) => {
          *
          * @param {Object} options - Picker options.
          */
-        init(options) {
+        _init(options) {
             let { preset, classname } = options;
             let { $: ref, e: events } = self;
 

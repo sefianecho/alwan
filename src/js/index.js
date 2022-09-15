@@ -3,13 +3,13 @@ import { getElement } from "./utils/dom";
 import { merge, objectIterator } from "./utils/object";
 import { defaults } from "./defaults";
 import { createComponents, initialize } from "./core";
-import '../sass/talwin.scss';
-import { Color } from "./core/color";
+import { ColorState } from "./core/colorState";
 import { boundNumber, isString, setColorAndTriggerEvents } from "./utils/util";
 import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
 import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "./lib/colors";
 import { EventListener } from "./core/events/EventListener";
 import { binder } from "./core/events/EventBinder";
+import '../sass/alwan.scss';
 
 
 export default class Alwan {
@@ -43,7 +43,7 @@ export default class Alwan {
         /**
          * Color state.
          */
-        alwan._s = Color(alwan);
+        alwan._s = ColorState(alwan);
 
         /**
          * Components.
@@ -71,28 +71,28 @@ export default class Alwan {
      * @returns {Boolean}
      */
     isOpen() {
-        return this._c.app.isOpen();
+        return this._c.app._isOpen();
     }
 
     /**
      * Opens the picker.
      */
     open() {
-        this._c.app.open();
+        this._c.app._open();
     }
 
     /**
      * Closes the picker.
      */
     close() {
-        this._c.app.close();
+        this._c.app._close();
     }
 
     /**
      * Toggles (opens/closes) the picker.
      */
     toggle() {
-        this._c.app.toggle();
+        this._c.app._toggle();
     }
 
     /**
@@ -102,7 +102,7 @@ export default class Alwan {
      * @param {CallableFunction} handler - Event handler.
      */
     on(type, handler) {
-        this._e.on(type, handler);
+        this._e._on(type, handler);
     }
 
     /**
@@ -117,7 +117,7 @@ export default class Alwan {
      * @param {CallableFunction} handler - Event handler.
      */
     off(type, handler) {
-        this._e.off(type, handler);
+        this._e._off(type, handler);
     }
 
     /**
@@ -133,7 +133,7 @@ export default class Alwan {
         if (! isString(color)) {
             // Get color format from color object.
             format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => format.split('')
-                                                                                   .every(channel => color[channel] && ! isNaN(color[channel])));
+                                                                               .every(channel => color[channel] && ! isNaN(color[channel])));
             if (format) {
                 let a = color.a;
                 color.a = a != null ? a : 1;
@@ -163,7 +163,7 @@ export default class Alwan {
             }
         }
 
-        alwan._s.updateByString(color, true);
+        alwan._s._updateFromString(color, true);
 
         return alwan;
     }
@@ -174,7 +174,7 @@ export default class Alwan {
      * @returns {Object}
      */
     getColor() {
-        return this._s.value;
+        return this._s._colorOutput;
     }
 
     /**
@@ -183,7 +183,7 @@ export default class Alwan {
      * @param {String} color - Color.
      */
     addSwatch(color) {
-        this._c.swatches.add(color);
+        this._c.swatches._add(color);
     }
 
     /**
@@ -192,21 +192,21 @@ export default class Alwan {
      * @param {String|Number} swatch - Can a color string or it's index in the swatches array.
      */
     removeSwatch(swatch) {
-        this._c.swatches.remove(swatch);
+        this._c.swatches._remove(swatch);
     }
 
     /**
      * Enables picker.
      */
     enable() {
-        this._c.app.disable(false);
+        this._c.app._setDisable(false);
     }
 
     /**
      * Disables picker.
      */
     disable() {
-        this._c.app.disable(true);
+        this._c.app._setDisable(true);
     }
 
     /**
@@ -220,7 +220,7 @@ export default class Alwan {
      * Repositions picker if it's displayed as a popover.
      */
     reposition() {
-        this._c.app.reposition();
+        this._c.app._reposition();
     }
 
     /**
@@ -229,7 +229,7 @@ export default class Alwan {
      * @param {String} type - Event type.
      */
     trigger(type) {
-        this._e.emit(type);
+        this._e._emit(type);
     }
 
     /**
@@ -241,7 +241,7 @@ export default class Alwan {
         let components = alwan._c;
 
         // Initialize the reference element back.
-        components.ref.init({ preset: false, toggle: true });
+        components.ref._init({ preset: false, toggle: true });
 
         // Remove all events.
         objectIterator(components, components => {
@@ -256,5 +256,3 @@ export default class Alwan {
         });
     }
 }
-
-window.p = new Alwan('#bar');

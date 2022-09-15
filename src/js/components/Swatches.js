@@ -53,7 +53,7 @@ export const Swatches = (parent, alwan) => {
          *
          * @param {Object} options - Alwan options.
          */
-        init(options) {
+        _init(options) {
             let buttons = [];
             swatches = options.swatches;
     
@@ -72,7 +72,7 @@ export const Swatches = (parent, alwan) => {
          *
          * @param {String} color - Color.
          */
-        add(color) {
+        _add(color) {
             let index = swatches.push(color) - 1;
             self.$[index] = createSwatchButton(color);
     
@@ -84,7 +84,7 @@ export const Swatches = (parent, alwan) => {
          *
          * @param {String|Number} swatch - Color or Swatch Index.
          */
-        remove(swatch) {
+        _remove(swatch) {
             let index = swatches.findIndex((color, index) => swatch === color || int(swatch) === index);
             let swatchButtons = self.$;
 

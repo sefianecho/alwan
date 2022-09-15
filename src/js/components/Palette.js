@@ -18,7 +18,7 @@ const OVERLAY_CLASSNAME = 'tw-overlay';
  */
 export const Palette = (parent, alwan) => {
 
-    const { _s: colorState, _e: { emit }} = alwan;
+    const { _s: colorState, _e: { _emit }} = alwan;
 
     /**
      * Palette element.
@@ -54,9 +54,9 @@ export const Palette = (parent, alwan) => {
     const marker = Marker(el);
 
     /**
-     * Marker Methods.
+     * Marker Method.
      */
-    let { moveTo, point } = marker;
+    let { _moveTo } = marker;
 
     /**
      * Palette dimensions
@@ -89,7 +89,7 @@ export const Palette = (parent, alwan) => {
             return;
         }
         // Save color state.
-        colorState.start();
+        colorState._saveColor();
         // Cache palette's bounds.
         bounds = getBounds(el);
         updateDimensions(bounds);
@@ -122,7 +122,7 @@ export const Palette = (parent, alwan) => {
     const dragEnd = e => {
         if (isDragging) {
             // Trigger change event if color changes.
-            colorState.end(el);
+            colorState._triggerChange(el);
             isDragging = false;
             // Hide overlay.
             setVisibility(overlay, isDragging);
@@ -137,9 +137,9 @@ export const Palette = (parent, alwan) => {
      * @param {Number} y - Y coordinate.
      */
     const updateColor = (x, y) => {
-        moveTo(x, y);
-        colorState.update({ s: x / WIDTH, v: 1 - y / HEIGHT });
-        emit(COLOR, el);
+        _moveTo(x, y);
+        colorState._update({ s: x / WIDTH, v: 1 - y / HEIGHT });
+        _emit(COLOR, el);
     }
 
 
@@ -176,9 +176,9 @@ export const Palette = (parent, alwan) => {
      *
      * @param {Object} hsv - HSV color object.
      */
-    const update = hsv => {
+    const _setMarkerPosition = hsv => {
         updateDimensions();
-        moveTo(hsv.s * WIDTH, (1 - hsv.v) * HEIGHT);
+        _moveTo(hsv.s * WIDTH, (1 - hsv.v) * HEIGHT);
     }
 
     /**
@@ -218,7 +218,7 @@ export const Palette = (parent, alwan) => {
 
             updateDimensions();
 
-            let {x, y} = point();
+            let {x, y} = marker._getPosition();
             let markerX = x, markerY = y;
             // Amount of pixel to move marker horizontally using keyboard.
             let stepX = WIDTH / 100;
@@ -261,7 +261,7 @@ export const Palette = (parent, alwan) => {
     return {
         $: el,
         marker,
-        update,
+        _setMarkerPosition,
         e: listeners
     }
 }

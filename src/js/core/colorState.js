@@ -11,7 +11,7 @@ import { isset } from "../utils/util";
  * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Color = (alwan) => {
+export const ColorState = (alwan) => {
 
     /**
      * HSV color object.
@@ -48,7 +48,7 @@ export const Color = (alwan) => {
      * @param {Object|Boolean} updater - Exclude some components from updating.
      * @param {Object} rgb - RGB color object.
      */
-    const update = (newHSV, updater, rgb) => {
+    const _update = (newHSV, updater, rgb) => {
         if (! config.disabled) {
             merge(HSV, newHSV);
             RGB = rgb || HSVToRGB(HSV);
@@ -64,14 +64,14 @@ export const Color = (alwan) => {
             (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
             // Set palette's hue.
             isset(newHSV.h) && setCustomProperty(palette.$, 'hue', HSV.h);
-    
+
             if (updater !== inputs) {
-                inputs.val(getColor('', config.singleInput));
+                inputs._setValue( getColorByFormat('', config.singleInput) );
             }
-    
+
             if (updater) {
-                sliders.val(HSV);
-                palette.update(HSV);
+                sliders._setValue(HSV);
+                palette._setMarkerPosition(HSV);
             }
         }
     }
@@ -83,7 +83,7 @@ export const Color = (alwan) => {
      * @param {Boolean} asString - Get color as a string.
      * @returns {Object}
      */
-    const getColor = (format, asString) => {
+    const getColorByFormat = (format, asString) => {
         format = format || config.format;
 
         let isHex = format === HEX_FORMAT;
@@ -101,10 +101,10 @@ export const Color = (alwan) => {
      * @param {String} colorString - Color string.
      * @param {Boolean|Object} updater - Exclude some components from updating.
      */
-    const updateByString = (colorString, updater) => {
+    const _updateFromString = (colorString, updater) => {
 
-        let { c: parsedColor, f: format } = parseColor(colorString);
-        let currentColor = getColor(format);
+        let { _color: parsedColor, _format: format } = parseColor(colorString);
+        let currentColor = getColorByFormat(format);
         let isChanged = ! isEqual(parsedColor, currentColor);
         let rgb, hsv;
 
@@ -117,7 +117,7 @@ export const Color = (alwan) => {
                 hsv = RGBToHSV(parsedColor);
             }
 
-            update(hsv, updater, rgb);
+            _update(hsv, updater, rgb);
         }
 
         return isChanged;
@@ -128,7 +128,7 @@ export const Color = (alwan) => {
      *
      * @returns {Boolean}
      */
-    const copy = () => objectIterator(getColor('', true), color => {
+    const _copyColor = () => objectIterator(getColorByFormat('', true), color => {
 
             let clipboard = navigator.clipboard;
 
@@ -189,7 +189,7 @@ export const Color = (alwan) => {
     /**
      * Picker value.
      */
-    const value = {
+    const _colorOutput = {
         [HSV_FORMAT]: () => output(HSV, '', HSV_FORMAT, false),
         [RGB_FORMAT]: asArray => output(RGB, rgbString, RGB_FORMAT, asArray),
         [HSL_FORMAT]: asArray => output(HSVToHSL(HSV), '', HSL_FORMAT, asArray),
@@ -199,8 +199,8 @@ export const Color = (alwan) => {
     /**
      * Set color start.
      */
-    const start = () => {
-        colorStart = getColor();
+    const _saveColor = () => {
+        colorStart = getColorByFormat();
     }
 
     /**
@@ -208,18 +208,18 @@ export const Color = (alwan) => {
      *
      * @param {Element} source - Element that changed color state.
      */
-    const end = (source) => {
-        if (! isEqual(colorStart, getColor())) {
-            event.emit(CHANGE, source);
+    const _triggerChange = (source) => {
+        if (! isEqual(colorStart, getColorByFormat())) {
+            event._emit(CHANGE, source);
         }
     }
 
     return {
-        value,
-        update,
-        updateByString,
-        copy,
-        start,
-        end,
+        _colorOutput,
+        _update,
+        _updateFromString,
+        _copyColor,
+        _saveColor,
+        _triggerChange,
     }
 }
