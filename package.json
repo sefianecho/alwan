@@ -1,8 +1,8 @@
 {
-  "name": "talwin",
+  "name": "talween",
   "version": "1.0.1",
   "description": "A simple, zero dependencies, lightweight color picker.",
-  "main": "dist/js/talwin.min.js",
+  "main": "dist/js/talween.min.js",
   "scripts": {
     "start": "webpack serve --open --config ./scripts/webpack.dev.js",
     "build": "webpack --config ./scripts/webpack.prod.js",
