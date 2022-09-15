@@ -7,7 +7,7 @@ import { Marker } from "./Marker";
  * Palette component constants.
  */
 const PALETTE_CLASSNAME = 'alwan__palette';
-const OVERLAY_CLASSNAME = 'tw-overlay';
+const OVERLAY_CLASSNAME = 'lw-overlay';
 
 /**
  * Picker palette.

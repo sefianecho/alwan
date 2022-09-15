@@ -3,7 +3,7 @@ import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { createElement, replaceElement, setVisibility, updateClass } from "../utils/dom";
 
 
-const PRESET_BUTTON_CLASSNAME = 'tw-ref';
+const PRESET_BUTTON_CLASSNAME = 'lw-ref';
 
 /**
  * Creates a Reference component.

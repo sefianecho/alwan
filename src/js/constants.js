@@ -38,10 +38,10 @@ export const ARROW_DOWN = 'ArrowDown';
 export const ENTER = 'Enter';
 export const ESCAPE = 'Escape';
 
-export const FOCUS_CLASSNAME = 'tw-focus';
-export const BUTTON_CLASSNAME = 'tw-btn';
+export const FOCUS_CLASSNAME = 'lw-focus';
+export const BUTTON_CLASSNAME = 'lw-btn';
 
-export const COLOR_PROPERTY = 'tw-' + COLOR;
+export const COLOR_PROPERTY = 'lw-' + COLOR;
 
 export const REMOVE_METHOD = 'remove';
 export const ADD_METHOD = 'add';

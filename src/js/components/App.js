@@ -7,8 +7,8 @@ import { merge } from "../utils/object";
  * App component constants.
  */
 const ALWAN_CLASSNAME = 'alwan';
-const POPPER_CLASSNAME = 'tw-popper';
-const DISABLED_CLASSNAME = 'tw-disabled';
+const POPPER_CLASSNAME = 'lw-popper';
+const DISABLED_CLASSNAME = 'lw-disabled';
 
 
 /**

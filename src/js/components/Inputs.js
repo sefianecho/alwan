@@ -9,7 +9,7 @@ import { objectIterator } from "../utils/object";
  */
 const INPUTS_CLASSNAME = 'alwan__inputs';
 const INPUT_CLASSNAME = 'alwan__input';
-const LABEL_CLASSNAME = 'tw-label';
+const LABEL_CLASSNAME = 'lw-label';
 
 /**
  * Inputs component.

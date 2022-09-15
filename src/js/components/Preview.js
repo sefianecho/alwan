@@ -4,6 +4,7 @@ import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
 import { createElement, removeElement, setElementsHTML, setVisibility, updateClass } from "../utils/dom";
 
 const PREVIEW_CLASSNAME = 'alwan__preview';
+const MARGIN_CLASSNAME = 'lw-mr';
 
 /**
  * Preview component.
@@ -22,7 +23,7 @@ export const Preview = (parent, alwan) => {
     /**
      * Preview area wrapper element.
      */
-    const container = createElement('', 'tw-mr', parent);
+    const container = createElement('', MARGIN_CLASSNAME, parent);
 
     /**
      * Preview API.

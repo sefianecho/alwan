@@ -8,6 +8,7 @@ import { createElement, removeElement } from "../utils/dom";
 const SLIDER_CLASSNAME = 'alwan__slider';
 const HUE_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--hue';
 const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--alpha'; 
+const WIDTH_CLASSNAME = 'lw-w100';
 
 /**
  * Picker sliders.
@@ -21,7 +22,7 @@ export const Sliders = (parent, alwan) => {
     /**
      * Sliders wrapper element.
      */
-    const container = createElement('', 'tw-w100', parent);
+    const container = createElement('', WIDTH_CLASSNAME, parent);
 
     /**
      * Color state updater.
