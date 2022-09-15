@@ -12,35 +12,35 @@ import { EventListener } from "./core/events/EventListener";
 import { binder } from "./core/events/EventBinder";
 
 
-export default class Talwin {
+export default class Alwan {
 
     static version = VERSION;
 
     /**
-     * Talwin defaults.
+     * Alwan defaults.
      */
     static defaults = defaults;
 
     /**
-     * Talwin picker constructor.
+     * Alwan instance constructor.
      *
      * @param {String|Element} reference - The reference element.
      * @param {Object} options - Options.
      */
     constructor(reference, options) {
         reference = getElement(reference);
-        const talwin = this;
-        talwin.config = merge({}, Talwin.defaults, options);
-        talwin._e = EventListener(talwin);
-        talwin._clr = Color(talwin);
-        talwin._ui = createComponents(reference, talwin);
-        initialize(talwin, talwin.config);
+        const alwan = this;
+        alwan.config = merge({}, Alwan.defaults, options);
+        alwan._e = EventListener(alwan);
+        alwan._clr = Color(alwan);
+        alwan._ui = createComponents(reference, alwan);
+        initialize(alwan, alwan.config);
     }
 
     /**
      * Sets new options.
      *
-     * @param {Object} options - Talwin options.
+     * @param {Object} options - Alwan options.
      */
     setOptions(options) {
         initialize(this, options);
@@ -108,7 +108,7 @@ export default class Talwin {
      */
     setColor(color) {
 
-        let talwin = this;
+        let alwan = this;
         let format;
 
         if (! isString(color)) {
@@ -121,7 +121,7 @@ export default class Talwin {
 
                 if (format === HSV_FORMAT) {
                     // Get current format.
-                    format = talwin.config.format;
+                    format = alwan.config.format;
 
                     // H must be a value between 0 and 360.
                     color.h = (color.h % 360 + 360) % 360;
@@ -144,9 +144,9 @@ export default class Talwin {
             }
         }
 
-        talwin._clr.updateByString(color, true);
+        alwan._clr.updateByString(color, true);
 
-        return talwin;
+        return alwan;
     }
 
     /**
@@ -218,8 +218,8 @@ export default class Talwin {
      */
     destroy() {
 
-        let talwin = this;
-        let components = talwin._ui;
+        let alwan = this;
+        let components = alwan._ui;
 
         // Initialize the reference element back.
         components.ref.init({ preset: false, toggle: true });
@@ -232,8 +232,8 @@ export default class Talwin {
         });
 
         // Remove all properties of this instance.
-        objectIterator(talwin, (value, key) => {
-            talwin[key] = null;
+        objectIterator(alwan, (value, key) => {
+            alwan[key] = null;
         });
     }
 }
