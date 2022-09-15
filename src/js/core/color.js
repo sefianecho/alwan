@@ -8,10 +8,10 @@ import { isset } from "../utils/util";
 /**
  * Color state.
  *
- * @param {Object} talwin - Talwin instance.
+ * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Color = (talwin) => {
+export const Color = (alwan) => {
 
     /**
      * HSV color object.
@@ -39,7 +39,7 @@ export const Color = (talwin) => {
     let colorStart;
 
     
-    let { config, _e: event } = talwin;
+    let { config, _e: event } = alwan;
 
     /**
      * Updates color and UI.
@@ -54,7 +54,7 @@ export const Color = (talwin) => {
             RGB = rgb || HSVToRGB(HSV);
             rgbString = toString(RGB, RGB_FORMAT);
     
-            let components = talwin._ui;
+            let components = alwan._c;
             let { palette, sliders, inputs } = components;
     
             // Preview color.

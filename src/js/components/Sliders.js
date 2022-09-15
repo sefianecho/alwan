@@ -5,7 +5,7 @@ import { createElement, removeElement } from "../utils/dom";
 /**
  * Sliders component constants.
  */
-const SLIDER_CLASSNAME = 'talwin__slider';
+const SLIDER_CLASSNAME = 'alwan__slider';
 const HUE_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--hue';
 const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--alpha'; 
 
@@ -13,10 +13,10 @@ const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--al
  * Picker sliders.
  *
  * @param {Element} parent - Element to append sliders to.
- * @param {Object} talwin - Talwin instance.
+ * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Sliders = (parent, talwin) => {
+export const Sliders = (parent, alwan) => {
 
     /**
      * Sliders wrapper element.
@@ -26,7 +26,7 @@ export const Sliders = (parent, talwin) => {
     /**
      * Color state updater.
      */
-    const updateColor = talwin._clr.update;
+    const updateColor = alwan._s.update;
 
     /**
      * Builds a slider.
@@ -96,7 +96,7 @@ export const Sliders = (parent, talwin) => {
 
         updateColor(hsv);
         // Either fire change or color event.
-        talwin._e.emit(e.type === CHANGE ? CHANGE : COLOR, slider);
+        alwan._e.emit(e.type === CHANGE ? CHANGE : COLOR, slider);
     }
 
     /**

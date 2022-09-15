@@ -1,7 +1,7 @@
 import { createElement, getBounds } from "../utils/dom";
 
 
-const MARKER_CLASSNAME = 'talwin__marker';
+const MARKER_CLASSNAME = 'alwan__marker';
 
 /**
  * Palette's marker.

@@ -6,7 +6,7 @@ import { merge } from "../utils/object";
 /**
  * App component constants.
  */
-const TALWIN_CLASSNAME = 'talwin';
+const ALWAN_CLASSNAME = 'alwan';
 const POPPER_CLASSNAME = 'tw-popper';
 const DISABLED_CLASSNAME = 'tw-disabled';
 
@@ -14,19 +14,19 @@ const DISABLED_CLASSNAME = 'tw-disabled';
 /**
  * App component.
  *
- * @param {Object} talwin - Talwin Instance.
+ * @param {Object} alwan - Alwan Instance.
  * @returns {Object}
  */
-export const App = (talwin) => {
+export const App = (alwan) => {
 
-    let { config, _e: { emit }, _clr: colorState } = talwin;
+    let { config, _e: { emit }, _s: colorState } = alwan;
 
     /**
      * Top container.
      *
      * @type {HTMLElement}
      */
-    let root = createElement('', TALWIN_CLASSNAME, BODY);
+    let root = createElement('', ALWAN_CLASSNAME, BODY);
 
     /**
      * App API.
@@ -57,11 +57,11 @@ export const App = (talwin) => {
     /**
      * Initializes app component.
      *
-     * @param {Object} options - Talwin options.
+     * @param {Object} options - Alwan options.
      */
     const init = (options) => {
         let { theme, popover, target, position, margin, disabled, id, toggle } = options;
-        let refElement = talwin._ui.ref.$;
+        let refElement = alwan._ui.ref.$;
         let targetElement = getElement(target);
         let targetReference = targetElement || refElement;
 
@@ -125,7 +125,7 @@ export const App = (talwin) => {
 
             // Close picker if the reference element is not visible in the viewport,
             // of nested scrollable elements.
-            if (! isInViewport(talwin._ui.ref.$, scrollableAncestors)) {
+            if (! isInViewport(alwan._ui.ref.$, scrollableAncestors)) {
                 close(true);
             }
         }
@@ -164,7 +164,7 @@ export const App = (talwin) => {
         if (_isOpen) {
 
             let { target, type, key, shiftKey } = e;
-            let components = talwin._ui;
+            let components = alwan._ui;
             let refElement = components.ref.$;
             let palette = components.palette.$;
             let elementToFocus;
@@ -255,7 +255,7 @@ export const App = (talwin) => {
         config.disabled = state;
         state && close(true);
         // Add/Remove disable class.
-        updateClass(talwin._ui.ref.$, DISABLED_CLASSNAME, state);
+        updateClass(alwan._ui.ref.$, DISABLED_CLASSNAME, state);
     }
 
     return merge(self, {

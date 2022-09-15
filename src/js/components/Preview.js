@@ -3,16 +3,16 @@ import { bindEvent } from "../core/events/EventBinder";
 import { checkSVGAttrs, clipboardSVGAttrs } from "../lib/svg";
 import { createElement, removeElement, setElementsHTML, setVisibility, updateClass } from "../utils/dom";
 
-const PREVIEW_CLASSNAME = 'talwin__preview';
+const PREVIEW_CLASSNAME = 'alwan__preview';
 
 /**
  * Preview component.
  *
  * @param {Element} parent - Element to append preview are to.
- * @param {Object} talwin - Instance.
+ * @param {Object} alwan - Instance.
  * @returns {Object}
  */
-export const Preview = (parent, talwin) => {
+export const Preview = (parent, alwan) => {
 
     /**
      * Copy state.
@@ -90,13 +90,13 @@ export const Preview = (parent, talwin) => {
      * @param {Event} e - Click or Focusin or Focusout or Mouseleave.
      */
     const copyColorAndUpdateView = e => {
-        if (self.cp && ! talwin.config.disabled) {
+        if (self.cp && ! alwan.config.disabled) {
             let type = e.type;
             let isFocusIn = type === FOCUS_IN;
 
             // On click copy color and update svg to display a Check icon.
             if (! isCopied && type === CLICK) {
-                isCopied = talwin._clr.copy();
+                isCopied = alwan._s.copy();
                 updateSVG();
             }else {
                 // On focus add a focus class.

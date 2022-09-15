@@ -6,8 +6,8 @@ import { objectIterator } from "../../utils/object";
  *
  * @returns {Object}
  */
-export const EventListener = (talwin) => {
-    const { config } = talwin;
+export const EventListener = (alwan) => {
+
     /**
      * Picker event listeners.
      */
@@ -26,10 +26,10 @@ export const EventListener = (talwin) => {
          * @param  {Element|Object} source - Event Source.
          */
         emit: (type, source) => {
-            if (! config.disabled && listeners[type]) {
+            if (! alwan.config.disabled && listeners[type]) {
                 listeners[type].forEach(handler => {
                     if (type === COLOR || type === CHANGE) {
-                        handler(talwin._clr.value, source || talwin);
+                        handler(alwan._s.value, source || alwan);
                     } else {
                         handler();
                     }

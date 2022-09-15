@@ -11,7 +11,7 @@ const PRESET_BUTTON_CLASSNAME = 'tw-ref';
  * @param {Element} originalRef - User Reference Element.
  * @returns {Object}
  */
-export const Reference = (originalRef, talwin) => {
+export const Reference = (originalRef, alwan) => {
 
     /**
      * Reference API.
@@ -59,7 +59,7 @@ export const Reference = (originalRef, talwin) => {
      * @param {Event} e - Click.
      */
     const togglePicker = e => {
-        talwin.toggle();
+        alwan.toggle();
     }
 
     return self;

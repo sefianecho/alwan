@@ -6,19 +6,19 @@ import { Marker } from "./Marker";
 /**
  * Palette component constants.
  */
-const PALETTE_CLASSNAME = 'talwin__palette';
+const PALETTE_CLASSNAME = 'alwan__palette';
 const OVERLAY_CLASSNAME = 'tw-overlay';
 
 /**
  * Picker palette.
  *
  * @param {Element} parent - Element to append the palette element to.
- * @param {Object} talwin - Talwin instance.
+ * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Palette = (parent, talwin) => {
+export const Palette = (parent, alwan) => {
 
-    const { _clr: colorState, _e: { emit }} = talwin;
+    const { _s: colorState, _e: { emit }} = alwan;
 
     /**
      * Palette element.

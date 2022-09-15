@@ -7,17 +7,17 @@ import { setColorAndTriggerEvents } from "../utils/util";
 /**
  * Swatches constants.
  */
-const SWATCHES_CLASSNAME = 'talwin__swatches';
-const SWATCHE_CLASSNAME = 'talwin__swatch';
+const SWATCHES_CLASSNAME = 'alwan__swatches';
+const SWATCHE_CLASSNAME = 'alwan__swatch';
 
 /**
  * Swatches component.
  *
  * @param {Element} parent - Element to append the palette element to.
- * @param {Object} talwin - Picker Instance.
+ * @param {Object} alwan - Picker Instance.
  * @returns {Object}
  */
-export const Swatches = (parent, talwin) => {
+export const Swatches = (parent, alwan) => {
 
     /**
      * Buttons wrapper element.
@@ -51,7 +51,7 @@ export const Swatches = (parent, talwin) => {
         /**
          * Initialize swatches.
          *
-         * @param {Object} options - Talwin options.
+         * @param {Object} options - Alwan options.
          */
         init(options) {
             let buttons = [];
@@ -110,7 +110,7 @@ export const Swatches = (parent, talwin) => {
         let target = e.target;
 
         if (getParent(target) === container) {
-            setColorAndTriggerEvents(talwin, target.style.getPropertyValue('--' + COLOR_PROPERTY), target);
+            setColorAndTriggerEvents(alwan, target.style.getPropertyValue('--' + COLOR_PROPERTY), target);
         }
     }
 

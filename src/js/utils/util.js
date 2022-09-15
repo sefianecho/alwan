@@ -31,13 +31,13 @@ export const boundNumber = (number, upperBound, lowerBound) => min(max(number, l
 /**
  * Sets color, if color state changes then trigger color and change events.
  *
- * @param {Object} talwin - Instance.
+ * @param {Object} alwan - Instance.
  * @param {String} color - Color.
  * @param {Element|Object} source - Event source.
  */
-export const setColorAndTriggerEvents = (talwin, color, source) => {
-    if (talwin._clr.updateByString(color, true)) {
-        let emit = talwin._e.emit;
+export const setColorAndTriggerEvents = (alwan, color, source) => {
+    if (alwan._s.updateByString(color, true)) {
+        let emit = alwan._e.emit;
         emit(COLOR, source);
         emit(CHANGE, source);
     }

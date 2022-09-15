@@ -10,16 +10,16 @@ import { merge, objectIterator } from "../utils/object";
 import { setColorAndTriggerEvents } from "../utils/util";
 
 
-const CONTAINER_CLASSNAME = 'talwin__container';
+const CONTAINER_CLASSNAME = 'alwan__container';
 
 /**
  * Create and initialize components.
  *
  * @param {Element} reference - Picker Reference element.
- * @param {Object} talwin - Talwin Instance.
+ * @param {Object} alwan - Alwan Instance.
  * @returns {Object}
  */
-export const createComponents = (reference, talwin) => {
+export const createComponents = (reference, alwan) => {
 
     /**
      * Creates a container element.
@@ -30,19 +30,19 @@ export const createComponents = (reference, talwin) => {
     const createContainer = (parent) => createElement('', CONTAINER_CLASSNAME, parent);
 
 
-    let ref = Reference(reference, talwin);
-    let app = App(talwin);
+    let ref = Reference(reference, alwan);
+    let app = App(alwan);
 
     let root = app.$;
 
-    let palette = Palette(root, talwin);
+    let palette = Palette(root, alwan);
 
     let container = createContainer(root);
     
-    let preview = Preview(container, talwin);
-    let sliders = Sliders(container, talwin);
-    let inputs = Inputs(createContainer(root), talwin);
-    let swatches = Swatches(root, talwin);
+    let preview = Preview(container, alwan);
+    let sliders = Sliders(container, alwan);
+    let inputs = Inputs(createContainer(root), alwan);
+    let swatches = Swatches(root, alwan);
 
     return {
         ref,
@@ -58,19 +58,19 @@ export const createComponents = (reference, talwin) => {
 /**
  * Initialize components.
  *
- * @param {Object} talwin - Instance.
- * @param {Object} options - Talwin options.
+ * @param {Object} alwan - Instance.
+ * @param {Object} options - Alwan options.
  */
-export const initialize = (talwin, options) => {
+export const initialize = (alwan, options) => {
 
     options = options || {};
 
-    let config = talwin.config;
+    let config = alwan.config;
     let color = options.color;
 
     merge(config, options);
 
-    objectIterator(talwin._ui, component => {
+    objectIterator(alwan._c, component => {
         let init = component.init;
 
         if (init) {
@@ -82,6 +82,6 @@ export const initialize = (talwin, options) => {
      * Initialize color.
      */
     if (color) {
-        setColorAndTriggerEvents(talwin, color);
+        setColorAndTriggerEvents(alwan, color);
     }
 }

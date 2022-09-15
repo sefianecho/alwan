@@ -30,10 +30,29 @@ export default class Alwan {
     constructor(reference, options) {
         reference = getElement(reference);
         const alwan = this;
+        /**
+         * Settings.
+         */
         alwan.config = merge({}, Alwan.defaults, options);
+
+        /**
+         * Event Listeners.
+         */
         alwan._e = EventListener(alwan);
-        alwan._clr = Color(alwan);
-        alwan._ui = createComponents(reference, alwan);
+
+        /**
+         * Color state.
+         */
+        alwan._s = Color(alwan);
+
+        /**
+         * Components.
+         */
+        alwan._c = createComponents(reference, alwan);
+
+        /**
+         * Initialize components.
+         */
         initialize(alwan, alwan.config);
     }
 
@@ -52,28 +71,28 @@ export default class Alwan {
      * @returns {Boolean}
      */
     isOpen() {
-        return this._ui.app.isOpen();
+        return this._c.app.isOpen();
     }
 
     /**
      * Opens the picker.
      */
     open() {
-        this._ui.app.open();
+        this._c.app.open();
     }
 
     /**
      * Closes the picker.
      */
     close() {
-        this._ui.app.close();
+        this._c.app.close();
     }
 
     /**
      * Toggles (opens/closes) the picker.
      */
     toggle() {
-        this._ui.app.toggle();
+        this._c.app.toggle();
     }
 
     /**
@@ -144,7 +163,7 @@ export default class Alwan {
             }
         }
 
-        alwan._clr.updateByString(color, true);
+        alwan._s.updateByString(color, true);
 
         return alwan;
     }
@@ -155,7 +174,7 @@ export default class Alwan {
      * @returns {Object}
      */
     getColor() {
-        return this._clr.value;
+        return this._s.value;
     }
 
     /**
@@ -164,7 +183,7 @@ export default class Alwan {
      * @param {String} color - Color.
      */
     addSwatch(color) {
-        this._ui.swatches.add(color);
+        this._c.swatches.add(color);
     }
 
     /**
@@ -173,21 +192,21 @@ export default class Alwan {
      * @param {String|Number} swatch - Can a color string or it's index in the swatches array.
      */
     removeSwatch(swatch) {
-        this._ui.swatches.remove(swatch);
+        this._c.swatches.remove(swatch);
     }
 
     /**
      * Enables picker.
      */
     enable() {
-        this._ui.app.disable(false);
+        this._c.app.disable(false);
     }
 
     /**
      * Disables picker.
      */
     disable() {
-        this._ui.app.disable(true);
+        this._c.app.disable(true);
     }
 
     /**
@@ -201,7 +220,7 @@ export default class Alwan {
      * Repositions picker if it's displayed as a popover.
      */
     reposition() {
-        this._ui.app.reposition();
+        this._c.app.reposition();
     }
 
     /**
@@ -219,7 +238,7 @@ export default class Alwan {
     destroy() {
 
         let alwan = this;
-        let components = alwan._ui;
+        let components = alwan._c;
 
         // Initialize the reference element back.
         components.ref.init({ preset: false, toggle: true });
@@ -237,3 +256,5 @@ export default class Alwan {
         });
     }
 }
+
+window.p = new Alwan('#bar');

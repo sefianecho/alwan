@@ -7,18 +7,18 @@ import { objectIterator } from "../utils/object";
 /**
  * Inputs constants.
  */
-const INPUTS_CLASSNAME = 'talwin__inputs';
-const INPUT_CLASSNAME = 'talwin__input';
+const INPUTS_CLASSNAME = 'alwan__inputs';
+const INPUT_CLASSNAME = 'alwan__input';
 const LABEL_CLASSNAME = 'tw-label';
 
 /**
  * Inputs component.
  *
  * @param {Element} parent - Element to append the inputs container element to.
- * @param {Object} talwin - Talwin instance.
+ * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Inputs = (parent, talwin) => {
+export const Inputs = (parent, alwan) => {
 
     /**
      * Component API.
@@ -56,7 +56,7 @@ export const Inputs = (parent, talwin) => {
      */
     let listeners = [];
 
-    const { config, _clr: colorState, _e: { emit } } = talwin;
+    const { config, _s: colorState, _e: { emit } } = alwan;
 
     /**
      * Init. Inputs.
@@ -205,7 +205,7 @@ export const Inputs = (parent, talwin) => {
      */
     const closePicker = e => {
         if (e.key === ENTER) {
-            talwin.close();
+            alwan.close();
         }
     }
 
