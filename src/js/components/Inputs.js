@@ -21,11 +21,6 @@ const LABEL_CLASSNAME = 'lw-label';
 export const Inputs = (parent, alwan) => {
 
     /**
-     * Component API.
-     */
-    const self = {};
-
-    /**
      * Inputs wrapper element.
      */
     let container;
@@ -59,48 +54,62 @@ export const Inputs = (parent, alwan) => {
     const { config, _s: colorState, _e: { _emit } } = alwan;
 
     /**
-     * Init. Inputs.
-     *
-     * @param {Object} options - Options.
+     * Component API.
      */
-    self._init = (options) => {
-        let { inputs, format } = options;
-        let length;
+    const self = {
+        /**
+         * Init. Inputs.
+         *
+         * @param {Object} options - Options.
+         */
+        _init(options) {
+            let { inputs, format } = options;
+            let length;
 
-        // Get only valid formats.
-        formats = COLOR_FORMATS.filter(format => inputs[format]);
-        length = formats.length;
+            // Get only valid formats.
+            formats = COLOR_FORMATS.filter(format => inputs[format]);
+            length = formats.length;
 
-        
-        if (! length) {
-            // No input, remove inputs.
-            container = removeElement(container, true);
-            switchButton = removeElement(switchButton, true);
-            // Normalize format value.
-            format = COLOR_FORMATS.includes(format) ? format : COLOR_FORMATS[0];
-        } else {
-
-            if (! container) {
-                container = createElement('', INPUTS_CLASSNAME, parent);
-            }
-
-            if (length === 1) {
+            if (! length) {
+                // No input, remove inputs.
+                container = removeElement(container, true);
                 switchButton = removeElement(switchButton, true);
-            } else if (!switchButton) {
-                // For more than one input format, add a switch button.
-                switchButton = createElement(BUTTON, BUTTON_CLASSNAME, parent, { type: BUTTON }, (thisButton) => {
-                    createElement(SVG, '', thisButton, switchSVGAttrs);
-                });
+                // Normalize format value.
+                format = COLOR_FORMATS.includes(format) ? format : COLOR_FORMATS[0];
+            } else {
+
+                if (! container) {
+                    container = createElement('', INPUTS_CLASSNAME, parent);
+                }
+
+                if (length === 1) {
+                    switchButton = removeElement(switchButton, true);
+                } else if (!switchButton) {
+                    // For more than one input format, add a switch button.
+                    switchButton = createElement(BUTTON, BUTTON_CLASSNAME, parent, { type: BUTTON }, (thisButton) => {
+                        createElement(SVG, '', thisButton, switchSVGAttrs);
+                    });
+                }
+
+                formatIndex = max(formats.indexOf(format), 0);
+                format = formats[formatIndex];
             }
+            config.format = format;
+            build(format);
+            // Show/Hide parent container.
+            setVisibility(parent, length);
+        },
 
-            formatIndex = max(formats.indexOf(format), 0);
-            format = formats[formatIndex];
+        /**
+         * Updates Input(s) value(s).
+         *
+         * @param {Object} color - Color object.
+         */
+        _setValue(color) {
+            objectIterator(self.$, (input, key) => {
+                input.value = color[key];
+            });
         }
-
-        config.format = format;
-        build(format);
-        // Show/Hide parent container.
-        setVisibility(parent, length);
     }
 
     /**
@@ -191,7 +200,7 @@ export const Inputs = (parent, alwan) => {
     const triggerChangeEvent = e => {
         if (e.type === FOCUS_IN) {
             // Save color state, when inputs receive focus.
-            colorState._saveColor();
+            colorState._colorStart();
         } else {
             // Trigger change event if color state is changed.
             colorState._triggerChange(self.$);
@@ -207,17 +216,6 @@ export const Inputs = (parent, alwan) => {
         if (e.key === ENTER) {
             alwan.close();
         }
-    }
-
-    /**
-     * Updates Input(s) value(s).
-     *
-     * @param {Object} color - Color object.
-     */
-    self._setValue = color => {
-        objectIterator(self.$, (input, key) => {
-            input.value = color[key];
-        });
     }
 
     /**

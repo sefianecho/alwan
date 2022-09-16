@@ -89,7 +89,7 @@ export const Palette = (parent, alwan) => {
             return;
         }
         // Save color state.
-        colorState._saveColor();
+        colorState._colorStart();
         // Cache palette's bounds.
         bounds = getBounds(el);
         updateDimensions(bounds);

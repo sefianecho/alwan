@@ -93,7 +93,7 @@ export const App = (alwan) => {
          * Set Popper.
          */
         if (popover) {
-            self.popper = popper = scPop(targetReference, root, {
+            popper = popper = scPop(targetReference, root, {
                 position,
                 margin
             });

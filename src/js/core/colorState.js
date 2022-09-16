@@ -42,41 +42,6 @@ export const ColorState = (alwan) => {
     let { config, _e: event } = alwan;
 
     /**
-     * Updates color and UI.
-     *
-     * @param {Object} newHSV - HSV color object.
-     * @param {Object|Boolean} updater - Exclude some components from updating.
-     * @param {Object} rgb - RGB color object.
-     */
-    const _update = (newHSV, updater, rgb) => {
-        if (! config.disabled) {
-            merge(HSV, newHSV);
-            RGB = rgb || HSVToRGB(HSV);
-            rgbString = toString(RGB, RGB_FORMAT);
-    
-            let components = alwan._c;
-            let { palette, sliders, inputs } = components;
-    
-            // Preview color.
-            setCustomProperty(components.preview.$, COLOR_PROPERTY, rgbString);
-            setCustomProperty(components.ref.$, COLOR_PROPERTY, rgbString);
-            // Change the gradient color stop of the alpha slider.
-            (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
-            // Set palette's hue.
-            isset(newHSV.h) && setCustomProperty(palette.$, 'hue', HSV.h);
-
-            if (updater !== inputs) {
-                inputs._setValue( getColorByFormat('', config.singleInput) );
-            }
-
-            if (updater) {
-                sliders._setValue(HSV);
-                palette._setMarkerPosition(HSV);
-            }
-        }
-    }
-
-    /**
      * Gets color object.
      *
      * @param {String} format - Color format.
@@ -93,62 +58,6 @@ export const ColorState = (alwan) => {
 
         return asString || isHex ? { [format]: toString(color, format) } : color;
     }
-
-
-    /**
-     * Updates color by a string instead of HSV object.
-     *
-     * @param {String} colorString - Color string.
-     * @param {Boolean|Object} updater - Exclude some components from updating.
-     */
-    const _updateFromString = (colorString, updater) => {
-
-        let { _color: parsedColor, _format: format } = parseColor(colorString);
-        let currentColor = getColorByFormat(format);
-        let isChanged = ! isEqual(parsedColor, currentColor);
-        let rgb, hsv;
-
-        if (isChanged) {
-
-            if (format === HSL_FORMAT) {
-                hsv = HSLToHSV(parsedColor);
-            } else {
-                rgb = parsedColor;
-                hsv = RGBToHSV(parsedColor);
-            }
-
-            _update(hsv, updater, rgb);
-        }
-
-        return isChanged;
-    }
-
-    /**
-     * Copies color to the clipboard.
-     *
-     * @returns {Boolean}
-     */
-    const _copyColor = () => objectIterator(getColorByFormat('', true), color => {
-
-            let clipboard = navigator.clipboard;
-
-            if (clipboard) {
-                clipboard.writeText(color);
-            } else {
-                // Incase browser doesn't support navigator.clipboard,
-                // Create a new input element and append it to the body,
-                // set its value as the color.
-                createElement(INPUT, '', BODY, null, input => {
-
-                    input.value = color;
-                    input.select();
-                    ROOT.execCommand('copy');
-
-                    // Color text is copied so remove the input.
-                    removeElement(input);
-                });
-            }
-        });
 
     /**
      * Outputs a color object.
@@ -186,40 +95,124 @@ export const ColorState = (alwan) => {
         }, output);
     }
 
-    /**
-     * Picker value.
-     */
-    const _colorOutput = {
-        [HSV_FORMAT]: () => output(HSV, '', HSV_FORMAT, false),
-        [RGB_FORMAT]: asArray => output(RGB, rgbString, RGB_FORMAT, asArray),
-        [HSL_FORMAT]: asArray => output(HSVToHSL(HSV), '', HSL_FORMAT, asArray),
-        [HEX_FORMAT]: () => RGBToHEX(RGB)
-    }
-
-    /**
-     * Set color start.
-     */
-    const _saveColor = () => {
-        colorStart = getColorByFormat();
-    }
-
-    /**
-     * Triggers change event if colorStart doesn't equal to the current color.
-     *
-     * @param {Element} source - Element that changed color state.
-     */
-    const _triggerChange = (source) => {
-        if (! isEqual(colorStart, getColorByFormat())) {
-            event._emit(CHANGE, source);
-        }
-    }
-
     return {
-        _colorOutput,
-        _update,
-        _updateFromString,
-        _copyColor,
-        _saveColor,
-        _triggerChange,
+        /**
+         * Updates color and UI.
+         *
+         * @param {Object} newHSV - HSV color object.
+         * @param {Object|Boolean} updater - Exclude some components from updating.
+         * @param {Object} rgb - RGB color object.
+         */
+        _update(newHSV, updater, rgb) {
+            if (! config.disabled) {
+                merge(HSV, newHSV);
+                RGB = rgb || HSVToRGB(HSV);
+                rgbString = toString(RGB, RGB_FORMAT);
+        
+                let components = alwan._c;
+                let { palette, sliders, inputs } = components;
+        
+                // Preview color.
+                setCustomProperty(components.preview.$, COLOR_PROPERTY, rgbString);
+                setCustomProperty(components.ref.$, COLOR_PROPERTY, rgbString);
+                // Change the gradient color stop of the alpha slider.
+                (updater || ! isset(newHSV.a)) && setCustomProperty(sliders.alpha, RGB_FORMAT, RGB.r + ',' + RGB.g + ',' + RGB.b);
+                // Set palette's hue.
+                isset(newHSV.h) && setCustomProperty(palette.$, 'hue', HSV.h);
+    
+                if (updater !== inputs) {
+                    inputs._setValue( getColorByFormat('', config.singleInput) );
+                }
+    
+                if (updater) {
+                    sliders._setValue(HSV);
+                    palette._setMarkerPosition(HSV);
+                }
+            }
+        },
+
+         /**
+         * Updates color by a string instead of HSV object.
+         *
+         * @param {String} colorString - Color string.
+         * @param {Boolean|Object} updater - Exclude some components from updating.
+         */
+        _updateFromString(colorString, updater) {
+
+            let { _color: parsedColor, _format: format } = parseColor(colorString);
+            let currentColor = getColorByFormat(format);
+            let isChanged = ! isEqual(parsedColor, currentColor);
+            let rgb, hsv;
+
+            if (isChanged) {
+
+                if (format === HSL_FORMAT) {
+                    hsv = HSLToHSV(parsedColor);
+                } else {
+                    rgb = parsedColor;
+                    hsv = RGBToHSV(parsedColor);
+                }
+
+                this._update(hsv, updater, rgb);
+            }
+
+            return isChanged;
+        },
+
+        /**
+         * Copies color to the clipboard.
+         *
+         * @returns {Boolean}
+         */
+        _copyColor() {
+            objectIterator(getColorByFormat('', true), color => {
+                let clipboard = navigator.clipboard;
+        
+                if (clipboard) {
+                    clipboard.writeText(color);
+                } else {
+                    // Incase browser doesn't support navigator.clipboard,
+                    // Create a new input element and append it to the body,
+                    // set its value as the color.
+                    createElement(INPUT, '', BODY, null, input => {
+        
+                        input.value = color;
+                        input.select();
+                        ROOT.execCommand('copy');
+        
+                        // Color text is copied so remove the input.
+                        removeElement(input);
+                    });
+                }
+            });
+        },
+
+        /**
+         * Picker value.
+         */
+        _colorOutput: {
+            [HSV_FORMAT]: () => output(HSV, '', HSV_FORMAT, false),
+            [RGB_FORMAT]: asArray => output(RGB, rgbString, RGB_FORMAT, asArray),
+            [HSL_FORMAT]: asArray => output(HSVToHSL(HSV), '', HSL_FORMAT, asArray),
+            [HEX_FORMAT]: () => RGBToHEX(RGB)
+        },
+        
+        /**
+         * Set color start.
+         */
+        _colorStart() {
+            colorStart = getColorByFormat();
+        },
+
+        /**
+         * Triggers change event if colorStart doesn't equal to the current color.
+         *
+         * @param {Element} source - Element that changed color state.
+         */
+        _triggerChange(source) {
+            if (! isEqual(colorStart, getColorByFormat())) {
+                event._emit(CHANGE, source);
+            }
+        }
     }
 }

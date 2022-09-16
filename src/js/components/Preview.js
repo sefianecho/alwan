@@ -97,7 +97,8 @@ export const Preview = (parent, alwan) => {
 
             // On click copy color and update svg to display a Check icon.
             if (! isCopied && type === CLICK) {
-                isCopied = alwan._s._copyColor();
+                alwan._s._copyColor();
+                isCopied = true;
                 updateSVG();
             }else {
                 // On focus add a focus class.
