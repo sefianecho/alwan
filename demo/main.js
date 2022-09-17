@@ -4,10 +4,10 @@ const sidePanel = document.querySelector('.panel');
 const closeButton = sidePanel.querySelector('.close-menu');
 const pickerSelect = sidePanel.querySelector('#picker');
 
-Talwin.defaults.swatches = ['red', 'green', 'blue'];
+Alwan.defaults.swatches = ['red', 'green', 'blue'];
 
-const talwinText = new Talwin('#fg');
-const talwinBG = new Talwin('#bg', { color: 'red' });
+const alwanText = new Alwan('#fg');
+const alwanBG = new Alwan('#bg', { color: 'red' });
 
 let picker;
 
@@ -15,7 +15,7 @@ initialize('bg');
 
 
 function initialize(pickerId) {
-    picker = pickerId === 'fg' ? talwinText : talwinBG
+    picker = pickerId === 'fg' ? alwanText : alwanBG
 
     const options = picker.config;
 
@@ -29,7 +29,6 @@ function initialize(pickerId) {
 
             const elements = document.getElementsByName(option);
 
-            
             // Checkboxes.
             if (elements.length > 1) {
                 elements.forEach(element => {
@@ -65,7 +64,8 @@ sidePanel.addEventListener('change', e => {
     value = type === 'checkbox' ? checked : value;
 
     if (name === 'swatches') {
-        options.swatches = value.split(/\s*,\s*/);
+        value = value.trim();
+        options.swatches = value ? value.split(/\s*,\s*/) : [];
     } else if (name === 'inputs') {
 
         options.inputs = {};
@@ -83,11 +83,11 @@ sidePanel.addEventListener('change', e => {
 });
 
 
-talwinText.on('color', (color) => {
+alwanText.on('color', (color) => {
     previewArea.style.color = color.rgb().toString();
 });
 
-talwinBG.on('color', (color) => {
+alwanBG.on('color', (color) => {
     previewArea.style.backgroundColor = color.rgb().toString();
 })
 
@@ -98,7 +98,6 @@ menuButton.addEventListener('click', toggleOptionsPanel);
 function toggleOptionsPanel(e) {
     sidePanel.classList.toggle('open');
     e.stopPropagation();
-    // picker.reposition();
 }
 
 document.addEventListener('click', e => {

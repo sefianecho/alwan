@@ -32,7 +32,6 @@ select {
 
 header {
     text-align: center;
-    /* background-color: #f0f0f0; */
     padding: 2rem 1rem;
 }
 
@@ -54,28 +53,24 @@ label {
 .button {
     display: inline-block;
     background-color: transparent;
-    /* border: 1px solid transparent; */
     border: 0;
     border-radius: 0.25rem;
     vertical-align: middle;
     user-select: none;
     padding: 0.75rem 1rem;
     font-size: 1rem;
-    transition: background 0.2s;
+    transition: background-color 0.2s;
 }
 
 .github-button,
 .menu-button {
     display: inline-flex;
     align-items: center;
-    /* border-width: 2px; */
     font-weight: 400;
 }
 
 .menu-button {
-    /* border-color: rgba(47, 7, 67, 0.7); */
     background: linear-gradient(0, #2f0743, rgba(47, 7, 67, 0.7));
-    /* color:rgba(47, 7, 67) */
     color: #fff;
 }
 
@@ -139,7 +134,7 @@ label {
     cursor: pointer;
     padding: 1rem;
     font-size: 1rem;
-    transition: background 0.15s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
 }
 
 .option:hover {
@@ -254,7 +249,6 @@ select:focus,
 .preview {
     width: 100%;
     text-align: center;
-    /* background-color: blue; */
     padding: 2rem;
 }
 .preview-area {
@@ -279,7 +273,7 @@ select:focus,
     line-height: 1.8;
 }
 
-.picker-wrapper .talwin {
+.picker-wrapper .alwan:not(.lw-popper) {
     margin: 0.5rem auto;
 }
 
@@ -287,11 +281,10 @@ select:focus,
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    background-color: var(--tw-color);
+    background-color: var(--lw-color);
 }
 
 .target-wrapper {
-    /* background-color: red; */
     padding: 8rem 0;
     text-align: center;
 }
@@ -348,6 +341,4 @@ select:focus,
         flex-direction: column;
         padding-bottom: 2rem;
     }
-
-
 }
