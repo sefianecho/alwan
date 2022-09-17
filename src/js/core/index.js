@@ -6,8 +6,6 @@ import { Reference } from "../components/Reference";
 import { Sliders } from "../components/Sliders";
 import { Swatches } from "../components/Swatches";
 import { createElement } from "../utils/dom";
-import { merge, objectIterator } from "../utils/object";
-import { setColorAndTriggerEvents } from "../utils/util";
 
 
 const CONTAINER_CLASSNAME = 'alwan__container';
@@ -52,36 +50,5 @@ export const createComponents = (reference, alwan) => {
         sliders,
         inputs,
         swatches
-    }
-}
-
-/**
- * Initialize components.
- *
- * @param {Object} alwan - Instance.
- * @param {Object} options - Alwan options.
- */
-export const initialize = (alwan, options) => {
-
-    options = options || {};
-
-    let config = alwan.config;
-    let color = options.color;
-
-    merge(config, options);
-
-    objectIterator(alwan._c, component => {
-        let init = component._init;
-
-        if (init) {
-            init(config);
-        }
-    });
-
-    /**
-     * Initialize color.
-     */
-    if (color) {
-        setColorAndTriggerEvents(alwan, color);
     }
 }

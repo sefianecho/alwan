@@ -1,4 +1,4 @@
-import { ADD_METHOD, BODY, BUTTON, INPUT, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
+import { ADD_METHOD, BODY, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
 import { objectIterator } from "./object";
 import { isString } from "./util";
 
@@ -149,16 +149,6 @@ export const setCustomProperty = (el, property, value) => {
     el && el.style.setProperty('--' + property, value);
 }
 
-/**
- * Gets the last focusable element in an element (context).
- *
- * @param {Element} context - Element which the last focusable elment is an ancestor.
- * @returns {Element}
- */
-export const getLastFocusableElement = context => {
-    let focusableElements = getElement(BUTTON + ',' + INPUT, context, true);
-    return focusableElements[focusableElements.length - 1];
-}
 
 /**
  * Hides/Shows element.

@@ -53,7 +53,7 @@ export default class Alwan {
         /**
          * Initialize components.
          */
-        initialize(alwan, alwan.config);
+        alwan._c.app._setup(alwan.config);
     }
 
     /**
@@ -62,7 +62,7 @@ export default class Alwan {
      * @param {Object} options - Alwan options.
      */
     setOptions(options) {
-        initialize(this, options);
+        this._c.app._setup(options);
     }
 
     /**

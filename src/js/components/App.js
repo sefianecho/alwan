@@ -1,8 +1,9 @@
-import { BODY, CLOSE, ESCAPE, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
+import { BODY, BUTTON, CLOSE, ESCAPE, INPUT, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { scPop } from "../lib/scPop";
-import { createElement, getElement, getLastFocusableElement, getScrollableAncestors, isInViewport, setVisibility, updateClass } from "../utils/dom";
-import { merge } from "../utils/object";
+import { createElement, getElement, getScrollableAncestors, isInViewport, setVisibility, updateClass } from "../utils/dom";
+import { merge, objectIterator } from "../utils/object";
+import { setColorAndTriggerEvents } from "../utils/util";
 /**
  * App component constants.
  */
@@ -27,6 +28,13 @@ export const App = (alwan) => {
      * @type {HTMLElement}
      */
     let root = createElement('', ALWAN_CLASSNAME, BODY);
+
+    /**
+     * Picker Reference.
+     *
+     * @type {Element}
+     */
+    let reference;
 
     /**
      * App API.
@@ -55,19 +63,50 @@ export const App = (alwan) => {
     let popper;
 
     /**
-     * Initializes app component.
+     * Last focusable element in picker.
+     * 
+     * @type {Element}
+     */
+    let lastFocusableElement;
+
+    /**
+     * Initialize app.
      *
      * @param {Object} options - Alwan options.
      */
-    const _init = (options) => {
-        let { theme, popover, target, position, margin, disabled, id, toggle } = options;
-        let refElement = alwan._c.ref.$;
+    const _setup = (options) => {
+        options = options || {};
+
+        let config = merge(alwan.config, options);
+        let { theme, popover, target, position, margin, disabled, id, toggle } = config;
         let targetElement = getElement(target);
-        let targetReference = targetElement || refElement;
+        let color = options.color;
+        let targetReference;
 
         if (id) {
             root.id = id;
         }
+
+        /**
+         * Initialize components.
+         */
+        objectIterator(alwan._c, component => {
+            let init = component._init;
+            if (init) {
+                init(config);
+            }
+        });
+
+        /**
+         * Initialize color.
+         */
+        if (color) {
+            setColorAndTriggerEvents(alwan, color);
+        }
+
+        reference = alwan._c.ref.$;
+        targetReference = targetElement || reference;
+
         // Remove all popper events.
         popperEvents(unbindEvent);
 
@@ -87,19 +126,19 @@ export const App = (alwan) => {
         }
 
         // Hide reference if both popover and toggle are false.
-        setVisibility(refElement, popover || toggle);
+        setVisibility(reference, popover || toggle);
 
         /**
          * Set Popper.
          */
         if (popover) {
-            popper = popper = scPop(targetReference, root, {
+            popper = scPop(targetReference, root, {
                 position,
                 margin
             });
             // If reference element inside a nested scrollable elements,
             // get all those scrollable elements in an array.
-            scrollableAncestors = getScrollableAncestors(refElement);
+            scrollableAncestors = getScrollableAncestors(reference);
 
             // Attach scroll event to all scrollable ancestors of the reference element,
             // in order to update the popper's position.
@@ -111,6 +150,9 @@ export const App = (alwan) => {
         // If it's popover then the method will be 'add', if it's not,
         // then the method will be 'remove'.
         updateClass(root, POPPER_CLASSNAME, popover);
+
+        lastFocusableElement = getElement(BUTTON + ',' + INPUT, root, true);
+        lastFocusableElement = lastFocusableElement[lastFocusableElement.length - 1];
     }
 
 
@@ -125,7 +167,7 @@ export const App = (alwan) => {
 
             // Close picker if the reference element is not visible in the viewport,
             // of nested scrollable elements.
-            if (! isInViewport(alwan._c.ref.$, scrollableAncestors)) {
+            if (! isInViewport(reference, scrollableAncestors)) {
                 _close(true);
             }
         }
@@ -162,26 +204,23 @@ export const App = (alwan) => {
     const handlesAccessibility = e => {
 
         if (isOpen) {
-
             let { target, type, key, shiftKey } = e;
-            let components = alwan._c;
-            let refElement = components.ref.$;
-            let palette = components.palette.$;
+            let palette = alwan._c.palette.$;
             let elementToFocus;
             // Clicking outside the picker or pressing Escape key, results in,
             // closing the picker.
-            if (key === ESCAPE || (type === MOUSE_DOWN && refElement !== target && ! root.contains(target))) {
+            if (key === ESCAPE || (type === MOUSE_DOWN && reference !== target && ! root.contains(target))) {
                 _close();
             } else if (key === TAB) {
                 // Pressing Tab on reference element sends focus to the picker palette.
-                if (target === refElement && !shiftKey) {
+                if (target === reference && !shiftKey) {
                     elementToFocus = palette;
                 // If picker is displayed as a popover,
                 // Pressing Tab + shift on the palette,
                 // or pressing Tab on the last focusable element in the picker,
                 // sends the focus back to the reference element.
-                } else if ((! shiftKey && target === getLastFocusableElement(root)) || (target === palette && shiftKey)) {
-                    elementToFocus = refElement;
+                } else if ((! shiftKey && target === lastFocusableElement) || (target === palette && shiftKey)) {
+                    elementToFocus = reference;
                 }
 
                 if (elementToFocus) {
@@ -255,12 +294,12 @@ export const App = (alwan) => {
         config.disabled = state;
         state && _close(true);
         // Add/Remove disable class.
-        updateClass(alwan._c.ref.$, DISABLED_CLASSNAME, state);
+        updateClass(reference, DISABLED_CLASSNAME, state);
     }
 
     return merge(self, {
         $: root,
-        _init,
+        _setup,
         _isOpen,
         _open,
         _close,
