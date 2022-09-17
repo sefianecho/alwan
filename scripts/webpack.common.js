@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        talwin: './src/js/index.js'
+        alwan: './src/js/index.js'
     },
     plugins: [
         new MiniCssExtractPlugin({
@@ -36,7 +36,7 @@ module.exports = {
         filename: 'js/[name].min.js',
         library: {
             type: 'umd',
-            name: 'Talwin',
+            name: 'Alwan',
             export: 'default',
             umdNamedDefine: true
         }
