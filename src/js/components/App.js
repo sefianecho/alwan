@@ -1,6 +1,6 @@
 import { BODY, BUTTON, CLOSE, ESCAPE, INPUT, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
-import { scPop } from "../lib/scPop";
+import { Popper } from "../lib/popper";
 import { createElement, getElement, getScrollableAncestors, isInViewport, setVisibility, updateClass } from "../utils/dom";
 import { merge, objectIterator } from "../utils/object";
 import { setColorAndTriggerEvents } from "../utils/util";
@@ -132,7 +132,7 @@ export const App = (alwan) => {
          * Set Popper.
          */
         if (popover) {
-            popper = scPop(targetReference, root, {
+            popper = Popper(targetReference, root, {
                 position,
                 margin
             });

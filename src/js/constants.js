@@ -50,6 +50,6 @@ export const ADD_METHOD = 'add';
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
 
 
-export const { max, min, round } = Math;
+export const { max, min, round, abs } = Math;
 export const float = parseFloat;
 export const int = parseInt;
