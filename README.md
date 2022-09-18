@@ -1,29 +1,29 @@
-# Talwin
+# Alwan
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="images/talwin-dark-theme.jpg">
-    <img alt="sc picker dark theme" src="images/talwin.jpg">
+    <source media="(prefers-color-scheme: dark)" srcset="images/alwan-dark-theme.jpg">
+    <img alt="alwan light theme" src="images/alwan.jpg">
   </picture>
 
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="images/dark-talwin-dark-theme.jpg">
-    <img alt="sc picker dark theme" src="images/dark-talwin.jpg">
+    <source media="(prefers-color-scheme: dark)" srcset="images/dark-alwan-dark-theme.jpg">
+    <img alt="alwan dark theme" src="images/dark-alwan.jpg">
   </picture>
 </div>
 
 
 <div>
-  <img alt="minified size" src="https://img.shields.io/bundlephobia/min/talwin">
-  <img alt="minizipped size" src="https://img.shields.io/bundlephobia/minzip/talwin">
+  <img alt="minified size" src="https://img.shields.io/bundlephobia/min/alwan">
+  <img alt="minizipped size" src="https://img.shields.io/bundlephobia/minzip/alwan">
 </div>
 
 
 A simple, zero dependencies, pure vanilla javascript, lightweight (only ~13Kb) color picker.
 
 ## features
-- Small file size (~13Kb).
+- Small file size (~12Kb).
 - Touch friendly.
 - Support dark theme.
 - Alpha channel (opacity).
@@ -33,56 +33,56 @@ A simple, zero dependencies, pure vanilla javascript, lightweight (only ~13Kb) c
 - No dependencies.
 
 ## Demo
-[Click here to try it](https://sofianchouaib.github.io/talwin/)
+[Click here to try it](https://sofianchouaib.github.io/alwan/)
 ## Getting started
 Install using package manager:
 ```shell
-npm install talwin
+npm install alwan
 ```
 or
 
 ```
-yarn add talwin
+yarn add alwan
 ```
 
 Import files
 ```javascript
 // Import javascript.
-import talwin from 'talwin';
+import alwan from 'alwan';
 // Import css.
-import 'talwin/dist/css/talwin.min.css';
+import 'alwan/dist/css/alwan.min.css';
 ```
 ### CDN
 Add it to your page.
 - Jsdelivr CDN
 ```html
 <!-- Style -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/talwin/dist/css/talwin.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alwan/dist/css/alwan.min.css">
 
 <!-- Script -->
-<script src="https://cdn.jsdelivr.net/npm/talwin/dist/js/talwin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alwan/dist/js/alwan.min.js"></script>
 ```
 - Unpkg CDN
 ```html
 <!-- Style -->
-<link rel="stylesheet" href="https://unpkg.com/talwin/dist/css/talwin.min.css">
+<link rel="stylesheet" href="https://unpkg.com/alwan/dist/css/alwan.min.css">
 
 <!-- Script -->
-<script src="https://unpkg.com/talwin/dist/js/talwin.min.js"></script>
+<script src="https://unpkg.com/alwan/dist/js/alwan.min.js"></script>
 ```
 
 ## Usage
-Talwin can take two arguments,
+Alwan can take two arguments,
 a reference element either a selector or an HTML element (required),
 and options object (optional).
 ```javascript
 
-const talwin = new Talwin('#reference', {
+const alwan = new Alwan('#reference', {
   // Options...
 });
 ```
 ## Options
-You can try these options in the [demo](https://sofianchouaib.github.io/sc-picker/), play around with it :)
+You can try these options in the [demo](https://sofianchouaib.github.io/alwan/), play around with it :)
 
 | **Option** | **Type** | **Default** | **Description** |
 |------------| ---------| ------------ | ---------------- |
@@ -110,13 +110,13 @@ You can try these options in the [demo](https://sofianchouaib.github.io/sc-picke
 E.g.
 ```css
 #my-reference-element {
-  background-color: var(--tw-color);
+  background-color: var(--lw-color);
 }
 ```
 ## Events
 Use the method `on`, that takes two parameters, `event` and `handler` (callback function).
 ```javascript
-talwin.on('event', function(argument) {
+alwan.on('event', function(argument) {
   // ...
 });
 ```
@@ -128,7 +128,7 @@ talwin.on('event', function(argument) {
 | `color` | (`colorObject`, `source`) | Similar to the `input` event, fires every time the color changes |
 
 ### ColorObject
-Color object is the output of Talwin color picker, its properties are:
+Color object is the output of Alwan color picker, its properties are:
 
 - **hsv**() : `object` — Gets an HSV color object.
 - **rgb**(asArray: `boolean`) : `object` — Get an RGB color object or an Array if `asArray` is set to true,
@@ -140,7 +140,7 @@ call the method `toString()` on this object to get an HSL string.
 
 ```javascript
 // e.g.
-talwin.on('change', function(color) {
+alwan.on('change', (color, el) => {
   // RGB color.
   color.rgb()                // output: { r: 0, g: 0, b: 0, a: 1}
   color.rgb(true)            // output: [0, 0, 0, 0]
