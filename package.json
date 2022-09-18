@@ -15,16 +15,8 @@
     "ui",
     "ux"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SofianChouaib/talwin.git"
-  },
   "author": "Sefiane Chouaib",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/SofianChouaib/talwin/issues"
-  },
-  "homepage": "https://github.com/SofianChouaib/talwin#readme",
   "devDependencies": {
     "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
@@ -39,5 +31,13 @@
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.10.1",
     "webpack-merge": "^5.8.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SofianChouaib/alwan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SofianChouaib/alwan/issues"
+  },
+  "homepage": "https://github.com/SofianChouaib/alwan#readme"
 }
