@@ -114,7 +114,7 @@ E.g.
 }
 ```
 ## Events
-Use the method `on`, that takes two parameters, `event` and `handler` (callback function).
+Use the method `on`, that has two parameters, `event` and `handler` (callback function).
 ```javascript
 alwan.on('event', function(argument) {
   // ...
