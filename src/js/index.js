@@ -241,7 +241,7 @@ export default class Alwan {
         let components = alwan._c;
 
         // Initialize the reference element back.
-        components.ref._init({ preset: false, toggle: true });
+        components.ref._init({ preset: false });
 
         // Remove all events.
         objectIterator(components, components => {
@@ -252,7 +252,7 @@ export default class Alwan {
 
         // Remove all properties of this instance.
         objectIterator(alwan, (value, key) => {
-            alwan[key] = null;
+            delete alwan[key];
         });
     }
 }
