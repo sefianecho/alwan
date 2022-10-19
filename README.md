@@ -21,14 +21,15 @@
 A simple, zero dependencies, pure vanilla javascript, lightweight (only ~13Kb) color picker.
 
 ## features
-- Small file size (~12Kb).
 - Touch friendly.
 - Support dark theme.
 - Alpha channel (opacity).
 - Support 3 color formats hsl, rgb and hex.
 - Keyboard accessible.
-- Simple interface (inspired by google chrome's color picker).
+- Simple easy to use interface (inspired by google chrome's color picker).
 - No dependencies.
+- Copy color to the clipboard.
+- Lightweight.
 
 ## Demo
 [Click here to try it](https://sofianchouaib.github.io/alwan/)
