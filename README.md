@@ -18,7 +18,7 @@
 </div>
 
 
-A simple, zero dependencies, pure vanilla javascript, lightweight (only ~13Kb) color picker.
+A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.
 
 ## features
 - Touch friendly.
