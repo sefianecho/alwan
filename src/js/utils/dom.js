@@ -1,4 +1,4 @@
-import { ADD_METHOD, BODY, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
+import { ADD_METHOD, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
 import { objectIterator } from "./object";
 import { isString } from "./util";
 
@@ -104,7 +104,7 @@ export const getScrollableAncestors = el => {
   
     let scrollableElements = [ROOT];
   
-    while (el !== BODY) {
+    while (el !== ROOT.body) {
       let overflow = getComputedStyle(el).overflow;
       if (overflow === 'auto' || overflow === SCROLL) {
         scrollableElements.push(el);

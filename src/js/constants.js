@@ -1,5 +1,4 @@
 export const ROOT = document;
-export const BODY = ROOT.body;
 export const HTML = ROOT.documentElement;
 
 export const BUTTON = 'button';

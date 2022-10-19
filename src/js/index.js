@@ -2,7 +2,7 @@
 import { getElement } from "./utils/dom";
 import { merge, objectIterator } from "./utils/object";
 import { defaults } from "./defaults";
-import { createComponents, initialize } from "./core";
+import { createComponents } from "./core";
 import { ColorState } from "./core/colorState";
 import { boundNumber, isString, setColorAndTriggerEvents } from "./utils/util";
 import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
@@ -28,8 +28,11 @@ export default class Alwan {
      * @param {Object} options - Options.
      */
     constructor(reference, options) {
-        reference = getElement(reference);
+
         const alwan = this;
+
+        reference = getElement(reference);
+
         /**
          * Settings.
          */

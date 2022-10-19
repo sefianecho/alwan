@@ -1,4 +1,4 @@
-import { BODY, BUTTON, CLOSE, ESCAPE, INPUT, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
+import { BUTTON, CLOSE, ESCAPE, INPUT, KEY_DOWN, MOUSE_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
 import { bindEvent, unbindEvent } from "../core/events/EventBinder";
 import { Popper } from "../lib/popper";
 import { createElement, getElement, getScrollableAncestors, isInViewport, setVisibility, updateClass } from "../utils/dom";
@@ -27,7 +27,7 @@ export const App = (alwan) => {
      *
      * @type {HTMLElement}
      */
-    let root = createElement('', ALWAN_CLASSNAME, BODY);
+    let root = createElement('', ALWAN_CLASSNAME, ROOT.body);
 
     /**
      * Picker Reference.

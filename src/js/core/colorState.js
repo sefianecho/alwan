@@ -1,4 +1,4 @@
-import { BODY, CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, INPUT, RGB_FORMAT, ROOT } from "../constants";
+import { CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, HTML, INPUT, RGB_FORMAT, ROOT } from "../constants";
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../lib/colors";
 import { parseColor } from "../lib/parser";
 import { createElement, removeElement, setCustomProperty } from "../utils/dom";
@@ -174,7 +174,7 @@ export const ColorState = (alwan) => {
                     // Incase browser doesn't support navigator.clipboard,
                     // Create a new input element and append it to the body,
                     // set its value as the color.
-                    createElement(INPUT, '', BODY, null, input => {
+                    createElement(INPUT, '', HTML, null, input => {
         
                         input.value = color;
                         input.select();
