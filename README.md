@@ -1,18 +1,14 @@
 # Alwan
 
-<div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="images/alwan-dark-theme.jpg">
-    <img alt="alwan light theme" src="images/alwan.jpg">
-  </picture>
+&nbsp;&nbsp;&nbsp;
 
-
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="images/dark-alwan-dark-theme.jpg">
-    <img alt="alwan dark theme" src="images/dark-alwan.jpg">
-  </picture>
+<div align="center">  
+  <img alt="alwan light theme" src="images/alwan-light.jpg">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img alt="alwan dark theme" src="images/alwan-dark.jpg">
 </div>
 
+&nbsp;&nbsp;&nbsp;
 
 <div>
   <img alt="minified size" src="https://img.shields.io/bundlephobia/min/alwan">
