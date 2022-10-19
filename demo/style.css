@@ -61,7 +61,10 @@ label {
     font-size: 1rem;
     transition: background-color 0.2s;
 }
-
+.lw-ref {
+    display: block;
+    margin: 2rem auto;
+}
 .github-button,
 .menu-button {
     display: inline-flex;
@@ -132,7 +135,7 @@ label {
     align-items: center;
     background-color: #fff;
     cursor: pointer;
-    padding: 1rem;
+    padding: 1.5rem 1rem;
     font-size: 1rem;
     transition: background-color 0.15s ease-in-out;
 }
@@ -252,7 +255,6 @@ select:focus,
     padding: 2rem;
 }
 .preview-area {
-    width: 500px;
     margin: 0 auto;
     padding: 1rem;
     border: 2px solid #41295a;
@@ -261,15 +263,15 @@ select:focus,
 }
 .color-pickers {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
 }
 
 .picker-wrapper {
     width: 100%;
+    margin-bottom: 3rem;
 }
 .picker-label {
-    display: block;
-    margin-bottom: 1rem;
     line-height: 1.8;
 }
 
@@ -340,5 +342,13 @@ select:focus,
     header {
         flex-direction: column;
         padding-bottom: 2rem;
+    }
+
+    .preview-area {
+        max-width: 500px;
+    }
+
+    .color-pickers {
+        flex-wrap: nowrap;
     }
 }
