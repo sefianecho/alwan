@@ -5,7 +5,9 @@
 <div align="center">  
   <img alt="alwan light theme" src="images/alwan-light.jpg">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
   <img alt="alwan dark theme" src="images/alwan-dark.jpg">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
 &nbsp;&nbsp;&nbsp;
