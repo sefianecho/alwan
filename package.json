@@ -1,7 +1,7 @@
 {
   "name": "alwan",
   "version": "1.0.2",
-  "description": "A simple, zero dependencies, lightweight color picker.",
+  "description": "A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.",
   "main": "dist/js/alwan.min.js",
   "scripts": {
     "start": "webpack serve --open --config ./scripts/webpack.dev.js",
