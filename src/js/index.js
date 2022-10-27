@@ -1,5 +1,5 @@
 
-import { getElement } from "./utils/dom";
+import { getElement, removeElement } from "./utils/dom";
 import { merge, objectIterator } from "./utils/object";
 import { defaults } from "./defaults";
 import { createComponents } from "./core";
@@ -235,6 +235,9 @@ export default class Alwan {
         // Initialize the reference element back.
         components.ref._init({ preset: false });
 
+        // Remove root element from the dom.
+        removeElement(components.app.$);
+
         // Remove all events.
         objectIterator(components, components => {
             components.e.forEach(listener => {
@@ -246,5 +249,8 @@ export default class Alwan {
         objectIterator(alwan, (value, key) => {
             delete alwan[key];
         });
+
+        // Empty instance prototype.
+        Object.setPrototypeOf(alwan, Object.prototype);
     }
 }
