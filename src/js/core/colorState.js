@@ -3,7 +3,7 @@ import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV, toString } from "../l
 import { parseColor } from "../lib/parser";
 import { createElement, removeElement, setCustomProperty } from "../utils/dom";
 import { isEqual, merge, objectIterator } from "../utils/object";
-import { isset } from "../utils/util";
+import { isset, isString } from "../utils/util";
 
 /**
  * Color state.
@@ -138,25 +138,26 @@ export const ColorState = (alwan) => {
          * @param {Boolean|Object} updater - Exclude some components from updating.
          */
         _updateFromString(colorString, updater) {
-
-            let { _color: parsedColor, _format: format } = parseColor(colorString);
-            let currentColor = getColorByFormat(format);
-            let isChanged = ! isEqual(parsedColor, currentColor);
-            let rgb, hsv;
-
-            if (isChanged) {
-
-                if (format === HSL_FORMAT) {
-                    hsv = HSLToHSV(parsedColor);
-                } else {
-                    rgb = parsedColor;
-                    hsv = RGBToHSV(parsedColor);
+            if (isString(colorString)) {
+                let { _color: parsedColor, _format: format } = parseColor(colorString);
+                let currentColor = getColorByFormat(format);
+                let isChanged = ! isEqual(parsedColor, currentColor);
+                let rgb, hsv;
+    
+                if (isChanged) {
+    
+                    if (format === HSL_FORMAT) {
+                        hsv = HSLToHSV(parsedColor);
+                    } else {
+                        rgb = parsedColor;
+                        hsv = RGBToHSV(parsedColor);
+                    }
+    
+                    this._update(hsv, updater, rgb);
                 }
-
-                this._update(hsv, updater, rgb);
+    
+                return isChanged;
             }
-
-            return isChanged;
         },
 
         /**

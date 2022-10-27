@@ -1,4 +1,4 @@
-import { CHANGE, COLOR, max, min } from "../constants";
+import { CHANGE, COLOR, max, min, round } from "../constants";
 
 /**
  * Checks if a value is a string.
@@ -42,3 +42,11 @@ export const setColorAndTriggerEvents = (alwan, color, source) => {
         emit(CHANGE, source);
     }
 }
+
+/**
+ * Hue value is an angle in degrees, it must be between 0 and 360.
+ *
+ * @param {Number} hue - Color hue.
+ * @returns {Number}
+ */
+export const normalizeHue = hue => (round(hue) % 360 + 360) % 360;

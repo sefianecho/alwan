@@ -4,7 +4,7 @@ import { merge, objectIterator } from "./utils/object";
 import { defaults } from "./defaults";
 import { createComponents } from "./core";
 import { ColorState } from "./core/colorState";
-import { boundNumber, isString, setColorAndTriggerEvents } from "./utils/util";
+import { boundNumber, isString, normalizeHue, setColorAndTriggerEvents } from "./utils/util";
 import { HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "./constants";
 import { HSVToHSL, HSVToRGB, RGBToHEX, toString } from "./lib/colors";
 import { EventListener } from "./core/events/EventListener";
@@ -136,33 +136,22 @@ export default class Alwan {
         if (! isString(color)) {
             // Get color format from color object.
             format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => format.split('')
-                                                                               .every(channel => color[channel] && ! isNaN(color[channel])));
+                                                                               .every(channel => ! isNaN(color[channel]) && color[channel] !== ''));
             if (format) {
-                let a = color.a;
-                color.a = a != null ? a : 1;
+                if (color.a == null) {
+                    color.a = 1;
+                }
 
                 if (format === HSV_FORMAT) {
-                    // Get current format.
-                    format = alwan.config.format;
-
-                    // H must be a value between 0 and 360.
-                    color.h = (color.h % 360 + 360) % 360;
-                    // S and V must be a value between 0 and 1.
-                    color.s = boundNumber(color.s) / 100;
-                    color.v = boundNumber(color.v) / 100;
-
-                    // Convert HSV to the selected color format.
-                    if (format === HSL_FORMAT) {
-                        color = HSVToHSL(color);
-                    } else {
-                        color = HSVToRGB(color);
-
-                        if (format === HEX_FORMAT) {
-                            color = RGBToHEX(color);
-                        }
-                    }
+                    alwan._s._update({
+                        h: normalizeHue(color.h),
+                        s: boundNumber(color.s) / 100,
+                        v: boundNumber(color.v) / 100,
+                        a: color.a
+                    }, true);
+                } else {
+                    color = toString(color, format);
                 }
-                color = toString(color, format);
             }
         }
 

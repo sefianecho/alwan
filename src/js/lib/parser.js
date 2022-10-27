@@ -1,6 +1,6 @@
 import { float, HSL_FORMAT, RGB_FORMAT, round } from "../constants";
 import { createElement } from "../utils/dom";
-import { boundNumber } from "../utils/util";
+import { boundNumber, normalizeHue } from "../utils/util";
 import { HEXToRGB, toString } from "./colors";
 
 const ctx = createElement('canvas').getContext('2d');
@@ -48,8 +48,7 @@ export const parseColor = (colorString, asString) => {
                 : 1;
 
             // Make sure hue is between 0 and 360.
-            let maxAngle = 360;
-            h = (round(h) % maxAngle + maxAngle) % maxAngle;
+            h = normalizeHue(h);
 
             // Alpha value must be between 0 and 1.
             a = a ? boundNumber(a.slice(-1) === '%' ? float(a) / 100 : a, 1) : 1;
