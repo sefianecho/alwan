@@ -1,23 +1,20 @@
+const { keys, assign } = Object;
+
 /**
- * Iterate in an object, stop and return false if callback function returns true.
+ * Iterate in an object.
+ * If any callback function return a value different then null or undefined,
+ * then stop iteration and return that value.
  *
  * @param {Object} object - Any object.
- * @param {CallableFunction} fn - Any Callback function.
- * @returns {Boolean}
+ * @param {Function} fn - A Callback function.
+ * @returns {any}
  */
 export const objectIterator = (object, fn) => {
-
-    for (const key in object) {
-        if (Object.hasOwnProperty.call(object, key)) {
-            if (fn(object[key], key, object)) {
-                return false;
-            }
-        }
+    let props = keys(object);
+    for (const prop of props) {
+       fn(object[prop], prop);
     }
-
-    return true;
 }
-
 
 /**
  * Merges two or more objects together into the target object.
@@ -26,13 +23,17 @@ export const objectIterator = (object, fn) => {
  * @param  {...Object} sources - Objects containing additional properties to merge in.
  * @returns {Object}
  */
-export const merge = (target, ...sources) => Object.assign(target, ...sources);
+export const merge = (target, ...sources) => {
+    return assign(target, ...sources);
+}
 
 /**
- * Checks if two object are equals.
+ * Checks if obj1 keys and values equal to obj2's keys and values.
  *
- * @param {Object} object1 - Any object.
- * @param {Object} object2 - Any object.
+ * @param {Object} obj1 - Any object.
+ * @param {Object} obj2 - Any object.
  * @returns {Boolean}
  */
-export const isEqual = (object1, object2) => objectIterator(object1, (value, key) => !object2 || object2[key] !== value);
+export const isEqual = (obj1, obj2) => {
+    return keys(obj1).every(key => obj1[key] === obj2[key]);
+}
