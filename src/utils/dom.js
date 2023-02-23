@@ -1,141 +1,177 @@
-import { ADD_METHOD, REMOVE_METHOD, ROOT, SCROLL, SVG } from "../constants";
-import { objectIterator } from "./object";
-import { isString } from "./util";
+import { BUTTON, HTML, ROOT } from "../constants";
+import { merge, objectIterator } from "./object";
+import { isString, trimString } from "./string";
 
 /**
- * Gets a DOM element.
+ * Gets the body element.
  *
- * @param {String|Element} ref - CSS selector or DOM element.
- * @param {Element} context - Element to search from.
- * @param {Boolean} all - Get all elements.
- * @returns {Element|null}
+ * @returns Document's body.
  */
-export const getElement = (ref, context, all) =>
-    isString(ref) ? ref && (context || ROOT)['querySelector' + (all ? 'All' : '')](ref)
-        : ref instanceof Element ? ref
-        : null;
+export const body = () => ROOT.body;
+
+/**
+ * Gets elements.
+ *
+ * @param {string|Element} reference - CSS selector or a HTML element.
+ * @param {Document|Element} context - Element to search from.
+ * @param {boolean} all - Select all elements.
+ * @returns {null|Element|NodeList}
+ */
+export const getElement = (reference, context = ROOT, all = false) => {
+    if (isString(reference) && trimString(reference)) {
+        return context[`querySelector${ all ? 'All' : ''}`](reference);
+    }
+
+    if (reference instanceof Element) {
+        return reference;
+    }
+
+    return null;
+}
+
+/**
+ * Inserts an element relative to another element (target element).
+ *
+ * @param {Element} element - The element to be inserted.
+ * @param {Element} targetElement - Element used as a reference.
+ * @param {string} where - Insert position relative to the targetElement.
+ * @returns {Element|undefined} - The inserted element.
+ */
+export const insertElement = (element, targetElement, where) => {
+    if (element && targetElement) {
+        return targetElement.insertAdjacentElement(where || 'beforeend', element);
+    }
+}
+
+/**
+ * Sets element's inner html.
+ *
+ * @param {Element} element - An HTML element.
+ * @param {string} html - HTML string.
+ */
+export const setHTML = (element, html) => {
+    element.innerHTML = html;
+}
 
 /**
  * Creates a new HTML Element.
  *
- * @param {String}           tagName     - HTML Element's Tag name.
- * @param {String}           className   - HTML Element's class name.
- * @param {Element}          parent - Append the new created element to this element.
- * @param {Object}           data - New element data its attributes, content html or inner text.
- * @param {CallableFunction} callback - Callback.
- * @returns {Element}
+ * @param {string} tagName - Element tag name.
+ * @param {string} className - Element class name.
+ * @param {Element} targetElement - Insert the new element relative to this element using position.
+ * @param {object} details - Element details (attributes + Initial content).
+ * @param {InsertPosition} insertPosition - Insert position.
+ * @returns {Element} The new created element.
  */
-export const createElement = (tagName, className, parent, data, callback) => {
+export const createElement = (tagName, className, targetElement, details = {}, insertPosition) => {
+    const element = ROOT.createElement(tagName || 'div');
+    element.className = className;
 
-    data = data || {}
-    const ns = `http://www.w3.org/${tagName === SVG ? '2000/svg' : '1999/xhtml'}`;
-    const element = document.createElementNS(ns, tagName || 'div');
-
-    if (className) {
-        element.className = className;
-    }
-
-    objectIterator(data, (value, key) => {
-        if (key === 'html') {
-            setElementsHTML(element, value);
-        } else if (key === 'text') {
-            element.innerText = value;
-        } else {
-            value && element.setAttributeNS('', key, value);
+    objectIterator(details, (value, name) => {
+        if (name === '_content') {
+            setHTML(element, value);
+        } else if (value) {
+            element.setAttribute(name, value);
         }
     });
 
-    if (parent) {
-        parent.appendChild(element);
+    if (targetElement) {
+        insertElement(element, targetElement, insertPosition);
     }
-
-    callback && callback(element);
 
     return element;
 }
 
-
 /**
- * Gets element bounds.
+ * Gets element's bounding rect.
  *
- * @param {HTMLElement} el Element.
- * @returns {Object}
+ * @param {Document|Element} element - Element.
+ * @returns {DOMRect}
  */
-export const getBounds = (el) => el && el.getBoundingClientRect();
-
-
-/**
- * Gets an element's parent.
- *
- * @param {Element} el - Any html element.
- * @returns {Element}
- */
-export const getParent = el => el.parentElement;
-
-
-/**
- * Replace a child node with another node.
- *
- * @param {Node} newChild - Any html node.
- * @param {Node} oldChild - Any html node.
- * @returns {Node}
- */
-export const replaceElement = (newChild, oldChild) => getParent(oldChild).replaceChild(newChild, oldChild) && newChild;
-
-/**
- * Removes an element from the DOM.
- *
- * @param {HTMLElement} element - Any html node.
- * @param {Boolean} destroy - Remove Reference. 
- * @returns {Element|null}
- */
-export const removeElement = (element, destroy) => element && getParent(element).removeChild(element) && (destroy ? null : element);
-
-
-/**
- * Gets any scrollable ancestor of an element.
- * Document is always included.
- *
- * @param {HTMLElement} el - Subject element.
- * @returns {Array}
- */
-export const getScrollableAncestors = el => {
-    el = getParent(el);
-  
-    let scrollableElements = [ROOT];
-  
-    while (el !== ROOT.body) {
-      let overflow = getComputedStyle(el).overflow;
-      if (overflow === 'auto' || overflow === SCROLL) {
-        scrollableElements.push(el);
-      }
-      el = getParent(el);
+export const getBounds = (element) => {
+    if (element === ROOT) {
+        return {
+            x: 0,
+            y: 0,
+            top: 0,
+            left: 0,
+            right: HTML.clientWidth,
+            bottom: HTML.clientHeight
+        }
     }
-  
-    return scrollableElements;
+    return element.getBoundingClientRect();
 }
+
+/**
+ * Gets an element parent.
+ *
+ * @param {Element} element - Element.
+ * @returns {Element|null} - The parent element.
+ */
+export const parent = (element) => {
+    return element.parentElement;
+}
+
+/**
+ * Replaces an element in the DOM with another element.
+ *
+ * @param {Element} newElement - Element to replace another element.
+ * @param {Element} oldElement - Element to be replaced by the newElement.
+ * @returns {Element} The new element.
+ */
+export const replaceElement = (newElement, oldElement) => {
+    parent(oldElement).replaceChild(newElement, oldElement);
+    return newElement;
+}
+
+/**
+ * Remove element from the document.
+ *
+ * @param {Element} element - Element to remove.
+ */
+export const removeElement = (element) => {
+    if (element) {
+        element.remove();
+    }
+}
+
+/**
+ * Gets scrollable ancestor of an element (body element is not included).
+ *
+ * @param {Element} element - Element.
+ * @param {array<Element|Document>} scrollables - Array of scrollable Elements.
+ * @returns {array<Element|Document>}
+ */
+export const getScrollableAncestors = (element, scrollables = [ROOT]) => {
+    element = parent(element);
+    if (! element || element === ROOT.body) {
+        return scrollables;
+    }
+
+    if (/auto|scroll/.test(getComputedStyle(element).overflow)) {
+        scrollables.push(element);
+    }
+
+    return getScrollableAncestors(element, scrollables);
+}
+
 
 
 /**
  * Check if an element is visible in the viewport of all scrollable elements.
  *
- * @param {HTMLElement} el - Any html element.
- * @param {Array} scrollableElements - scrollable elements.
+ * @param {Element} element - Element.
+ * @param {Array} scrollables - Scrollable elements.
  * @returns {boolean}
  */
-export const isInViewport = (el, scrollableElements) =>
-    scrollableElements.every(scrollable => {
-        let isVisible = true;
+export const isInViewport = (element, scrollables) => {
+    return scrollables.every(scrollable => {
+        let { x: elementX, y: elementY, bottom: elementBottom, right: elementRight } = getBounds(element);
+        let { x: scrollableX, y: scrollableY, bottom: scrollableBottom, right: scrollableRight } = getBounds(scrollable);
 
-        if (scrollable !== ROOT) {
-            let {top: elTop, bottom: elBottom} = getBounds(el);
-            let {top: scrollableTop, bottom: scrollableBottom} = getBounds(scrollable);
-
-            isVisible = elTop >= scrollableTop && scrollableBottom >= elBottom;
-        }
-
-        return isVisible;
+        return elementY >= scrollableY && elementBottom <= scrollableBottom && elementX <= scrollableRight && elementRight >= scrollableX;
     });
+}
 
 
 /**
@@ -152,40 +188,36 @@ export const setCustomProperty = (el, property, value) => {
 
 /**
  * Hides/Shows element.
- * Truthy value or non empty array shows the element,
- * else hides it.
  * 
- * @param {Element} el - Element to show/hide.
- * @param {Array|Boolean} cond - Condition.
+ * @param {Element} element - Element to show/hide.
+ * @param {boolean} toggler - Whether to show (true) or hide the element.
  */
-export const setVisibility = (el, cond) => {
+export const toggleVisibility = (element, toggler = true) => {
+    element.style.display = toggler ? '' : 'none';
+}
 
-    let length = cond && cond.length;
-
-    if (length != null) {
-        cond = length;
+/**
+ * Adds/Removes a class to/from an based on a boolean variable.
+ *
+ * @param {Element} element - Element.
+ * @param {string} token - Class name.
+ * @param {boolean} toggler - Whether to add (true) or remove a class.
+ */
+export const toggleClassName = (element, token, toggler = true) => {
+    if (token) {
+        element.classList.toggle(token, toggler);
     }
-
-    el.style.display = cond ? '' : 'none';
 }
 
 /**
- * Adds/Remove class based on a condition.
+ * Creates a button Element.
  *
- * @param {Element} el - Any Element.
- * @param {String} classname - CSS Class Selector.
- * @param {Boolean} cond - Condition.
+ * @param {string} className - Class.
+ * @param {Element} targetElement - TargetElement.
+ * @param {object} details - Button details.
+ * @param {string} insertPosition - Button insert position.
+ * @returns {Element} A button.
  */
-export const updateClass = (el, classname, cond) => {
-    classname && el.classList[cond ? ADD_METHOD : REMOVE_METHOD](classname);
-}
-
-/**
- * Sets element's inner html.
- *
- * @param {Element} el - Any Element.
- * @param {String} html - HTML string.
- */
-export const setElementsHTML = (el, html) => {
-    el.innerHTML = html || '';
+export const createButton = (className, targetElement, details, insertPosition) => {
+    return createElement(BUTTON, className, targetElement, merge({ type: BUTTON }, details), insertPosition);
 }
