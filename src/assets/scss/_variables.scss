@@ -1,0 +1,129 @@
+@use 'sass:map';
+@use 'sass:math';
+
+$primary-color: #117ce0;
+$pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23d1d3d4' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23d1d3d4' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
+$box-shadow: 0 0 2px rgba(0,0,0,0.6);
+
+
+// Alwan container.
+$alwan-max-width: 260px;
+// Light theme.
+$alwan-background: #fff;
+$alwan-foreground: #333;
+$alwan-border-color: #ccc;
+$border-color: #ccc;
+
+// Dark theme.
+$alwan-background-dark: #111;
+$alwan-border-color-dark: #aaa;
+$alwan-foreground-dark: #ccc;
+$border-color-dark: #27292c;
+
+
+// Marker.
+$marker-width: 16px;
+$marker-height: $marker-width;
+$marker-top: math.div($marker-height, 2) * -1;
+$marker-left: math.div($marker-width, 2) * -1;
+$marker-box-shadow: $box-shadow;
+$marker-border: 2px solid #fff;
+
+// Palette.
+$palette-height: 136px;
+
+// Container
+$container-border-color:#ccc;
+$container-padding-y: 10px;
+$container-padding-x: 15px;
+$container-padding: $container-padding-y $container-padding-x;
+
+// Preview.
+$preview-width: 40px;
+$preview-height: $preview-width;
+$preview-margin-right: 15px;
+$preview-border-radius: 0;
+
+// Sliders.
+// ------------------------------------------------
+$alpha-slider-margin-top: 14px;
+
+// Track.
+$track-height: 15px;
+
+// Thumb.
+$thumb-height: 21px;
+$thumb-width: 14px;
+$thumb-background: #fff;
+$thumb-border-radius: 3px;
+$thumb-box-shadow: $box-shadow;
+$thumb-border-color:#9b9b9b;
+
+$thumb-background-dark: #151515;
+$thumb-border-color-dark: #3c4146;
+
+// Input label.
+$input-background: #fff;
+$input-label-margin-right: 4px;
+$label-color: #555;
+$input-label-font-size: 13px;
+$input-label-font-family: system-ui;
+
+$label-color-dark: #d8d8d8;
+
+// Input.
+$input-background: #fff;
+$input-padding: 8px 5px;
+$input-color: #333;
+$input-border: 1px solid #ccc;
+$input-margin-bottom: 3px;
+$input-font-family: monospace;
+
+$input-background-dark: #181818;
+
+// Swatches container.
+$swatches-background: #f5f5f5;
+$swatches-container-padding: 10px 15px 0 15px;
+$swatches-max-height: 100px;
+
+$swatches-background-dark: #0a0a0a;
+
+// Swatch button.
+$swatch-width: 20px;
+$swatch-height: 20px;
+$swatch-margin: 0 5px 10px 5px;
+$swatch-border-radius: 2px;
+
+// Buttons.
+$button-padding: 8px 4px;
+$button-border-radius: 2px;
+$button-hover-background: #f0f0f0;
+$button-hover-background-dark: #444;
+
+// Preset reference button.
+$preset-button-height: 1.5rem;
+$preset-button-width: 1.5rem;
+$preset-button-border-radius: 0.25rem;
+
+
+$dark-theme: (
+    --alwan-bg: $alwan-background-dark,
+    --alwan-fg: $alwan-foreground-dark,
+    --alwan-bc: $alwan-border-color-dark,
+    --lw-swatches-bg: $swatches-background-dark,
+    --lw-bc: $border-color-dark,
+    --lw-thumb: $thumb-background-dark,
+    --lw-thumb-bc: $thumb-border-color-dark,
+    --lw-label: $label-color-dark,
+    --lw-input-bg: $input-background-dark,
+    --lw-btn-hover: $button-hover-background-dark
+);
+
+
+@mixin dark-theme() {
+    &[data-theme="dark"] {
+        @each $property, $value in $dark-theme {
+            #{$property}: #{$value};
+        }
+    }
+}
