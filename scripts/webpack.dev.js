@@ -13,7 +13,6 @@ module.exports = merge(common, {
         new HtmlWebpackPlugin({
             title: 'Alwan: a simple lightweight color picker',
             template: 'template.html',
-            inject: 'body',
         })
     ],
 });

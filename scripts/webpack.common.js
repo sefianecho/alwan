@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        alwan: './src/js/index.js'
+        alwan: './src/index.js'
     },
     plugins: [
         new MiniCssExtractPlugin({
