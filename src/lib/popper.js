@@ -1,205 +1,177 @@
-import { abs, float, HTML } from "../constants";
+import { ROOT } from "../constants";
 import { getBounds } from "../utils/dom";
+import { abs, isNumeric } from "../utils/number";
+import { objectIterator } from "../utils/object";
+import { isString } from "../utils/string";
 
 /**
- * Constants
+ * Popper constants.
  */
 const TOP = 'top';
-const RIGHT = 'right';
 const BOTTOM = 'bottom';
+const RIGHT = 'right';
 const LEFT = 'left';
 const START = 'start';
 const CENTER = 'center';
 const END = 'end';
-const WIDTH = 'width';
-const HEIGHT = 'height';
+
+const dimension = {
+    x: 'width',
+    y: 'height'
+}
+
+const upperBound = {
+    x: RIGHT,
+    y: BOTTOM
+}
+
+const X_AXIS = 'x';
+const Y_AXIS = 'y';
 
 /**
- * Display an element as a popover.
+ * Creates popper instance.
  *
- * @param {Element} ref - Popper reference element.
- * @param {Element} pop - Popper element.
- * @param {Object} options - Options.
- * @returns {Object}
+ * @param {Element} reference - Popper reference element.
+ * @param {Element} container - Popper container.
+ * @param {object} param2 - Popper options.
+ * @returns {object} - Popper instance.
  */
-export const Popper = (ref, pop, options) => {
-
-    options = options || {};
-
-    /**
-     * Popper options.
-     */
-    let { margin, position } = options;
-
-    /**
-     * Position is devided into, side and alignment.
-     */
-    let [side, alignment] = position ? position.split('-') : [];
-
+export const createPopper = (reference, container, { _margin, _position }) => {
     /**
      * Sides to fallback to.
      */
-    let sides = {
-        [TOP]: [TOP, BOTTOM, RIGHT, LEFT],
+    let fallbackSides = {
+        [TOP]:    [TOP, BOTTOM, RIGHT, LEFT],
         [BOTTOM]: [BOTTOM, TOP, RIGHT, LEFT],
-        [RIGHT]: [RIGHT, LEFT, TOP, BOTTOM],
-        [LEFT]: [LEFT, RIGHT, TOP, BOTTOM],
-    }
-
+        [RIGHT]:  [RIGHT, LEFT, TOP, BOTTOM],
+        [LEFT]:   [LEFT, RIGHT, TOP, BOTTOM]
+    };
     /**
      * Alignments to fallback to.
      */
-    let alignments = {
-        [START]: [START, CENTER, END],
-        [CENTER]: [CENTER, START, END],
-        [END]: [END, CENTER, START],
+    let fallbackAlignments = {
+        start: [START, CENTER, END],
+        center: [CENTER, START, END],
+        end: [END, CENTER, START]
     };
+    /**
+     * Popup coordinates.
+     */
+    let coordinates;
 
     /**
-     * Document bounds.
-     *
-     * @type {object}
+     * Space between the reference and the container.
      */
-    let domBounds;
+    let margin = 5;
 
     /**
-     * Reference element bounds.
-     *
-     * @type {object}
+     * Side and alignment from the position.
      */
-    let refBoundingRect;
+    let [side, alignment] = isString(_position) ? _position.split('-') : [];
 
-    /**
-     * Pop element bounds.
-     *
-     * @type {object}
-     */
-    let popBoundingRect;
-
-    // Normalize options values.
-    margin = margin == null ? 6 : float(margin);
-    side = sides[side] ? side : BOTTOM;
-    alignment = alignment ? alignments[alignment] ? alignment : START : CENTER;
-
-
-    /**
-     * Sets popper's position.
-     *
-     * @param {Boolean} isVertical - Indicate whether the popper is displayed on the Y axes.
-     * @param {Number} value - Value of the top or left css property.
-     */
-    const setPosition = (isVertical, value) => {
-        if (value !== false) {
-            pop.style[isVertical ? TOP : LEFT] = value + 'px';
-        }
+    // Validate values.
+    if (! fallbackSides[side]) {
+        side = BOTTOM;
     }
-
-    /**
-     * Positions the popper in the screen center vertically or horizontally.
-     *
-     * @param {Boolean} isVertical - Indicate whether the popper is displayed on the Y axes.
-     */
-    const centerPopElement = (isVertical) => {
-        let dimension = WIDTH;
-        let maxBoundary = RIGHT;
-    
-        if (isVertical) {
-            dimension = HEIGHT;
-            maxBoundary = BOTTOM;
-        }
-
-        setPosition(isVertical, (domBounds[maxBoundary] - popBoundingRect[dimension]) / 2);
+    if (! alignment) {
+        alignment = CENTER;
+    } else if (! fallbackAlignments[alignment]) {
+        alignment = START;
     }
-
-    /**
-     * Updates popper's position.
-     */
-    const _update = () => {
-        domBounds = {
-            top: 0,
-            left: 0,
-            right: HTML.clientWidth,
-            bottom: HTML.clientHeight
-        }
-
-        refBoundingRect = getBounds(ref);
-        popBoundingRect = getBounds(pop);
-
-        let isPopPlaced = sides[side].some(side => {
-
-            let isVertical = side === TOP || side === BOTTOM;
-            let domBoundary = domBounds[side];
-            let refBound = refBoundingRect[side];
-            // Space taken by the pop element.
-            let space = margin + popBoundingRect[isVertical ? HEIGHT : WIDTH];
-            let hasSpace = space <= abs(domBoundary - refBound);
-
-            if (hasSpace) {
-                setPosition(isVertical, refBound + (domBoundary ? margin : -space));
-
-                // The pop element is positioned in the one of the 4 sides,
-                // Now its alignment.
-                let isPopAligned = alignments[alignment].some(alignment => {
-
-                    let dimension = HEIGHT;
-                    let lowerBound = TOP;
-                    let upperBound = BOTTOM;
-
-                    if (isVertical) {
-                        dimension = WIDTH;
-                        lowerBound = LEFT;
-                        upperBound = RIGHT;
-                    }
-                    // Reference lower bound top or left.
-                    let refLowerBound = refBoundingRect[lowerBound];
-                    // Reference upper bound bottom or right.
-                    let refUpperBound = refBoundingRect[upperBound];
-
-                    // Space between the document lower bound (top or left) and,
-                    // the reference upper bound (bottom or right).
-                    let lowerSpace = abs(domBounds[lowerBound] - refUpperBound);
-                    // Space between the document upper bound (bottom or right) and,
-                    // the reference lower bound (top or left).
-                    let upperSpace = abs(domBounds[upperBound] - refLowerBound);
-
-                    // Dimension could be height or width.
-                    let refDimension = refBoundingRect[dimension];
-                    let popDimension = popBoundingRect[dimension];
-
-                    // Center align pop element with the reference,
-                    // this is the distance between (lower/upper) bound of the reference,
-                    // and the (lower/upper) bound of the pop element.
-                    let offset = (popDimension + refDimension) / 2;
-
-                    // Check the space and get the position value in pixels.
-                    let placement = {
-                        [START]: popDimension <= upperSpace && refLowerBound,
-                        [CENTER]: offset <= lowerSpace && offset <= upperSpace && refUpperBound - offset,
-                        [END]: popDimension <= lowerSpace && refUpperBound - popDimension,
-                    }
-
-                    placement = placement[alignment];
-                    setPosition(! isVertical, placement);
-                    return placement !== false;
-                });
-
-                if (! isPopAligned) {
-                    centerPopElement(! isVertical);
-                }
-            }
-
-            return hasSpace;
-        });
-
-        if (! isPopPlaced) {
-            centerPopElement(true);
-            centerPopElement();
-        }
+    if (isNumeric(_margin)) {
+        margin = _margin;
     }
-
-    _update();
 
     return {
-        _update
+        /**
+         * Popper Reference element.
+         *
+         * @type {Element}
+         */
+        _reference: reference,
+
+        /**
+         * Update container's position.
+         */
+        _update() {
+            let domBounds = getBounds(ROOT);
+            let referenceBoundingRect = getBounds(reference);
+            let containerBoundingRect = getBounds(container);
+
+            coordinates = {
+                x: null,
+                y: null
+            }
+
+            /**
+             * Check sides.
+             */
+            fallbackSides[side].some(referenceSide => {
+                let axis = referenceSide === TOP || referenceSide === BOTTOM ? Y_AXIS : X_AXIS;
+
+                let domBound = domBounds[referenceSide];
+                let referenceBound = referenceBoundingRect[referenceSide];
+
+                // The amount of space for the container.
+                let containerSpace = margin + containerBoundingRect[dimension[axis]];
+                // If container has available space.
+                if (containerSpace <= abs(domBound - referenceBound)) {
+                    // Calculate coordinate to set this side,
+                    // for the top/left sides substruct the container space from the top/left bound of the reference element,
+                    // and for the bottom/right sides just add the margin.
+                    coordinates[axis] = referenceBound + (domBound ? margin : -containerSpace);
+                    // Reverse the axises for the alignments.
+                    axis = axis === X_AXIS ? Y_AXIS : X_AXIS;
+
+                    /**
+                     * Check alignments, only if the container is attached.
+                     */
+                    fallbackAlignments[alignment].some(alignment => {
+                        // container width/height depends on the axis.
+                        let containerDimension = containerBoundingRect[dimension[axis]];
+                        // Lower bound is for the top/left coordinates.
+                        // Upper bound is for the bottom/right coordinates.
+                        // top/left coordinates are always lesser(lower) than bottom/right.
+                        let {
+                            [axis]: referenceLowerBound,
+                            [upperBound[axis]]: referenceUpperBound,
+                        } = referenceBoundingRect;
+                        // Distance between the reference bottom/right coordinates and the DOM,
+                        // bottom/right coordinates or boundries.
+                        let upperBoundDistance = domBounds[upperBound[axis]] - referenceLowerBound;
+
+                        // Offset between the container and the reference element.
+                        let offset = (containerDimension + referenceBoundingRect[dimension[axis]]) / 2;
+
+                        // Check for space availability and set the coordinate.
+                        if (alignment === START && containerDimension <= upperBoundDistance) {
+                            coordinates[axis] = referenceLowerBound;
+                            return true;
+                        }
+                        if (alignment === CENTER && offset <= referenceUpperBound && offset <= upperBoundDistance) {
+                            coordinates[axis] = referenceUpperBound - offset;
+                            return true;
+                        }
+                        if (alignment === END && containerDimension <= referenceUpperBound) {
+                            coordinates[axis] = referenceUpperBound - containerDimension;
+                            return true;
+                        }
+                    });
+                    // Exit the fallback sides loop.
+                    return true;    
+                }
+            });
+            // If there is no space to position the popover in all sides,
+            // then center the popover in the screen.
+            // If the popover is attached to one side but there is no space,
+            // for the alignment than center it horizontally/vertically depends on the side.
+            objectIterator(coordinates, (value, axis) => {
+                if (value === null) {
+                    coordinates[axis] = (domBounds[upperBound[axis]] - containerBoundingRect[dimension[axis]]) / 2;
+                }
+            });
+
+            container.style.transform = `translate(${coordinates.x}px, ${coordinates.y}px)`;
+        }
     }
 }
