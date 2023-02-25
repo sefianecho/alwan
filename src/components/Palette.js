@@ -1,267 +1,208 @@
-import { ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT, ARROW_UP, COLOR, FOCUS_CLASSNAME, FOCUS_IN, FOCUS_OUT, KEY_DOWN, MOUSE_DOWN, MOUSE_MOVE, MOUSE_UP, ROOT, TOUCH_CANCEL, TOUCH_END, TOUCH_MOVE, TOUCH_START } from "../constants";
-import { bindEvent } from "../core/events/EventBinder";
-import { createElement, getBounds, setVisibility, updateClass } from "../utils/dom"
-import { Marker } from "./Marker";
-
-/**
- * Palette component constants.
- */
-const PALETTE_CLASSNAME = 'alwan__palette';
-const OVERLAY_CLASSNAME = 'lw-overlay';
+import { FOCUS_CLASSNAME, MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../classnames";
+import { FOCUS_IN, FOCUS_OUT, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants";
+import { createElement, getBounds, toggleClassName, translate, removeElement } from "../utils/dom"
+import { numberRange } from "../utils/number";
 
 /**
  * Picker palette.
  *
- * @param {Element} parent - Element to append the palette element to.
+ * @param {Element} root - Root element to append the palette elements to.
  * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Palette = (parent, alwan) => {
+export const Palette = (root, alwan, events) => {
+    /**
+     * Marker X coordinate.
+     *
+     * @type {number}
+     */
+    let markerX;
 
-    const { _s: colorState, _e: { _emit }} = alwan;
+    /**
+     * Marker Y coordinate.
+     *
+     * @type {number}
+     */
+    let markerY;
+
+    /**
+     * Palette element bounds.
+     *
+     * @type {DOMRect}
+     */
+    let paletteBounds;
+
+    /**
+     * A transparent element cover the whole document.
+     *
+     * @type {Element}
+     */
+    let overlayElement;
+
+    /**
+     * Indicates whether a pointer (mouse, pen or touch) is down.
+     */
+    let isPointerDown = false;
 
     /**
      * Palette element.
      */
-    const el = createElement('', PALETTE_CLASSNAME, parent, { tabindex: '0' });
+    const palette = createElement('', PALETTE_CLASSNAME, root, { tabindex: '0' });
 
     /**
-     * Overlay element, used to set focus only on palette,
-     * if marker is moving.
+     * Palette marker.
      */
-    const overlay = createElement('', OVERLAY_CLASSNAME, parent);
-    setVisibility(overlay, false);
+    const marker = createElement('', MARKER_CLASSNAME, palette);
 
     /**
-     * Move marker one step horizontally using the keyboard.
+     * Palette element dimension.
      */
-    const moveX = {
-        [ARROW_RIGHT]: 1,
-        [ARROW_LEFT]: -1
-    }
+    const { width, height } = getBounds(palette);
 
     /**
-     * Move marker one step vertically using the keyboard.
+     * Move marker horizontally using the keyboard arrow keys.
      */
-    const moveY = {
-        [ARROW_UP]: -1,
-        [ARROW_DOWN]: 1
-    }
+    const keyboardX = {
+        ArrowRight: 1,
+        ArrowLeft: -1
+    };
 
     /**
-     * Marker component.
+     * Move marker vertically using the keyboard arrow keys
      */
-    const marker = Marker(el);
+    const keyboardY = {
+        ArrowDown: 1,
+        ArrowUp: -1
+    };
 
     /**
-     * Marker Method.
-     */
-    let { _moveTo } = marker;
-
-    /**
-     * Palette dimensions
-     */
-    let WIDTH, HEIGHT;
-
-    /**
-     * Palette event listeners.
-     */
-    let listeners = [];
-
-    /**
-     * Palette bounds.
-     */
-    let bounds;
-
-    /**
-     * State of the marker.
-     */
-    let isDragging = false;
-
-    /**
-     * Marker start moving.
+     * Moves marker and updates color.
      *
-     * @param {Event} e - Mousedown or Touchstart events.
-     * @returns {void}
+     * @param {PointerEvent} param0 - Event.
+     */
+    const moveMarkerAndUpdateColor = ({ clientX, clientY }) => {
+        clientX = numberRange(clientX - paletteBounds.x, width);
+        clientY = numberRange(clientY - paletteBounds.y, height);
+
+        if (clientX !== markerX || clientY !== markerY) {
+            markerX = clientX;
+            markerY = clientY;
+            translate(marker, markerX, markerY);
+            // Update color.
+            // TODO dispatch color event.
+        }
+    }
+
+    /**
+     * Starts dragging the marker.
+     *
+     * @param {PointerEvent} e - Event.
      */
     const dragStart = e => {
-        if (e.touches && e.touches.length > 1) {
-            return;
+        if (! overlayElement) {
+            overlayElement = createElement('', OVERLAY_CLASSNAME, root);
         }
-        // Save color state.
-        colorState._colorStart();
-        // Cache palette's bounds.
-        bounds = getBounds(el);
-        updateDimensions(bounds);
-        moveAndUpdateColor(e);
-        isDragging = true;
-        // Display overlay.
-        setVisibility(overlay, isDragging);
-        el.focus();
+        paletteBounds = getBounds(palette);
+        isPointerDown = true;
+        moveMarkerAndUpdateColor(e);
+        palette.focus();
     }
 
     /**
-     * Moves the marker.
+     * Dragging the marker.
      *
-     * @param {Event} e - Mousemove or Touchmove event.
-     * @returns {void}
+     * @param {PointerEvent} e - Event.
      */
-    const dragMove = e => {
-        if (!isDragging || (e.touches && e.touches.length > 1)) {
-            return;
+    const drag = e => {
+        if (isPointerDown) {
+            moveMarkerAndUpdateColor(e);
         }
-        moveAndUpdateColor(e);
     }
 
-
     /**
-     * Marker stop moving.
+     * Drag end (released the marker).
      *
-     * @param {Event} e - Mouseup or Touchend or touchcancel events.
+     * @param {PointerEvent} e - Event.
      */
     const dragEnd = e => {
-        if (isDragging) {
-            // Trigger change event if color changes.
-            colorState._triggerChange(el);
-            isDragging = false;
-            // Hide overlay.
-            setVisibility(overlay, isDragging);
+        if (isPointerDown) {
+            overlayElement = removeElement(overlayElement);
+            isPointerDown = false;
         }
-    }
-
-
-    /**
-     * Updates color and moves marker.
-     *
-     * @param {Number} x - X coordinate.
-     * @param {Number} y - Y coordinate.
-     */
-    const updateColor = (x, y) => {
-        _moveTo(x, y);
-        colorState._update({ s: x / WIDTH, v: 1 - y / HEIGHT });
-        _emit(COLOR, el);
-    }
-
-
-    /**
-     * Moves Marker and Updates color.
-     *
-     * @param {Event} e - Drag start or drag move events.
-     */
-    const moveAndUpdateColor = e => {
-        let { top, left } = bounds;
-        let x, y;
-        let touches = e.touches;
-
-        e.preventDefault();
-
-        if (touches) {
-            e = touches[0];
-        }
-
-        // Calculate the local coordinates,
-        // local to the palette.
-        x = e.clientX - left;
-        y = e.clientY - top;
-
-        // Make sure x and y don't go out of bounds.
-        x = x < 0 ? 0 : x > WIDTH ? WIDTH : x;
-        y = y < 0 ? 0 : y > HEIGHT ? HEIGHT : y;
-
-        updateColor(x, y);
-    }
-
-    /**
-     * Updates palette.
-     *
-     * @param {Object} hsv - HSV color object.
-     */
-    const _setMarkerPosition = hsv => {
-        updateDimensions();
-        _moveTo(hsv.s * WIDTH, (1 - hsv.v) * HEIGHT);
     }
 
     /**
      * Handles palette's focus.
      *
-     * @param {Event} e - Focusout or Focusin.
+     * @param {FocusEvent} param0 - Event.
      */
-    const handleFocus = e => {
-        // Update class condition removes class if its false,
-        // add class if true.
-        let cond = false;
-        // If palette lose focus, remove the focus class,
-        // and remove browser keyboard focus.
-        if (e.type === FOCUS_OUT) {
-            el.blur();
-        } else {
-            cond = ! isDragging;
-        }
-
-        updateClass(el, FOCUS_CLASSNAME, cond);
+    const handleFocus = ({ type }) => {
+        // If the palette receive focus by a non pointer event,
+        // (not a touch/pen/mouse) then add focus class to simulate focus-visible,
+        // if the palette loses focus then remove the focus class.
+        // because .blur() returns undefined wich is a faulty value,
+        // that means remove class.
+        toggleClassName(palette, FOCUS_CLASSNAME, type === FOCUS_IN ? ! isPointerDown : palette.blur());
     }
 
     /**
-     * Handles picking color using keyboard.
+     * Moves marker using keyboard arrow keys and adds focus-visible to the palette.
      *
-     * @param {Event} e - Keydown.
+     * @param {KeyboardEvent} e - Event.
      */
     const handleKeyboard = e => {
-
-        // Add focus class.
-        updateClass(el, FOCUS_CLASSNAME, true);
-
+        // Add focus classname to the palette.
+        toggleClassName(palette, FOCUS_CLASSNAME);
         let key = e.key;
+        let currentX = markerX;
+        let currentY = markerY;
 
-        if (moveX[key] || moveY[key]) {
+        if (keyboardX[key] || keyboardY[key]) {
             e.preventDefault();
+            paletteBounds = getBounds(palette);
 
-            updateDimensions();
+            markerX = numberRange(markerX + (keyboardX[key] || 0) * width / 100, width, 0);
+            markerY = numberRange(markerY + (keyboardY[key] || 0) * height / 100, height, 0);
 
-            let {x, y} = marker._getPosition();
-            let markerX = x, markerY = y;
-            // Amount of pixel to move marker horizontally using keyboard.
-            let stepX = WIDTH / 100;
-            // Amount of pixel to move marker vertically using keyboard.
-            let stepY = HEIGHT / 100;
-
-            x += (moveX[key] || 0) * stepX;
-            y += (moveY[key] || 0) * stepY;
-
-            // Make sure x and y don't go out of bounds.
-            x = x > WIDTH ? WIDTH : x < 0 ? 0 : x;
-            y = y > HEIGHT ? HEIGHT : y < 0 ? 0 : y;
-
-            // If the marker changes its position then calculate and set the color.
-            if (x !== markerX || y !== markerY) {
-                updateColor(x, y);
+            if (markerX !== currentX || markerY !== currentY) {
+                translate(marker, markerX, markerY);
+                // TODO:
+                // Update color.
+                // dispatch change event.
+                // dispatch color event.
             }
         }
-    }
-
-
-    /**
-     * Updates palette's width and height values.
-     *
-     * @param {Object} bounds - Palette's Bounding rect.
-     */
-    const updateDimensions = bounds => {
-        ({ width: WIDTH, height: HEIGHT } = bounds || getBounds(el));
     }
 
     /**
      * Bind events.
      */
-    bindEvent(listeners, el, [MOUSE_DOWN, TOUCH_START], dragStart);
-    bindEvent(listeners, ROOT, [MOUSE_MOVE, TOUCH_MOVE], dragMove, { passive: false });
-    bindEvent(listeners, ROOT, [MOUSE_UP, TOUCH_END, TOUCH_CANCEL], dragEnd);
-    bindEvent(listeners, el, [FOCUS_OUT, FOCUS_IN], handleFocus);
-    bindEvent(listeners, el, KEY_DOWN, handleKeyboard);
+    events._bind(palette, POINTER_DOWN, dragStart);
+    events._bind(ROOT, POINTER_MOVE, drag);
+    events._bind(ROOT, POINTER_UP, dragEnd);
+    events._bind(palette, [FOCUS_IN, FOCUS_OUT], handleFocus);
+    events._bind(palette, KEY_DOWN, handleKeyboard);
+
 
     return {
-        $: el,
-        marker,
-        _setMarkerPosition,
-        e: listeners
+        _element: palette,
+        /**
+         * Initialize component.
+         *
+         * @param {object} options - Alwan options.
+         * @param {object} instance - Alwan instance.
+         */
+        _init(_options, instance) {
+            alwan = instance;
+        },
+
+        /**
+         * Updates marker position from an hsv color object.
+         *
+         * @param {object} param0 - HSV color object.
+         */
+        _updateMarker({ s, v }) {
+            translate(marker, s * width, (1 - v) * height);
+        }
     }
 }
