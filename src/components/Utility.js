@@ -1,6 +1,7 @@
+import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, FOCUS_CLASSNAME, PREVIEW_CLASSNAME } from "../classnames";
 import { CLICK, FOCUS_IN, FOCUS_OUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT } from "../constants";
-import { createButton, createElement, insertElement, removeElement, toggleClassName } from "../utils/dom";
+import { createButton, createElement, insertElement, removeElement, setHTML, toggleClassName } from "../utils/dom";
 
 /**
  * Creates utility component.
@@ -42,7 +43,7 @@ export const Utility = (parent, alwan, events) => {
 
             if (copy !== !! copyButton) {
                 if (copy) {
-                    copyButton = createButton(COPY_BUTTON_CLASSNAME, previewElement || parent, { _content: 'CP' }, INSERT_BEFORE_FIRST_CHILD);
+                    copyButton = createButton(COPY_BUTTON_CLASSNAME, previewElement || parent, { _content: clipboardSVG }, INSERT_BEFORE_FIRST_CHILD);
                 } else {
                     copyButton = removeElement(copyButton);
                 }
@@ -71,6 +72,7 @@ export const Utility = (parent, alwan, events) => {
             // TODO: get color and copy it to the clipbloard,
             // change icon.
             isCopied = true;
+            setHTML(copyButton, checkSVG);
         }
     }
 
@@ -86,6 +88,7 @@ export const Utility = (parent, alwan, events) => {
             // to the clipboard svg.
             if (isCopied && type !== FOCUS_IN) {
                 isCopied = false;
+                setHTML(copyButton, clipboardSVG);
                 // set the clipboard icon.
             }
             // Add focus class to the button if it receive focus,
