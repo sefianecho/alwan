@@ -1,7 +1,7 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, FOCUS_CLASSNAME, PREVIEW_CLASSNAME } from "../classnames";
-import { CLICK, FOCUS_IN, FOCUS_OUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT } from "../constants";
-import { createButton, createElement, insertElement, removeElement, setHTML, toggleClassName } from "../utils/dom";
+import { CLICK, COLOR_PROPERTY, FOCUS_IN, FOCUS_OUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT } from "../constants";
+import { createButton, createElement, insertElement, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
 
 /**
  * Creates utility component.
@@ -12,6 +12,13 @@ import { createButton, createElement, insertElement, removeElement, setHTML, tog
  * @returns {object} Utility component.
  */
 export const Utility = (parent, alwan, events) => {
+    /**
+     * Preview color.
+     *
+     * @type {Element}
+     */
+    let previewElement;
+
     /**
      * Copy button.
      *
@@ -27,20 +34,13 @@ export const Utility = (parent, alwan, events) => {
 
     const self = {
         /**
-         * Color preview element.
-         */
-        _preview: null,
-
-        /**
          * Initialize utility component.
          *
          * @param {object} param0 - Alwan options.
-         * @param {Alwan} instance - Alwan instance.
+         * @param {object} instance - Alwan instance.
          */
         _init({ preview, copy }, instance) {
             alwan = instance;
-            let previewElement = self._preview;
-
             if (copy !== !! copyButton) {
                 if (copy) {
                     copyButton = createButton(COPY_BUTTON_CLASSNAME, previewElement || parent, { _content: clipboardSVG }, INSERT_BEFORE_FIRST_CHILD);
@@ -58,7 +58,15 @@ export const Utility = (parent, alwan, events) => {
 
                 insertElement(copyButton, previewElement || parent, INSERT_BEFORE_FIRST_CHILD);
             }
-            self._preview = previewElement;
+        },
+
+        /**
+         * Previews a color.
+         *
+         * @param {string} color - Color.
+         */
+        _preview(color) {
+            setCustomProperty(previewElement, COLOR_PROPERTY, color);
         }
     }
 
