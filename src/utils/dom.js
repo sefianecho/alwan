@@ -234,3 +234,16 @@ export const createButton = (className, targetElement, details, insertPosition) 
 export const translate = (element, x, y) => {
     element.style.transform = `translate(${x}px,${y}px)`;
 }
+
+/**
+ * Creates a slider.
+ *
+ * @param {string} className - CSS class.
+ * @param {Element} parent - Sldier parent.
+ * @param {number} max - Max property.
+ * @param {number} step - Step property.
+ * @returns {HTMLInputElement} - Slider.
+ */
+export const createSlider = (className, parent, max, step) => {
+    return createElement(INPUT, className, parent, { type: 'range', max, step });
+}

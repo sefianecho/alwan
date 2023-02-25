@@ -1,109 +1,89 @@
-import { CHANGE, COLOR, INPUT } from "../constants";
-import { bindEvent } from "../core/events/EventBinder";
-import { createElement, removeElement } from "../utils/dom";
+import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME, SLIDERS_CLASSNAME } from "../classnames";
+import { CHANGE, INPUT, RGB_FORMAT } from "../constants";
+import { createElement, createSlider, removeElement, setCustomProperty } from "../utils/dom";
 
 /**
- * Sliders component constants.
- */
-const SLIDER_CLASSNAME = 'alwan__slider';
-const HUE_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--hue';
-const ALPHA_SLIDER_CLASSNAME = SLIDER_CLASSNAME + ' ' + SLIDER_CLASSNAME + '--alpha'; 
-const WIDTH_CLASSNAME = 'lw-w100';
-
-/**
- * Picker sliders.
+ * Creates sliders component.
  *
  * @param {Element} parent - Element to append sliders to.
  * @param {Object} alwan - Alwan instance.
- * @returns {Object}
+ * @returns {Object} Sliders component.
  */
-export const Sliders = (parent, alwan) => {
-
+export const Sliders = (parent, alwan, events) => {
     /**
-     * Sliders wrapper element.
-     */
-    const container = createElement('', WIDTH_CLASSNAME, parent);
-
-    /**
-     * Color state updater.
-     */
-    const updateColor = alwan._s._update;
-
-    /**
-     * Builds a slider.
+     * Alpha slider.
      *
-     * @param {String} className - Slider classname.
-     * @param {Number} max - Slider max value.
-     * @param {Number} step - Slider step.
-     * @returns {HTMLElement}
+     * @type {HTMLInputElement}
      */
-    const build = (className, max, step) => 
-         createElement(INPUT, className, container, { type: 'range', max, step });
- 
+    let alphaSlider;
+
     /**
-     * Component API.
+     * Sliders container.
      */
-    const self = {
-        /**
-         * Sliders events.
-         */
-        e: [],
+    const container = createElement('', SLIDERS_CLASSNAME, parent);
 
-        hue: build(HUE_SLIDER_CLASSNAME, 360),
-        alpha: null,
+    /**
+     * Hue slider.
+     *
+     * @type {HTMLInputElement}
+     */
+    const hueSlider = createSlider(HUE_SLIDER_CLASSNAME, container, 360);
 
+    /**
+     * Updates color.
+     *
+     * @param {InputEvent} param0 - Event.
+     */
+    const handleChange = ({ target, target: { value } }) => {
+        console.log(value * 1);
+        // alwan._color._update(target === hueSlider ? { h: 360 - value } : { a: value * 1 });
+        // TODO: dispatch events.
+    }
+
+    /**
+     * Bind events.
+     */
+    events._bind(container, [INPUT, CHANGE], handleChange);
+
+
+    return {
         /**
-         * Init. Sliders.
+         * Initialize sliders.
          *
-         * @param {Object} options - New options.
+         * @param {object} param0 - Alwan options.
+         * @param {object} instance - Alwan instance.
          */
-        _init({ opacity }) {
-
-            let alpha = self.alpha;
-
-            if (opacity !== !!alpha) {
-                self.alpha = opacity ? build(ALPHA_SLIDER_CLASSNAME, 1, 0.01)
-                                     : removeElement(alpha, true) || updateColor({ a: 1 });
+        _init({ opacity }, instance) {
+            alwan = instance;
+            if (opacity !== !! alphaSlider) {
+                if (opacity) {
+                    alphaSlider = createSlider(ALPHA_SLIDER_CLASSNAME, container, 1, 0.01);
+                } else {
+                    alphaSlider = removeElement(alphaSlider);
+                    // alwan._color._update({ a: 1 });
+                }
             }
         },
 
         /**
          * Sets sliders values.
          *
-         * @param {Object} hsv - HSV color object.
+         * @param {object} param0 - HSV color object.
          */
-        _setValue(hsv) {
-            let { alpha, hue } = self;
-            hue.value = 360 - hsv.h;
-            alpha && (alpha.value = hsv.a);
+        _setValue({ h, a }) {
+            hueSlider.value = 360 - h;
+            if (alphaSlider) {
+                alphaSlider.value = a;
+            }
+        },
+
+        /**
+         * Sets alpha slider's gradient color.
+         *
+         * @param {object} param0 - RGB color object.
+         */
+        _setSliderGradient({ r, g, b }) {
+            setCustomProperty(RGB_FORMAT, `${r},${g},${b}`);
         }
-    }
-
-    /**
-     * Handles changes in a slider value.
-     *
-     * @param {Event} e - Input or Change event.
-     */
-    const handleChange = e => {
-        let slider = e.target;
-        let value = slider.valueAsNumber;
-        let hsv = {};
-
-        if (slider === self.hue) {
-            hsv.h = 360 - value;
-        } else {
-            hsv.a = value;
-        }
-
-        updateColor(hsv);
-        // Either fire change or color event.
-        alwan._e._emit(e.type === CHANGE ? CHANGE : COLOR, slider);
-    }
-
-    /**
-     * Events binding.
-     */
-    bindEvent(self.e, container, [INPUT, CHANGE], handleChange);
-
-    return self;
+    };
 }
