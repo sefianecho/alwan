@@ -1,32 +1,30 @@
-import { BUTTON, BUTTON_CLASSNAME, CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN, max, SVG } from "../constants";
-import { bindEvent } from "../core/events/EventBinder";
-import { switchSVGAttrs } from "../lib/svg";
-import { createElement, removeElement, setElementsHTML, setVisibility } from "../utils/dom";
+import { switchInputsSVG } from "../assets/svg";
+import { BUTTON_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../classnames";
+import { stringify } from "../colors/stringify";
+import { CLICK, COLOR_FORMATS, ENTER, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants";
+import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
+import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";
+import { isString, trimString } from "../utils/string";
+
 
 /**
- * Inputs constants.
- */
-const INPUTS_CLASSNAME = 'alwan__inputs';
-const INPUT_CLASSNAME = 'alwan__input';
-const LABEL_CLASSNAME = 'lw-label';
-
-/**
- * Inputs component.
+ * Creates Inputs component.
  *
  * @param {Element} parent - Element to append the inputs container element to.
  * @param {Object} alwan - Alwan instance.
- * @returns {Object}
+ * @returns {Object} - Inputs component.
  */
-export const Inputs = (parent, alwan) => {
+export const Inputs = (parent, alwan, events) => {
 
     /**
      * Inputs wrapper element.
      */
-    let container;
+    let inputsContainer;
 
     /**
      * Switch button.
+     *
      * @type {Element}
      */
     let switchButton;
@@ -42,62 +40,59 @@ export const Inputs = (parent, alwan) => {
     let formatIndex;
 
     /**
-     * Array of inputs.
+     * Object that maps fields label to their inputs.
+     *
+     * @type {object}
      */
-    let inputList;
+    let inputsMap;
 
-    /**
-     * Event listeners.
-     */
-    let listeners = [];
-
-    const { config, _s: colorState, _e: { _emit } } = alwan;
 
     /**
      * Component API.
      */
     const self = {
         /**
-         * Init. Inputs.
+         * Initialize Inputs.
          *
-         * @param {Object} options - Options.
+         * @param {object} param0 - Alwan options.
+         * @param {object} instance - Alwan instance.
          */
-        _init(options) {
-            let { inputs, format } = options;
-            let length;
-
+        _init({ inputs, format }, instance) {
+            alwan = instance || alwan;
+            
             // Get only valid formats.
             formats = COLOR_FORMATS.filter(format => inputs[format]);
-            length = formats.length;
+            let length = formats.length;
 
             if (! length) {
-                // No input, remove inputs.
-                container = removeElement(container, true);
-                switchButton = removeElement(switchButton, true);
+                // No inputs, remove inputs container and the switch button.
+                inputsContainer = removeElement(inputsContainer);
+                switchButton = removeElement(switchButton);
                 // Normalize format value.
                 format = COLOR_FORMATS.includes(format) ? format : COLOR_FORMATS[0];
             } else {
 
-                if (! container) {
-                    container = createElement('', INPUTS_CLASSNAME, parent);
+                // Create inputs container.
+                if (! inputsContainer) {
+                    inputsContainer = createElement('', INPUTS_CLASSNAME, parent);
                 }
 
                 if (length === 1) {
-                    switchButton = removeElement(switchButton, true);
+                    switchButton = removeElement(switchButton);
                 } else if (!switchButton) {
                     // For more than one input format, add a switch button.
-                    switchButton = createElement(BUTTON, BUTTON_CLASSNAME, parent, { type: BUTTON }, (thisButton) => {
-                        createElement(SVG, '', thisButton, switchSVGAttrs);
-                    });
+                    switchButton = createButton(BUTTON_CLASSNAME, parent, { _content: switchInputsSVG });
                 }
 
+                // Validate and normalize format value.
                 formatIndex = max(formats.indexOf(format), 0);
                 format = formats[formatIndex];
+                build(format);
             }
-            config.format = format;
-            build(format);
+
+            alwan.config.format = format;
             // Show/Hide parent container.
-            setVisibility(parent, length);
+            toggleVisibility(parent, length);
         },
 
         /**
@@ -106,127 +101,109 @@ export const Inputs = (parent, alwan) => {
          * @param {Object} color - Color object.
          */
         _setValue(color) {
-            objectIterator(self.$, (input, key) => {
-                input.value = color[key];
+            objectIterator(inputsMap, (input, key) => {
+                input.value = isString(color) ? color : color[key];
             });
         }
     }
 
     /**
-     * Build Inputs.
+     * Builds inputs.
+     *
+     * @param {string} format - Color format.
      */
     const build = (format) => {
-
-        self.$ = {};
-        inputList = [];
-
-        if (container) {
-            let { singleInput, opacity } = config;
-            // Each letter in the format variable represent a color channel,
-            // For multiple inputs, each color channel has an input field.
-            // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
-            let fields = singleInput || format == HEX_FORMAT ? [format]
-                        : (format + (opacity ? 'a' : '')).split('');
-
-            // Empty the container from any inputs.
-            setElementsHTML(container);
-
-            fields.forEach((field, index) => {
-                /**
-                 * Create Input.
-                 * 
-                 * <label class="sc-label">
-                 *     <input type="text" class="sc-picker__input">
-                 *     <span>${field}</span>
-                 * </label>
-                 */
-                createElement('label', LABEL_CLASSNAME, container, false, (label => {
-                    self.$[field] = inputList[index] = createElement(INPUT, INPUT_CLASSNAME, label, { type: 'text' });
-                    createElement('span', '', label, { text: field });
-                }));
-            });
-
-            colorState._update({});
+        let { singleInput, opacity } = alwan.config;
+        let fields;
+        // Each letter in the format variable represent a color channel,
+        // For multiple inputs, each color channel has an input field.
+        // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
+        if (singleInput || format === HEX_FORMAT) {
+            fields = [format];
+        } else {
+            fields = (format + (opacity ? 'a' : '')).split('');
         }
+
+        // Empty the container from any inputs.
+        setHTML(inputsContainer, '');
+        inputsMap = {};
+
+        fields.forEach(field => {
+            /**
+             * Create Input.
+             * 
+             * <label>
+             *     <input type="text|number" class="alwan__input">
+             *     <span>${field}</span>
+             * </label>
+             */
+            const labelElement = createElement('label', '', inputsContainer);
+            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement);
+            createElement('span', '', labelElement, { _content: field });
+        });
+
+        // TODO: set inputs values.
     }
 
     /**
      * Handles changes in inputs.
      *
-     * @param {Event} e - Input event.
+     * @param {InputEvent} e - Event.
      */
-    const handleChange = e => {
-        let value = e.target.value;
-
-        if (value.trim()) {
-            let colorString = '';
+    const handleChange = ({ target: { value }}) => {
+        value = trimString(value);
+        if (value) {
+            let str = '';
+            let color = {};
             let format = formats[formatIndex];
-            
-            if (config.singleInput || format === HEX_FORMAT) {
-                colorString = value;
-            } else {
-                // InputList has 3 or 4 inputs, Input for each color channel in the hsl and rgb,
-                // format, the reduce method adds comma between each input value.
-                // [30, 20, 10, 0.5] => '30,20,10,0.5'
-                colorString = format + '(' + inputList.reduce((string, currentInput) => (string && string + ',') + currentInput.value, '') + ')';
-            }
 
-            if (colorState._updateFromString(colorString, self)) {
-                _emit(COLOR, self.$);
+            if (alwan.config.singleInput || format === HEX_FORMAT) {
+                str = value;
+            } else {
+                // Copy inputs values into an object (rgb or hsl).
+                objectIterator(inputsMap, (input, key) => {
+                    color[key] = input.value;
+                });
+                // Convert the object into string.
+                str = stringify(color, format);
             }
+            // TODO: set color and dispatch events.
         }
     }
 
     /**
      * Changes color format.
      *
-     * @param {Event} e - Click event.
+     * @param {MouseEvent} e - Click event.
      */
     const changeFormat = e => {
         if (e.target === switchButton) {
             // Increment input format index, reset it if it reaches the end.
             // this index will point to the next format.
             formatIndex = (formatIndex + 1) % formats.length;
-            config.format = formats[formatIndex];
+            alwan.config.format = formats[formatIndex];
             build(formats[formatIndex]);
-        }
-    }
-
-    /**
-     * Triggers change event when the color changes.
-     *
-     * @param {Event} e - Focusin or Change.
-     */
-    const triggerChangeEvent = e => {
-        if (e.type === FOCUS_IN) {
-            // Save color state, when inputs receive focus.
-            colorState._colorStart();
-        } else {
-            // Trigger change event if color state is changed.
-            colorState._triggerChange(self.$);
         }
     }
 
     /**
      * Closes picker.
      *
-     * @param {Event} e - Keydown.
+     * @param {KeyboardEvent} e - Event.
      */
     const closePicker = e => {
         if (e.key === ENTER) {
-            alwan.close();
+            alwan._reference._close();
         }
     }
 
     /**
      * Bind events.
      */
-    bindEvent(listeners, parent, CLICK, changeFormat);
-    bindEvent(listeners, parent, INPUT, handleChange);
-    bindEvent(listeners, parent, [FOCUS_IN, CHANGE], triggerChangeEvent);
-    bindEvent(listeners, parent, KEY_DOWN, closePicker);
+    events._bind(parent, CLICK, changeFormat);
+    events._bind(parent, INPUT, handleChange);
+    events._bind(parent, KEY_DOWN, closePicker);
 
-    self.e = listeners;
 
     return self;
 }
