@@ -1,5 +1,5 @@
 import { ROOT } from "../constants";
-import { getBounds } from "../utils/dom";
+import { getBounds, translate } from "../utils/dom";
 import { abs, isNumeric } from "../utils/number";
 import { objectIterator } from "../utils/object";
 import { isString } from "../utils/string";
@@ -171,7 +171,7 @@ export const createPopper = (reference, container, { _margin, _position }) => {
                 }
             });
 
-            container.style.transform = `translate(${coordinates.x}px, ${coordinates.y}px)`;
+            translate(container, coordinates.x, coordinates.y);
         }
     }
 }

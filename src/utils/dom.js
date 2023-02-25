@@ -1,4 +1,4 @@
-import { BUTTON, HTML, ROOT } from "../constants";
+import { BUTTON, HTML, INPUT, ROOT } from "../constants";
 import { merge, objectIterator } from "./object";
 import { isString, trimString } from "./string";
 
@@ -63,11 +63,11 @@ export const setHTML = (element, html) => {
  * @param {InsertPosition} insertPosition - Insert position.
  * @returns {Element} The new created element.
  */
-export const createElement = (tagName, className, targetElement, details = {}, insertPosition) => {
+export const createElement = (tagName, className, targetElement, details, insertPosition) => {
     const element = ROOT.createElement(tagName || 'div');
     element.className = className;
 
-    objectIterator(details, (value, name) => {
+    objectIterator(details || {}, (value, name) => {
         if (name === '_content') {
             setHTML(element, value);
         } else if (value) {
@@ -181,8 +181,10 @@ export const isInViewport = (element, scrollables) => {
  * @param {string} property - Property name.
  * @param {string} value    - Property value.
  */
-export const setCustomProperty = (el, property, value) => {
-    el && el.style.setProperty('--' + property, value);
+export const setCustomProperty = (element, property, value) => {
+    if (element) {
+        element.style.setProperty('--' + property, value);
+    }
 }
 
 
@@ -220,4 +222,15 @@ export const toggleClassName = (element, token, toggler = true) => {
  */
 export const createButton = (className, targetElement, details, insertPosition) => {
     return createElement(BUTTON, className, targetElement, merge({ type: BUTTON }, details), insertPosition);
+}
+
+/**
+ * Translates an element.
+ *
+ * @param {Element} element - Element to translate.
+ * @param {number} x - X coordinate.
+ * @param {number} y - Y coordinate.
+ */
+export const translate = (element, x, y) => {
+    element.style.transform = `translate(${x}px,${y}px)`;
 }
