@@ -82,8 +82,8 @@ export const Sliders = (parent, alwan, events) => {
          *
          * @param {object} param0 - RGB color object.
          */
-        _setSliderGradient({ r, g, b }) {
-            setCustomProperty(RGB_FORMAT, `${r},${g},${b}`);
+        _sliderGradient({ r, g, b }) {
+            setCustomProperty(alphaSlider, RGB_FORMAT, `${r},${g},${b}`);
         }
     };
 }
