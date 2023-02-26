@@ -343,13 +343,13 @@
     }
 
     &--collapse {
-        & .alwan__swatches {
+        &.alwan__swatches {
             height: 0;
             padding: 0;
             overflow: hidden;
         }
 
-        & .alwan__collapse-button {
+        & + .alwan__collapse-button {
             border: 0;
             transform: rotate(180deg);
         }
