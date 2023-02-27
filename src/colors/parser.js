@@ -1,7 +1,7 @@
-import { HSL_FORMAT, RGB_FORMAT } from "../constants";
+import { HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants";
 import { createElement } from "../utils/dom";
-import { float, normalizeAngle, numberRange, PI } from "../utils/number";
-import { trimString } from "../utils/string";
+import { float, isNumeric, normalizeAngle, numberRange, PI } from "../utils/number";
+import { isString, trimString } from "../utils/string";
 import { isset } from "../utils/util";
 import { HEXToRGB } from "./converter";
 import { stringify } from "./stringify";
@@ -22,17 +22,55 @@ const ANGLE_COEFFICIENT_MAP = {
 }
 
 /**
- * Parses a string.
+ * Parses any value into an RGB or HSL objects.
+ * Invalid color values default to #000.
  *
- * @param {string} str - A string to parse.
+ * @param {unknown} value - A value to parse.
  * @param {boolean} asString - Whether to return the result as a string or object.
  * @returns {object|string} - Parsed color as string or object.
  */
-export const parseColor = (str, asString) => {
-    str = trimString(str);
+export const parseColor = (value = '', asString) => {
 
     let color;
     let format;
+    let str = '';
+
+    /**
+     * Validate Non string values, convert color objects into strings.
+     * Invalid values default to empty string.
+     */
+    if (! isString(value)) {
+
+        format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => {
+			return format.split('').every(key => {
+				return isNumeric(value[key]);
+			});
+		});
+
+        if (format) {
+            if (! isset(value.a)) {
+                value.a = 1;
+            }
+
+            if (format === HSV_FORMAT) {
+                format = RGB_FORMAT;
+                value = HSVToRGB({
+                    h: normalizeAngle(value.h),
+                    s: numberRange(value.s) / 100,
+                    v: numberRange(value.v) / 100,
+                    a: value.a
+                });
+            }
+
+            str = stringify(value, format);
+        }
+    } else {
+        str = trimString(value);
+    }
+
+    /**
+     * Parse strings
+     */
     let [input, h, angle, s, l, a, percentage] = HSL_REGEX.exec(str) || [];
 
     // str is a hsl string.
