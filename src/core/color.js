@@ -123,7 +123,7 @@ export const color = (alwan) => {
 
                 // Update UI.
                 setCustomProperty(alwan._reference._element, COLOR_PROPERTY, rgbString);
-                setCustomProperty(_palette._element, 'hue', hsv.h);
+                setCustomProperty(_palette._element, '--hue', hsv.h);
                 // Preview the current color.
                 _utility._preview(rgbString);
                 _sliders._sliderGradient(RGB);

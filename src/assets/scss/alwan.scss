@@ -121,7 +121,7 @@
         cursor: pointer;
         -webkit-appearance: none;
         appearance: none;
-        --lw-alpha: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--lw-pattern);
+        --lw-alpha: linear-gradient(90deg, transparent, var(--lw-color)), var(--lw-pattern);
         --lw-hue: linear-gradient(
             -90deg,
             #ff0000,

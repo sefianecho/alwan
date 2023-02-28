@@ -1,6 +1,8 @@
+import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../classnames";
 import { BUTTON, HTML, INPUT, ROOT } from "../constants";
 import { merge, objectIterator } from "./object";
 import { isString, trimString } from "./string";
+import { isset } from "./util";
 
 /**
  * Gets the body element.
@@ -65,7 +67,10 @@ export const setHTML = (element, html) => {
  */
 export const createElement = (tagName, className, targetElement, details, insertPosition) => {
     const element = ROOT.createElement(tagName || 'div');
-    element.className = className;
+
+    if (className) {
+        element.className = className;
+    }
 
     objectIterator(details || {}, (value, name) => {
         if (name === '_content') {
@@ -169,7 +174,7 @@ export const isInViewport = (element, scrollables) => {
         let { x: elementX, y: elementY, bottom: elementBottom, right: elementRight } = getBounds(element);
         let { x: scrollableX, y: scrollableY, bottom: scrollableBottom, right: scrollableRight } = getBounds(scrollable);
 
-        return elementY >= scrollableY && elementBottom <= scrollableBottom && elementX <= scrollableRight && elementRight >= scrollableX;
+        return elementY < scrollableBottom && elementBottom > scrollableY && elementX < scrollableRight && elementRight > scrollableX;
     });
 }
 
@@ -182,8 +187,8 @@ export const isInViewport = (element, scrollables) => {
  * @param {string} value    - Property value.
  */
 export const setCustomProperty = (element, property, value) => {
-    if (element) {
-        element.style.setProperty('--' + property, value);
+    if (element && isset(value)) {
+        element.style.setProperty(property, value);
     }
 }
 
@@ -205,7 +210,7 @@ export const toggleVisibility = (element, toggler = true) => {
  * @param {string} token - Class name.
  * @param {boolean} toggler - Whether to add (true) or remove a class.
  */
-export const toggleClassName = (element, token, toggler = true) => {
+export const toggleClassName = (element, token, toggler) => {
     if (token) {
         element.classList.toggle(token, toggler);
     }
@@ -221,7 +226,7 @@ export const toggleClassName = (element, token, toggler = true) => {
  * @returns {Element} A button.
  */
 export const createButton = (className, targetElement, details, insertPosition) => {
-    return createElement(BUTTON, className, targetElement, merge({ type: BUTTON }, details), insertPosition);
+    return createElement(BUTTON, BUTTON_CLASSNAME + ' ' + className, targetElement, merge({ type: BUTTON }, details), insertPosition);
 }
 
 /**
@@ -245,5 +250,5 @@ export const translate = (element, x, y) => {
  * @returns {HTMLInputElement} - Slider.
  */
 export const createSlider = (className, parent, max, step) => {
-    return createElement(INPUT, className, parent, { type: 'range', max, step });
+    return createElement(INPUT, SLIDER_CLASSNAME + ' ' + className, parent, { type: 'range', max, step });
 }

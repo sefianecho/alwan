@@ -35,5 +35,8 @@ export const merge = (target, ...sources) => {
  * @returns {Boolean}
  */
 export const isEqual = (obj1, obj2) => {
-    return keys(obj1).every(key => obj1[key] === obj2[key]);
+    if (obj1 && obj2) {
+        return keys(obj1).every(key => obj1[key] === obj2[key]);
+    }
+    return false;
 }
