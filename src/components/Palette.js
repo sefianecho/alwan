@@ -76,20 +76,26 @@ export const Palette = (root, alwan, events) => {
     };
 
     /**
-     * Moves marker and updates color.
+     * Move marker and update color state.
      *
-     * @param {PointerEvent} param0 - Event.
+     * @param {number} x - X coordinate.
+     * @param {number} y - Y coordinate.
+     * @param {Function} change - Callback function if color changed.
      */
-    const moveMarkerAndUpdateColor = ({ clientX, clientY }) => {
-        clientX = numberRange(clientX - paletteBounds.x, width);
-        clientY = numberRange(clientY - paletteBounds.y, height);
+    const moveMarkerAndUpdateColor = (x, y, change) => {
 
-        if (clientX !== markerX || clientY !== markerY) {
-            markerX = clientX;
-            markerY = clientY;
+        x = numberRange(x, width);
+        y = numberRange(y, height);
+
+        if (x !== markerX || y !== markerY) {
+            markerX = x;
+            markerY = y;
             translate(marker, markerX, markerY);
-            // Update color.
-            // TODO dispatch color event.
+            alwan._color._update({ s: markerX / width, v: (1 - markerY / height)});
+            // Todo: dispatch color event.
+            if (change) {
+                change();
+            }
         }
     }
 
@@ -104,7 +110,7 @@ export const Palette = (root, alwan, events) => {
         }
         paletteBounds = getBounds(palette);
         isPointerDown = true;
-        moveMarkerAndUpdateColor(e);
+        moveMarkerAndUpdateColor(e.clientX - paletteBounds.x, e.clientY - paletteBounds.y);
         palette.focus();
     }
 
@@ -115,7 +121,7 @@ export const Palette = (root, alwan, events) => {
      */
     const drag = e => {
         if (isPointerDown) {
-            moveMarkerAndUpdateColor(e);
+            moveMarkerAndUpdateColor(e.clientX - paletteBounds.x, e.clientY - paletteBounds.y);
         }
     }
 
@@ -152,25 +158,20 @@ export const Palette = (root, alwan, events) => {
      */
     const handleKeyboard = e => {
         // Add focus classname to the palette.
-        toggleClassName(palette, FOCUS_CLASSNAME);
+        toggleClassName(palette, FOCUS_CLASSNAME, true);
+
         let key = e.key;
-        let currentX = markerX;
-        let currentY = markerY;
 
         if (keyboardX[key] || keyboardY[key]) {
             e.preventDefault();
-            paletteBounds = getBounds(palette);
 
-            markerX = numberRange(markerX + (keyboardX[key] || 0) * width / 100, width, 0);
-            markerY = numberRange(markerY + (keyboardY[key] || 0) * height / 100, height, 0);
-
-            if (markerX !== currentX || markerY !== currentY) {
-                translate(marker, markerX, markerY);
-                // TODO:
-                // Update color.
-                // dispatch change event.
-                // dispatch color event.
-            }
+            moveMarkerAndUpdateColor(
+                markerX + (keyboardX[key] || 0) * width / 100,
+                markerY + (keyboardY[key] || 0) * height / 100,
+                () => {
+                    // TODO: Dispatch change event.
+                }
+            );
         }
     }
 
