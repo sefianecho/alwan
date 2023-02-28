@@ -1,6 +1,6 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, FOCUS_CLASSNAME, PREVIEW_CLASSNAME } from "../classnames";
-import { CLICK, COLOR_PROPERTY, FOCUS_IN, FOCUS_OUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT } from "../constants";
+import { CLICK, COLOR_PROPERTY, FOCUS_IN, FOCUS_OUT, HTML, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants";
 import { createButton, createElement, insertElement, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
 
 /**
@@ -78,6 +78,18 @@ export const Utility = (parent, alwan, events) => {
     const copyColor = ({ target }) => {
         if (target === copyButton && ! isCopied && ! alwan.config.disabled) {
             // TODO: get color and copy it to the clipbloard,
+            let clipboard = navigator.clipboard;
+            let color = alwan._color._getColorByFormat(true);
+            let input;
+
+            if (clipboard) {
+                clipboard.writeText(color);
+            } else {
+                input = createElement(INPUT, '', HTML, { value: color });
+                input.select();
+                ROOT.execCommand('copy');
+                input = removeElement(input); 
+            }
             // change icon.
             isCopied = true;
             setHTML(copyButton, checkSVG);
