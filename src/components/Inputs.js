@@ -5,7 +5,7 @@ import { CLICK, COLOR_FORMATS, ENTER, HEX_FORMAT, INPUT, KEY_DOWN} from "../cons
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
 import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";
-import { isString, trimString } from "../utils/string";
+import { isString } from "../utils/string";
 
 
 /**
@@ -141,8 +141,6 @@ export const Inputs = (parent, alwan, events) => {
             inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement);
             createElement('span', '', labelElement, { _content: field });
         });
-
-        // TODO: set inputs values.
     }
 
     /**
@@ -151,23 +149,22 @@ export const Inputs = (parent, alwan, events) => {
      * @param {InputEvent} e - Event.
      */
     const handleChange = ({ target: { value }}) => {
-        value = trimString(value);
-        if (value) {
-            let str = '';
-            let color = {};
-            let format = formats[formatIndex];
+        let str = '';
+        let color = {};
+        let format = formats[formatIndex];
 
-            if (alwan.config.singleInput || format === HEX_FORMAT) {
-                str = value;
-            } else {
-                // Copy inputs values into an object (rgb or hsl).
-                objectIterator(inputsMap, (input, key) => {
-                    color[key] = input.value;
-                });
-                // Convert the object into string.
-                str = stringify(color, format);
-            }
-            // TODO: set color and dispatch events.
+        if (alwan.config.singleInput || format === HEX_FORMAT) {
+            str = value;
+        } else {
+            // Copy inputs values into an object (rgb or hsl).
+            objectIterator(inputsMap, (input, key) => {
+                color[key] = input.value;
+            });
+            // Convert the object into string.
+            str = stringify(color, format);
+        }
+        if (alwan._color._set(str, true)) {
+            // dispatch event.
         }
     }
 
@@ -183,6 +180,7 @@ export const Inputs = (parent, alwan, events) => {
             formatIndex = (formatIndex + 1) % formats.length;
             alwan.config.format = formats[formatIndex];
             build(formats[formatIndex]);
+            alwan._color._update();
         }
     }
 
