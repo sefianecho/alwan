@@ -1,4 +1,4 @@
-import { CHANGE, COLOR, OPEN } from "../../constants"
+import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants"
 import { isset } from "../../utils/util";
 
 /**
@@ -25,10 +25,10 @@ export const Dispatcher = (alwan) => {
          * @param {string} type - Event type.
          * @param {object} ev - Event object.
          */
-        _dispatch(type, ev) {
+        _dispatch(type, source) {
             if (! alwan.config.disabled) {
                 listeners[type].forEach(handler => {
-                    handler(ev);
+                    handler(alwan._color._event(type, source));
                 });
             }
         },
