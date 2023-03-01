@@ -1,5 +1,5 @@
 import { FOCUS_CLASSNAME, MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../classnames";
-import { FOCUS_IN, FOCUS_OUT, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants";
+import { CHANGE, COLOR, FOCUS_IN, FOCUS_OUT, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants";
 import { createElement, getBounds, toggleClassName, translate, removeElement } from "../utils/dom"
 import { numberRange } from "../utils/number";
 
@@ -92,7 +92,8 @@ export const Palette = (root, alwan, events) => {
             markerY = y;
             translate(marker, markerX, markerY);
             alwan._color._update({ s: markerX / width, v: (1 - markerY / height)});
-            // Todo: dispatch color event.
+            alwan._events._dispatch(COLOR, palette);
+
             if (change) {
                 change();
             }
@@ -108,6 +109,8 @@ export const Palette = (root, alwan, events) => {
         if (! overlayElement) {
             overlayElement = createElement('', OVERLAY_CLASSNAME, root);
         }
+        // Save color state.
+        alwan._color._saveState();
         paletteBounds = getBounds(palette);
         isPointerDown = true;
         moveMarkerAndUpdateColor(e.clientX - paletteBounds.x, e.clientY - paletteBounds.y);
@@ -132,6 +135,7 @@ export const Palette = (root, alwan, events) => {
      */
     const dragEnd = e => {
         if (isPointerDown) {
+            alwan._color._triggerChange(palette);
             overlayElement = removeElement(overlayElement);
             isPointerDown = false;
         }
@@ -169,7 +173,7 @@ export const Palette = (root, alwan, events) => {
                 markerX + (keyboardX[key] || 0) * width / 100,
                 markerY + (keyboardY[key] || 0) * height / 100,
                 () => {
-                    // TODO: Dispatch change event.
+                    alwan._events._dispatch(CHANGE, palette);
                 }
             );
         }
