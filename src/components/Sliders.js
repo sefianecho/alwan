@@ -1,5 +1,5 @@
 import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME, SLIDERS_CLASSNAME } from "../classnames";
-import { CHANGE, COLOR_PROPERTY, INPUT, RGB_FORMAT } from "../constants";
+import { CHANGE, COLOR, COLOR_PROPERTY, INPUT, RGB_FORMAT } from "../constants";
 import { createElement, createSlider, removeElement, setCustomProperty } from "../utils/dom";
 
 /**
@@ -34,9 +34,9 @@ export const Sliders = (parent, alwan, events) => {
      *
      * @param {InputEvent} param0 - Event.
      */
-    const handleChange = ({ target, target: { value } }) => {
+    const handleChange = ({ target, type, target: { value } }) => {
         alwan._color._update(target === hueSlider ? { h: 360 - value } : { a: value * 1 });
-        // TODO: dispatch events.
+        alwan._events._dispatch(type === CHANGE ? CHANGE : COLOR, target);
     }
 
     /**
@@ -53,13 +53,14 @@ export const Sliders = (parent, alwan, events) => {
          * @param {object} instance - Alwan instance.
          */
         _init({ opacity }, instance) {
-            alwan = instance;
+            alwan = instance || alwan;
+
             if (opacity !== !! alphaSlider) {
                 if (opacity) {
                     alphaSlider = createSlider(ALPHA_SLIDER_CLASSNAME, container, 1, 0.01);
                 } else {
                     alphaSlider = removeElement(alphaSlider);
-                    // alwan._color._update({ a: 1 });
+                    alwan._color._update({ a: 1 });
                 }
             }
         },
