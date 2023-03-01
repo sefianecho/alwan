@@ -1,11 +1,11 @@
 import { switchInputsSVG } from "../assets/svg";
 import { BUTTON_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../classnames";
 import { stringify } from "../colors/stringify";
-import { CLICK, COLOR_FORMATS, ENTER, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants";
+import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants";
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
 import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";
-import { isString } from "../utils/string";
+import { isString, trimString } from "../utils/string";
 
 
 /**
@@ -46,6 +46,10 @@ export const Inputs = (parent, alwan, events) => {
      */
     let inputsMap;
 
+    /**
+     * Indicates that an input value has changed.
+     */
+    let isChanged = false;
 
     /**
      * Component API.
@@ -149,6 +153,12 @@ export const Inputs = (parent, alwan, events) => {
      * @param {InputEvent} e - Event.
      */
     const handleChange = ({ target: { value }}) => {
+
+        if (! isChanged) {
+            alwan._color._saveState();
+            isChanged = true;
+        }
+
         let str = '';
         let color = {};
         let format = formats[formatIndex];
@@ -158,13 +168,26 @@ export const Inputs = (parent, alwan, events) => {
         } else {
             // Copy inputs values into an object (rgb or hsl).
             objectIterator(inputsMap, (input, key) => {
-                color[key] = input.value;
+                color[key] = trimString(input.value);
             });
             // Convert the object into string.
             str = stringify(color, format);
         }
+
         if (alwan._color._set(str, true)) {
-            // dispatch event.
+            alwan._events._dispatch(COLOR, inputsMap);
+        }
+    }
+
+    /**
+     * Handles when an input loses focus after its value was changed.
+     *
+     * @param {InputEvent} e - Event.
+     */
+    const handleChangeStop = e => {
+        if (isChanged) {
+            alwan._color._triggerChange(inputsMap);
+            isChanged = false;
         }
     }
 
@@ -200,6 +223,7 @@ export const Inputs = (parent, alwan, events) => {
      */
     events._bind(parent, CLICK, changeFormat);
     events._bind(parent, INPUT, handleChange);
+    events._bind(parent, CHANGE, handleChangeStop);
     events._bind(parent, KEY_DOWN, closePicker);
 
 
