@@ -1,5 +1,5 @@
 import { DISABLED_CLASSNAME, OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "./classnames";
-import { CLICK, ROOT } from "./constants";
+import { CLICK, CLOSE, OPEN, ROOT } from "./constants";
 import { Binder } from "./core/events/binder";
 import { body, createButton, getElement, replaceElement, toggleClassName } from "./utils/dom";
 import { isString } from "./utils/string";
@@ -163,7 +163,7 @@ export const ReferenceControl = (reference, alwan) => {
         isOpen = state;
 
         if (! silent) {
-            // TODO: dispatch events.
+            alwan._events._dispatch(state ? OPEN : CLOSE, self._element);
         }
     }
 
