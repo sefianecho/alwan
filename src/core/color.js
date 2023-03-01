@@ -1,7 +1,7 @@
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV } from "../colors/converter";
 import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
-import { COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants";
+import { CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants";
 import { setCustomProperty } from "../utils/dom";
 import { isEqual, merge } from "../utils/object";
 
@@ -30,13 +30,6 @@ export const color = (alwan) => {
     let RGB;
 
     /**
-     * HSL color object.
-     *
-     * @type {object}
-     */
-    let HSL;
-
-    /**
      * RGB color string.
      *
      * @type {string}
@@ -44,18 +37,11 @@ export const color = (alwan) => {
     let rgbString;
 
     /**
-     * HSL color string.
+     * Color state.
      *
-     * @type {string}
+     * @type{object}
      */
-    let hslString;
-
-    /**
-     * HEX color string.
-     *
-     * @type {string}
-     */
-    let hex;
+    let state;
 
     /**
      * Alwan options.
@@ -78,7 +64,7 @@ export const color = (alwan) => {
                 return output;
             }, asArray ? [] : {}),
 
-            format !== HSV_FORMAT ? { toString: () => str } : {}
+            format !== HSV_FORMAT ? { toString: () => str || stringify(color, format) } : {}
         )
     }
 
@@ -88,7 +74,7 @@ export const color = (alwan) => {
     let value = {
         hsv: asArray => colorData(HSV, HSV_FORMAT, asArray),
         rgb: asArray => colorData(RGB, RGB_FORMAT, asArray, rgbString),
-        hsl: asArray => colorData(HSL, HSL_FORMAT, asArray, hslString),
+        hsl: asArray => colorData(HSVToHSL(HSV), HSL_FORMAT, asArray),
         hex: () => hex,
     };
 
@@ -105,21 +91,15 @@ export const color = (alwan) => {
          * @param {boolean} isInputs - If true don't set inputs values.
          */
         _update(hsv, rgb, isInputs) {
-    
+
+            let { _palette, _sliders, _inputs, _utility } = alwan._components;
+
             if (! config.disabled) {
-                let { _palette, _sliders, _inputs, _utility } = alwan._components;
-    
                 hsv = hsv || HSV;
+                merge(HSV, hsv);
 
-                if (hsv !== HSV) {
-                    merge(HSV, hsv);
-
-                    RGB = rgb || HSVToRGB(HSV);
-                    rgbString = stringify(RGB, RGB_FORMAT);
-                    hex = RGBToHEX(RGB);
-                    HSL = HSVToHSL(HSV);
-                    hslString = stringify(HSL, HSL_FORMAT);
-                }
+                RGB = rgb || HSVToRGB(HSV);
+                rgbString = stringify(RGB, RGB_FORMAT);
 
                 // Update UI.
                 setCustomProperty(alwan._reference._element, COLOR_PROPERTY, rgbString);
@@ -167,16 +147,35 @@ export const color = (alwan) => {
     
             if (format === HSL_FORMAT) {
                 if (asString) {
-                    return hslString;
+                    return stringify(HSVToHSL(HSV), HSL_FORMAT);
                 }
-                return HSL;
+                return HSVToHSL(HSV);
             }
     
             if (format === HEX_FORMAT) {
-                return hex;
+                return RGBToHEX(RGB);
             }
     
             return '';
+        },
+
+        /**
+         * Save color state.
+         */
+        _saveState() {
+            state = self._getColorByFormat();
+        },
+
+        /**
+         * Compare the current color with the saved color, if they are different,
+         * then dipatch a change event.
+         *
+         * @param {Element} source - Event source.
+         */
+        _triggerChange(source) {
+            if (! isEqual(state, self._getColorByFormat())) {
+                alwan._events._dispatch(CHANGE, source);
+            }
         },
 
         /**
