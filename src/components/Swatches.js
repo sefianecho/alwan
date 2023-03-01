@@ -1,6 +1,6 @@
 import { caretSVG } from "../assets/svg";
 import { COLLAPSE_BUTTON_CLASSNAME, COLLAPSE_CLASSNAME, SWATCHES_CLASSNAME, SWATCH_CLASSNAME } from "../classnames";
-import { CLICK, COLOR_PROPERTY, int } from "../constants";
+import { CHANGE, CLICK, COLOR, COLOR_PROPERTY, int } from "../constants";
 import { createButton, createElement, parent, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
 import { isString } from "../utils/string";
 
@@ -156,7 +156,8 @@ export const Swatches = (root, alwan, events) => {
             toggleClassName(container, COLLAPSE_CLASSNAME);
         }else if(parent(target) === container) {
             alwan._color._set(target.style.getPropertyValue(COLOR_PROPERTY));
-            // TODO: update core color state, and dipatch events.
+            alwan._events._dispatch(COLOR, target);
+            alwan._events._dispatch(CHANGE, target);
         }
     }
 
