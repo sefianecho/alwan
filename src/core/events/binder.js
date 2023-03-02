@@ -1,4 +1,4 @@
-import { isString } from "../../utils/util";
+import { isString } from "../../utils/string";
 
 /**
  * Adds event listeners to an element and stores its data.

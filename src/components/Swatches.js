@@ -1,7 +1,8 @@
 import { caretSVG } from "../assets/svg";
 import { COLLAPSE_BUTTON_CLASSNAME, COLLAPSE_CLASSNAME, SWATCHES_CLASSNAME, SWATCH_CLASSNAME } from "../classnames";
-import { CHANGE, CLICK, COLOR, COLOR_PROPERTY, int } from "../constants";
+import { CHANGE, CLICK, COLOR, COLOR_PROPERTY } from "../constants";
 import { createButton, createElement, parent, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
+import { int } from "../utils/number";
 import { isString } from "../utils/string";
 
 /**
