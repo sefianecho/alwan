@@ -27,7 +27,7 @@ export const Dispatcher = (alwan) => {
          */
         _dispatch(type, source) {
             if (! alwan.config.disabled) {
-                listeners[type].forEach(handler => {
+                (listeners[type] || []).forEach(handler => {
                     handler(alwan._color._event(type, source));
                 });
             }

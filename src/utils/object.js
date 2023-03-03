@@ -1,4 +1,4 @@
-const { keys, assign } = Object;
+export const { keys, assign, setPrototypeOf, prototype } = Object;
 
 /**
  * Iterate in an object.
