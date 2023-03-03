@@ -1,8 +1,9 @@
 import { DISABLED_CLASSNAME, OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "./classnames";
 import { CLICK, CLOSE, OPEN, ROOT } from "./constants";
 import { Binder } from "./core/events/binder";
-import { body, createButton, getElement, replaceElement, toggleClassName } from "./utils/dom";
+import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "./utils/dom";
 import { isString } from "./utils/string";
+import { isset } from "./utils/util";
 
 /**
  * Creates the reference control.
@@ -89,7 +90,9 @@ export const ReferenceControl = (reference, alwan) => {
             }
 
             self._element = element;
-            self._toggleDisable(disabled);
+            if (isset(disabled)) {
+                self._toggleDisable(disabled);
+            }
         },
 
         /**
@@ -149,6 +152,18 @@ export const ReferenceControl = (reference, alwan) => {
                 self._close(true);
             }
             toggleClassName(self._element, DISABLED_CLASSNAME, disabled);
+        },
+
+        /**
+         * Destroy reference component.
+         */
+        _destroy() {
+            if (userReference) {
+                self._init({ preset: false });
+            } else {
+                self._element = removeElement(self._element);
+            }
+            events._unbindAll();
         }
     }
 
