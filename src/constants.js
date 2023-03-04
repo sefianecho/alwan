@@ -16,6 +16,7 @@ export const KEY_DOWN = 'keydown';
 export const INPUT = 'input';
 export const CHANGE = 'change';
 export const FOCUS_OUT = 'focusout';
+export const FOCUS_IN = 'focusin';
 export const MOUSE_OUT = 'mouseout';
 
 export const HEX_FORMAT = 'hex';

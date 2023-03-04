@@ -1,7 +1,7 @@
 import { switchInputsSVG } from "../assets/svg";
 import { BUTTON_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../classnames";
 import { stringify } from "../colors/stringify";
-import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants";
+import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants";
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
 import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";
@@ -11,11 +11,11 @@ import { isString, trimString } from "../utils/string";
 /**
  * Creates Inputs component.
  *
- * @param {Element} parent - Element to append the inputs container element to.
+ * @param {Element} container - Element to append the inputs container element to.
  * @param {Object} alwan - Alwan instance.
  * @returns {Object} - Inputs component.
  */
-export const Inputs = (parent, alwan, events) => {
+export const Inputs = (container, alwan, events) => {
 
     /**
      * Inputs wrapper element.
@@ -78,14 +78,14 @@ export const Inputs = (parent, alwan, events) => {
 
                 // Create inputs container.
                 if (! inputsContainer) {
-                    inputsContainer = createElement('', INPUTS_CLASSNAME, parent);
+                    inputsContainer = createElement('', INPUTS_CLASSNAME, container);
                 }
 
                 if (length === 1) {
                     switchButton = removeElement(switchButton);
                 } else if (!switchButton) {
                     // For more than one input format, add a switch button.
-                    switchButton = createButton(BUTTON_CLASSNAME, parent, { _content: switchInputsSVG });
+                    switchButton = createButton(BUTTON_CLASSNAME, container, { _content: switchInputsSVG });
                 }
 
                 // Validate and normalize format value.
@@ -96,7 +96,7 @@ export const Inputs = (parent, alwan, events) => {
 
             alwan.config.format = format;
             // Show/Hide parent container.
-            toggleVisibility(parent, length);
+            toggleVisibility(container, length);
         },
 
         /**
@@ -208,23 +208,27 @@ export const Inputs = (parent, alwan, events) => {
     }
 
     /**
-     * Closes picker.
+     * Select input value when focus in, and close the picker when pressing Enter key.
      *
-     * @param {KeyboardEvent} e - Event.
+     * @param {FocusEvent|KeyboardEvent} e - Event.
      */
-    const closePicker = e => {
-        if (e.key === ENTER) {
-            alwan._reference._close();
+    const selectOrClose = ({ target, key, type }) => {
+        if (target !== switchButton) {
+            if (type === FOCUS_IN) {
+                target.select();
+            } else if (key === ENTER) {
+                alwan._reference._close();
+            }
         }
     }
 
     /**
      * Bind events.
      */
-    events._bind(parent, CLICK, changeFormat);
-    events._bind(parent, INPUT, handleChange);
-    events._bind(parent, CHANGE, handleChangeStop);
-    events._bind(parent, KEY_DOWN, closePicker);
+    events._bind(container, CLICK, changeFormat);
+    events._bind(container, INPUT, handleChange);
+    events._bind(container, CHANGE, handleChangeStop);
+    events._bind(container, [KEY_DOWN, FOCUS_IN], selectOrClose);
 
 
     return self;
