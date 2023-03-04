@@ -55,7 +55,7 @@ export const App = (root, alwan, events) => {
 
             // Close picker if popper's reference is scrolled out of view.
             if (! isInViewport(popper._reference, scrollableAncestors)) {
-                reference._close();
+                reference._close(true);
             }
         }
     }

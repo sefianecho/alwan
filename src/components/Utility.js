@@ -1,7 +1,7 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
-import { COPY_BUTTON_CLASSNAME, FOCUS_CLASSNAME, PREVIEW_CLASSNAME } from "../classnames";
-import { CLICK, COLOR_PROPERTY, FOCUS_IN, FOCUS_OUT, HTML, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants";
-import { createButton, createElement, insertElement, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
+import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../classnames";
+import { CLICK, COLOR_PROPERTY, FOCUS_OUT, HTML, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants";
+import { createButton, createElement, insertElement, removeElement, setCustomProperty, setHTML } from "../utils/dom";
 
 /**
  * Creates utility component.
@@ -31,7 +31,9 @@ export const Utility = (parent, alwan, events) => {
      */
     let isCopied;
 
-
+    /**
+     * API.
+     */
     const self = {
         /**
          * Initialize utility component.
@@ -88,7 +90,7 @@ export const Utility = (parent, alwan, events) => {
                 input = createElement(INPUT, '', HTML, { value: color });
                 input.select();
                 ROOT.execCommand('copy');
-                input = removeElement(input); 
+                input = removeElement(input);
             }
             // change icon.
             isCopied = true;
@@ -101,19 +103,16 @@ export const Utility = (parent, alwan, events) => {
      *
      * @param {MouseEvent|FocusEvent} e - Event.
      */
-    const updateButtonIcon = ({ target, type }) => {
-        if (target === copyButton) {
+    const updateButtonIcon = e => {
+        if (e.target === copyButton) {
             // If the color is copied (that means the copy button has changed its icon),
             // and the button has lost focus or mouse left it, then set the icon back,
             // to the clipboard svg.
-            if (isCopied && type !== FOCUS_IN) {
+            if (isCopied) {
                 isCopied = false;
                 setHTML(copyButton, clipboardSVG);
-                // set the clipboard icon.
+                copyButton.blur();
             }
-            // Add focus class to the button if it receive focus,
-            // otherwise remove the class if the button loses focus or the mouse leave it.
-            toggleClassName(copyButton, FOCUS_CLASSNAME, type === FOCUS_IN);
         }
     }
 
@@ -121,7 +120,7 @@ export const Utility = (parent, alwan, events) => {
      * Bind events.
      */
     events._bind(parent, CLICK, copyColor);
-    events._bind(parent, [MOUSE_OUT, FOCUS_IN, FOCUS_OUT], updateButtonIcon);
+    events._bind(parent, [MOUSE_OUT, FOCUS_OUT], updateButtonIcon);
 
     return self;
 }

@@ -15,8 +15,6 @@ export const RESIZE = 'resize';
 export const KEY_DOWN = 'keydown';
 export const INPUT = 'input';
 export const CHANGE = 'change';
-export const MOUSE_LEAVE = 'mouseleave';
-export const FOCUS_IN = 'focusin';
 export const FOCUS_OUT = 'focusout';
 export const MOUSE_OUT = 'mouseout';
 
@@ -33,7 +31,4 @@ export const COLOR_PROPERTY = '--lw-' + COLOR;
 
 // Picker supported color formats.
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
-
-
-
 export const INSERT_BEFORE_FIRST_CHILD = 'afterbegin';

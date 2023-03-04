@@ -1,6 +1,6 @@
-import { FOCUS_CLASSNAME, MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../classnames";
-import { CHANGE, COLOR, FOCUS_IN, FOCUS_OUT, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants";
-import { createElement, getBounds, toggleClassName, translate, removeElement } from "../utils/dom"
+import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../classnames";
+import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants";
+import { createElement, getBounds, translate, removeElement } from "../utils/dom"
 import { numberRange } from "../utils/number";
 
 /**
@@ -142,28 +142,11 @@ export const Palette = (root, alwan, events) => {
     }
 
     /**
-     * Handles palette's focus.
-     *
-     * @param {FocusEvent} param0 - Event.
-     */
-    const handleFocus = ({ type }) => {
-        // If the palette receive focus by a non pointer event,
-        // (not a touch/pen/mouse) then add focus class to simulate focus-visible,
-        // if the palette loses focus then remove the focus class.
-        // because .blur() returns undefined wich is a faulty value,
-        // that means remove class.
-        toggleClassName(palette, FOCUS_CLASSNAME, type === FOCUS_IN ? ! isPointerDown : palette.blur());
-    }
-
-    /**
      * Moves marker using keyboard arrow keys and adds focus-visible to the palette.
      *
      * @param {KeyboardEvent} e - Event.
      */
     const handleKeyboard = e => {
-        // Add focus classname to the palette.
-        toggleClassName(palette, FOCUS_CLASSNAME, true);
-
         let key = e.key;
 
         if (keyboardX[key] || keyboardY[key]) {
@@ -185,12 +168,12 @@ export const Palette = (root, alwan, events) => {
     events._bind(palette, POINTER_DOWN, dragStart);
     events._bind(ROOT, POINTER_MOVE, drag);
     events._bind(ROOT, POINTER_UP, dragEnd);
-    events._bind(palette, [FOCUS_IN, FOCUS_OUT], handleFocus);
     events._bind(palette, KEY_DOWN, handleKeyboard);
 
 
     return {
         _element: palette,
+
         /**
          * Initialize component.
          *
