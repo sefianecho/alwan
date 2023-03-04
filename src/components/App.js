@@ -77,7 +77,7 @@ export const App = (root, alwan, events) => {
             if (key === ESCAPE) {
                 reference._close();
             } else if (key === TAB) {
-                if (target === reference && ! shiftKey) {
+                if (target === reference._element && ! shiftKey) {
                     // Pressing Tab while focusing on the reference element sends focus,
                     // to the first element (palette) inside the picker container.
                     elementToFocusOn = paletteElement;
@@ -162,7 +162,6 @@ export const App = (root, alwan, events) => {
                 });
                 popperEvents._bind(ROOT, KEY_DOWN, handleAccessibility);
             } else {
-
                 insertElement(root, target, ! targetElement && 'afterend');
             }
 

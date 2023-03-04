@@ -4,6 +4,7 @@ import { CHANGE, CLICK, COLOR, COLOR_PROPERTY } from "../constants";
 import { createButton, createElement, parent, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
 import { int } from "../utils/number";
 import { isString } from "../utils/string";
+import { isset } from "../utils/util";
 
 /**
  * Creates swatches component.
@@ -63,7 +64,8 @@ export const Swatches = (root, alwan, events) => {
             alwan = instance || alwan;
 
             swatches = options.swatches || swatches;
-            isCollapsible = options.collapseSwatches || isCollapsible;
+            isCollapsible = options.collapseSwatches;
+            isCollapsible = isset(isCollapsible) ? isCollapsible : false;
 
             if (Array.isArray(swatches)) {
 
