@@ -3,7 +3,7 @@
 
 $primary-color: #117ce0;
 $pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23d1d3d4' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23d1d3d4' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
-$box-shadow: 0 0 2px rgba(0,0,0,0.6);
+$box-shadow: 0 0 2px rgba(0,0,0,0.7);
 
 
 // Alwan container.
@@ -18,11 +18,11 @@ $border-color: #ccc;
 $alwan-background-dark: #111;
 $alwan-border-color-dark: #aaa;
 $alwan-foreground-dark: #ccc;
-$border-color-dark: #27292c;
+$border-color-dark: #34373a;
 
 
 // Marker.
-$marker-width: 16px;
+$marker-width: 14px;
 $marker-height: $marker-width;
 $marker-top: math.div($marker-height, 2) * -1;
 $marker-left: math.div($marker-width, 2) * -1;
@@ -57,7 +57,7 @@ $thumb-width: 14px;
 $thumb-background: #fff;
 $thumb-border-radius: 3px;
 $thumb-box-shadow: $box-shadow;
-$thumb-border-color:#9b9b9b;
+$thumb-border-color:#8f8f8f;
 
 $thumb-background-dark: #151515;
 $thumb-border-color-dark: #3c4146;
@@ -76,10 +76,12 @@ $input-background: #fff;
 $input-padding: 8px 5px;
 $input-color: #333;
 $input-border: 1px solid #ccc;
+$input-border-hover-color: #a8a8a8;
 $input-margin-bottom: 3px;
 $input-font-family: monospace;
 
 $input-background-dark: #181818;
+$input-border-hover-color-dark: #484b4d;
 
 // Swatches container.
 $swatches-background: #f5f5f5;
@@ -116,6 +118,7 @@ $dark-theme: (
     --lw-thumb-bc: $thumb-border-color-dark,
     --lw-label: $label-color-dark,
     --lw-input-bg: $input-background-dark,
+    --lw-input-hover-bc: $input-border-hover-color-dark,
     --lw-btn-hover: $button-hover-background-dark
 );
 

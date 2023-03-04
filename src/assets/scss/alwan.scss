@@ -54,16 +54,14 @@
         outline: 0;
         touch-action: none;
         background: linear-gradient(to bottom, transparent, #000),
-                    linear-gradient(to right, #fff, hsl(var(--hue, 0), 100%, 50%));
+                    linear-gradient(to right, #fff, hsl(var(--h, 0), 100%, 50%));
 
         &:hover {
             cursor: crosshair;
         }
 
-        &.alwan--focus:focus {
-            & .alwan__marker {
-                border-color: var.$primary-color;
-            }
+        &:focus .alwan__marker {
+            box-shadow: 0 0 1px 2px var.$primary-color;
         }
     }
 
@@ -84,7 +82,7 @@
         width: var.$preview-width;
         height: var.$preview-height;
         margin-right: var.$preview-margin-right;
-        border: 1px solid #ccc;
+        border: 1px solid var(--lw-bc, var.$border-color);
         flex-shrink: 0;
         
         & .alwan__copy-button {
@@ -99,7 +97,7 @@
             border-radius: 0;
             margin: 0;
 
-            &.alwan--focus:focus,
+            &:focus,
             &:hover {
                 opacity: 1;
                 z-index: 100;
@@ -119,6 +117,7 @@
         margin: 0;
         padding: 0;
         cursor: pointer;
+        outline: 0;
         -webkit-appearance: none;
         appearance: none;
         --lw-alpha: linear-gradient(90deg, transparent, var(--lw-color)), var(--lw-pattern);
@@ -169,6 +168,11 @@
             box-shadow: var.$thumb-box-shadow;
             cursor: ew-resize;
         }
+
+        &:focus::-webkit-slider-thumb {
+            border-color: var.$primary-color;
+        }
+
         // Mozilla.
         &::-moz-range-thumb {
             box-sizing: border-box;
@@ -181,6 +185,11 @@
             box-shadow: var.$thumb-box-shadow;
             cursor: ew-resize;
         }
+
+        &:focus::-moz-range-thumb {
+            border-color: var.$primary-color;
+        }
+
         &--hue {
             &::-webkit-slider-runnable-track {
                 background: var(--lw-hue);
@@ -189,7 +198,7 @@
                 background: var(--lw-hue);
             }
         }
-        
+
         &--alpha {
             margin-top: var.$alpha-slider-margin-top;
 
@@ -217,7 +226,7 @@
             font-family: var.$input-label-font-family;
             font-size: var.$input-label-font-size;
         }
-	}
+    }
 
     &__input {
         display: block;
@@ -237,6 +246,10 @@
             + span {
                 color: var.$primary-color;
             }
+        }
+
+        &:hover {
+            border-color: var(--lw-input-hover-bc, var.$input-border-hover-color);
         }
     }
 
@@ -270,8 +283,10 @@
         padding: var.$button-padding;
         text-transform: capitalize;
         transition: background-color 0.2s ease-in-out;
+        outline: 0;
         
-        &:hover {
+        &:hover,
+        &:focus {
             background-color: var(--lw-btn-hover, var.$button-hover-background);
         }
     
@@ -283,9 +298,12 @@
     }
 
     &__preset-button {
-    	width: var.$preset-button-width;
-    	height: var.$preset-button-height;
-    	border-radius: var.$preset-button-border-radius;
+        width: var.$preset-button-width;
+        height: var.$preset-button-height;
+        border-radius: var.$preset-button-border-radius;
+        &:disabled {
+            cursor: not-allowed;
+        }
     }
 
     &__swatch:focus,
@@ -298,9 +316,6 @@
         margin-right: var.$preview-margin-right;
     }
     
-    &--disabled {
-    	cursor: not-allowed;
-    }
 
     &__overlay {
     	position: fixed;
@@ -344,9 +359,7 @@
 
     &--collapse {
         &.alwan__swatches {
-            height: 0;
-            padding: 0;
-            overflow: hidden;
+           display: none;
         }
 
         & + .alwan__collapse-button {
