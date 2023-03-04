@@ -7,7 +7,7 @@ import { HSL_FORMAT } from "../constants";
  * @param {string} format - hsl or rgb.
  * @returns {string} rgb or hsl string.
  */
-export const stringify = (color, format) => {
+export const stringify = (color, format, opaque) => {
     let percentage = '';
     let opacity = '';
     let a = color.a;
@@ -16,7 +16,7 @@ export const stringify = (color, format) => {
         percentage = '%';
     }
 
-    if (a < 1) {
+    if (a < 1 && ! opaque) {
         format += 'a';
         opacity = ', ' + a;
     }
