@@ -37,13 +37,6 @@ export const App = (root, alwan, events) => {
     let scrollableAncestors;
 
     /**
-     * Last focusable element in the components.
-     *
-     * @type {Element}
-     */
-    let lastFocusableElement;
-
-    /**
      * Updates popper's position and visibility.
      * 
      * @param {Event} e - Event. 
@@ -73,10 +66,15 @@ export const App = (root, alwan, events) => {
             let { target, key, shiftKey } = e;
             let paletteElement = alwan._components._palette._element;
             let elementToFocusOn;
+            let lastFocusableElement;
+
             // Pressing Escape key closes the picker.
             if (key === ESCAPE) {
                 reference._close();
             } else if (key === TAB) {
+
+                lastFocusableElement = [...getElement(BUTTON + ',' + INPUT, root, true)].pop();
+
                 if (target === reference._element && ! shiftKey) {
                     // Pressing Tab while focusing on the reference element sends focus,
                     // to the first element (palette) inside the picker container.
@@ -164,8 +162,6 @@ export const App = (root, alwan, events) => {
             } else {
                 insertElement(root, target, ! targetElement && 'afterend');
             }
-
-            lastFocusableElement = [...getElement(BUTTON + ',' + INPUT, root, true)].pop();
         },
 
         /**

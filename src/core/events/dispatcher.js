@@ -1,4 +1,5 @@
 import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants"
+import { merge } from "../../utils/object";
 import { isset } from "../../utils/util";
 
 /**
@@ -28,7 +29,7 @@ export const Dispatcher = (alwan) => {
         _dispatch(type, source) {
             if (! alwan.config.disabled) {
                 (listeners[type] || []).forEach(handler => {
-                    handler(alwan._color._event(type, source));
+                    handler(merge({ type, source }, alwan._color._value()));
                 });
             }
         },

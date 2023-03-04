@@ -69,17 +69,6 @@ export const color = (alwan) => {
     }
 
     /**
-     * Value methods.
-     */
-    let value = {
-        hsv: asArray => colorData(HSV, HSV_FORMAT, asArray),
-        rgb: asArray => colorData(RGB, RGB_FORMAT, asArray, rgbString),
-        hsl: asArray => colorData(HSVToHSL(HSV), HSL_FORMAT, asArray),
-        hex: () => hex,
-    };
-
-
-    /**
      * Color api.
      */
     let self = {
@@ -205,29 +194,17 @@ export const color = (alwan) => {
         },
 
         /**
-         * Creates and gets event object.
-         *
-         * @param {string} type - Event type.
-         * @param {Element} src - Source element.
-         * @returns {object} - Event object.
-         */
-        _event: (type, src) => {
-            return merge(
-                {
-                    type,
-                    src,
-                    value: rgbString
-                },
-                value
-            )
-        },
-
-        /**
          * Gets color value.
          *
          * @returns {object} - Color value.
          */
-        _value: () => merge({ value: rgbString }, value),
+        _value: () => ({ 
+            value: self._getColorByFormat(true),
+            hsv: asArray => colorData(HSV, HSV_FORMAT, asArray),
+            rgb: asArray => colorData(RGB, RGB_FORMAT, asArray, rgbString),
+            hsl: asArray => colorData(HSVToHSL(HSV), HSL_FORMAT, asArray),
+            hex: () => RGBToHEX(RGB),
+        })
     }
 
     return self;

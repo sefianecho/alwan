@@ -1,5 +1,5 @@
 import { defaults } from "./defaults";
-import { ReferenceControl } from "./reference";
+import { Reference } from "./reference";
 import { merge, objectIterator, prototype, setPrototypeOf } from "./utils/object";
 import { destroyComponents } from "./core/component";
 import { color } from "./core/color";
@@ -29,7 +29,7 @@ export default class Alwan {
         alwan.config = merge({}, Alwan.defaults);
         alwan._events = Dispatcher(alwan);
         alwan._color = color(alwan);
-        alwan._reference = ReferenceControl(reference, alwan);
+        alwan._reference = Reference(reference, alwan);
         initialize(alwan, options);
     }
 
@@ -39,7 +39,7 @@ export default class Alwan {
      * @param {Object} options - Alwan options.
      */
     setOptions(options) {
-        initialize(alwan, options);
+        initialize(this, options);
     }
 
     /**
@@ -184,7 +184,7 @@ export default class Alwan {
         objectIterator(alwan, (value, key) => {
             delete alwan[key];
         });
-        
+
         // Empty instance prototype.
         setPrototypeOf(alwan, prototype);
     }

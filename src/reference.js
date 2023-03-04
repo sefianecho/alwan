@@ -1,5 +1,5 @@
-import { DISABLED_CLASSNAME, OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "./classnames";
-import { CLICK, CLOSE, OPEN, ROOT } from "./constants";
+import { OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "./classnames";
+import { CLOSE, OPEN, POINTER_DOWN, ROOT } from "./constants";
 import { Binder } from "./core/events/binder";
 import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "./utils/dom";
 import { isString } from "./utils/string";
@@ -12,7 +12,7 @@ import { isset } from "./utils/util";
  * @param {Alwan} param1 - Alwan instance.
  * @returns {object} - ReferenceElement control.
  */
-export const ReferenceControl = (reference, alwan) => {
+export const Reference = (reference, alwan) => {
     /**
      * Visibility state.
      */
@@ -21,7 +21,7 @@ export const ReferenceControl = (reference, alwan) => {
     /**
      * Reference element classes.
      */
-    let referenceClasses = [];
+    let classes = [];
 
     /**
      * Event binder.
@@ -38,14 +38,14 @@ export const ReferenceControl = (reference, alwan) => {
      *
      * @type {Element|null}
      */
-    const referenceElement = getElement(reference);
+    const element = getElement(reference);
 
     /**
      * User reference.
      * 
      * Check if the reference element is valid.
      */
-    const userReference = bodyElement.contains(referenceElement) && referenceElement !== bodyElement ? referenceElement : null;
+    const userReference = bodyElement.contains(element) && element !== bodyElement ? element : null;
 
     /**
      * Alwan options.
@@ -83,10 +83,10 @@ export const ReferenceControl = (reference, alwan) => {
             // Add custom classes to the preset button.
             if (! userReference || preset && isString(classname)) {
                 // Remove previously add classes.
-                toggleClasses(element, referenceClasses, false);
-                referenceClasses = classname.split(/\s+/);
+                toggleClasses(element, classes, false);
+                classes = classname.split(/\s+/);
                 // Add the new classname.
-                toggleClasses(element, referenceClasses);
+                toggleClasses(element, classes);
             }
 
             self._element = element;
@@ -112,12 +112,15 @@ export const ReferenceControl = (reference, alwan) => {
                 let app = alwan._components._app;
                 let instance = app._getInstance();
 
+                // Components are shared, and this instance doesn't control these components.
                 if (instance !== alwan) {
-                    instance._reference._close();
+                    if (instance._reference) {
+                        instance._reference._close();
+                    }
                     app._setup(config, alwan);
                 }
 
-                // Update core color state.
+                alwan._color._update();
                 app._reposition();
                 setState(true, silent);
             }
@@ -151,7 +154,7 @@ export const ReferenceControl = (reference, alwan) => {
             if (disabled) {
                 self._close(true);
             }
-            toggleClassName(self._element, DISABLED_CLASSNAME, disabled);
+            self._element.disabled = disabled;
         },
 
         /**
@@ -198,7 +201,7 @@ export const ReferenceControl = (reference, alwan) => {
     /**
      * Handles Document clicks that results in opening/closing the Color picker.
      *
-     * @param {MouseEvent} param0 - Event.
+     * @param {PointerEvent} param0 - Event.
      */
     const handleClick = ({ target }) => {
         if (target === self._element) {
@@ -211,7 +214,7 @@ export const ReferenceControl = (reference, alwan) => {
     }
 
     // Event listener.
-    events._bind(ROOT, CLICK, handleClick);
+    events._bind(ROOT, POINTER_DOWN, handleClick);
 
     return self;
 }

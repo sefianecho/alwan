@@ -1,5 +1,6 @@
 import { caretSVG } from "../assets/svg";
 import { COLLAPSE_BUTTON_CLASSNAME, COLLAPSE_CLASSNAME, SWATCHES_CLASSNAME, SWATCH_CLASSNAME } from "../classnames";
+import { parseColor } from "../colors/parser";
 import { CHANGE, CLICK, COLOR, COLOR_PROPERTY } from "../constants";
 import { createButton, createElement, parent, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
 import { int } from "../utils/number";
@@ -85,7 +86,7 @@ export const Swatches = (root, alwan, events) => {
                         setCustomProperty(
                             createButton(SWATCH_CLASSNAME, container),
                             COLOR_PROPERTY,
-                            color
+                            parseColor(color, true)
                         );
                     });
 
@@ -117,7 +118,8 @@ export const Swatches = (root, alwan, events) => {
                 if (swatchesLength > 1) {
                     setCustomProperty(
                         createButton(SWATCH_CLASSNAME, container),
-                        COLOR_PROPERTY, color
+                        COLOR_PROPERTY,
+                        parseColor(color, true)
                     );
                 } else {
                     // Initialize component, if calling add swatches on an empty array.
