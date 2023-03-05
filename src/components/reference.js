@@ -1,6 +1,6 @@
 import { OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
 import { CLOSE, OPEN, POINTER_DOWN, ROOT } from "../constants/globals";
-import { isShared } from "../core/component";
+import { closeSharedInstance } from "../core/component";
 import { Binder } from "../core/events/binder";
 import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "../utils/dom";
 import { isString } from "../utils/string";
@@ -110,19 +110,9 @@ export const Reference = (reference, alwan) => {
          */
         _open(silent) {
             if (! isOpen && ! config.disabled) {
-                let app = alwan._components._app;
-                let instance = app._getInstance();
-
-                // Components are shared, and this instance doesn't control these components.
-                if (instance !== alwan) {
-                    if (isShared(instance._components)) {
-                        instance._reference._close();
-                    }
-                    app._setup(config, alwan);
-                }
-
+                closeSharedInstance(alwan, config, true);
                 alwan._color._updateAll();
-                app._reposition();
+                alwan._components._app._reposition();
                 setState(true, silent);
             }
         },

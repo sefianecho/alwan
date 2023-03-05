@@ -81,7 +81,7 @@ export const destroyComponents = (components) => {
  * @param {Alwan} alwan - Alwan instance.
  * @returns {object} components.
  */
-export const components = (alwan) => {
+export const useComponents = (alwan) => {
     let { _components, config: { shared }} = alwan;
 
     // Alwan already has components.
@@ -115,4 +115,28 @@ export const components = (alwan) => {
 
     // Create components.
     return createComponents(alwan);
+}
+
+
+/**
+ * Closes the previous instance that controls the shared components,
+ * before the current instance (alwan) controls the components.
+ *
+ * @param {object} alwan - Alwan instance.
+ * @param {object} options - Alwan options.
+ * @param {boolean} setup - If true run app setup.
+ */
+export const closeSharedInstance = (alwan, options, setup) => {
+    let app = alwan._components._app;
+    let instance = app._getInstance();
+
+    if (instance !== alwan) {
+        if (isShared(instance._components)) {
+            instance._reference._close(true);
+        }
+
+        if (setup) {
+            app._setup(options, alwan);
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import { merge } from "../utils/object"
 import { isset } from "../utils/util";
-import { components } from "./component";
+import { useComponents, closeSharedInstance } from "./component";
 
 /**
  * Initialize instance.
@@ -13,8 +13,9 @@ export const initialize = (alwan, options) => {
     let color = options.color;
     let { _set, _update } = alwan._color;
 
-    alwan._components = components(alwan);
+    alwan._components = useComponents(alwan);
     alwan._reference._init(config);
+    closeSharedInstance(alwan);
     alwan._components._app._setup(config, alwan);
 
     if (isset(color)) {

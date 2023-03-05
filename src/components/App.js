@@ -2,7 +2,7 @@ import { POPUP_CLASSNAME } from "../constants/classnames";
 import { BUTTON, ESCAPE, INPUT, KEY_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants/globals";
 import { Binder } from "../core/events/binder";
 import { createPopper } from "../lib/popper";
-import { getElement, getScrollableAncestors, insertElement, isInViewport, removeElement, toggleClassName, toggleVisibility } from "../utils/dom";
+import { getElement, getScrollableAncestors, insertElement, isInViewport, removeElement, toggleClassName, toggleVisibility, translate } from "../utils/dom";
 import { objectIterator } from "../utils/object";
 import { isString } from "../utils/string";
 
@@ -108,10 +108,11 @@ export const App = (root, alwan, events) => {
             alwan = instance;
             let { theme, popover, target, position, margin, id, toggle, shared } = options;
             let targetElement = getElement(target);
-    
-            if (isString(id) && id) {
+
+            if (isString(id) && ! shared) {
                 root.id = id;
             }
+
             // Shared option force the toggle.
             if (shared) {
                 toggle = true;
@@ -160,6 +161,7 @@ export const App = (root, alwan, events) => {
                 });
                 popperEvents._bind(ROOT, KEY_DOWN, handleAccessibility);
             } else {
+                root.style = '';
                 insertElement(root, target, ! targetElement && 'afterend');
             }
         },
