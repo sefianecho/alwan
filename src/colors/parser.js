@@ -1,4 +1,4 @@
-import { HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants";
+import { HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { createElement } from "../utils/dom";
 import { float, isNumeric, normalizeAngle, numberRange, PI } from "../utils/number";
 import { isString, trimString } from "../utils/string";

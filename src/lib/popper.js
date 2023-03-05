@@ -1,4 +1,4 @@
-import { ROOT } from "../constants";
+import { ROOT } from "../constants/globals";
 import { getBounds, translate } from "../utils/dom";
 import { abs, isNumeric } from "../utils/number";
 import { objectIterator } from "../utils/object";

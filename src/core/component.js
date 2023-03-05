@@ -1,4 +1,4 @@
-import { ALWAN_CLASSNAME, CONTAINER_CLASSNAME } from "../classnames";
+import { ALWAN_CLASSNAME, CONTAINER_CLASSNAME } from "../constants/classnames";
 import { App } from "../components/App";
 import { Inputs } from "../components/Inputs";
 import { Palette } from "../components/Palette";

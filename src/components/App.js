@@ -1,5 +1,5 @@
-import { POPUP_CLASSNAME } from "../classnames";
-import { BUTTON, ESCAPE, INPUT, KEY_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants";
+import { POPUP_CLASSNAME } from "../constants/classnames";
+import { BUTTON, ESCAPE, INPUT, KEY_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants/globals";
 import { Binder } from "../core/events/binder";
 import { createPopper } from "../lib/popper";
 import { getElement, getScrollableAncestors, insertElement, isInViewport, removeElement, toggleClassName, toggleVisibility } from "../utils/dom";

@@ -1,6 +1,6 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
-import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../classnames";
-import { CLICK, COLOR_PROPERTY, FOCUS_OUT, HTML, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants";
+import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../constants/classnames";
+import { CLICK, COLOR_PROPERTY, FOCUS_OUT, HTML, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
 import { createButton, createElement, insertElement, removeElement, setCustomProperty, setHTML } from "../utils/dom";
 
 /**

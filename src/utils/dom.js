@@ -1,5 +1,5 @@
-import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../classnames";
-import { BUTTON, HTML, INPUT, ROOT } from "../constants";
+import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
+import { BUTTON, HTML, INPUT, ROOT } from "../constants/globals";
 import { merge, objectIterator } from "./object";
 import { isString, trimString } from "./string";
 import { isset } from "./util";

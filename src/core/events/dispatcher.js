@@ -1,4 +1,4 @@
-import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants"
+import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants/globals"
 import { merge, objectIterator } from "../../utils/object";
 import { isset } from "../../utils/util";
 

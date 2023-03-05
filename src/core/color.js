@@ -1,7 +1,7 @@
 import { HSLToHSV, HSVToHSL, HSVToRGB, RGBToHEX, RGBToHSV } from "../colors/converter";
 import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
-import { CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants";
+import { CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { setCustomProperty } from "../utils/dom";
 import { isEqual, merge } from "../utils/object";
 

@@ -1,7 +1,7 @@
 import { switchInputsSVG } from "../assets/svg";
-import { BUTTON_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../classnames";
+import { BUTTON_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../constants/classnames";
 import { stringify } from "../colors/stringify";
-import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants";
+import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants/globals";
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
 import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";

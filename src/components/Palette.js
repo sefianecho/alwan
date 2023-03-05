@@ -1,5 +1,5 @@
-import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../classnames";
-import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants";
+import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
+import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { createElement, getBounds, translate, removeElement } from "../utils/dom"
 import { numberRange } from "../utils/number";
 

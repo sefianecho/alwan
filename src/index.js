@@ -1,4 +1,3 @@
-import { defaults } from "./defaults";
 import { Reference } from "./reference";
 import { merge, objectIterator, prototype, setPrototypeOf } from "./utils/object";
 import { destroyComponents } from "./core/component";
@@ -6,6 +5,7 @@ import { color } from "./core/color";
 import { Dispatcher } from "./core/events/dispatcher";
 import { initialize } from "./core/init";
 import "./assets/scss/alwan.scss";
+import { defaults } from "./constants/defaults";
 
 
 export default class Alwan {

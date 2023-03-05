@@ -1,4 +1,4 @@
-import { HSL_FORMAT } from "../constants";
+import { HSL_FORMAT } from "../constants/globals";
 
 /**
  * Converts RGB or HSL color objects to string.
