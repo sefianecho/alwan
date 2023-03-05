@@ -63,7 +63,6 @@ export const Inputs = (container, alwan, events) => {
          */
         _init({ inputs, format }, instance) {
             alwan = instance || alwan;
-            
             // Get only valid formats.
             formats = COLOR_FORMATS.filter(format => inputs[format]);
             let length = formats.length;
@@ -203,6 +202,7 @@ export const Inputs = (container, alwan, events) => {
             formatIndex = (formatIndex + 1) % formats.length;
             alwan.config.format = formats[formatIndex];
             build(formats[formatIndex]);
+            // Update values.
             alwan._color._update();
         }
     }

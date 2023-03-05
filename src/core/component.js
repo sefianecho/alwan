@@ -47,13 +47,23 @@ const createComponents = (alwan) => {
 }
 
 /**
+ * Checks if components are shared.
+ *
+ * @param {object} components - Alwan components.
+ * @returns {boolean} - True if components are shared.
+ */
+export const isShared = (components) => {
+    return !!sharedComponents && components === sharedComponents;
+}
+
+/**
  * Destroys components.
  *
  * @param {object} components - Alwan components.
  * @returns {void}
  */
 export const destroyComponents = (components) => {
-    if (sharedComponents === components) {
+    if (isShared(components)) {
         instanceCount--;
         if (instanceCount > 0) {
             return;
@@ -77,11 +87,14 @@ export const components = (alwan) => {
     // Alwan already has components.
     if (_components) {
         // Nothing is changing, if components are shared and the option shared is true,
-        // or the components are non-shared and the option shared is false
+        // or the components are not shared and the option shared is false
         // then just return the current compoenents.
-        if ((sharedComponents === _components) === shared) {
+        if ((isShared(_components)) === shared) {
             return _components;
         }
+
+        // Force close the picker before destroying its components.
+        alwan._reference._close(true, true);
         // If something changed, either the components were shared,
         // and the option shared is false which means set the components as,
         // non-shared or the coponents were non-shared and we want to share them.

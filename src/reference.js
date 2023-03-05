@@ -1,5 +1,6 @@
 import { OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "./classnames";
 import { CLOSE, OPEN, POINTER_DOWN, ROOT } from "./constants";
+import { isShared } from "./core/component";
 import { Binder } from "./core/events/binder";
 import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "./utils/dom";
 import { isString } from "./utils/string";
@@ -114,13 +115,13 @@ export const Reference = (reference, alwan) => {
 
                 // Components are shared, and this instance doesn't control these components.
                 if (instance !== alwan) {
-                    if (instance._reference) {
+                    if (isShared(instance._components)) {
                         instance._reference._close();
                     }
                     app._setup(config, alwan);
                 }
 
-                alwan._color._update();
+                alwan._color._updateAll();
                 app._reposition();
                 setState(true, silent);
             }
@@ -129,10 +130,11 @@ export const Reference = (reference, alwan) => {
         /**
          * Hides the color picker.
          *
-         * @param {boolean} silent - Indicate whether to dispatch the close event or not.
+         * @param {boolean} silent - If true don't dispatch close event.
+         * @param {boolean} forced - Close the color picker event if its toggle option is set to false.
          */
-        _close(silent) {
-            if (isOpen && (config.shared || config.toggle)) {
+        _close(silent, forced) {
+            if (isOpen && (config.shared || config.toggle || forced)) {
                 setState(false, silent);
             }
         },

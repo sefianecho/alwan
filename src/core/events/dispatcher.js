@@ -1,5 +1,5 @@
 import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants"
-import { merge } from "../../utils/object";
+import { merge, objectIterator } from "../../utils/object";
 import { isset } from "../../utils/util";
 
 /**
@@ -41,7 +41,7 @@ export const Dispatcher = (alwan) => {
          * @param {CallableFunction} eventHandler - Event handler to registered.
          */
         _addListener(eventType, eventHandler) {
-            if (listeners[eventType]) {
+            if (listeners[eventType] && ! listeners[eventType].includes(eventHandler)) {
                 listeners[eventType].push(eventHandler);
             }
         },
