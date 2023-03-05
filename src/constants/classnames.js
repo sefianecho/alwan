@@ -1,4 +1,4 @@
-import { BUTTON, INPUT, OPEN } from "./constants";
+import { BUTTON, INPUT, OPEN } from "./globals";
 
 const COLLAPSE = 'collapse';
 export const ALWAN_CLASSNAME = 'alwan';
