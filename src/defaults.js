@@ -78,4 +78,14 @@
 
     // Array of color strings, invalid color strings will default to rgb(0,0,0).
     swatches: [],
+
+    /**
+     * Share components with multiple alwan instances.
+     */
+    shared: false,
+
+    /**
+     * Make swatches container collapsible.
+     */
+    collapseSwatches: false,
 }
