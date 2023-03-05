@@ -1,4 +1,4 @@
-import { Reference } from "./reference";
+import { Reference } from "./components/reference";
 import { merge, objectIterator, prototype, setPrototypeOf } from "./utils/object";
 import { destroyComponents } from "./core/component";
 import { color } from "./core/color";

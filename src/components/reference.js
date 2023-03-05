@@ -1,10 +1,10 @@
-import { OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "./constants/classnames";
-import { CLOSE, OPEN, POINTER_DOWN, ROOT } from "./constants/globals";
-import { isShared } from "./core/component";
-import { Binder } from "./core/events/binder";
-import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "./utils/dom";
-import { isString } from "./utils/string";
-import { isset } from "./utils/util";
+import { OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
+import { CLOSE, OPEN, POINTER_DOWN, ROOT } from "../constants/globals";
+import { isShared } from "../core/component";
+import { Binder } from "../core/events/binder";
+import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "../utils/dom";
+import { isString } from "../utils/string";
+import { isset } from "../utils/util";
 
 /**
  * Creates the reference control.
