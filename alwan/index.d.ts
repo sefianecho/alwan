@@ -109,7 +109,7 @@ declare namespace Alwan {
         copy?: boolean,
         swatches?: Array<Color>,
         shared?: boolean,
-        collapseSwatches?: boolean
+        toggleSwatches?: boolean
     }
 }
 

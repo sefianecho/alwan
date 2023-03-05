@@ -64,7 +64,7 @@ export const Swatches = (root, alwan, events) => {
             alwan = instance || alwan;
 
             swatches = options.swatches || swatches;
-            isCollapsible = options.collapseSwatches;
+            isCollapsible = options.toggleSwatches;
             isCollapsible = isset(isCollapsible) ? isCollapsible : false;
 
             if (Array.isArray(swatches)) {
@@ -89,7 +89,7 @@ export const Swatches = (root, alwan, events) => {
                         );
                     });
 
-                    // Create or remove the collapse button depend if the collapseSwatches,
+                    // Create or remove the collapse button depend if the toggleSwatches,
                     // option changes.
                     if (isCollapsible) {
                         if (! collapseButton) {

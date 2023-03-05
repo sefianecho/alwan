@@ -87,5 +87,5 @@
     /**
      * Make swatches container collapsible.
      */
-    collapseSwatches: false,
+    toggleSwatches: false,
 }
