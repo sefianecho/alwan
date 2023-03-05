@@ -110,21 +110,19 @@ export const Swatches = (root, alwan, events) => {
         /**
          * Adds a swatch button.
          *
-         * @param {String} color - Color.
+         * @param {String|object} color - Color.
          */
         _add(color) {
-            if (isString(color)) {
-                swatchesLength = swatches.push(color);
-                if (swatchesLength > 1) {
-                    setCustomProperty(
-                        createButton(SWATCH_CLASSNAME, container),
-                        COLOR_PROPERTY,
-                        parseColor(color, true)
-                    );
-                } else {
-                    // Initialize component, if calling add swatches on an empty array.
-                    self._init();
-                }
+            swatchesLength = swatches.push(color);
+            if (swatchesLength > 1) {
+                setCustomProperty(
+                    createButton(SWATCH_CLASSNAME, container),
+                    COLOR_PROPERTY,
+                    parseColor(color, true)
+                );
+            } else {
+                // Initialize component, if calling add swatches on an empty array.
+                self._init();
             }
         },
         /**
