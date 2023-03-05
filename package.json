@@ -3,6 +3,7 @@
   "version": "1.0.5",
   "description": "A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.",
   "main": "dist/js/alwan.min.js",
+  "types": "./alwan/index.d.ts",
   "scripts": {
     "start": "webpack serve --open --config ./scripts/webpack.dev.js",
     "build": "webpack --config ./scripts/webpack.prod.js",
