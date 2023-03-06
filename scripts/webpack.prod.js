@@ -12,8 +12,7 @@ module.exports = merge(common, {
             terserOptions: {
                 mangle: {
                     properties: {
-                        regex: /^_/,
-                        reserved: ['_c', '_e', '_s'],
+                        regex: /^_/
                     }
                 }
             }
