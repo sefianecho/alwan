@@ -1,6 +1,6 @@
 import { ROOT } from "../constants/globals";
 import { getBounds, translate } from "../utils/dom";
-import { abs, isNumeric } from "../utils/number";
+import { abs, float, isNumeric } from "../utils/number";
 import { objectIterator } from "../utils/object";
 import { isString } from "../utils/string";
 
@@ -78,6 +78,7 @@ export const createPopper = (reference, container, { _margin, _position }) => {
     } else if (! fallbackAlignments[alignment]) {
         alignment = START;
     }
+    _margin = float(_margin);
     if (isNumeric(_margin)) {
         margin = _margin;
     }

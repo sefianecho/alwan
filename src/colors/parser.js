@@ -43,7 +43,7 @@ export const parseColor = (value = '', asString) => {
 
         format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => {
 			return format.split('').every(key => {
-				return isNumeric(value[key]);
+				return isNumeric(float(value[key]));
 			});
 		});
 
