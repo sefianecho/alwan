@@ -73,7 +73,7 @@ export const createElement = (tagName, className, targetElement, details, insert
     }
 
     objectIterator(details || {}, (value, name) => {
-        if (name === '_content') {
+        if (name === 'html') {
             setHTML(element, value);
         } else if (value) {
             element.setAttribute(name, value);

@@ -93,7 +93,7 @@ export const Swatches = (root, alwan, events) => {
                     // option changes.
                     if (isCollapsible) {
                         if (! collapseButton) {
-                            collapseButton = createButton(COLLAPSE_BUTTON_CLASSNAME, root, { _content: caretSVG });
+                            collapseButton = createButton(COLLAPSE_BUTTON_CLASSNAME, root, { html: caretSVG });
                         }
                     } else {
                         collapseButton = removeElement(collapseButton);

@@ -1,5 +1,5 @@
 import { switchInputsSVG } from "../assets/svg";
-import { BUTTON_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../constants/classnames";
+import { INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../constants/classnames";
 import { stringify } from "../colors/stringify";
 import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants/globals";
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
@@ -84,7 +84,7 @@ export const Inputs = (container, alwan, events) => {
                     switchButton = removeElement(switchButton);
                 } else if (!switchButton) {
                     // For more than one input format, add a switch button.
-                    switchButton = createButton(BUTTON_CLASSNAME, container, { _content: switchInputsSVG });
+                    switchButton = createButton('', container, { html: switchInputsSVG });
                 }
 
                 // Validate and normalize format value.
@@ -141,8 +141,8 @@ export const Inputs = (container, alwan, events) => {
              * </label>
              */
             const labelElement = createElement('label', '', inputsContainer);
-            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement);
-            createElement('span', '', labelElement, { _content: field });
+            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, { type: 'text' });
+            createElement('span', '', labelElement, { html: field });
         });
     }
 

@@ -45,7 +45,7 @@ export const Utility = (parent, alwan, events) => {
             alwan = instance;
             if (copy !== !! copyButton) {
                 if (copy) {
-                    copyButton = createButton(COPY_BUTTON_CLASSNAME, previewElement || parent, { _content: clipboardSVG }, INSERT_BEFORE_FIRST_CHILD);
+                    copyButton = createButton(COPY_BUTTON_CLASSNAME, previewElement || parent, { html: clipboardSVG }, INSERT_BEFORE_FIRST_CHILD);
                 } else {
                     copyButton = removeElement(copyButton);
                 }
