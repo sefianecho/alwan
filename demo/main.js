@@ -37,7 +37,7 @@ function initialize(pickerId) {
             } else {
 
                 const element = elements[0];
-                
+
                 if (element.tagName === 'TEXTAREA') {
                     element.value = value.join(', ');
                 } else if (element.tagName === 'SELECT' || element.type !== 'checkbox') {
@@ -51,8 +51,7 @@ function initialize(pickerId) {
     }
 }
 
-
-sidePanel.addEventListener('change', e => {
+function updateOptions(e) {
     const options = {};
     const el = e.target;
     let { type, value, checked, name } = el;
@@ -80,16 +79,20 @@ sidePanel.addEventListener('change', e => {
     }
 
     picker.setOptions(options);
-});
+}
+
+
+sidePanel.addEventListener('change', updateOptions);
+sidePanel.addEventListener('input', updateOptions);
 
 
 alwanText.on('color', (color) => {
-    previewArea.style.color = color.rgb().toString();
+    previewArea.style.color = color.rgb() + '';
 });
 
 alwanBG.on('color', (color) => {
-    previewArea.style.backgroundColor = color.rgb().toString();
-})
+    previewArea.style.backgroundColor = color.rgb() + '';
+});
 
 
 closeButton.addEventListener('click', toggleOptionsPanel);

@@ -6,22 +6,23 @@ body {
     margin: 0;
     line-height: 1;
     font-size: 1.15rem;
-    background: linear-gradient(to bottom, rgba(64, 41, 89, 0.25), transparent);
+    background: #fff;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
 }
 
 h1 {
-    font-size: 5rem;
+    font-size: 4rem;
     font-weight: 700;
     margin: 0;
     margin-bottom: 1rem;
     color: #111;
+    font-weight: 300;
 }
 
 
 p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #222;
     margin-bottom: 1.5rem;
 }
@@ -32,7 +33,8 @@ select {
 
 header {
     text-align: center;
-    padding: 2rem 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #ccc;
 }
 
 header .button div {
@@ -61,7 +63,7 @@ label {
     font-size: 1rem;
     transition: background-color 0.2s;
 }
-.lw-ref {
+.alwan__preset-button {
     display: block;
     margin: 2rem auto;
 }
@@ -73,21 +75,21 @@ label {
 }
 
 .menu-button {
-    background: linear-gradient(0, #2f0743, rgba(47, 7, 67, 0.7));
+    background: #0c73d3;
     color: #fff;
 }
 
 .github-button {
-    background: linear-gradient(0, #24292F, rgba(35, 40, 46, 0.7));
+    background-color: #24292F;
     border: 0;
     color: #fff;
     text-decoration: none;
 }
 .menu-button:hover {
-    background-color: #2f0743;
+    background-color: #0760b3;
 }
 .github-button:hover {
-    background-color: #24292F;
+    background-color: #121518;
 }
 
 .main-content {
@@ -115,8 +117,8 @@ label {
 .panel .header {
     display: flex;
     justify-content: flex-end;
-    border-bottom: 1px solid #f0f0f0;
-    padding: 1rem;
+    border-bottom: 1px solid #ccc;
+    padding: 0.5rem 1rem;
 }
 
 .header .button {
@@ -135,20 +137,20 @@ label {
     align-items: center;
     background-color: #fff;
     cursor: pointer;
-    padding: 1.5rem 1rem;
+    padding: 0.75rem 1rem;
     font-size: 1rem;
     transition: background-color 0.15s ease-in-out;
 }
 
 .option:hover {
-    background-color: rgba(71, 61, 83, 0.014);
+    background-color: rgba(12, 115, 211, 0.1);
 }
 
 .option .switch {
     position: relative;
     display: inline-block;
     width: 40px;
-    height: 18px;
+    height: 16px;
 }
 
 .option .switch input {
@@ -171,8 +173,8 @@ label {
 .option .slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     left: -2px;
     border: 2px solid #797979;
     border-radius: 50%;
@@ -182,15 +184,15 @@ label {
 }
 
 .option input:checked + .slider {
-    background-color: #41295a;
+    background-color: #0c73d3;
 }
 
 .option input:checked + .slider::before {
-    border-color: #41295a;
+    border-color: #045aaa;
 }
 
 input:focus + .slider {
-    outline-offset: 4px;
+    outline-offset: 5px;
     outline: 2px solid rgba(17, 17, 17, 0.25);
 }
 
@@ -212,7 +214,7 @@ input:checked + .slider:before {
 .option input[type="number"] {
     background-color: #fafafa;
     border: 1px solid #ccc;
-    padding: 0.5rem;
+    padding: 0.4rem 0.5rem;
     outline: 0;
     font-size: 0.9rem;
     color: #333;
@@ -226,6 +228,13 @@ input:checked + .slider:before {
     width: 5em;
     text-align: center;
 }
+select:hover,
+.option textarea:hover,
+.option input[type="text"]:hover,
+.option input[type="number"]:hover {
+    border-color: #a7a7a7;
+}
+
 
 select:focus,
 .option textarea:focus,
@@ -233,8 +242,8 @@ select:focus,
 .option input[type="number"]:focus {
     outline: 0;
     background-color: #fff;
-    border-color: rgba(65, 41, 90, 0.5);
-    box-shadow: 0 0 4px #41295a;
+    border-color: #0c73d3;
+    box-shadow: 0 0 4px rgba(12, 115, 211, 0.5);
 }
 
 .option select {
@@ -243,6 +252,9 @@ select:focus,
     padding: 0.25rem 0.5rem;
     font-size: 1rem;
     cursor: pointer;
+}
+.option select:focus {
+    border-color: #0c73d3;
 }
 
 
@@ -257,7 +269,7 @@ select:focus,
 .preview-area {
     margin: 0 auto;
     padding: 1rem;
-    border: 2px solid #41295a;
+    border: 2px solid #0c73d3;
     margin-bottom: 4rem;
     line-height: 1.6;
 }
@@ -275,7 +287,7 @@ select:focus,
     line-height: 1.8;
 }
 
-.picker-wrapper .alwan:not(.lw-popper) {
+.picker-wrapper .alwan:not(.alwan--popup) {
     margin: 0.5rem auto;
 }
 
@@ -310,12 +322,12 @@ select:focus,
 
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(65, 41, 90, 0.5);
+    background: #0c73d3;
 }
 
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(65, 41, 90, 0.8);
+    background: #0c73d3;
 }
 
 @media (min-width: 920px) {
