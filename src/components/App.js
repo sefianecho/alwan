@@ -106,7 +106,7 @@ export const App = (root, alwan, events) => {
          */
         _setup(options, instance = alwan) {
             alwan = instance;
-            let { theme, popover, target, position, margin, id, toggle, shared } = options;
+            let { theme, popover, target, position, margin, id, toggle, shared, disabled } = options;
             let targetElement = getElement(target);
 
             if (isString(id) && ! shared) {
@@ -164,6 +164,8 @@ export const App = (root, alwan, events) => {
                 root.style = '';
                 insertElement(root, target, ! targetElement && 'afterend');
             }
+
+            reference._toggleDisable(disabled);
         },
 
         /**

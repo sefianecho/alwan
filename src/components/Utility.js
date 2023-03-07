@@ -111,8 +111,8 @@ export const Utility = (parent, alwan, events) => {
             if (isCopied) {
                 isCopied = false;
                 setHTML(copyButton, clipboardSVG);
-                copyButton.blur();
             }
+            copyButton.blur();
         }
     }
 

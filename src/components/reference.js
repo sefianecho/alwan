@@ -66,7 +66,7 @@ export const Reference = (reference, alwan) => {
          *
          * @param {object} param - Alwan options. 
          */
-        _init({ preset, classname, disabled }) {
+        _init({ preset, classname }) {
             let element = self._element;
 
             // If the user reference is valid then replace it with the preset button,
@@ -91,9 +91,6 @@ export const Reference = (reference, alwan) => {
             }
 
             self._element = element;
-            if (isset(disabled)) {
-                self._toggleDisable(disabled);
-            }
         },
 
         /**
@@ -142,11 +139,15 @@ export const Reference = (reference, alwan) => {
          * @param {boolean} disabled - Disabled state.
          */
         _toggleDisable(disabled) {
-            config.disabled = disabled;
-            if (disabled) {
-                self._close(true);
+            if (config.disabled !== disabled) {
+                config.disabled = disabled;
+                if (disabled) {
+                    self._close(true, true);
+                } else if (! config.toggle) {
+                    self._open(true);
+                }
+                self._element.disabled = disabled;
             }
-            self._element.disabled = disabled;
         },
 
         /**
