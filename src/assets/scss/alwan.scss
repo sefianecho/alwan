@@ -120,7 +120,7 @@
         outline: 0;
         -webkit-appearance: none;
         appearance: none;
-        --lw-alpha: linear-gradient(90deg, transparent, var(--lw-color)), var(--lw-pattern);
+        --lw-alpha: linear-gradient(90deg, transparent, var(--rgb)), var(--lw-pattern);
         --lw-hue: linear-gradient(
             -90deg,
             #ff0000,
@@ -315,7 +315,6 @@
     &__copy-button {
         margin-right: var.$preview-margin-right;
     }
-    
 
     &__overlay {
     	position: fixed;

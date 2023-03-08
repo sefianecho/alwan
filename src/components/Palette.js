@@ -181,7 +181,7 @@ export const Palette = (root, alwan, events) => {
          * @param {object} instance - Alwan instance.
          */
         _init(_options, instance) {
-            alwan = instance;
+            alwan = instance || alwan;
         },
 
         /**
@@ -189,7 +189,7 @@ export const Palette = (root, alwan, events) => {
          *
          * @param {object} param0 - HSV color object.
          */
-        _updateMarker({ s, v }) {
+        _update({ s, v }) {
             translate(marker, s * width, (1 - v) * height);
         }
     }

@@ -81,7 +81,7 @@ export const color = (alwan) => {
          */
         _update(hsv, rgb, isInputs) {
 
-            let { _palette, _sliders, _inputs, _utility } = alwan._components;
+            let { _app: { _root }, _inputs } = alwan._components;
 
             if (! config.disabled) {
                 hsv = hsv || HSV;
@@ -92,10 +92,9 @@ export const color = (alwan) => {
 
                 // Update UI.
                 setCustomProperty(alwan._reference._element, COLOR_PROPERTY, rgbString);
-                setCustomProperty(_palette._element, '--h', hsv.h);
-                // Preview the current color.
-                _utility._preview(rgbString);
-                _sliders._sliderGradient(stringify(RGB, RGB_FORMAT, true));
+                setCustomProperty(_root, '--h', hsv.h);
+                setCustomProperty(_root, '--rgb', stringify(RGB, RGB_FORMAT, true));
+                setCustomProperty(_root, COLOR_PROPERTY, rgbString);
 
                 if (! isInputs) {
                     _inputs._setValue(self._getColorByFormat(config.singleInput));
@@ -114,7 +113,7 @@ export const color = (alwan) => {
         _updateAll(hsv, rgb, isInputs) {
             let { _palette, _sliders } = alwan._components;
             self._update(hsv, rgb, isInputs);
-            _palette._updateMarker(HSV);
+            _palette._update(HSV);
             _sliders._setValue(HSV);
         },
 

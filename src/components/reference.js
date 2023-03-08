@@ -139,15 +139,15 @@ export const Reference = (reference, alwan) => {
          * @param {boolean} disabled - Disabled state.
          */
         _toggleDisable(disabled) {
-            if (config.disabled !== disabled) {
-                config.disabled = disabled;
-                if (disabled) {
-                    self._close(true, true);
-                } else if (! config.toggle) {
-                    self._open(true);
-                }
-                self._element.disabled = disabled;
+            config.disabled = disabled;
+
+            if (disabled) {
+                self._close(true, true);
+            } else if (! config.toggle) {
+                self._open(true);
             }
+
+            self._element.disabled = disabled;
         },
 
         /**

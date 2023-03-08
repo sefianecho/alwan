@@ -75,15 +75,6 @@ export const Sliders = (parent, alwan, events) => {
             if (alphaSlider) {
                 alphaSlider.value = a;
             }
-        },
-
-        /**
-         * Sets alpha slider's gradient color.
-         *
-         * @param {string} rgb - RGB color string without transparency.
-         */
-        _sliderGradient(rgb) {
-            setCustomProperty(alphaSlider, COLOR_PROPERTY, rgb);
         }
     };
 }

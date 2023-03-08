@@ -60,15 +60,6 @@ export const Utility = (parent, alwan, events) => {
 
                 insertElement(copyButton, previewElement || parent, INSERT_BEFORE_FIRST_CHILD);
             }
-        },
-
-        /**
-         * Previews a color.
-         *
-         * @param {string} color - Color.
-         */
-        _preview(color) {
-            setCustomProperty(previewElement, COLOR_PROPERTY, color);
         }
     }
 
