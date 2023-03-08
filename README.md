@@ -81,54 +81,52 @@ const alwan = new Alwan('#reference', {
 });
 ```
 ## Options
-You can try these options in the [demo](https://sofianchouaib.github.io/alwan/), play around with it :)
+*You can try these options in the [demo](https://sofianchouaib.github.io/alwan/), play around with it*
 
-| **Option** | **Type** | **Default** | **Description** |
-|------------| ---------| ------------ | ---------------- |
-| id         | `string` | `''`         | Set the container's (widget) id. |
-| classname  | `string` |    `''`      | One or many classes (separated by a white space) to add to the reference element. |
-| theme      | `string` | `light`      | Choose a theme, 'dark' or 'light'. |
-| toggle     | `boolean` | `true`      | Toggle picker's visibility (Show/Hide), Setting this to false keeps the picker visible. |
-| popover    | `boolean` | `true`      | Display picker as a popover, otherwise display it as a block (embeded in the page content). |
-| position   | `string`  | `bottom-start` | Set the position of the popper relative to the reference element.<br />The position has two values seperated by a dash (-)<br />the first value is the direction (top, bottom, right, left) and the second value is the alignment (start, center, end), omitting this value will default to center.<br />E.g. 'bottom-start': 'bottom' places the picker below the reference element, and 'start' aligns the left side of the container with the left side of the reference element.<br />Note: If the picker container has no space to be placed, it will auto-position itself based on the available space. |
-| margin | `number` | `8` | Set the gap (in pixels) between the picker container and the reference element. |
-| preset | `boolean` | `true` | Replace the reference element with a pre-styled button. |
-| color  | `string` | `#000` | Initial color.
-| default | `string` | `#000` | Default color.
-| target | `string` or `HTMLElement` | `''` | Target can be a selector or an HTML element, If the option popover is set to true, the picker container will be positionned retalive to this element,<br />else if popover option is set to false, the picker container will be appended as a child into this element. |
-| disabled | `boolean` | `false` | Disable the picker, users won't be able to pick colors. |
-| format | `string` | `rgb` | Initial color format. |
-| singleInput | `boolean` | `false` | For the formats 'hsl' and 'rgb', choose a single input to display the color string,<br />if false, display an input for each color channel. |
-| inputs | `object` | `{ hex: true, rgb: true,  hsl: true  }` | Choose color formats for the picker input |
-| opacity | `boolean` | `true` | Support alpha channel and display opacity slider. |
-| preview | `boolean` | `true` | Preview the color. |
-| copy | `boolean` | `true` | Add/Remove a copy button. |
-| swatches | `array<string>` | `[]` | Array of color strings, invalid color strings will default to rgb(0,0,0). |
 
-**Note:** In case you set the `preset` to `false` (using your own reference element), to access the color to change its background or any other property, add the css custom property to your styles `--tw-color`.  
-E.g.
-```css
-#my-reference-element {
-  background-color: var(--lw-color);
-}
-```
+- `id` (default `''`) — Set the container's (widget) id.
+- `classname` (default `''`) — One or many classes (separated by a white space) to add to the preset button.
+- `theme` (default `light`) — Choose a theme, 'dark' or 'light'.
+- `toggle` (default `true`) — Toggle picker's visibility (Show/Hide), Setting this to false keeps the picker visible.
+- `popover` (default `true`) — Display picker as a popover, otherwise display it as a block (embeded in the page content).
+- `position` (default `bottom-start`) — Set the position of the popper relative to the reference element. The position has two values seperated by a dash (-). The first value is the direction (top, bottom, right, left) and the second value is the alignment (start, center, end), omitting this value will default to center.
+
+    *Note: If the picker container has no space to be placed, it will auto-position itself based on the available space.*
+- `margin` (default `8`) — The gap (in pixels) between the picker container and the reference element.
+- `preset` (default `true`) — Replace the reference element with a pre-styled button.
+- `color` (default `#000`) — Initial color.
+- `default` (default `#000`) — Default color.
+- `target` (default `''`) — Target can be a selector or an HTML element, If the option popover is set to true, the picker container will be positionned retalive to this element else if popover option is set to false, the picker container will be appended as a child into this element.
+- `disabled` (default `false`) — Disable the picker, users won't be able to pick colors.
+- `format` (default `rgb`) — Initial color format.
+- `singleInput` (default `false`) — For the formats 'hsl' and 'rgb', choose a single input to display the color string, if false, display an input for each color channel.
+- `inputs` (default `{ hex: true, rgb: true,  hsl: true  }`) — Choose color formats for the picker input.
+- `opacity` (default `true`) — Support alpha channel and display opacity slider.
+- `preview` (default `true`) — Preview the color.
+- `copy` (default `true`) — Add/Remove a copy button.
+- `swatches` (default `[]`) — Array of colors, invalid colors will default to rgb(0,0,0).
+- `toggleSwatches` (default `false`) — Show/Hide swatches container (Make swatches container collapsible).
+- `shared` (default `false`) — Picker widget shared between multiple instance (this is good if you have many color picker instances).
+
+**Note:** In the reference element you can access the css custom property `--lw-color` to get color value.
+
 ## Events
 Use the method `on`, that has two parameters, `event` and `handler` (callback function).
 ```javascript
-alwan.on('event', function(argument) {
+alwan.on('event', ev => {
   // ...
 });
 ```
 | Event  | Argument | Description                    |
 |------- | --------------- | ------------------------------ |
-| `open` | `-`   | Fires when the picker get opened |
-| `close` | `-`  | Fires when the picker get closed |
-| `change` | (`colorObject`, `source`) | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event  |
-| `color` | (`colorObject`, `source`) | Similar to the `input` event, fires every time the color changes |
+| `open` | `event`   | Fires when the picker get opened |
+| `close` | `event`  | Fires when the picker get closed |
+| `change` | `event` | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event  |
+| `color` | `event` | Similar to the `input` event, fires every time the color changes |
 
-### ColorObject
-Color object is the output of Alwan color picker, its properties are:
-
+### Event object
+- `type` — Event type.
+- `source` — Event source. 
 - **hsv**() : `object` — Gets an HSV color object.
 - **rgb**(asArray: `boolean`) : `object` — Get an RGB color object or an Array if `asArray` is set to true,
 call the method `toString()` on this object to get an RGB string.
@@ -139,19 +137,22 @@ call the method `toString()` on this object to get an HSL string.
 
 ```javascript
 // e.g.
-alwan.on('change', (color, el) => {
+alwan.on('change', (ev) => {
+  ev.type                 // change
+  ev.source               // Element
+
   // RGB color.
-  color.rgb()                // output: { r: 0, g: 0, b: 0, a: 1}
-  color.rgb(true)            // output: [0, 0, 0, 0]
-  color.rgb().toString()     // output: rgba(0, 0, 0, 1)
+  ev.rgb()                // output: { r: 0, g: 0, b: 0, a: 1}
+  ev.rgb(true)            // output: [0, 0, 0, 0]
+  ev.rgb().toString()     // output: rgba(0, 0, 0, 1)
   
   // Hex color.
-  color.hex()                // output: #000000
+  ev.hex()                // output: #000000
   
   // HSL color.
-  color.hsl()               // output: { h: 0, s: 0, l: 0, a: 1 }
-  color.hsl(true)           // output: [0, 0, 0, 0]
-  color.hsl().toString()    // output: hsla(0, 0%, 0%, 1)
+  ev.hsl()               // output: { h: 0, s: 0, l: 0, a: 1 }
+  ev.hsl(true)           // output: [0, 0, 0, 0]
+  ev.hsl().toString()    // output: hsla(0, 0%, 0%, 1)
 })
 ```
 
