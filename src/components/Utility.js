@@ -70,7 +70,7 @@ export const Utility = (parent, alwan, events) => {
      */
     const copyColor = ({ target }) => {
         if (target === copyButton && ! isCopied && ! alwan.config.disabled) {
-            // TODO: get color and copy it to the clipbloard,
+
             let clipboard = navigator.clipboard;
             let color = alwan._color._getColorByFormat(true);
             let input;

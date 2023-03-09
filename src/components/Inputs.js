@@ -6,6 +6,7 @@ import { createButton, createElement, removeElement, setHTML, toggleVisibility }
 import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";
 import { isString, trimString } from "../utils/string";
+import { isset } from "../utils/util";
 
 
 /**
@@ -62,7 +63,11 @@ export const Inputs = (container, alwan, events) => {
          * @param {object} instance - Alwan instance.
          */
         _init({ inputs, format }, instance) {
+
             alwan = instance || alwan;
+            inputs = isset(inputs) ? inputs : {};
+            inputsMap = {};
+
             // Get only valid formats.
             formats = COLOR_FORMATS.filter(format => inputs[format]);
             let length = formats.length;
@@ -129,7 +134,6 @@ export const Inputs = (container, alwan, events) => {
 
         // Empty the container from any inputs.
         setHTML(inputsContainer, '');
-        inputsMap = {};
 
         fields.forEach(field => {
             /**
