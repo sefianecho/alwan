@@ -1,6 +1,6 @@
 import { HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { createElement } from "../utils/dom";
-import { float, isNumeric, normalizeAngle, numberRange, PI } from "../utils/number";
+import { float, isNumeric, normalizeAngle, confineNumber, PI } from "../utils/number";
 import { isString, trimString } from "../utils/string";
 import { isset } from "../utils/util";
 import { HEXToRGB } from "./converter";
@@ -56,8 +56,8 @@ export const parseColor = (value = '', asString) => {
                 format = RGB_FORMAT;
                 value = HSVToRGB({
                     h: normalizeAngle(value.h),
-                    s: numberRange(value.s) / 100,
-                    v: numberRange(value.v) / 100,
+                    s: confineNumber(value.s) / 100,
+                    v: confineNumber(value.v) / 100,
                     a: value.a
                 });
             }
@@ -84,9 +84,9 @@ export const parseColor = (value = '', asString) => {
          */
         color = {
             h: normalizeAngle(h * (ANGLE_COEFFICIENT_MAP[angle] ? ANGLE_COEFFICIENT_MAP[angle] : 1)),
-            s: numberRange(s),
-            l: numberRange(l),
-            a: isset(a) ? numberRange(percentage ? a / 100 : a, 1) : 1
+            s: confineNumber(s),
+            l: confineNumber(l),
+            a: isset(a) ? confineNumber(percentage ? a / 100 : a, 1) : 1
         }
         format = HSL_FORMAT;
     } else {
