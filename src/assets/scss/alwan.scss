@@ -24,7 +24,7 @@
         height: 0;
         border: 0;
     }
-    
+
     @include var.dark-theme();
 
     &--popup {
@@ -44,7 +44,7 @@
         display: flex;
         align-items: center;
         padding: var.$container-padding;
-        border-bottom: 1px solid var(--lw-bc, var.$border-color);
+        border-top: 1px solid var(--lw-bc, var.$border-color);
     }
 
     // Palette.
@@ -84,7 +84,7 @@
         margin-right: var.$preview-margin-right;
         border: 1px solid var(--lw-bc, var.$border-color);
         flex-shrink: 0;
-        
+
         & .alwan__copy-button {
             position: relative;
             display: flex;
@@ -153,7 +153,7 @@
             height: var.$track-height;
             border: 0;
         }
-        
+
         // Slider Thumb.
         // Webkit.
         &::-webkit-slider-thumb {
@@ -215,7 +215,7 @@
     &__inputs {
         display: flex;
         width: 100%;
-        
+
         label {
             width: 100%;
             text-align: center;
@@ -234,6 +234,7 @@
         padding: var.$input-padding;
         text-align: center;
         color: var(--alwan-fg, var.$input-color);
+        font-size: var.$input-font-size;
         font-family: var.$input-font-family;
         border:  1px solid var(--lw-bc, var.$border-color);
         margin-bottom: var.$input-margin-bottom;
@@ -261,6 +262,7 @@
         padding: var.$swatches-container-padding;
         max-height: var.$swatches-max-height;
         overflow-y: auto;
+        border-top: 1px solid var(--lw-bc, var.$border-color);
     }
 
     &__swatch {
@@ -278,18 +280,21 @@
     	display: inline-block;
         background: transparent;
         color: var(--alwan-fg, var.$alwan-foreground);
-        border: 0;
+        border: 1px solid transparent;
         cursor: pointer;
         padding: var.$button-padding;
         text-transform: capitalize;
         transition: background-color 0.2s ease-in-out;
         outline: 0;
-        
-        &:hover,
-        &:focus {
+
+        &:hover {
             background-color: var(--lw-btn-hover, var.$button-hover-background);
         }
-    
+
+        &:focus-visible {
+            border-color: var.$primary-color;
+        }
+
         svg {
             fill: currentColor;
             pointer-events: none;
@@ -328,9 +333,9 @@
     &__swatch,
     &__preview,
     &__preset-button {
-
         position: relative;
         background: var(--lw-pattern);
+        background-clip: padding-box;
         overflow: hidden;
         padding: 0;
 
@@ -361,8 +366,7 @@
            display: none;
         }
 
-        & + .alwan__collapse-button {
-            border: 0;
+        & + .alwan__collapse-button svg {
             transform: rotate(180deg);
         }
     }

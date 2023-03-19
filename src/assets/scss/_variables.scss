@@ -12,14 +12,15 @@ $alwan-max-width: 260px;
 $alwan-background: #fff;
 $alwan-foreground: #333;
 $alwan-border-color: #ccc;
-$border-color: #ccc;
 
 // Dark theme.
 $alwan-background-dark: #111;
 $alwan-border-color-dark: #aaa;
 $alwan-foreground-dark: #ccc;
-$border-color-dark: #34373a;
 
+// Separator border.
+$border-color: #ccc;
+$border-color-dark: #34373a;
 
 // Marker.
 $marker-width: 14px;
@@ -79,6 +80,7 @@ $input-border: 1px solid #ccc;
 $input-border-hover-color: #a8a8a8;
 $input-margin-bottom: 3px;
 $input-font-family: monospace;
+$input-font-size: 14px;
 
 $input-background-dark: #181818;
 $input-border-hover-color-dark: #484b4d;
