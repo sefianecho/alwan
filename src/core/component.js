@@ -94,7 +94,7 @@ export const useComponents = (alwan) => {
         }
 
         // Force close the picker before destroying its components.
-        alwan._reference._close(true, true);
+        _components._app._toggle(alwan, false, true);
         // If something changed, either the components were shared,
         // and the option shared is false which means set the components as,
         // non-shared or the coponents were non-shared and we want to share them.
@@ -115,28 +115,4 @@ export const useComponents = (alwan) => {
 
     // Create components.
     return createComponents(alwan);
-}
-
-
-/**
- * Closes the previous instance that controls the shared components,
- * before the current instance (alwan) controls the components.
- *
- * @param {object} alwan - Alwan instance.
- * @param {object} options - Alwan options.
- * @param {boolean} setup - If true run app setup.
- */
-export const closeSharedInstance = (alwan, options, setup) => {
-    let app = alwan._components._app;
-    let instance = app._getInstance();
-
-    if (instance !== alwan) {
-        if (isShared(instance._components)) {
-            instance._reference._close(true);
-        }
-
-        if (setup) {
-            app._setup(options, alwan);
-        }
-    }
 }

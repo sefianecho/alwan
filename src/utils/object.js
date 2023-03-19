@@ -1,4 +1,4 @@
-export const { keys, assign, setPrototypeOf, prototype } = Object;
+export const { keys, assign: merge, setPrototypeOf, prototype } = Object;
 
 /**
  * Iterate in an object.
@@ -14,17 +14,6 @@ export const objectIterator = (object, fn) => {
     for (const prop of props) {
        fn(object[prop], prop);
     }
-}
-
-/**
- * Merges two or more objects together into the target object.
- *
- * @param {Object} target - Object that will receive the new properties.
- * @param  {...Object} sources - Objects containing additional properties to merge in.
- * @returns {Object}
- */
-export const merge = (target, ...sources) => {
-    return assign(target, ...sources);
 }
 
 /**

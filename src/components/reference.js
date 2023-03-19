@@ -1,23 +1,17 @@
-import { OPEN_CLASSNAME, PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
-import { CLOSE, OPEN, POINTER_DOWN, ROOT } from "../constants/globals";
-import { closeSharedInstance } from "../core/component";
+import { PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
+import { POINTER_DOWN, ROOT } from "../constants/globals";
 import { Binder } from "../core/events/binder";
 import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "../utils/dom";
 import { isString } from "../utils/string";
-import { isset } from "../utils/util";
 
 /**
  * Creates the reference control.
- * 
+ *
  * @param {string|Element} reference - User Reference.
  * @param {Alwan} param1 - Alwan instance.
  * @returns {object} - ReferenceElement control.
  */
 export const Reference = (reference, alwan) => {
-    /**
-     * Visibility state.
-     */
-    let isOpen = false;
 
     /**
      * Reference element classes.
@@ -43,15 +37,10 @@ export const Reference = (reference, alwan) => {
 
     /**
      * User reference.
-     * 
+     *
      * Check if the reference element is valid.
      */
     const userReference = bodyElement.contains(element) && element !== bodyElement ? element : null;
-
-    /**
-     * Alwan options.
-     */
-    const config = alwan.config;
 
     /**
      * Reference API.
@@ -60,11 +49,11 @@ export const Reference = (reference, alwan) => {
         // If user reference is not valid element in the body, then create,
         // a preset button and append it to the body.
         _element: userReference ? userReference : createButton(PRESET_BUTTON_CLASSNAME, bodyElement),
-        
+
         /**
          * Initialize Reference element.
          *
-         * @param {object} param - Alwan options. 
+         * @param {object} param - Alwan options.
          */
         _init({ preset, classname }) {
             let element = self._element;
@@ -94,63 +83,6 @@ export const Reference = (reference, alwan) => {
         },
 
         /**
-         * Gets current picker state (opened or closed).
-         *
-         * @returns Picker state.
-         */
-        _isOpen: () => isOpen,
-
-        /**
-         * Shows the color picker.
-         *
-         * @param {boolean} silent - Indicate whether to dispatch the open event or not.
-         */
-        _open(silent) {
-            if (! isOpen && ! config.disabled) {
-                closeSharedInstance(alwan, config, true);
-                alwan._color._updateAll();
-                alwan._components._app._reposition();
-                setState(true, silent);
-            }
-        },
-
-        /**
-         * Hides the color picker.
-         *
-         * @param {boolean} silent - If true don't dispatch close event.
-         * @param {boolean} forced - Close the color picker event if its toggle option is set to false.
-         */
-        _close(silent, forced) {
-            if (isOpen && (config.shared || config.toggle || forced)) {
-                setState(false, silent);
-            }
-        },
-
-        /**
-         * Opens/Closes the color picker.
-         */
-        _toggle() {
-            isOpen ? self._close() : self._open();
-        },
-
-        /**
-         * Changes state Disable/Enable.
-         *
-         * @param {boolean} disabled - Disabled state.
-         */
-        _toggleDisable(disabled) {
-            config.disabled = disabled;
-
-            if (disabled) {
-                self._close(true, true);
-            } else if (! config.toggle) {
-                self._open(true);
-            }
-
-            self._element.disabled = disabled;
-        },
-
-        /**
          * Destroy reference component.
          */
         _destroy() {
@@ -160,21 +92,6 @@ export const Reference = (reference, alwan) => {
                 self._element = removeElement(self._element);
             }
             events._unbindAll();
-        }
-    }
-
-    /**
-     * Shows/Hide root element (container) and updates the state.
-     *
-     * @param {boolean} state - open or close.
-     * @param {boolean} silent - Don't dispatch the event.
-     */
-    const setState = (state, silent) => {
-        toggleClassName(alwan._components._app._root, OPEN_CLASSNAME, state);
-        isOpen = state;
-
-        if (! silent) {
-            alwan._events._dispatch(state ? OPEN : CLOSE, self._element);
         }
     }
 
@@ -191,23 +108,8 @@ export const Reference = (reference, alwan) => {
         });
     }
 
-    /**
-     * Handles Document clicks that results in opening/closing the Color picker.
-     *
-     * @param {PointerEvent} param0 - Event.
-     */
-    const handleClick = ({ target }) => {
-        if (target === self._element) {
-            self._toggle();
-            // If The click is outside the color picker container and it displayed as,
-            // popover then close it.
-        } else if (isOpen && config.popover && ! alwan._components._app._root.contains(target)) {
-            self._close();
-        }
-    }
-
     // Event listener.
-    events._bind(ROOT, POINTER_DOWN, handleClick);
+    events._bind(ROOT, POINTER_DOWN, ({ target }) => { alwan._components._app._setVisibility(alwan, target); });
 
     return self;
 }

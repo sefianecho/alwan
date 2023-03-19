@@ -73,11 +73,13 @@ export const RGBToHEX = ({ r, g, b, a }) => {
  * @returns {object} - HSL object.
  */
 export const HSVToHSL = ({ h, s, v, a }) => {
-    let l = v * (1 - s / 2);
+    // Lightness value.
+    s = v * (1 - s / 2);
+
     return {
         h,
-        s: round((! l || l === 1 ? 0 : (v - l) / min(l, 1 - l)) * 100),
-        l: round(l * 100),
+        s: round((! s || s === 1 ? 0 : (v - s) / min(s, 1 - s)) * 100),
+        l: round(s * 100),
         a: round(a * 100) / 100
     }
 }
@@ -90,15 +92,14 @@ export const HSVToHSL = ({ h, s, v, a }) => {
  * @returns {Object}
  */
 export const HSLToHSV = ({ h, s, l, a }) => {
-    s /= 100;
     l /= 100;
-
-    let v = l + s * min(l, 1 - l);
+    // Value.
+    s = l + s * min(l, 1 - l) / 100;
 
     return {
         h,
-        s: v ? 2 * (1 - l / v) : 0,
-        v,
+        s: s ? 2 * (1 - l / s) : 0,
+        v: s,
         a
     }
 }

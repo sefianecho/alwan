@@ -1,10 +1,11 @@
-import { POPUP_CLASSNAME } from "../constants/classnames";
-import { BUTTON, ESCAPE, INPUT, KEY_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants/globals";
+import { OPEN_CLASSNAME, POPUP_CLASSNAME } from "../constants/classnames";
+import { BUTTON, CLOSE, ESCAPE, INPUT, KEY_DOWN, OPEN, RESIZE, ROOT, SCROLL, TAB } from "../constants/globals";
 import { Binder } from "../core/events/binder";
 import { createPopper } from "../lib/popper";
-import { getElement, getScrollableAncestors, insertElement, isInViewport, removeElement, toggleClassName, toggleVisibility, translate } from "../utils/dom";
+import { getElement, getScrollableAncestors, insertElement, isInViewport, removeElement, toggleClassName, toggleVisibility } from "../utils/dom";
 import { objectIterator } from "../utils/object";
 import { isString } from "../utils/string";
+import { isset } from "../utils/util";
 
 /**
  * Creates App componenet and initialize components.
@@ -37,32 +38,101 @@ export const App = (root, alwan, events) => {
     let scrollableAncestors;
 
     /**
-     * Updates popper's position and visibility.
-     * 
-     * @param {Event} e - Event. 
+     * Visibility state.
      */
-    let updatePopper = e => {
-        if (reference._isOpen()) {
+    let isOpen = false;
+
+    /**
+     * Setup and Initialize other components.
+     *
+     * @param {object} options - Alwan options.
+     * @param {object} instance - Alwan instance.
+     */
+    const _setup = (options, instance = alwan) => {
+        alwan = instance;
+        let { theme, popover, target, position, margin, id, toggle, shared } = options;
+        let targetElement = getElement(target);
+
+        if (isString(id) && ! shared) {
+            root.id = id;
+        }
+
+        // Initialize components.
+        objectIterator(alwan._components, ({ _init }) => {
+            if (_init) {
+                _init(options, alwan);
+            }
+        })
+
+        reference = alwan._reference;
+        target = targetElement || reference._element;
+
+        // Set theme (dark or light).
+        root.dataset.theme = theme;
+
+        // Toggle option changed to false then open (show) the picker
+        if (! toggle && ! shared) {
+            _toggle(alwan, true, true);
+        }
+        // Hide reference element if both popover and toggle are false.
+        // and the components are not shared.
+        toggleVisibility(reference._element, popover || toggle || shared);
+        // Toggle popup class that makes the root's position fixed.
+        toggleClassName(root, POPUP_CLASSNAME, popover);
+
+        popperEvents._unbindAll();
+        popper = null;
+
+        if (popover) {
+            popper = createPopper(target, root, {
+                _margin: margin,
+                _position: position
+            });
+            popper._update();
+            // If reference element inside a nested scrollable elements,
+            // get all those scrollable elements in an array.
+            scrollableAncestors = getScrollableAncestors(target);
+            // Attach scroll event to all scrollable ancestors of the reference element,
+            // in order to update the popper's position.
+            // On window resize reposition the popper.
+            popperEvents._bind(window, RESIZE, updatePopper);
+            scrollableAncestors.forEach(scrollable => {
+                popperEvents._bind(scrollable, SCROLL, updatePopper);
+            });
+            popperEvents._bind(ROOT, KEY_DOWN, handleAccessibility);
+        } else {
+            root.style = '';
+            insertElement(root, target, ! targetElement && 'afterend');
+        }
+    }
+
+    /**
+     * Updates popper's position and visibility.
+     *
+     * @param {Event} e - Event.
+     */
+    const updatePopper = e => {
+        if (isOpen) {
 
             popper._update();
 
             // Close picker if popper's reference is scrolled out of view.
             if (! isInViewport(popper._reference, scrollableAncestors)) {
-                reference._close(true);
+                _toggle(alwan, false);
             }
         }
     }
 
     /**
      * Handles keyboard accessibility.
-     * 
+     *
      * If picker is displayed as a popover then link the focus from the reference,
      * to the picker focusable elements.
      *
      * @param {KeyboardEvent} e - Event.
      */
-    let handleAccessibility = e => {
-        if (reference._isOpen()) {
+    const handleAccessibility = e => {
+        if (isOpen) {
             let { target, key, shiftKey } = e;
             let paletteElement = alwan._components._palette._element;
             let elementToFocusOn;
@@ -70,7 +140,7 @@ export const App = (root, alwan, events) => {
 
             // Pressing Escape key closes the picker.
             if (key === ESCAPE) {
-                reference._close();
+                _toggle(alwan, false);
             } else if (key === TAB) {
 
                 lastFocusableElement = [...getElement(BUTTON + ',' + INPUT, root, true)].pop();
@@ -92,108 +162,129 @@ export const App = (root, alwan, events) => {
         }
     }
 
-    return {
-        /**
-         * Picker container.
-         */
-        _root: root,
+    /**
+     * Toggles color picker visiblity.
+     *
+     * @param {object} instance - Alwan instance.
+     * @param {boolean} state - True to open, false to close.
+     * @param {boolean} forced - Open/Close picker even if its disabled or the toggle option is set to false.
+     */
+    const _toggle = (instance, state, forced) => {
+        instance = instance || alwan;
+        let { shared, toggle, disabled } = instance.config;
 
-        /**
-         * Setup and Initialize other components.
-         *
-         * @param {object} options - Alwan options.
-         * @param {object} instance - Alwan instance. 
-         */
-        _setup(options, instance = alwan) {
-            alwan = instance;
-            let { theme, popover, target, position, margin, id, toggle, shared, disabled } = options;
-            let targetElement = getElement(target);
+        if (! disabled || forced) {
 
-            if (isString(id) && ! shared) {
-                root.id = id;
-            }
-
-            // Shared option force the toggle.
-            if (shared) {
-                toggle = true;
-            }
-    
-            // Initialize components.
-            objectIterator(alwan._components, ({ _init }) => {
-                if (_init) {
-                    _init(options, alwan);
+            if (! isset(state)) {
+                // If the instance doesn't control the components.
+                // then close the instance that controls the components.
+                if (isOpen && instance !== alwan) {
+                    _toggle(alwan, false);
                 }
-            })
 
-            reference = alwan._reference;
-            target = targetElement || reference._element;
-
-            // Set theme (dark or light).
-            root.dataset.theme = theme;
-
-            // Toggle option changed to false then open (show) the picker
-            if (! toggle) {
-                reference._open(true);
-            }
-            // Hide reference element if both popover and toggle are false.
-            toggleVisibility(reference._element, popover || toggle);
-            // Toggle popup class that makes the root's position fixed.
-            toggleClassName(root, POPUP_CLASSNAME, popover);
-
-            popperEvents._unbindAll();
-            popper = null;
-
-            if (popover) {
-                popper = createPopper(target, root, {
-                    _margin: margin,
-                    _position: position
-                });
-                popper._update();
-                // If reference element inside a nested scrollable elements,
-                // get all those scrollable elements in an array.
-                scrollableAncestors = getScrollableAncestors(target);
-                // Attach scroll event to all scrollable ancestors of the reference element,
-                // in order to update the popper's position.
-                // On window resize reposition the popper.
-                popperEvents._bind(window, RESIZE, updatePopper);
-                scrollableAncestors.forEach(scrollable => {
-                    popperEvents._bind(scrollable, SCROLL, updatePopper);
-                });
-                popperEvents._bind(ROOT, KEY_DOWN, handleAccessibility);
-            } else {
-                root.style = '';
-                insertElement(root, target, ! targetElement && 'afterend');
+                state = ! isOpen;
             }
 
-            reference._toggleDisable(disabled);
-        },
+            if (state !== isOpen && (shared || toggle || forced)) {
+                if (state) {
+                    if (instance !== alwan) {
+                        // Set components to point to the new instance,
+                        // and update options.
+                        _setup(instance.config, instance);
+                    }
+                    alwan._color._updateAll();
+                    _reposition();
+                }
 
-        /**
-         * Updates the popper's position.
-         */
-        _reposition() {
-            if (popper) {
-                popper._update();
+                // Only the instance that controls the components,
+                // open/close the picker.
+                if (instance === alwan) {
+                    isOpen = state;
+                    toggleClassName(root, OPEN_CLASSNAME, state);
+                    alwan._events._dispatch(state ? OPEN : CLOSE, root);
+                }
             }
-        },
-
-        /**
-         * Gets instance that controls the components.
-         *
-         * @returns {object} - Alwan instance.
-         */
-        _getInstance: () => alwan,
-
-        /**
-         * Destroy components and remove root element from the DOM.
-         */
-        _destroy() {
-            // Remove components events.
-            events._unbindAll();
-            // Remove popper events.
-            popperEvents._unbindAll();
-            root = removeElement(root);
-            alwan = {};
         }
+    }
+
+    /**
+     * Updates the popper's position.
+     */
+    const _reposition = () => {
+        if (popper) {
+            popper._update();
+        }
+    }
+
+    /**
+     * Gets current picker state (opened or closed).
+     *
+     * @returns {boolean}
+     */
+    const _isOpen = () => {
+        return isOpen;
+    }
+
+    /**
+     * Handles Document clicks that results in opening/closing the Color picker.
+     *
+     * @param {object} instance - Alwan instance.
+     * @param {Element} target - Event target.
+     */
+    const _setVisibility = (instance, target) => {
+        if (target === instance._reference._element) {
+            _toggle(instance);
+            // If the click is outside the picker and displayed as a popover.
+        } else if (isOpen && popper && ! root.contains(target)) {
+            _toggle(instance, false);
+        }
+    }
+
+    /**
+     * Disables/Enables Picker instance.
+     *
+     * @param {boolean} disabled - Disable/Enable.
+     * @param {object} instance - Alwan instance.
+     */
+    const _setDisabled = (disabled, instance = alwan) => {
+        if (isset(disabled)) {
+            let config = instance.config;
+            let { shared, toggle } = config;
+
+            disabled = !! disabled;
+
+            config.disabled = disabled;
+
+            if (disabled) {
+                _toggle(instance, false, true);
+            } else if (! shared && ! toggle) {
+                _toggle(instance, true);
+            }
+
+            instance._reference._element.disabled = disabled;
+        }
+    }
+
+    /**
+     * Destroy components and remove root element from the DOM.
+     */
+    const _destroy = () => {
+        // Remove components events.
+        events._unbindAll();
+        // Remove popper events.
+        popperEvents._unbindAll();
+        root = removeElement(root);
+        alwan = {};
+    }
+
+    return {
+        _root: root,
+        _setup,
+        _reposition,
+        _toggle,
+        _setVisibility,
+        _isOpen,
+        _setDisabled,
+        _destroy
     }
 }

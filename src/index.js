@@ -48,28 +48,28 @@ export default class Alwan {
      * @returns {Boolean}
      */
     isOpen() {
-        return this._reference._isOpen();
+        return this._components._app._isOpen();
     }
 
     /**
      * Opens the picker.
      */
     open() {
-        this._reference._open();
+        this._components._app._toggle(this, true);
     }
 
     /**
      * Closes the picker.
      */
     close() {
-        this._reference._close();
+        this._components._app._toggle(this, false);
     }
 
     /**
      * Toggles (opens/closes) the picker.
      */
     toggle() {
-        this._reference._toggle();
+        this._components._app._toggle(this);
     }
 
     /**
@@ -138,14 +138,14 @@ export default class Alwan {
      * Enables picker.
      */
     enable() {
-        this._reference._toggleDisable(false);
+        this._components._app._setDisabled(false, this);
     }
 
     /**
      * Disables picker.
      */
     disable() {
-        this._reference._toggleDisable(true);
+        this._components._app._setDisabled(true, this);
     }
 
     /**

@@ -138,7 +138,7 @@ export const Inputs = (container, alwan, events) => {
         fields.forEach(field => {
             /**
              * Create Input.
-             * 
+             *
              * <label>
              *     <input type="text|number" class="alwan__input">
              *     <span>${field}</span>
@@ -221,7 +221,7 @@ export const Inputs = (container, alwan, events) => {
             if (type === FOCUS_IN) {
                 target.select();
             } else if (key === ENTER) {
-                alwan._reference._close();
+                alwan.close();
             }
         }
     }
