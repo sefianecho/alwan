@@ -63,7 +63,8 @@ label {
     font-size: 1rem;
     transition: background-color 0.2s;
 }
-.alwan__preset-button {
+#bg,
+#fg {
     display: block;
     margin: 2rem auto;
 }
