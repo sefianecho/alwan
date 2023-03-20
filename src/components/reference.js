@@ -1,5 +1,5 @@
 import { PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
-import { POINTER_DOWN, ROOT } from "../constants/globals";
+import { CLICK } from "../constants/globals";
 import { Binder } from "../core/events/binder";
 import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "../utils/dom";
 import { isString } from "../utils/string";
@@ -62,6 +62,9 @@ export const Reference = (reference, alwan) => {
             // If the user reference is valid then replace it with the preset button,
             // if preset option is true.
             if (userReference && preset !== (userReference !== element)) {
+                // Clear events, element might be deleted.
+                events._unbindAll();
+
                 if (preset) {
                     // Replace user reference with a preset button.
                     element = replaceElement(createButton(PRESET_BUTTON_CLASSNAME, null, { id: userReference.id }), userReference);
@@ -69,6 +72,13 @@ export const Reference = (reference, alwan) => {
                     // Replace preset button with the user reference.
                     element = replaceElement(userReference, element);
                 }
+
+                /**
+                 * Handles click.
+                 */
+                events._bind(element, CLICK, e => {
+                    alwan._components._app._toggle(alwan);
+                });
             }
 
             // Add custom classes to the preset button.
@@ -116,9 +126,6 @@ export const Reference = (reference, alwan) => {
             events._unbindAll();
         }
     }
-
-    // Event listener.
-    events._bind(ROOT, POINTER_DOWN, ({ target }) => { alwan._components._app._setVisibility(alwan, target); });
 
     return self;
 }
