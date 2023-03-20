@@ -3,10 +3,10 @@
 &nbsp;&nbsp;&nbsp;
 
 <div align="center">  
-  <img alt="alwan light theme" src="images/alwan-light.jpg">
+  <img alt="alwan light theme" src="images/alwan-light.png">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-  <img alt="alwan dark theme" src="images/alwan-dark.jpg">
+  <img alt="alwan dark theme" src="images/alwan-dark.png">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
