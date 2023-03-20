@@ -3,7 +3,7 @@ import { createElement } from "../utils/dom";
 import { float, isNumeric, normalizeAngle, confineNumber, PI } from "../utils/number";
 import { isString, trimString } from "../utils/string";
 import { isset } from "../utils/util";
-import { HEXToRGB } from "./converter";
+import { HEXToRGB, HSVToRGB } from "./converter";
 import { stringify } from "./stringify";
 
 const ctx = createElement('canvas').getContext('2d');

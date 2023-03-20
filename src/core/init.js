@@ -23,12 +23,12 @@ export const initialize = (alwan, options = {}) => {
     }
 
     app._setup(config, alwan);
-    app._setDisabled(disabled);
+    alwan._reference._setDisabled(disabled);
 
     if (isset(color)) {
         _set(color);
-    } else {
-        // To update inputs values.
-        _update();
     }
+
+    // To update inputs values.
+    _update();
 }

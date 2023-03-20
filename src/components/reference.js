@@ -3,6 +3,7 @@ import { POINTER_DOWN, ROOT } from "../constants/globals";
 import { Binder } from "../core/events/binder";
 import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "../utils/dom";
 import { isString } from "../utils/string";
+import { isset } from "../utils/util";
 
 /**
  * Creates the reference control.
@@ -73,13 +74,34 @@ export const Reference = (reference, alwan) => {
             // Add custom classes to the preset button.
             if (! userReference || preset && isString(classname)) {
                 // Remove previously add classes.
-                toggleClasses(element, classes, false);
+                toggleClassName(element, classes, false);
                 classes = classname.split(/\s+/);
                 // Add the new classname.
-                toggleClasses(element, classes);
+                toggleClassName(element, classes, true);
             }
 
             self._element = element;
+        },
+
+        /**
+         * Disables/Enables Picker instance.
+         *
+         * @param {boolean} disabled - Disable/Enable.
+         */
+        _setDisabled(disabled) {
+            if (isset(disabled)) {
+                let { config, _components } = alwan;
+                let { shared, toggle } = config;
+                let toggler = _components._app._toggle;
+
+                config.disabled = self._element.disabled = !! disabled;
+
+                if (disabled) {
+                    toggler(alwan, false, true);
+                } else if (! shared && ! toggle) {
+                    toggler(alwan, true, true);
+                }
+            }
         },
 
         /**
@@ -93,19 +115,6 @@ export const Reference = (reference, alwan) => {
             }
             events._unbindAll();
         }
-    }
-
-    /**
-     * Adds/Removes array of classes to/from an element.
-     *
-     * @param {Element} element - Element.
-     * @param {string[]} tokensArray - Array of classnames.
-     * @param {boolean} toggler - True to add classes, false to remove them.
-     */
-    const toggleClasses = (element, tokensArray, toggler = true) => {
-        tokensArray.forEach(className => {
-            toggleClassName(element, className, toggler);
-        });
     }
 
     // Event listener.

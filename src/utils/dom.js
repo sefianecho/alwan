@@ -1,5 +1,6 @@
 import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
 import { BUTTON, HTML, INPUT, ROOT } from "../constants/globals";
+import { round } from "./number";
 import { merge, objectIterator } from "./object";
 import { isString, trimString } from "./string";
 import { isset } from "./util";
@@ -195,7 +196,7 @@ export const setCustomProperty = (element, property, value) => {
 
 /**
  * Hides/Shows element.
- * 
+ *
  * @param {Element} element - Element to show/hide.
  * @param {boolean} toggler - Whether to show (true) or hide the element.
  */
@@ -207,13 +208,20 @@ export const toggleVisibility = (element, toggler = true) => {
  * Adds/Removes a class to/from an based on a boolean variable.
  *
  * @param {Element} element - Element.
- * @param {string} token - Class name.
+ * @param {string|string[]} tokens - Class name or array of classes.
  * @param {boolean} toggler - Whether to add (true) or remove a class.
  */
-export const toggleClassName = (element, token, toggler) => {
-    if (token) {
-        element.classList.toggle(token, toggler);
+export const toggleClassName = (element, tokens, toggler) => {
+
+    if (isString(tokens)) {
+        tokens = [tokens];
     }
+
+    tokens.forEach(token => {
+        if (token) {
+            element.classList.toggle(token, toggler);
+        }
+    });
 }
 
 /**
@@ -237,7 +245,7 @@ export const createButton = (className, targetElement, details, insertPosition) 
  * @param {number} y - Y coordinate.
  */
 export const translate = (element, x, y) => {
-    element.style.transform = `translate(${x}px,${y}px)`;
+    element.style.transform = `translate(${round(x)}px,${round(y)}px)`;
 }
 
 /**

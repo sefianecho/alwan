@@ -138,14 +138,14 @@ export default class Alwan {
      * Enables picker.
      */
     enable() {
-        this._components._app._setDisabled(false, this);
+        this._reference._setDisabled(false);
     }
 
     /**
      * Disables picker.
      */
     disable() {
-        this._components._app._setDisabled(true, this);
+        this._reference._setDisabled(true);
     }
 
     /**

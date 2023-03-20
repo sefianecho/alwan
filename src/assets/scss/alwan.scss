@@ -225,6 +225,9 @@
             cursor: pointer;
             font-family: var.$input-label-font-family;
             font-size: var.$input-label-font-size;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
     }
 
@@ -239,6 +242,7 @@
         border:  1px solid var(--lw-bc, var.$border-color);
         margin-bottom: var.$input-margin-bottom;
         background-color: var(--lw-input-bg, var.$input-background);
+        line-height: 1;
 
         &:focus {
             outline: 0;
@@ -314,7 +318,7 @@
     &__swatch:focus,
     &__preset-button:focus {
     	outline: 1px dashed var(--lw-color);
-        outline-offset: 2px;
+        outline-offset: 1px;
     }
 
     &__copy-button {

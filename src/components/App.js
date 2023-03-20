@@ -241,31 +241,6 @@ export const App = (root, alwan, events) => {
     }
 
     /**
-     * Disables/Enables Picker instance.
-     *
-     * @param {boolean} disabled - Disable/Enable.
-     * @param {object} instance - Alwan instance.
-     */
-    const _setDisabled = (disabled, instance = alwan) => {
-        if (isset(disabled)) {
-            let config = instance.config;
-            let { shared, toggle } = config;
-
-            disabled = !! disabled;
-
-            config.disabled = disabled;
-
-            if (disabled) {
-                _toggle(instance, false, true);
-            } else if (! shared && ! toggle) {
-                _toggle(instance, true);
-            }
-
-            instance._reference._element.disabled = disabled;
-        }
-    }
-
-    /**
      * Destroy components and remove root element from the DOM.
      */
     const _destroy = () => {
@@ -284,7 +259,6 @@ export const App = (root, alwan, events) => {
         _toggle,
         _setVisibility,
         _isOpen,
-        _setDisabled,
         _destroy
     }
 }
