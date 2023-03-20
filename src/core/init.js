@@ -8,7 +8,9 @@ import { useComponents, isShared } from "./component";
  * @param {object} alwan - Instance.
  * @param {object} options - Alwan options.
  */
-export const initialize = (alwan, options = {}) => {
+export const initialize = (alwan, options) => {
+    options = options || {};
+
     let config = merge(alwan.config, options);
     let { color, disabled } = options;
     let { _set, _update } = alwan._color;
