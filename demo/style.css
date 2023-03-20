@@ -18,6 +18,7 @@ h1 {
     margin-bottom: 1rem;
     color: #111;
     font-weight: 300;
+    margin-left: 0.5rem;
 }
 
 
@@ -50,6 +51,11 @@ svg {
 button,
 label {
     cursor: pointer;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
 }
 
 .button {
@@ -286,6 +292,7 @@ select:focus,
 }
 .picker-label {
     line-height: 1.8;
+    user-select: none;
 }
 
 .picker-wrapper .alwan:not(.alwan--popup) {
@@ -300,7 +307,7 @@ select:focus,
 }
 
 .target-wrapper {
-    padding: 8rem 0;
+    padding: 7rem 0;
     text-align: center;
 }
 
