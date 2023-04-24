@@ -41,13 +41,6 @@ declare namespace Alwan {
         toString?: stringify
     }
 
-    interface HSV {
-        h: number,
-        s: number,
-        v: number,
-        a?: number
-    }
-
     interface HSL {
         h: number,
         s: number,
@@ -56,8 +49,8 @@ declare namespace Alwan {
         toString?: stringify
     }
 
-    
-    export type Color = string|RGB|HSV|HSL;
+
+    export type Color = string|RGB|HSL;
     type colorArray = [number, number, number, number?, stringify?];
 
     type colorFormat = 'rgb'|'hsl'|'hex';
@@ -71,7 +64,6 @@ declare namespace Alwan {
 
     interface colorValue {
         value: string,
-        hsv: (asArray?: boolean) => HSV|colorArray,
         rgb: (asArray?: boolean) => RGB|colorArray,
         hsl: (asArray?: boolean) => HSL|colorArray,
         hex: () => string,
