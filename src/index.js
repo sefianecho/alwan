@@ -1,11 +1,11 @@
 import { Reference } from "./components/reference";
 import { merge, objectIterator, prototype, setPrototypeOf } from "./utils/object";
-import { destroyComponents } from "./core/component";
+import { destroyComponents, isShared, useComponents } from "./core/component";
 import { color } from "./core/color";
 import { Dispatcher } from "./core/events/dispatcher";
-import { initialize } from "./core/init";
 import "./assets/scss/alwan.scss";
 import { defaults } from "./constants/defaults";
+import { isset } from "./utils/util.js";
 
 
 export default class Alwan {
@@ -30,7 +30,7 @@ export default class Alwan {
         alwan._events = Dispatcher(alwan);
         alwan._color = color(alwan);
         alwan._reference = Reference(reference, alwan);
-        initialize(alwan, options);
+        alwan.setOptions(options);
     }
 
     /**
@@ -39,7 +39,31 @@ export default class Alwan {
      * @param {Object} options - Alwan options.
      */
     setOptions(options) {
-        initialize(this, options);
+        options = options || {};
+
+        let alwan = this;
+        let config = merge(alwan.config, options);
+        let { color, disabled } = options;
+        let core = alwan._color;
+        let app;
+
+        alwan._components = useComponents(alwan);
+        alwan._reference._init(config);
+        app = alwan._components._app;
+
+        if (isShared(alwan._components)) {
+            app._toggle(null, false);
+        }
+
+        app._setup(config, alwan);
+        alwan._reference._setDisabled(disabled);
+
+        if (isset(color)) {
+            core._set(color);
+        }
+
+        // To update inputs values.
+        core._update();
     }
 
     /**
