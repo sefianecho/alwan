@@ -193,7 +193,7 @@ export const Inputs = (container, alwan, events) => {
         }
 
         if (alwan._color._set(str, true)) {
-            alwan._events._dispatch(COLOR, inputsMap);
+            alwan._events._dispatch(COLOR, target);
         }
     }
 
@@ -203,7 +203,7 @@ export const Inputs = (container, alwan, events) => {
      * @param {InputEvent} e - Event.
      */
     const handleChangeStop = e => {
-        alwan._color._triggerChange(inputsMap);
+        alwan._color._triggerChange(e.target);
         isChanged = false;
         alwan._color._update();
     }
