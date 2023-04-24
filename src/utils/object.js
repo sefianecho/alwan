@@ -15,17 +15,3 @@ export const objectIterator = (object, fn) => {
        fn(object[prop], prop);
     }
 }
-
-/**
- * Checks if obj1 keys and values equal to obj2's keys and values.
- *
- * @param {Object} obj1 - Any object.
- * @param {Object} obj2 - Any object.
- * @returns {Boolean}
- */
-export const isEqual = (obj1, obj2) => {
-    if (obj1 && obj2) {
-        return keys(obj1).every(key => obj1[key] === obj2[key]);
-    }
-    return false;
-}
