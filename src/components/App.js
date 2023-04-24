@@ -195,7 +195,7 @@ export const App = (root, alwan, events) => {
                         // and update options.
                         _setup(instance.config, instance);
                     }
-                    alwan._color._updateAll();
+                    alwan._color._update({}, true);
                     _reposition();
                 }
 

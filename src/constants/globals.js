@@ -22,7 +22,6 @@ export const MOUSE_OUT = 'mouseout';
 export const HEX_FORMAT = 'hex';
 export const RGB_FORMAT = 'rgb';
 export const HSL_FORMAT = 'hsl';
-export const HSV_FORMAT = 'hsv';
 
 export const TAB = 'Tab';
 export const ENTER = 'Enter';

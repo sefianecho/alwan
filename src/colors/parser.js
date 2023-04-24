@@ -1,9 +1,8 @@
-import { HSL_FORMAT, HSV_FORMAT, RGB_FORMAT } from "../constants/globals";
+import { HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { createElement } from "../utils/dom";
-import { float, isNumeric, normalizeAngle, confineNumber, PI } from "../utils/number";
+import { float, isNumeric, normalizeAngle, confineNumber, PI, round, int } from "../utils/number";
 import { isString, trimString } from "../utils/string";
 import { isset } from "../utils/util";
-import { HEXToRGB, HSVToRGB } from "./converter";
 import { stringify } from "./stringify";
 
 const ctx = createElement('canvas').getContext('2d');
@@ -13,7 +12,9 @@ const ctx = createElement('canvas').getContext('2d');
  */
 const HSL_REGEX = /^hsla?\(\s*([+-]?\d*\.?\d+)(\w*)?\s*[\s,]\s*([+-]?\d*\.?\d+)%?\s*,?\s*([+-]?\d*\.?\d+)%?(?:\s*[\/,]\s*([+-]?\d*\.?\d+)(%)?)?\s*\)?$/;
 const HEX_REGEX = /^#[0-9a-f]{6}$/i;
-
+/**
+ * Used to convert non degrees angles to degrees.
+ */
 const ANGLE_COEFFICIENT_MAP = {
     deg: 1,
     turn: 360,
@@ -41,27 +42,13 @@ export const parseColor = (value = '', asString) => {
      */
     if (! isString(value)) {
 
-        format = [RGB_FORMAT, HSL_FORMAT, HSV_FORMAT].find(format => {
-			return format.split('').every(key => {
-				return isNumeric(float(value[key]));
-			});
-		});
+        format = [RGB_FORMAT, HSL_FORMAT].find(format => {
+            return format.split('').every(key => {
+                return isNumeric(float(value[key]));
+            });
+        });
 
         if (format) {
-            if (! isset(value.a)) {
-                value.a = 1;
-            }
-
-            if (format === HSV_FORMAT) {
-                format = RGB_FORMAT;
-                value = HSVToRGB({
-                    h: normalizeAngle(value.h),
-                    s: confineNumber(value.s) / 100,
-                    v: confineNumber(value.v) / 100,
-                    a: value.a
-                });
-            }
-
             str = stringify(value, format);
         }
     } else {
@@ -84,8 +71,8 @@ export const parseColor = (value = '', asString) => {
          */
         color = {
             h: normalizeAngle(h * (ANGLE_COEFFICIENT_MAP[angle] ? ANGLE_COEFFICIENT_MAP[angle] : 1)),
-            s: confineNumber(s),
-            l: confineNumber(l),
+            s: round(confineNumber(s)),
+            l: round(confineNumber(l)),
             a: isset(a) ? confineNumber(percentage ? a / 100 : a, 1) : 1
         }
         format = HSL_FORMAT;
@@ -99,12 +86,22 @@ export const parseColor = (value = '', asString) => {
         // if it's hex convert it to rgb object,
         // if it's rgb then parse it to object.
         if (HEX_REGEX.test(str)) {
-            color = HEXToRGB(str);
+            // Convert hex string to rgb object.
+            color = {
+                r: int(str.slice(1, 3), 16),
+                g: int(str.slice(3, 5), 16),
+                b: int(str.slice(5, 7), 16),
+                a: 1
+            }
         } else {
+            // Parse rgb string into a rgb object.
             let [r, g, b, a] = /\((.+)\)/.exec(str)[1].split(',').map(value => float(value));
             color = { r, g, b, a };
         }
     }
+
+    // Round the transparency component to two numbers behind
+    color.a = round(color.a * 100) / 100;
 
     return asString ? stringify(color, format) : { _format: format, _color: color }
 }

@@ -1,7 +1,7 @@
 import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
 import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { createElement, getBounds, translate, removeElement } from "../utils/dom"
-import { confineNumber } from "../utils/number";
+import { confineNumber, min } from "../utils/number";
 
 /**
  * Picker palette.
@@ -91,7 +91,15 @@ export const Palette = (root, alwan, events) => {
             markerX = x;
             markerY = y;
             translate(marker, markerX, markerY);
-            alwan._color._update({ s: markerX / width, v: (1 - markerY / height)});
+
+            let v = (1 - y / height);
+            let L = v * (1 - x / (2 * width));
+
+            alwan._color._update({
+                S: L === 1 || L === 0 ? 0 : (v - L) / min(L, 1 - L),
+                L
+            });
+
             alwan._events._dispatch(COLOR, palette);
 
             if (change) {
@@ -187,10 +195,16 @@ export const Palette = (root, alwan, events) => {
         /**
          * Updates marker position from an hsv color object.
          *
-         * @param {object} param0 - HSV color object.
+         * @param {object} param0 - HSL color object.
          */
-        _update({ s, v }) {
-            translate(marker, s * width, (1 - v) * height);
+        _update({ S, L }) {
+            // Temporary hold the value of V in the HSV color space.
+            markerY = L + S * min(L, 1 - L);
+
+            markerX = (markerY ? 2 * (1 - L / markerY) : 0) * width;
+            markerY = (1 - markerY) * height;
+
+            translate(marker, markerX, markerY);
         }
     }
 }

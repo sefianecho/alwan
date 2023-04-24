@@ -70,7 +70,7 @@ export const Sliders = (parent, alwan, events) => {
          *
          * @param {object} param0 - HSV color object.
          */
-        _setValue({ h, a }) {
+        _update({ h, a }) {
             hueSlider.value = 360 - h;
             if (alphaSlider) {
                 alphaSlider.value = a;
