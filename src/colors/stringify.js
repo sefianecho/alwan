@@ -1,4 +1,4 @@
-import { HEX_FORMAT, HSL_FORMAT } from "../constants/globals";
+import { HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { round } from "../utils/number.js";
 
 /**
@@ -22,19 +22,20 @@ const toHex = number => {
 export const stringify = (color, format, opaque) => {
     let opacity = '';
     let a = color.a;
+    let str = format;
+
+    if (a < 1 && ! opaque) {
+        str += 'a';
+        opacity = ', ' + a;
+    }
+
+    if (format === RGB_FORMAT) {
+        return str + `(${color.r}, ${color.g}, ${color.b + opacity})`;
+    }
 
     if (format === HEX_FORMAT) {
         return '#' + toHex(color.r) + toHex(color.g) + toHex(color.b) + (a < 1 ? toHex(round(a * 255)) : '');
     }
 
-    if (a < 1 && ! opaque) {
-        format += 'a';
-        opacity = ', ' + a;
-    }
-
-    if (format === HSL_FORMAT) {
-        return `${format}(${color.h}, ${color.s}%, ${color.l}%${opacity})`;
-    }
-
-    return `${format}(${color.r}, ${color.g}, ${color.b + opacity})`;
+    return str + `(${color.h}, ${color.s}%, ${color.l}%${opacity})`;
 }
