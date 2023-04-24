@@ -1,7 +1,7 @@
 import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
 import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { createElement, getBounds, translate, removeElement } from "../utils/dom"
-import { confineNumber, min } from "../utils/number";
+import { boundNumber, min } from "../utils/number";
 
 /**
  * Picker palette.
@@ -91,8 +91,8 @@ export const Palette = (root, alwan, events) => {
             y = clientY - y;
         }
 
-        x = confineNumber(x, width);
-        y = confineNumber(y, height);
+        x = boundNumber(x, width);
+        y = boundNumber(y, height);
 
         if (x !== markerX || y !== markerY) {
             markerX = x;

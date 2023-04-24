@@ -1,6 +1,6 @@
 import { HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { createElement } from "../utils/dom";
-import { float, isNumeric, normalizeAngle, confineNumber, PI, round, int } from "../utils/number";
+import { float, isNumeric, normalizeAngle, boundNumber, PI, round, int } from "../utils/number";
 import { isString, trimString } from "../utils/string";
 import { isset } from "../utils/util";
 import { stringify } from "./stringify";
@@ -71,9 +71,9 @@ export const parseColor = (value = '', asString) => {
          */
         color = {
             h: normalizeAngle(h * (ANGLE_COEFFICIENT_MAP[angle] ? ANGLE_COEFFICIENT_MAP[angle] : 1)),
-            s: round(confineNumber(s)),
-            l: round(confineNumber(l)),
-            a: isset(a) ? confineNumber(percentage ? a / 100 : a, 1) : 1
+            s: round(boundNumber(s)),
+            l: round(boundNumber(l)),
+            a: isset(a) ? boundNumber(percentage ? a / 100 : a, 1) : 1
         }
         format = HSL_FORMAT;
     } else {

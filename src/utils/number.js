@@ -9,7 +9,7 @@ export const { min, max, abs, round, PI } = Math;
  * @param {number} lowerBound - Min.
  * @returns {number}
  */
-export const confineNumber = (number, upperBound = 100, lowerBound = 0) => {
+export const boundNumber = (number, upperBound = 100, lowerBound = 0) => {
     return min(max(number, lowerBound), upperBound);
 }
 
