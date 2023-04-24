@@ -1,6 +1,6 @@
 import { ROOT } from "../constants/globals";
 import { getBounds, translate } from "../utils/dom";
-import { abs, float, isNumeric } from "../utils/number";
+import { abs, float, isNumeric, round } from "../utils/number";
 import { objectIterator } from "../utils/object";
 import { isString } from "../utils/string";
 
@@ -159,7 +159,7 @@ export const createPopper = (reference, container, { _margin, _position }) => {
                         }
                     });
                     // Exit the fallback sides loop.
-                    return true;    
+                    return true;
                 }
             });
             // If there is no space to position the popover in all sides,
@@ -169,6 +169,8 @@ export const createPopper = (reference, container, { _margin, _position }) => {
             objectIterator(coordinates, (value, axis) => {
                 if (value === null) {
                     coordinates[axis] = (domBounds[upperBound[axis]] - containerBoundingRect[dimension[axis]]) / 2;
+                } else {
+                    coordinates[axis] = round(value)
                 }
             });
 

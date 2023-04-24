@@ -1,6 +1,5 @@
 import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
 import { BUTTON, HTML, INPUT, ROOT } from "../constants/globals";
-import { round } from "./number";
 import { merge, objectIterator } from "./object";
 import { isString, trimString } from "./string";
 import { isset } from "./util";
@@ -245,7 +244,7 @@ export const createButton = (className, targetElement, details, insertPosition) 
  * @param {number} y - Y coordinate.
  */
 export const translate = (element, x, y) => {
-    element.style.transform = `translate(${round(x)}px,${round(y)}px)`;
+    element.style.transform = `translate(${x}px,${y}px)`;
 }
 
 /**
