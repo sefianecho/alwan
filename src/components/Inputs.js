@@ -3,10 +3,8 @@ import { INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../constants/classnames";
 import { stringify } from "../colors/stringify";
 import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN, RGB_FORMAT} from "../constants/globals";
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
-import { max } from "../utils/number";
+import { float, max } from "../utils/number";
 import { objectIterator } from "../utils/object";
-import { trimString } from "../utils/string";
-import { isset } from "../utils/util";
 
 
 /**
@@ -65,7 +63,7 @@ export const Inputs = (container, alwan, events) => {
         _init({ inputs, format }, instance) {
 
             alwan = instance || alwan;
-            inputs = isset(inputs) ? inputs : {};
+            inputs = inputs || {};
             inputsMap = {};
 
             // Get only valid formats.
@@ -76,8 +74,8 @@ export const Inputs = (container, alwan, events) => {
                 // No inputs, remove inputs container and the switch button.
                 inputsContainer = removeElement(inputsContainer);
                 switchButton = removeElement(switchButton);
-                // Normalize format value.
-                format = COLOR_FORMATS.includes(format) ? format : COLOR_FORMATS[0];
+
+                formats = COLOR_FORMATS;
             } else {
 
                 // Create inputs container.
@@ -85,20 +83,21 @@ export const Inputs = (container, alwan, events) => {
                     inputsContainer = createElement('', INPUTS_CLASSNAME, container);
                 }
 
-                if (length === 1) {
+                if (length > 1) {
+                    if (!switchButton) {
+                        // For more than one input format, add a switch button.
+                        switchButton = createButton('', container, { html: switchInputsSVG });
+                    }
+                } else {
                     switchButton = removeElement(switchButton);
-                } else if (!switchButton) {
-                    // For more than one input format, add a switch button.
-                    switchButton = createButton('', container, { html: switchInputsSVG });
                 }
-
-                // Validate and normalize format value.
-                formatIndex = max(formats.indexOf(format), 0);
-                format = formats[formatIndex];
-                build(format);
             }
 
-            alwan.config.format = format;
+            // Validate and normalize format value.
+            formatIndex = max(formats.indexOf(format), 0);
+            format = formats[formatIndex];
+            build(format);
+
             // Show/Hide parent container.
             toggleVisibility(container, length);
         },
@@ -121,44 +120,49 @@ export const Inputs = (container, alwan, events) => {
      * @param {string} format - Color format.
      */
     const build = (format) => {
-        let { singleInput, opacity } = alwan.config;
-        let fields;
-		let props;
-        // Each letter in the format variable represent a color channel,
-        // For multiple inputs, each color channel has an input field.
-        // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
-        if (singleInput || format === HEX_FORMAT) {
-            fields = [format];
 
-            props = {
-                type: 'text',
-            }
-        } else {
-            fields = (format + (opacity ? 'a' : '')).split('');
+        alwan._color._setFormat(format);
 
-            props = {
-                type: 'number',
-                max: format === RGB_FORMAT ? 255 : 100,
-                min: '0'
+        if (inputsContainer) {
+            let { singleInput, opacity } = alwan.config;
+            let fields;
+            let props;
+            // Each letter in the format variable represent a color channel,
+            // For multiple inputs, each color channel has an input field.
+            // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
+            if (singleInput || format === HEX_FORMAT) {
+                fields = [format];
+
+                props = {
+                    type: 'text',
+                }
+            } else {
+                fields = (format + (opacity ? 'a' : '')).split('');
+
+                props = {
+                    type: 'number',
+                    max: format === RGB_FORMAT ? 255 : 100,
+                    min: '0'
+                }
             }
+
+            // Empty the container from any inputs.
+            setHTML(inputsContainer, '');
+
+            fields.forEach(field => {
+                /**
+                 * Create Input.
+                 *
+                 * <label>
+                 *     <input type="text|number" class="alwan__input">
+                 *     <span>${field}</span>
+                 * </label>
+                 */
+                const labelElement = createElement('label', '', inputsContainer);
+                inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, props);
+                createElement('span', '', labelElement, { html: field });
+            });
         }
-
-        // Empty the container from any inputs.
-        setHTML(inputsContainer, '');
-
-        fields.forEach(field => {
-            /**
-             * Create Input.
-             *
-             * <label>
-             *     <input type="text|number" class="alwan__input">
-             *     <span>${field}</span>
-             * </label>
-             */
-            const labelElement = createElement('label', '', inputsContainer);
-            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, props);
-            createElement('span', '', labelElement, { html: field });
-        });
     }
 
     /**
@@ -182,7 +186,7 @@ export const Inputs = (container, alwan, events) => {
         } else {
             // Copy inputs values into an object (rgb or hsl).
             objectIterator(inputsMap, (input, key) => {
-                color[key] = trimString(input.value);
+                color[key] = float(input.value);
             });
             // Convert the object into string.
             str = stringify(color, format);
@@ -199,12 +203,9 @@ export const Inputs = (container, alwan, events) => {
      * @param {InputEvent} e - Event.
      */
     const handleChangeStop = e => {
-        if (isChanged) {
-            alwan._color._triggerChange(inputsMap);
-            isChanged = false;
-        }
-        // TODO:
-        // Update inputs.
+        alwan._color._triggerChange(inputsMap);
+        isChanged = false;
+        alwan._color._update();
     }
 
     /**
@@ -217,7 +218,6 @@ export const Inputs = (container, alwan, events) => {
             // Increment input format index, reset it if it reaches the end.
             // this index will point to the next format.
             formatIndex = (formatIndex + 1) % formats.length;
-            alwan.config.format = formats[formatIndex];
             build(formats[formatIndex]);
             // Update values.
             alwan._color._update();

@@ -28,6 +28,13 @@ export const color = (alwan) => {
     let savedColor;
 
     /**
+     * Current color format.
+     *
+     * @type {'rgb'|'hsl'|'hex'}
+     */
+    let format;
+
+    /**
      * Color state.
      */
     const state = {
@@ -121,21 +128,6 @@ export const color = (alwan) => {
         return round((l - s * min(l, 1 - l) * max(-1, min(k - 3, 9 - k, 1))) * 255);
     }
 
-    /**
-     * Gets a color string by format or the color state object.
-     *
-     * @param {boolean} toString - Get string representation of the color.
-     * @param {string} format - Color format.
-     * @returns {string|object}.
-     */
-    const getColorByFormat = (toString, format = config.format) => {
-        if (toString || format === HEX_FORMAT) {
-            return { [format]: stringify(state, format) };
-        }
-
-        return state;
-    }
-
 
     return {
         /**
@@ -147,7 +139,6 @@ export const color = (alwan) => {
          * @param {boolean} isRGB - Color state changed from a RGB color.
          */
         _update(hsl, all, isInputs, isRGB) {
-
             if (! config.disabled) {
 
                 merge(state, hsl);
@@ -176,7 +167,7 @@ export const color = (alwan) => {
 
                 // Update Inputs.
                 if (! isInputs) {
-                    _inputs._update(getColorByFormat(config.singleInput));
+                    _inputs._update(config.singleInput || format === HEX_FORMAT ? { [format]: stringify(state, format) } : state);
                 }
 
                 // Update palette's marker position and sliders values.
@@ -191,7 +182,7 @@ export const color = (alwan) => {
          * Saves the current state.
          */
         _saveState() {
-            savedColor = getColorByFormat(true);
+            savedColor = stringify(state, format);
         },
 
         /**
@@ -201,12 +192,9 @@ export const color = (alwan) => {
          * @param {Element} source - Event source.
          */
         _triggerChange(source) {
-
-            objectIterator(savedColor, (colorString, format) => {
-                if (colorString !== getColorByFormat(true)[format]) {
-                    alwan._events._dispatch(CHANGE, source);
-                }
-            });
+            if (savedColor !== stringify(state, format)) {
+                alwan._events._dispatch(CHANGE, source);
+            }
         },
 
         /**
@@ -234,8 +222,10 @@ export const color = (alwan) => {
                     updateHSLFromRGB(_color);
                 } else {
                     hsl = {
+                        h: _color.h,
                         S: _color.s / 100,
-                        L: _color.l / 100
+                        L: _color.l / 100,
+                        a: _color.a
                     }
                 }
 
@@ -255,6 +245,15 @@ export const color = (alwan) => {
                 hsl: asArray => colorData(HSL_FORMAT, asArray),
                 hex: () => stringify(state, HEX_FORMAT),
             }
+        },
+
+        /**
+         * Sets a new color format.
+         *
+         * @param {string} newFormat - Color format.
+         */
+        _setFormat(newFormat) {
+            format = config.format = newFormat;
         }
     }
 }
