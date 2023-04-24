@@ -28,12 +28,21 @@ const createComponents = (alwan) => {
     const events = Binder();
     const root = createElement('', ALWAN_CLASSNAME, body());
 
+    /**
+     * Creates a new container element.
+     *
+     * @returns {Element} - Container Element.
+     */
+    const createContainer = () => {
+        return createElement('', CONTAINER_CLASSNAME, root);
+    }
+
     const _app = App(root, alwan, events);
     const _palette = Palette(root, alwan, events);
-    const container = createElement('', CONTAINER_CLASSNAME, root);
+    const container = createContainer();
     const _utility = Utility(container, alwan, events);
     const _sliders = Sliders(container, alwan, events);
-    const _inputs = Inputs(createElement('', CONTAINER_CLASSNAME, root), alwan, events);
+    const _inputs = Inputs(createContainer(), alwan, events);
     const _swatches = Swatches(root, alwan, events);
 
     return {
