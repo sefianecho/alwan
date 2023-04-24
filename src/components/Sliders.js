@@ -1,5 +1,5 @@
 import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME, SLIDERS_CLASSNAME } from "../constants/classnames";
-import { CHANGE, COLOR, COLOR_PROPERTY, INPUT } from "../constants/globals";
+import { CHANGE, COLOR, INPUT } from "../constants/globals";
 import { createElement, createSlider, removeElement, setCustomProperty } from "../utils/dom";
 
 /**

@@ -1,4 +1,4 @@
-import { HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
+import { HEX_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { round } from "../utils/number.js";
 
 /**

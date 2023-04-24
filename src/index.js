@@ -205,7 +205,7 @@ export default class Alwan {
         destroyComponents(alwan._components);
 
         // Remove all properties of this instance.
-        objectIterator(alwan, (value, key) => {
+        objectIterator(alwan, (_, key) => {
             delete alwan[key];
         });
 
