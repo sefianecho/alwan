@@ -55,11 +55,6 @@ export const Palette = (root, alwan, events) => {
     const marker = createElement('', MARKER_CLASSNAME, palette);
 
     /**
-     * Palette element dimension.
-     */
-    const { width, height } = getBounds(palette);
-
-    /**
      * Move marker horizontally using the keyboard arrow keys.
      */
     const keyboardX = {
@@ -76,13 +71,25 @@ export const Palette = (root, alwan, events) => {
     };
 
     /**
-     * Move marker and update color state.
+     * Moves marker and updaets the color state.
+     * Moves it using a pointer (mouse, touch or pen) or keyboard arrow keys.
      *
-     * @param {number} x - X coordinate.
-     * @param {number} y - Y coordinate.
-     * @param {Function} change - Callback function if color changed.
+     * @param {Event} param0 - Pointer Event.
+     * @param {object} keyboard - Keyboard steps.
+     * @param {Function} change - Callback function, called when color changes.
      */
-    const moveMarkerAndUpdateColor = (x, y, change) => {
+    const moveMarkerAndUpdateColor = ({ clientX, clientY }, keyboard, change) => {
+
+        let { x, y, width, height } = paletteBounds;
+        let v, L;
+
+        if (keyboard) {
+            x = markerX + keyboard.x * width / 100;
+            y = markerY + keyboard.y * height / 100;
+        } else {
+            x = clientX - x;
+            y = clientY - y;
+        }
 
         x = confineNumber(x, width);
         y = confineNumber(y, height);
@@ -92,8 +99,8 @@ export const Palette = (root, alwan, events) => {
             markerY = y;
             translate(marker, markerX, markerY);
 
-            let v = (1 - y / height);
-            let L = v * (1 - x / (2 * width));
+            v = (1 - y / height);
+            L = v * (1 - x / (2 * width));
 
             alwan._color._update({
                 S: L === 1 || L === 0 ? 0 : (v - L) / min(L, 1 - L),
@@ -121,7 +128,7 @@ export const Palette = (root, alwan, events) => {
         alwan._color._saveState();
         paletteBounds = getBounds(palette);
         isPointerDown = true;
-        moveMarkerAndUpdateColor(e.clientX - paletteBounds.x, e.clientY - paletteBounds.y);
+        moveMarkerAndUpdateColor(e);
         palette.focus();
     }
 
@@ -132,7 +139,7 @@ export const Palette = (root, alwan, events) => {
      */
     const drag = e => {
         if (isPointerDown) {
-            moveMarkerAndUpdateColor(e.clientX - paletteBounds.x, e.clientY - paletteBounds.y);
+            moveMarkerAndUpdateColor(e);
         }
     }
 
@@ -160,9 +167,9 @@ export const Palette = (root, alwan, events) => {
         if (keyboardX[key] || keyboardY[key]) {
             e.preventDefault();
 
-            moveMarkerAndUpdateColor(
-                markerX + (keyboardX[key] || 0) * width / 100,
-                markerY + (keyboardY[key] || 0) * height / 100,
+            paletteBounds = getBounds(palette);
+
+            moveMarkerAndUpdateColor({}, { x: keyboardX[key] || 0, y: keyboardY[key] || 0 },
                 () => {
                     alwan._events._dispatch(CHANGE, palette);
                 }
@@ -198,11 +205,12 @@ export const Palette = (root, alwan, events) => {
          * @param {object} param0 - HSL color object.
          */
         _update({ S, L }) {
+            paletteBounds = getBounds(palette);
             // Temporary hold the value of V in the HSV color space.
             markerY = L + S * min(L, 1 - L);
 
-            markerX = (markerY ? 2 * (1 - L / markerY) : 0) * width;
-            markerY = (1 - markerY) * height;
+            markerX = (markerY ? 2 * (1 - L / markerY) : 0) * paletteBounds.width;
+            markerY = (1 - markerY) * paletteBounds.height;
 
             translate(marker, markerX, markerY);
         }
