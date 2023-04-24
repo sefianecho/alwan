@@ -1,11 +1,11 @@
 import { switchInputsSVG } from "../assets/svg";
 import { INPUTS_CLASSNAME, INPUT_CLASSNAME } from "../constants/classnames";
 import { stringify } from "../colors/stringify";
-import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN} from "../constants/globals";
+import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT, KEY_DOWN, RGB_FORMAT} from "../constants/globals";
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
 import { max } from "../utils/number";
 import { objectIterator } from "../utils/object";
-import { isString, trimString } from "../utils/string";
+import { trimString } from "../utils/string";
 import { isset } from "../utils/util";
 
 
@@ -108,10 +108,10 @@ export const Inputs = (container, alwan, events) => {
          *
          * @param {Object} color - Color object.
          */
-        _setValue(color) {
+        _update(color) {
             objectIterator(inputsMap, (input, key) => {
-                input.value = isString(color) ? color : color[key];
-            });
+                input.value = color[key];
+            })
         }
     }
 
@@ -123,13 +123,24 @@ export const Inputs = (container, alwan, events) => {
     const build = (format) => {
         let { singleInput, opacity } = alwan.config;
         let fields;
+		let props;
         // Each letter in the format variable represent a color channel,
         // For multiple inputs, each color channel has an input field.
         // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
         if (singleInput || format === HEX_FORMAT) {
             fields = [format];
+
+            props = {
+                type: 'text',
+            }
         } else {
             fields = (format + (opacity ? 'a' : '')).split('');
+
+            props = {
+                type: 'number',
+                max: format === RGB_FORMAT ? 255 : 100,
+                min: '0'
+            }
         }
 
         // Empty the container from any inputs.
@@ -145,7 +156,7 @@ export const Inputs = (container, alwan, events) => {
              * </label>
              */
             const labelElement = createElement('label', '', inputsContainer);
-            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, { type: 'text' });
+            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, props);
             createElement('span', '', labelElement, { html: field });
         });
     }
@@ -192,6 +203,8 @@ export const Inputs = (container, alwan, events) => {
             alwan._color._triggerChange(inputsMap);
             isChanged = false;
         }
+        // TODO:
+        // Update inputs.
     }
 
     /**

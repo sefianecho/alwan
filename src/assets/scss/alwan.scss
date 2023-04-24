@@ -244,6 +244,14 @@
         background-color: var(--lw-input-bg, var.$input-background);
         line-height: 1;
 
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        -moz-appearance: textfield;
+
+
         &:focus {
             outline: 0;
             border-color: var.$primary-color;
