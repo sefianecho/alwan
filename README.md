@@ -2,7 +2,7 @@
 
 &nbsp;&nbsp;&nbsp;
 
-<div align="center">  
+<div align="center">
   <img alt="alwan light theme" src="images/alwan-light.png">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -126,8 +126,7 @@ alwan.on('event', ev => {
 
 ### Event object
 - `type` — Event type.
-- `source` — Event source. 
-- **hsv**() : `object` — Gets an HSV color object.
+- `source` — Event source.
 - **rgb**(asArray: `boolean`) : `object` — Get an RGB color object or an Array if `asArray` is set to true,
 call the method `toString()` on this object to get an RGB string.
 - **hsl**(asArray: `boolean`) : `object` — Get an HSL color object or an Array if `asArray` is set to true,
@@ -145,10 +144,10 @@ alwan.on('change', (ev) => {
   ev.rgb()                // output: { r: 0, g: 0, b: 0, a: 1}
   ev.rgb(true)            // output: [0, 0, 0, 0]
   ev.rgb().toString()     // output: rgba(0, 0, 0, 1)
-  
+
   // Hex color.
   ev.hex()                // output: #000000
-  
+
   // HSL color.
   ev.hsl()               // output: { h: 0, s: 0, l: 0, a: 1 }
   ev.hsl(true)           // output: [0, 0, 0, 0]
@@ -176,7 +175,7 @@ picker.setColor('purple').trigger('change');
 - **reposition**() — Updates picker position only if it's a popover.
 - **addSwatch**(color: `string`) — Adds a swatch button.
 - **removeSwatch**(swatch: `string | number`) — Removes color from the `Options.swatches` array, also removes its button from the swatches container.
-  
+
   *Note:* swatch argument can be a color string in the `Options.swatches` array or an index.
 - **reset**() — Reset to default color.
 - **destroy**() — Removes the color picker functionality completely(free up memory).
