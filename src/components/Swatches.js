@@ -157,9 +157,10 @@ export const Swatches = (root, alwan, events) => {
         if (target === collapseButton) {
             toggleClassName(container, COLLAPSE_CLASSNAME);
         }else if(parent(target) === container) {
-            alwan._color._set(target.style.getPropertyValue(COLOR_PROPERTY));
-            alwan._events._dispatch(COLOR, target);
-            alwan._events._dispatch(CHANGE, target);
+            if (alwan._color._set(target.style.getPropertyValue(COLOR_PROPERTY))) {
+                alwan._events._dispatch(COLOR, target);
+                alwan._events._dispatch(CHANGE, target);
+            }
         }
     }
 

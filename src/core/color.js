@@ -231,6 +231,8 @@ export const color = (alwan) => {
 
                 this._update(hsl, true, isInputs, isRGB);
             }
+
+            return isChanged;
         },
 
         /**
