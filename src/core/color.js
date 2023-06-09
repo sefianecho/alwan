@@ -256,6 +256,13 @@ export const color = (alwan) => {
          */
         _setFormat(newFormat) {
             format = config.format = newFormat;
-        }
+        },
+
+        /**
+         * Gets current color as a string.
+         *
+         * @returns {string}
+         */
+        _get: () => stringify(state, format)
     }
 }
