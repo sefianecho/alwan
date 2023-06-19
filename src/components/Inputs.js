@@ -5,6 +5,7 @@ import { CHANGE, CLICK, COLOR, COLOR_FORMATS, ENTER, FOCUS_IN, HEX_FORMAT, INPUT
 import { createButton, createElement, removeElement, setHTML, toggleVisibility } from "../utils/dom";
 import { float, max } from "../utils/number";
 import { objectIterator } from "../utils/object";
+import { addEvent } from "../core/events/binder";
 
 
 /**
@@ -14,7 +15,7 @@ import { objectIterator } from "../utils/object";
  * @param {Object} alwan - Alwan instance.
  * @returns {Object} - Inputs component.
  */
-export const Inputs = (container, alwan, events) => {
+export const Inputs = (container, alwan) => {
 
     /**
      * Inputs wrapper element.
@@ -242,10 +243,11 @@ export const Inputs = (container, alwan, events) => {
     /**
      * Bind events.
      */
-    events._bind(container, CLICK, changeFormat);
-    events._bind(container, INPUT, handleChange);
-    events._bind(container, CHANGE, handleChangeStop);
-    events._bind(container, [KEY_DOWN, FOCUS_IN], selectOrClose);
+    addEvent(container, CLICK, changeFormat);
+    addEvent(container, INPUT, handleChange);
+    addEvent(container, CHANGE, handleChangeStop);
+    addEvent(container, KEY_DOWN, selectOrClose);
+    addEvent(container, FOCUS_IN, selectOrClose);
 
 
     return self;

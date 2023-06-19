@@ -1,6 +1,7 @@
 import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME, SLIDERS_CLASSNAME } from "../constants/classnames";
 import { CHANGE, COLOR, INPUT } from "../constants/globals";
-import { createElement, createSlider, removeElement, setCustomProperty } from "../utils/dom";
+import { addEvent } from "../core/events/binder";
+import { createElement, createSlider, removeElement } from "../utils/dom";
 
 /**
  * Creates sliders component.
@@ -9,7 +10,7 @@ import { createElement, createSlider, removeElement, setCustomProperty } from ".
  * @param {Object} alwan - Alwan instance.
  * @returns {Object} Sliders component.
  */
-export const Sliders = (parent, alwan, events) => {
+export const Sliders = (parent, alwan) => {
     /**
      * Alpha slider.
      *
@@ -42,7 +43,8 @@ export const Sliders = (parent, alwan, events) => {
     /**
      * Bind events.
      */
-    events._bind(container, [INPUT, CHANGE], handleChange);
+    addEvent(container, INPUT, handleChange);
+    addEvent(container, CHANGE, handleChange);
 
 
     return {

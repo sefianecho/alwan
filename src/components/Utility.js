@@ -1,6 +1,7 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../constants/classnames";
 import { CLICK, FOCUS_OUT, DOC_ELEMENT, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
+import { addEvent } from "../core/events/binder";
 import { createButton, createElement, insertElement, removeElement, setHTML } from "../utils/dom";
 
 /**
@@ -8,10 +9,9 @@ import { createButton, createElement, insertElement, removeElement, setHTML } fr
  *
  * @param {Element} parent - Container.
  * @param {Alwan} alwan - Alwan instance.
- * @param {object} events - Event binder.
  * @returns {object} Utility component.
  */
-export const Utility = (parent, alwan, events) => {
+export const Utility = (parent, alwan) => {
     /**
      * Preview color.
      *
@@ -110,8 +110,9 @@ export const Utility = (parent, alwan, events) => {
     /**
      * Bind events.
      */
-    events._bind(parent, CLICK, copyColor);
-    events._bind(parent, [MOUSE_OUT, FOCUS_OUT], updateButtonIcon);
+    addEvent(parent, CLICK, copyColor);
+    addEvent(parent, MOUSE_OUT, updateButtonIcon);
+    addEvent(parent, FOCUS_OUT, updateButtonIcon);
 
     return self;
 }

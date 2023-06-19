@@ -5,16 +5,16 @@ import { CHANGE, CLICK, COLOR, COLOR_PROPERTY } from "../constants/globals";
 import { createButton, createElement, parent, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
 import { int } from "../utils/number";
 import { isset } from "../utils/util";
+import { addEvent } from "../core/events/binder";
 
 /**
  * Creates swatches component.
  *
  * @param {Element} root - Element to append the palette element to.
  * @param {object} alwan - Picker Instance.
- * @param {object} events - Event binder.
  * @returns {object} - Swatches component.
  */
-export const Swatches = (root, alwan, events) => {
+export const Swatches = (root, alwan) => {
 
     /**
      * Swatches container.
@@ -167,7 +167,7 @@ export const Swatches = (root, alwan, events) => {
     /**
      * Bind events.
      */
-    events._bind(root, CLICK, handleClick);
+    addEvent(root, CLICK, handleClick);
 
 
     return self;

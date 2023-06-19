@@ -6,7 +6,6 @@ import { Sliders } from "../components/Sliders";
 import { Swatches } from "../components/Swatches";
 import { Utility } from "../components/Utility";
 import { body, bodyElement, createElement } from "../utils/dom";
-import { Binder } from "./events/binder";
 
 /**
  * Shared Components.
@@ -25,7 +24,7 @@ let instanceCount = 0;
  * @returns {object} alwan components.
  */
 const createComponents = (alwan) => {
-    const events = Binder();
+
     const root = createElement('', ALWAN_CLASSNAME, bodyElement());
 
     /**
@@ -37,13 +36,13 @@ const createComponents = (alwan) => {
         return createElement('', CONTAINER_CLASSNAME, root);
     }
 
-    const _app = App(root, alwan, events);
-    const _palette = Palette(root, alwan, events);
+    const _app = App(root, alwan);
+    const _palette = Palette(root, alwan);
     const container = createContainer();
-    const _utility = Utility(container, alwan, events);
-    const _sliders = Sliders(container, alwan, events);
-    const _inputs = Inputs(createContainer(), alwan, events);
-    const _swatches = Swatches(root, alwan, events);
+    const _utility = Utility(container, alwan);
+    const _sliders = Sliders(container, alwan);
+    const _inputs = Inputs(createContainer(), alwan);
+    const _swatches = Swatches(root, alwan);
 
     return {
         _app,

@@ -1,5 +1,6 @@
 import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
 import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
+import { addEvent, removeEvent } from "../core/events/binder";
 import { createElement, getBounds, translate, removeElement } from "../utils/dom"
 import { boundNumber, min } from "../utils/number";
 
@@ -10,7 +11,7 @@ import { boundNumber, min } from "../utils/number";
  * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Palette = (root, alwan, events) => {
+export const Palette = (root, alwan) => {
     /**
      * Marker X coordinate.
      *
@@ -71,7 +72,7 @@ export const Palette = (root, alwan, events) => {
     };
 
     /**
-     * Moves marker and updaets the color state.
+     * Moves marker and updates the color state.
      * Moves it using a pointer (mouse, touch or pen) or keyboard arrow keys.
      *
      * @param {Event} param0 - Pointer Event.
@@ -122,14 +123,14 @@ export const Palette = (root, alwan, events) => {
      */
     const dragStart = e => {
         if (! overlayElement) {
-            overlayElement = createElement('', OVERLAY_CLASSNAME, root);
+            // overlayElement = createElement('', OVERLAY_CLASSNAME, root);
         }
         // Save color state.
         alwan._color._saveState();
         paletteBounds = getBounds(palette);
         isPointerDown = true;
         moveMarkerAndUpdateColor(e);
-        palette.focus();
+        // palette.focus();
     }
 
     /**
@@ -180,10 +181,10 @@ export const Palette = (root, alwan, events) => {
     /**
      * Bind events.
      */
-    events._bind(palette, POINTER_DOWN, dragStart);
-    events._bind(ROOT, POINTER_MOVE, drag);
-    events._bind(ROOT, POINTER_UP, dragEnd);
-    events._bind(palette, KEY_DOWN, handleKeyboard);
+    addEvent(palette, POINTER_DOWN, dragStart);
+    addEvent(ROOT, POINTER_MOVE, drag);
+    addEvent(ROOT, POINTER_UP, dragEnd);
+    addEvent(palette, KEY_DOWN, handleKeyboard);
 
 
     return {
@@ -213,6 +214,14 @@ export const Palette = (root, alwan, events) => {
             markerY = (1 - markerY) * paletteBounds.height;
 
             translate(marker, markerX, markerY);
+        },
+
+        /**
+         * Remove listeners attached to the document.
+         */
+        _destroy() {
+            removeEvent(ROOT, POINTER_MOVE, drag);
+            removeEvent(ROOT, POINTER_UP, dragEnd);
         }
     }
 }
