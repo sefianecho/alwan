@@ -1,55 +1,48 @@
 import { PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
 import { CLICK } from "../constants/globals";
-import { Binder } from "../core/events/binder";
-import { body, createButton, getElement, removeElement, replaceElement, toggleClassName } from "../utils/dom";
+import { addEvent, removeEvent } from "../core/events/binder";
+import { bodyElement, createButton, removeElement, replaceElement, toggleClassName } from "../utils/dom";
 import { isString } from "../utils/string";
 import { isset } from "../utils/util";
 
 /**
- * Creates the reference control.
+ * Creates an element that controls (open/close) the color picker.
  *
  * @param {string|Element} reference - User Reference.
  * @param {Alwan} param1 - Alwan instance.
  * @returns {object} - ReferenceElement control.
  */
-export const Reference = (reference, alwan) => {
-
-    /**
-     * Reference element classes.
-     */
-    let classes = [];
-
-    /**
-     * Event binder.
-     */
-    const events = Binder();
-
-    /**
-     * Body.
-     */
-    const bodyElement = body();
+export const Reference = (userReference, alwan) => {
 
     /**
      * Reference element.
      *
-     * @type {Element|null}
+     * @type {Element | HTMLButtonElement | null}
      */
-    const element = getElement(reference);
+    let element = userReference || createButton(PRESET_BUTTON_CLASSNAME, bodyElement());
 
     /**
-     * User reference.
-     *
-     * Check if the reference element is valid.
+     * Preset button user set classes.
      */
-    const userReference = bodyElement.contains(element) && element !== bodyElement ? element : null;
+    let buttonClasses = [];
+
+    /**
+     * Handles mouse click.
+     */
+    let handleClick = () => {
+        alwan.toggle();
+    }
 
     /**
      * Reference API.
      */
-    const self = {
-        // If user reference is not valid element in the body, then create,
-        // a preset button and append it to the body.
-        _element: userReference ? userReference : createButton(PRESET_BUTTON_CLASSNAME, bodyElement),
+    return {
+        /**
+         * Returns the reference element.
+         *
+         * @returns {Element}
+         */
+        _el: () => element,
 
         /**
          * Initialize Reference element.
@@ -57,40 +50,27 @@ export const Reference = (reference, alwan) => {
          * @param {object} param - Alwan options.
          */
         _init({ preset, classname }) {
-            let element = self._element;
-
-            // If the user reference is valid then replace it with the preset button,
-            // if preset option is true.
+            // userReference === element means preset button is not set.
             if (userReference && preset !== (userReference !== element)) {
-                // Clear events, element might be deleted.
-                events._unbindAll();
-
                 if (preset) {
                     // Replace user reference with a preset button.
-                    element = replaceElement(createButton(PRESET_BUTTON_CLASSNAME, null, { id: userReference.id }), userReference);
+                    element = replaceElement(userReference, createButton(PRESET_BUTTON_CLASSNAME, null, { id: userReference.id }));
                 } else {
                     // Replace preset button with the user reference.
-                    element = replaceElement(userReference, element);
+                    element = replaceElement(element, userReference);
                 }
-
-                /**
-                 * Handles click.
-                 */
-                events._bind(element, CLICK, e => {
-                    alwan._components._app._toggle(alwan);
-                });
             }
+
+            addEvent(element, CLICK, handleClick);
 
             // Add custom classes to the preset button.
-            if (! userReference || preset && isString(classname)) {
+            if ((! userReference || preset) && isString(classname)) {
                 // Remove previously add classes.
-                toggleClassName(element, classes, false);
-                classes = classname.split(/\s+/);
+                toggleClassName(element, buttonClasses, false);
+                buttonClasses = classname.split(/\s+/);
                 // Add the new classname.
-                toggleClassName(element, classes, true);
+                toggleClassName(element, buttonClasses, true);
             }
-
-            self._element = element;
         },
 
         /**
@@ -100,11 +80,11 @@ export const Reference = (reference, alwan) => {
          */
         _setDisabled(disabled) {
             if (isset(disabled)) {
-                let { config, _components } = alwan;
-                let { shared, toggle } = config;
-                let toggler = _components._app._toggle;
+                const { config, _components } = alwan;
+                const { shared, toggle } = config;
+                const toggler = _components._app._toggle;
 
-                config.disabled = self._element.disabled = !! disabled;
+                config.disabled = element.disabled = !! disabled;
 
                 if (disabled) {
                     toggler(alwan, false, true);
@@ -119,13 +99,11 @@ export const Reference = (reference, alwan) => {
          */
         _destroy() {
             if (userReference) {
-                self._init({ preset: false });
+                this._init({ preset: false });
+                removeEvent(element, CLICK, handleClick);
             } else {
-                self._element = removeElement(self._element);
+                element = removeElement(element);
             }
-            events._unbindAll();
         }
     }
-
-    return self;
 }

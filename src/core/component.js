@@ -5,7 +5,7 @@ import { Palette } from "../components/Palette";
 import { Sliders } from "../components/Sliders";
 import { Swatches } from "../components/Swatches";
 import { Utility } from "../components/Utility";
-import { body, createElement } from "../utils/dom";
+import { body, bodyElement, createElement } from "../utils/dom";
 import { Binder } from "./events/binder";
 
 /**
@@ -26,7 +26,7 @@ let instanceCount = 0;
  */
 const createComponents = (alwan) => {
     const events = Binder();
-    const root = createElement('', ALWAN_CLASSNAME, body());
+    const root = createElement('', ALWAN_CLASSNAME, bodyElement());
 
     /**
      * Creates a new container element.

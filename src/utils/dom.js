@@ -1,7 +1,7 @@
 import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
 import { BUTTON, HTML, INPUT, ROOT } from "../constants/globals";
 import { merge, objectIterator } from "./object";
-import { isString, trimString } from "./string";
+import { isString } from "./string";
 import { isset } from "./util";
 
 /**
@@ -9,7 +9,7 @@ import { isset } from "./util";
  *
  * @returns Document's body.
  */
-export const body = () => ROOT.body;
+export const bodyElement = () => ROOT.body;
 
 /**
  * Gets elements.
@@ -19,12 +19,12 @@ export const body = () => ROOT.body;
  * @param {boolean} all - Select all elements.
  * @returns {null|Element|NodeList}
  */
-export const getElement = (reference, context = ROOT, all = false) => {
-    if (isString(reference) && trimString(reference)) {
+export const getElement = (reference, context = bodyElement(), all = false) => {
+    if (isString(reference) && reference.trim()) {
         return context[`querySelector${ all ? 'All' : ''}`](reference);
     }
-
-    if (reference instanceof Element) {
+    // Reference must be an element in the page.
+    if (reference instanceof Element && bodyElement().contains(reference) && reference !== bodyElement()) {
         return reference;
     }
 
@@ -120,13 +120,13 @@ export const parent = (element) => {
 /**
  * Replaces an element in the DOM with another element.
  *
- * @param {Element} newElement - Element to replace another element.
- * @param {Element} oldElement - Element to be replaced by the newElement.
+ * @param {Element} element - Element to replace another element.
+ * @param {Element} replacement - Element to be replaced by the newElement.
  * @returns {Element} The new element.
  */
-export const replaceElement = (newElement, oldElement) => {
-    parent(oldElement).replaceChild(newElement, oldElement);
-    return newElement;
+export const replaceElement = (element, replacement) => {
+    element.replaceWith(replacement);
+    return replacement;
 }
 
 /**
