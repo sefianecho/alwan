@@ -98,7 +98,7 @@ export const getBounds = (element) => {
 
     if (element === ROOT) {
         x = y = 0;
-        width = right = DOC_ELEMENT.clientLeft;
+        width = right = DOC_ELEMENT.clientWidth;
         height = bottom = DOC_ELEMENT.clientHeight;
     } else {
         ({ x, y, width, height, right, bottom } = element.getBoundingClientRect());

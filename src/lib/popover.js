@@ -48,7 +48,7 @@ export const createPopover = (target, container, { _margin, _position }, autoUpd
         _margin = float(_margin);
     }
     const margin = isNumeric(_margin) ? _margin : 0;
-    const [side, alignment] = isString(_position) ? _position.split('') : [];
+    const [side, alignment] = isString(_position) ? _position.split('-') : [];
     const sidesFlipOrder = fallbackSides[side] || fallbackSides.bottom;
     const alignmentsFlipOrder = fallbackAlignments[alignment] || fallbackAlignments.center;
     const overflowAncestors = getOverflowAncestors(target);
@@ -123,6 +123,8 @@ export const createPopover = (target, container, { _margin, _position }, autoUpd
                     }
                     return false;
                 });
+
+                return true;
             }
         });
 
