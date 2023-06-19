@@ -1,5 +1,5 @@
 import { ROOT } from "../constants/globals";
-import { getBounds, translate } from "../utils/dom";
+import { getBounds, getOverflowAncestors, translate } from "../utils/dom";
 import { abs, isNumeric, round } from "../utils/number";
 import { isString } from "../utils/string";
 import { isset } from "../utils/util";
@@ -42,7 +42,7 @@ const fallbackAlignments = {
  * @param {Function} autoUpdate - Auto update callback.
  * @param {Function} accessibility - Popover accessibility callback.
  */
-export const createPopover = (target, container, { _margin, _position }) => {
+export const createPopover = (target, container, { _margin, _position }, autoUpdate, popoverAccessibility) => {
     if (isString(_margin)) {
         _margin = float(_margin);
     }
@@ -50,7 +50,7 @@ export const createPopover = (target, container, { _margin, _position }) => {
     const [side, alignment] = isString(_position) ? _position.split('') : [];
     const sidesFlipOrder = fallbackSides[side] || fallbackSides.bottom;
     const alignmentsFlipOrder = fallbackAlignments[alignment] || fallbackAlignments.center;
-    // const overflowAncestors = getOverflowAncestors(target);
+    const overflowAncestors = getOverflowAncestors(target);
 
     /**
      * Updates the container's position.
@@ -139,6 +139,20 @@ export const createPopover = (target, container, { _margin, _position }) => {
                 )
             ))
         );
+    };
+
+    /**
+     * Checks if target element is visible is the viewport.
+     */
+    const isVisible = () => {
+        return overflowAncestors.every((ancestor) => {
+            const [x, y, , , right, bottom] = getBounds(target);
+            const [ancestorX, ancestorY, , , ancestorRight, ancestorBottom] = getBounds(ancestor);
+
+            return (
+                y < ancestorBottom && bottom > ancestorY && x < ancestorRight && right > ancestorX
+            );
+        });
     };
 
     return {

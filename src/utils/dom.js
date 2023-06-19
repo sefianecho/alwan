@@ -164,25 +164,6 @@ export const getOverflowAncestors = (element, ancestors = [ROOT]) => {
     return getOverflowAncestors(element, ancestors);
 }
 
-
-
-/**
- * Check if an element is visible in the viewport of all scrollable elements.
- *
- * @param {Element} element - Element.
- * @param {Array} scrollables - Scrollable elements.
- * @returns {boolean}
- */
-export const isInViewport = (element, scrollables) => {
-    return scrollables.every(scrollable => {
-        let { x: elementX, y: elementY, bottom: elementBottom, right: elementRight } = getBounds(element);
-        let { x: scrollableX, y: scrollableY, bottom: scrollableBottom, right: scrollableRight } = getBounds(scrollable);
-
-        return elementY < scrollableBottom && elementBottom > scrollableY && elementX < scrollableRight && elementRight > scrollableX;
-    });
-}
-
-
 /**
  * Sets a CSS custom property.
  *
