@@ -31,4 +31,8 @@ export const COLOR_PROPERTY = '--lw-' + COLOR;
 
 // Picker supported color formats.
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
+
+// Element insert positions.
 export const INSERT_BEFORE_FIRST_CHILD = 'afterbegin';
+export const INSERT_AFTER = 'afterend';
+export const INSERT_AFTER_LAST_CHILD = 'beforeend';

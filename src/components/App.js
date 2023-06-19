@@ -1,7 +1,7 @@
 import { OPEN_CLASSNAME, POPUP_CLASSNAME } from "../constants/classnames";
-import { CLOSE, ESCAPE, OPEN, TAB} from "../constants/globals";
+import { CLOSE, ESCAPE, INSERT_AFTER, INSERT_AFTER_LAST_CHILD, OPEN, TAB} from "../constants/globals";
 import { createPopover } from "../lib/popover";
-import { getElement, insertElement, removeElement, toggleClassName, toggleVisibility } from "../utils/dom";
+import { getElement, insertElement, removeElement, toggleClassName } from "../utils/dom";
 import { objectIterator, toArray } from "../utils/object";
 import { isString } from "../utils/string";
 import { isset } from "../utils/util";
@@ -13,17 +13,7 @@ import { isset } from "../utils/util";
  * @param {Alwan} alwan - Alwan instance.
  * @returns {object}
  */
-export const App = (root, alwan, events) => {
-    /**
-     * Alwan reference element.
-     */
-    let referenceElement;
-
-    /**
-     * Popper event binder.
-     */
-    let popperEvents = Binder();
-
+export const App = (root, alwan) => {
     /**
      * Popper instance.
      */
@@ -42,9 +32,9 @@ export const App = (root, alwan, events) => {
      */
     const _setup = (options, instance = alwan) => {
         alwan = instance;
-        let { theme, popover, target, position, margin, id, toggle, shared } = options;
-        let refElement = alwan._reference._el();
-        let targetElement = getElement(target);
+        const { theme, popover, target, position, margin, id, toggle, shared } = options;
+        const refElement = alwan._reference._el();
+        const targetElement = getElement(target) || refElement;
 
         if (isString(id) && ! shared) {
             root.id = id;
@@ -57,8 +47,6 @@ export const App = (root, alwan, events) => {
             }
         })
 
-        target = targetElement || refElement;
-
         // Set theme (dark or light).
         root.dataset.theme = theme;
 
@@ -66,9 +54,11 @@ export const App = (root, alwan, events) => {
         if (! toggle && ! shared) {
             _toggle(alwan, true, true);
         }
-        // Hide reference element if both popover and toggle are false.
+
+        // Hide reference element if both toggle and popover options are set to false,
         // and the components are not shared.
-        toggleVisibility(referenceElement, popover || toggle || shared);
+        refElement.style.display = popover || toggle || shared ? '' : 'none';
+
         // Toggle popup class that makes the root's position fixed.
         toggleClassName(root, POPUP_CLASSNAME, popover);
 
@@ -79,7 +69,7 @@ export const App = (root, alwan, events) => {
 
         if (popover) {
             popoverInstance = createPopover(
-                target,
+                targetElement,
                 root,
                 {
                     _margin: margin,
@@ -89,7 +79,13 @@ export const App = (root, alwan, events) => {
                 popoverAccessibility
             );
         } else {
-            insertElement(root, target, ! targetElement && 'afterend');
+            // If there is a target element then append the color picker widget in it,
+            // otherwise insert it after the reference element.
+            insertElement(
+                root,
+                targetElement,
+                targetElement === refElement ? INSERT_AFTER : INSERT_AFTER_LAST_CHILD
+            )
         }
     }
 
@@ -198,7 +194,11 @@ export const App = (root, alwan, events) => {
                         _setup(instance.config, instance);
                     }
                     alwan._color._update({}, true);
-                    _reposition();
+
+                    // Update popover position before open.
+                    if (state) {
+                        _reposition();
+                    }
                 }
 
                 // Only the instance that controls the components,
@@ -213,11 +213,11 @@ export const App = (root, alwan, events) => {
     }
 
     /**
-     * Updates the popper's position.
+     * Updates the popover's position.
      */
     const _reposition = () => {
-        if (popper) {
-            popper._update();
+        if (popoverInstance) {
+            popoverInstance._update();
         }
     }
 

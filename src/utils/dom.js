@@ -1,5 +1,5 @@
-import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
-import { BUTTON, DOC_ELEMENT, INPUT, ROOT } from "../constants/globals";
+import { BUTTON_CLASSNAME, CONTAINER_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
+import { BUTTON, DOC_ELEMENT, INPUT, INSERT_AFTER_LAST_CHILD, ROOT } from "../constants/globals";
 import { merge, objectIterator } from "./object";
 import { isString } from "./string";
 import { isset } from "./util";
@@ -36,12 +36,12 @@ export const getElement = (reference, context = bodyElement(), all = false) => {
  *
  * @param {Element} element - The element to be inserted.
  * @param {Element} targetElement - Element used as a reference.
- * @param {string} where - Insert position relative to the targetElement.
+ * @param {InsertPosition} where - Insert position relative to the targetElement.
  * @returns {Element|undefined} - The inserted element.
  */
-export const insertElement = (element, targetElement, where) => {
+export const insertElement = (element, targetElement, where = INSERT_AFTER_LAST_CHILD) => {
     if (element && targetElement) {
-        return targetElement.insertAdjacentElement(where || 'beforeend', element);
+        targetElement.insertAdjacentElement(where, element);
     }
 }
 
@@ -236,7 +236,7 @@ export const translate = (element, x, y) => {
  * Creates a slider.
  *
  * @param {string} className - CSS class.
- * @param {Element} parent - Sldier parent.
+ * @param {Element} parent - Slider parent.
  * @param {number} max - Max property.
  * @param {number} step - Step property.
  * @returns {HTMLInputElement} - Slider.
