@@ -1,4 +1,5 @@
-import { ROOT } from "../constants/globals";
+import { KEY_DOWN, POINTER_DOWN, RESIZE, ROOT, SCROLL } from "../constants/globals";
+import { addEvent, removeEvent } from "../core/events/binder";
 import { getBounds, getOverflowAncestors, translate } from "../utils/dom";
 import { abs, isNumeric, round } from "../utils/number";
 import { isString } from "../utils/string";
@@ -155,7 +156,42 @@ export const createPopover = (target, container, { _margin, _position }, autoUpd
         });
     };
 
+    /**
+     * Target overflow ancestors onScroll and window onResize event handler.
+     */
+    const eventHandler = () => {
+        autoUpdate(_update, isVisible);
+    };
+
+    /**
+     * Attach/Detach popover event listeners.
+     *
+     * @param {Function} fn - A callback function that attach/Detach events listeners.
+     */
+    const popoverEvents = (fn) => {
+        overflowAncestors.forEach((ancestor) => {
+            fn(ancestor, SCROLL, eventHandler);
+        });
+        fn(window, RESIZE, eventHandler);
+        fn(ROOT, KEY_DOWN, popoverAccessibility);
+        fn(ROOT, POINTER_DOWN, popoverAccessibility);
+    };
+
+    // First update.
+    _update();
+    // Attach listeners.
+    popoverEvents(addEvent);
+
     return {
-        _update
+        _update,
+
+        /**
+         * Remove popover functionality.
+         */
+        _destroy() {
+            // Remove listeners.
+            popoverEvents(removeEvent);
+            container.style.transform = '';
+        }
     }
 }

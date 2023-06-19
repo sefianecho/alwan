@@ -1,18 +1,17 @@
 import { OPEN_CLASSNAME, POPUP_CLASSNAME } from "../constants/classnames";
-import { BUTTON, CLOSE, ESCAPE, INPUT, KEY_DOWN, OPEN, POINTER_DOWN, RESIZE, ROOT, SCROLL, TAB } from "../constants/globals";
-import { Binder } from "../core/events/binder";
-import { createPopper } from "../lib/popper";
-import { getElement, getScrollableAncestors, insertElement, isInViewport, removeElement, toggleClassName, toggleVisibility } from "../utils/dom";
-import { objectIterator } from "../utils/object";
+import { CLOSE, ESCAPE, OPEN, TAB} from "../constants/globals";
+import { createPopover } from "../lib/popover";
+import { getElement, insertElement, removeElement, toggleClassName, toggleVisibility } from "../utils/dom";
+import { objectIterator, toArray } from "../utils/object";
 import { isString } from "../utils/string";
 import { isset } from "../utils/util";
 
 /**
- * Creates App componenet and initialize components.
+ * Creates App component and initialize components.
  *
  * @param {Element} root - Picker container.
  * @param {Alwan} alwan - Alwan instance.
- * @returns {App}
+ * @returns {object}
  */
 export const App = (root, alwan, events) => {
     /**
@@ -28,14 +27,7 @@ export const App = (root, alwan, events) => {
     /**
      * Popper instance.
      */
-    let popper;
-
-    /**
-     * Popper reference's scrollable ancestors.
-     *
-     * @type {Array[Element]}
-     */
-    let scrollableAncestors;
+    let popoverInstance = null;
 
     /**
      * Visibility state.
@@ -51,6 +43,7 @@ export const App = (root, alwan, events) => {
     const _setup = (options, instance = alwan) => {
         alwan = instance;
         let { theme, popover, target, position, margin, id, toggle, shared } = options;
+        let refElement = alwan._reference._el();
         let targetElement = getElement(target);
 
         if (isString(id) && ! shared) {
@@ -64,13 +57,12 @@ export const App = (root, alwan, events) => {
             }
         })
 
-        referenceElement = alwan._reference._element;
-        target = targetElement || referenceElement;
+        target = targetElement || refElement;
 
         // Set theme (dark or light).
         root.dataset.theme = theme;
 
-        // Toggle option changed to false then open (show) the picker
+        // If toggle option changed to false, then open (show) the picker
         if (! toggle && ! shared) {
             _toggle(alwan, true, true);
         }
@@ -80,45 +72,48 @@ export const App = (root, alwan, events) => {
         // Toggle popup class that makes the root's position fixed.
         toggleClassName(root, POPUP_CLASSNAME, popover);
 
-        popperEvents._unbindAll();
-        popper = null;
+        if (popoverInstance) {
+            popoverInstance._destroy();
+            popoverInstance = null;
+        }
 
         if (popover) {
-            popper = createPopper(target, root, {
-                _margin: margin,
-                _position: position
-            });
-            popper._update();
-            // If reference element inside a nested scrollable elements,
-            // get all those scrollable elements in an array.
-            scrollableAncestors = getScrollableAncestors(target);
-            // Attach scroll event to all scrollable ancestors of the reference element,
-            // in order to update the popper's position.
-            // On window resize reposition the popper.
-            popperEvents._bind(window, RESIZE, updatePopper);
-            scrollableAncestors.forEach(scrollable => {
-                popperEvents._bind(scrollable, SCROLL, updatePopper);
-            });
-            popperEvents._bind(ROOT, [KEY_DOWN, POINTER_DOWN], handleAccessibility);
+            popoverInstance = createPopover(
+                target,
+                root,
+                {
+                    _margin: margin,
+                    _position: position
+                },
+                autoUpdate,
+                popoverAccessibility
+            );
         } else {
-            root.style = '';
             insertElement(root, target, ! targetElement && 'afterend');
         }
     }
 
     /**
-     * Updates popper's position and visibility.
+     * Auto updates popover position and picker visibility.
      *
-     * @param {Event} e - Event.
+     * @param {Function} update - Popover position updater function.
+     * @param {Function} isInViewport - Checks if popover target element is visible in the viewport.
      */
-    const updatePopper = e => {
-        if (isOpen) {
-
-            popper._update();
-
-            // Close picker if popper's reference is scrolled out of view.
-            if (! isInViewport(popper._reference, scrollableAncestors)) {
-                _toggle(alwan, false);
+    const autoUpdate = (update, isInViewport) => {
+        if (isOpen || ! alwan.config.toggle) {
+            if (isInViewport()) {
+                if (isOpen) {
+                    // Update popover position if its target element is in the viewport,
+                    // and picker is open.
+                    update();
+                } else {
+                    // This is reachable only if toggle is false,
+                    // open picker if the popover target element becomes visible.
+                    _toggle(alwan, true, true);
+                }
+            } else {
+                // Force close picker if the target element is not in the viewport.
+                _toggle(alwan, false, true);
             }
         }
     }
@@ -129,34 +124,41 @@ export const App = (root, alwan, events) => {
      * If picker is displayed as a popover then link the focus from the reference,
      * to the picker focusable elements.
      *
-     * @param {KeyboardEvent} e - Event.
+     * @param {KeyboardEvent | PointerEvent} e - Event.
      */
-    const handleAccessibility = e => {
+    const popoverAccessibility = (e) => {
         if (isOpen) {
             let { target, key, shiftKey } = e;
-            let paletteElement = alwan._components._palette._element;
-            let elementToFocusOn;
-            let lastFocusableElement;
+            let refElement = alwan._reference._el();
+            let focusableElements,
+                firstFocusableElement,
+                lastFocusableElement,
+                elementToFocusOn;
 
             // Close picker if:
             // - Escape key is pressed.
-            // - A pointerdown event happened ouside the picker and not on the reference element or one of its labels,
-            // (only if the reference element is a labelable element).
-            if (key === ESCAPE || (target !== referenceElement && ! root.contains(target) && ! [...referenceElement.labels || []].some(label => label.contains(target)))) {
+            // - A pointerdown event happened outside the picker and not on the reference element
+            // or one of its labels (if it has any).
+            if (
+                key === ESCAPE ||
+                (target !== refElement && !root.contains(target) && ! toArray(refElement.labels || []).some((label) => label.contains(target)))
+            ) {
                 _toggle(alwan, false);
             } else if (key === TAB) {
+                focusableElements = toArray(getElement('button,input,[tabindex]', root, true));
+                firstFocusableElement = focusableElements[0];
+                lastFocusableElement = focusableElements.pop();
 
-                lastFocusableElement = [...getElement(BUTTON + ',' + INPUT, root, true)].pop();
-
-                if (target === referenceElement && ! shiftKey) {
+                if (target === refElement && !shiftKey) {
                     // Pressing Tab while focusing on the reference element sends focus,
                     // to the first element (palette) inside the picker container.
-                    elementToFocusOn = paletteElement;
-                } else if ((shiftKey && target === paletteElement) || (! shiftKey && target === lastFocusableElement)) {
+                    elementToFocusOn = firstFocusableElement;
+                } else if ((shiftKey && target === firstFocusableElement) || (!shiftKey && target === lastFocusableElement)) {
                     // Pressing Tab while focusing on the palette with the shift key or focussing on the last,
                     // focusable element without shift key sends focus to the reference element (if it's focusable).
-                    elementToFocusOn = referenceElement;
+                    elementToFocusOn = refElement;
                 }
+
                 if (elementToFocusOn) {
                     e.preventDefault();
                     elementToFocusOn.focus();
@@ -166,7 +168,7 @@ export const App = (root, alwan, events) => {
     }
 
     /**
-     * Toggles color picker visiblity.
+     * Toggles color picker visibility.
      *
      * @param {object} instance - Alwan instance.
      * @param {boolean} state - True to open, false to close.
@@ -232,16 +234,13 @@ export const App = (root, alwan, events) => {
      * Destroy components and remove root element from the DOM.
      */
     const _destroy = () => {
-        // Remove components events.
-        events._unbindAll();
-        // Remove popper events.
-        popperEvents._unbindAll();
-        root = removeElement(root);
-        alwan = {};
+        if (popoverInstance) {
+            popoverInstance._destroy();
+        }
+        removeElement(root);
     }
 
     return {
-        _root: root,
         _setup,
         _reposition,
         _toggle,
