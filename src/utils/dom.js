@@ -141,23 +141,27 @@ export const removeElement = (element) => {
 }
 
 /**
- * Gets scrollable ancestor of an element (body element is not included).
+ * Gets overflow ancestor of an element (body element is not included).
  *
  * @param {Element} element - Element.
- * @param {array<Element|Document>} scrollables - Array of scrollable Elements.
+ * @param {array<Element|Document>} ancestors - Array of overflow ancestors.
  * @returns {array<Element|Document>}
  */
-export const getScrollableAncestors = (element, scrollables = [ROOT]) => {
-    element = parent(element);
-    if (! element || element === ROOT.body) {
-        return scrollables;
+export const getOverflowAncestors = (element, ancestors = [ROOT]) => {
+
+    if (element) {
+        element = element.parentElement;
     }
 
-    if (/auto|scroll/.test(getComputedStyle(element).overflow)) {
-        scrollables.push(element);
+    if (! element || element === bodyElement()) {
+        return ancestors;
     }
 
-    return getScrollableAncestors(element, scrollables);
+    if (/auto|scroll|overflow|clip|hidden/.test(getComputedStyle(element).overflow)) {
+        ancestors.push(element);
+    }
+
+    return getOverflowAncestors(element, ancestors);
 }
 
 
