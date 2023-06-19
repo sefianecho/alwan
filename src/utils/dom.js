@@ -1,5 +1,5 @@
 import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
-import { BUTTON, HTML, INPUT, ROOT } from "../constants/globals";
+import { BUTTON, DOC_ELEMENT, INPUT, ROOT } from "../constants/globals";
 import { merge, objectIterator } from "./object";
 import { isString } from "./string";
 import { isset } from "./util";
@@ -94,17 +94,17 @@ export const createElement = (tagName, className, targetElement, details, insert
  * @returns {DOMRect}
  */
 export const getBounds = (element) => {
+    let x, y, width, height, right, bottom;
+
     if (element === ROOT) {
-        return {
-            x: 0,
-            y: 0,
-            top: 0,
-            left: 0,
-            right: HTML.clientWidth,
-            bottom: HTML.clientHeight
-        }
+        x = y = 0;
+        width = right = DOC_ELEMENT.clientLeft;
+        height = bottom = DOC_ELEMENT.clientHeight;
+    } else {
+        ({ x, y, width, height, right, bottom } = element.getBoundingClientRect());
     }
-    return element.getBoundingClientRect();
+
+    return [x, y, width, height, right, bottom];
 }
 
 /**

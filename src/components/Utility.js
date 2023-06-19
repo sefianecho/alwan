@@ -1,6 +1,6 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../constants/classnames";
-import { CLICK, FOCUS_OUT, HTML, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
+import { CLICK, FOCUS_OUT, DOC_ELEMENT, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
 import { createButton, createElement, insertElement, removeElement, setHTML } from "../utils/dom";
 
 /**
@@ -78,7 +78,7 @@ export const Utility = (parent, alwan, events) => {
             if (clipboard) {
                 clipboard.writeText(color);
             } else {
-                input = createElement(INPUT, '', HTML, { value: color });
+                input = createElement(INPUT, '', DOC_ELEMENT, { value: color });
                 input.select();
                 ROOT.execCommand('copy');
                 input = removeElement(input);
