@@ -1,8 +1,7 @@
-import { HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
+import { DEFAULT_COLOR, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { createElement } from "../utils/dom";
 import { float, isNumeric, normalizeAngle, boundNumber, PI, round, int } from "../utils/number";
-import { isString, trimString } from "../utils/string";
-import { isset } from "../utils/util";
+import { isString } from "../utils/string";
 import { stringify } from "./stringify";
 
 const ctx = createElement('canvas').getContext('2d');
@@ -41,6 +40,7 @@ export const parseColor = (value = '', asString) => {
      * Invalid values default to empty string.
      */
     if (! isString(value)) {
+        value = value || {};
 
         format = [RGB_FORMAT, HSL_FORMAT].find(format => {
             return format.split('').every(key => {
@@ -58,7 +58,7 @@ export const parseColor = (value = '', asString) => {
     /**
      * Parse strings
      */
-    let [input, h, angle, s, l, a, percentage] = HSL_REGEX.exec(str) || [];
+    let [input, h, angle, s, l, a = 1, percentage] = HSL_REGEX.exec(str) || [];
 
     // str is a hsl string.
     if (input) {
@@ -73,13 +73,13 @@ export const parseColor = (value = '', asString) => {
             h: normalizeAngle(h * (ANGLE_COEFFICIENT_MAP[angle] ? ANGLE_COEFFICIENT_MAP[angle] : 1)),
             s: round(boundNumber(s)),
             l: round(boundNumber(l)),
-            a: isset(a) ? boundNumber(percentage ? a / 100 : a, 1) : 1
+            a: boundNumber(percentage ? a / 100 : a, 1)
         }
         format = HSL_FORMAT;
     } else {
         format = RGB_FORMAT;
 
-        ctx.fillStyle = '#000';
+        ctx.fillStyle = DEFAULT_COLOR;
         ctx.fillStyle = str;
         str = ctx.fillStyle;
         // ColorString is either hex or rgb string,

@@ -1,6 +1,8 @@
 export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
+export const DEFAULT_COLOR = '#000';
+
 export const BUTTON = 'button';
 
 export const OPEN = 'open';
