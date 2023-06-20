@@ -6,81 +6,61 @@ import { createButton, createElement, parent, removeElement, setCustomProperty, 
 import { int } from "../utils/number";
 import { isset } from "../utils/util";
 import { addEvent } from "../core/events/binder";
+import { isArray, merge } from "../utils/object";
 
 /**
- * Creates swatches component.
+ * Creates color swatches buttons.
  *
- * @param {Element} root - Element to append the palette element to.
+ * @param {Element} ref - Element to append the swatches container to.
  * @param {object} alwan - Picker Instance.
  * @returns {object} - Swatches component.
  */
-export const Swatches = (root, alwan) => {
+export const Swatches = (ref, alwan) => {
 
     /**
      * Swatches container.
      *
-     * @type {Element}
+     * @type {HTMLDivElement | null}
      */
     let container;
 
     /**
      * Swatches array.
      *
-     * @type {array<string>}
+     * @type {Array<string>}
      */
-    let swatches;
+    let swatchesArray;
 
     /**
      * Button.
      *
-     * @type {HTMLButtonElement}
+     * @type {HTMLButtonElement | null}
      */
     let collapseButton;
 
     /**
-     * Swatches array length.
-     *
-     * @type {number}
-     */
-    let swatchesLength;
-
-    /**
-     * Indicate whether swatches container is collapsible.
-     *
-     * @type {boolean}
-     */
-    let isCollapsible
-
-    /**
      * Swatches API.
      */
-    const self = {
+    return {
         /**
-         * Initialize swatches.
+         * Creates color swatches.
          *
-         * @param {Object} options - Alwan options.
+         * @param {object} param0 - Alwan options.
+         * @param {object} instance - Alwan instance.
          */
-        _init(options = {}, instance) {
+        _init({ swatches, toggleSwatches }, instance) {
             alwan = instance || alwan;
+            swatchesArray = [];
 
-            swatches = options.swatches || swatches;
-            isCollapsible = options.toggleSwatches;
-            isCollapsible = isset(isCollapsible) ? isCollapsible : false;
+            if (isArray(swatches)) {
+                swatchesArray = swatches;
+                container = removeElement(container);
+                collapseButton = removeElement(collapseButton);
 
-            if (Array.isArray(swatches)) {
-
-                swatchesLength = swatches.length;
-
-                if (swatchesLength) {
+                if (swatches.length) {
                     // Create swatches container.
-                    if (! container) {
-                        container = createElement('', SWATCHES_CLASSNAME, root);
-                    } else {
-                        // Initialize container.
-                        setHTML(container, '');
-                    }
-
-                    // Create swatch button.
+                    container = createElement('', SWATCHES_CLASSNAME, ref);
+                    // Create swatch buttons.
                     swatches.forEach(color => {
                         setCustomProperty(
                             createButton(SWATCH_CLASSNAME, container),
@@ -91,84 +71,46 @@ export const Swatches = (root, alwan) => {
 
                     // Create or remove the collapse button depend if the toggleSwatches,
                     // option changes.
-                    if (isCollapsible) {
-                        if (! collapseButton) {
-                            collapseButton = createButton(COLLAPSE_BUTTON_CLASSNAME, root, { html: caretSVG });
-                        }
-                    } else {
-                        collapseButton = removeElement(collapseButton);
+                    if (toggleSwatches) {
+                        collapseButton = createButton(COLLAPSE_BUTTON_CLASSNAME, ref, { html: caretSVG });
+                        /**
+                         * Handles toggle swatches button click.
+                         */
+                        addEvent(collapseButton, CLICK, () => toggleClassName(container, COLLAPSE_CLASSNAME));
                     }
-                    toggleClassName(container, COLLAPSE_CLASSNAME, isCollapsible);
-                } else {
-                    // Remove everything if the swatches array is empty.
-                    container = removeElement(container);
-                    collapseButton = removeElement(collapseButton);
+                    /**
+                     * Handles clicks in the swatches container.
+                     */
+                    addEvent(container, CLICK, ({ target }) => {
+                        if(target !== container) {
+                            if (alwan._color._set(target.style.getPropertyValue(COLOR_PROPERTY))) {
+                                alwan._events._dispatch(COLOR, target);
+                                alwan._events._dispatch(CHANGE, target);
+                            }
+                        }
+                    });
                 }
             }
         },
+
         /**
-         * Adds a swatch button.
+         * Adds color swatches.
          *
-         * @param {String|object} color - Color.
+         * @param {Array<string | object>} swatches - Color swatches array to add.
          */
-        _add(color) {
-            swatchesLength = swatches.push(color);
-            if (swatchesLength > 1) {
-                setCustomProperty(
-                    createButton(SWATCH_CLASSNAME, container),
-                    COLOR_PROPERTY,
-                    parseColor(color, true)
-                );
-            } else {
-                // Initialize component, if calling add swatches on an empty array.
-                self._init();
-            }
+        _add(swatches) {
+            alwan.config.swatches = [ ...swatchesArray, ...swatches ];
+            this._init(alwan.config);
         },
+
         /**
-         * Removes a swatch button.
+         * Removes color swatches.
          *
-         * @param {String|Number} swatch - Color or Swatch Index.
+         * @param {Array<string | number | object} swatches - Color swatches or their index to remove.
          */
-        _remove(swatch) {
-            let index = swatches.findIndex((color, index) => swatch === color || int(swatch) === index);
-
-            if (index > -1) {
-                swatchesLength--;
-                // Remove swatch button.
-                removeElement(container.children[index]);
-                // Remove color from swatches array.
-                swatches.splice(index, 1);
-
-                if (! swatchesLength) {
-                    // Initialize component, if calling remove swatches on an array that,
-                    // has only one value.
-                    self._init();
-                }
-            }
+        _remove(swatches) {
+            alwan.config.swatches = swatchesArray.filter((swatch, index) => ! swatches.some((item) => item === swatch || int(item) === index));
+            this._init(alwan.config);
         }
     };
-
-    /**
-     * Handles clicks in the swatches container or the collapse button.
-     *
-     * @param {MouseEvent} e - Event.
-     */
-    const handleClick = ({ target }) => {
-        if (target === collapseButton) {
-            toggleClassName(container, COLLAPSE_CLASSNAME);
-        }else if(parent(target) === container) {
-            if (alwan._color._set(target.style.getPropertyValue(COLOR_PROPERTY))) {
-                alwan._events._dispatch(COLOR, target);
-                alwan._events._dispatch(CHANGE, target);
-            }
-        }
-    }
-
-    /**
-     * Bind events.
-     */
-    addEvent(root, CLICK, handleClick);
-
-
-    return self;
 }

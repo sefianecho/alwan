@@ -6,6 +6,7 @@ import { Dispatcher } from "./core/events/dispatcher";
 import "./assets/scss/alwan.scss";
 import { defaults } from "./constants/defaults";
 import { isset } from "./utils/util.js";
+import { getElement } from "./utils/dom";
 
 
 export default class Alwan {
@@ -29,7 +30,7 @@ export default class Alwan {
         alwan.config = merge({}, Alwan.defaults);
         alwan._events = Dispatcher(alwan);
         alwan._color = color(alwan);
-        alwan._reference = Reference(reference, alwan);
+        alwan._reference = Reference(getElement(reference), alwan);
         alwan.setOptions(options);
     }
 
@@ -141,21 +142,21 @@ export default class Alwan {
     }
 
     /**
-     * Adds a swatch.
+     * Adds color swatches.
      *
-     * @param {String} color - Color.
+     * @param {Array<string | object>} swatches - Color swatches.
      */
-    addSwatch(color) {
-        this._components._swatches._add(color);
+    addSwatches(...swatches) {
+        this._components._swatches._add(swatches);
     }
 
     /**
-     * Removes a swatch.
+     * Removes color swatches.
      *
-     * @param {String|Number} swatch - Can a color string or it's index in the swatches array.
+     * @param {Array<string | number | object} swatches - Array of swatches or their indexes in the config.swatches array.
      */
-    removeSwatch(swatch) {
-        this._components._swatches._remove(swatch);
+    removeSwatches(...swatches) {
+        this._components._swatches._remove(swatches);
     }
 
     /**
