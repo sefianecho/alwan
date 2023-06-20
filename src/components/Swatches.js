@@ -1,7 +1,7 @@
 import { caretSVG } from "../assets/svg";
 import { COLLAPSE_BUTTON_CLASSNAME, COLLAPSE_CLASSNAME, SWATCHES_CLASSNAME, SWATCH_CLASSNAME } from "../constants/classnames";
 import { parseColor } from "../colors/parser";
-import { CHANGE, CLICK, COLOR } from "../constants/globals";
+import { CLICK, COLOR } from "../constants/globals";
 import { createButton, createElement, customProperty, removeElement, toggleClassName } from "../utils/dom";
 import { int } from "../utils/number";
 import { addEvent } from "../core/events/binder";
@@ -82,10 +82,7 @@ export const Swatches = (ref, alwan) => {
                      */
                     addEvent(container, CLICK, ({ target }) => {
                         if(target !== container) {
-                            if (alwan._color._set(customProperty(target, COLOR))) {
-                                alwan._events._dispatch(COLOR, target);
-                                alwan._events._dispatch(CHANGE, target);
-                            }
+                            alwan._color._set(customProperty(target, COLOR), target, true);
                         }
                     });
                 }

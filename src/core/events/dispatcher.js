@@ -6,7 +6,7 @@ import { isset } from "../../utils/util";
  * Alwan events.
  *
  * @param {Alwan} alwan - Alwan Instance.
- * @returns 
+ * @returns
  */
 export const Dispatcher = (alwan) => {
     /**
@@ -23,7 +23,7 @@ export const Dispatcher = (alwan) => {
         /**
          * Dispatch an event.
          *
-         * @param {string} type - Event type.
+         * @param {string} type - Alwan event.
          * @param {object} ev - Event object.
          */
         _dispatch(type, source) {
@@ -37,37 +37,35 @@ export const Dispatcher = (alwan) => {
         /**
          * Add an event listener.
          *
-         * @param {string} eventType - Event type.
-         * @param {CallableFunction} eventHandler - Event handler to registered.
+         * @param {string} event - Alwan event.
+         * @param {Function} listener - Event listener callback.
          */
-        _addListener(eventType, eventHandler) {
-            if (listeners[eventType] && ! listeners[eventType].includes(eventHandler)) {
-                listeners[eventType].push(eventHandler);
+        _addListener(event, listener) {
+            if (listeners[event] && ! listeners[event].includes(listener)) {
+                listeners[event].push(listener);
             }
         },
 
         /**
          * Remove event listener(s).
          *
-         * @param {string} type - Event type.
-         * @param {CallableFunction} handlerToRemove - Event handler to remove.
+         * @param {string} event - Alwan event.
+         * @param {Function} listener - Event listener callback.
          */
-        _removeListeners(eventType, handlerToRemove) {
-
-            let handlers = eventType && listeners[eventType];
-
-            if (isset(eventType)) {
-                if (handlers) {
-                    if (isset(handlerToRemove)) {
-                        listeners[eventType] = handlers.filter((handler => handler !== handlerToRemove));
-                    } else {
-                        listeners[eventType] = [];
-                    }
-                }
-            } else {
-                objectIterator(listeners, (_array, eventType) => {
-                    listeners[eventType] = [];
+        _removeListeners(event, listener) {
+            if (! isset(event)) {
+                // Remove all listeners if event is undefined.
+                objectIterator(listeners, (_array, alwanEvent) => {
+                    listeners[alwanEvent] = [];
                 });
+            } else if (listeners[event]) {
+                if (isset(listener)) {
+                    // Remove the given listener.
+                    listeners[event] = listeners[event].filter((fn) => fn !== listener);
+                } else {
+                    // Remove all listeners of a given event if listener is undefined.
+                    listeners[event] = [];
+                }
             }
         }
     }

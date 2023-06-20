@@ -141,7 +141,7 @@ export const Inputs = (ref, alwan) => {
     const handleChange = ({ target }) => {
 
         if (! isChanged) {
-            alwan._color._saveState();
+            alwan._color._save();
             isChanged = true;
         }
 
@@ -157,9 +157,7 @@ export const Inputs = (ref, alwan) => {
             str = stringify(color, formats[currentFormatIndex]);
         }
 
-        if (alwan._color._set(str, true)) {
-            alwan._events._dispatch(COLOR, target);
-        }
+        alwan._color._set(str, target);
     }
 
     /**
@@ -168,9 +166,8 @@ export const Inputs = (ref, alwan) => {
      * @param {InputEvent} e - Event.
      */
     const handleChangeStop = e => {
-        alwan._color._triggerChange(e.target);
+        alwan._color._change(e.target, true);
         isChanged = false;
-        alwan._color._update();
     }
 
     /**

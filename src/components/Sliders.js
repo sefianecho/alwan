@@ -35,11 +35,12 @@ export const Sliders = (ref, alwan) => {
      *
      * @param {InputEvent} e - Event.
      */
-    const handleChange = (e) => {
-        const target = e.target;
-        const value = target.value;
-        alwan._color._update(target === hueSlider ? { h: 360 - value } : { a: value * 1 });
-        alwan._events._dispatch(type === CHANGE ? CHANGE : COLOR, target);
+    const handleChange = ({ target, type, target: { value }}) => {
+        if (type === CHANGE) {
+            alwan._color._change(target);
+        } else {
+            alwan._color._update(target === hueSlider ? { h: 360 - value } : { a: value * 1 }, target);
+        }
     }
 
     /**

@@ -92,6 +92,8 @@ export const color = (alwan) => {
         _update(hsl, source, updateAll = false, rgb) {
             if (! config.disabled) {
 
+                const { r, g, b, a } = state;
+
                 merge(state, hsl);
                 merge(
                     state,
@@ -116,24 +118,33 @@ export const color = (alwan) => {
                 _utility._preview(rgbString);
                 _sliders._update(state, opaqueHex, updateAll);
                 _inputs._values(state);
+
+                // If an element in the picker is changing the state,
+                // then trigger color event.
+                if (source && (state.r !== r || state.g !== g || state.b !== b || state.a !== a)) {
+                    alwan._events._dispatch(COLOR, source);
+                }
             }
         },
 
         /**
-         * Saves the current state.
+         * Saves the current color as a string.
          */
-        _saveState() {
-            savedColor = stringify(state, format);
+        _save() {
+            savedColor = state[format];
         },
 
         /**
-         * Compares the current color state with the saved state. if they are different,
-         * then dispatch a change event.
+         * Triggers change event.
          *
-         * @param {Element} source - Event source.
+         * If checkChange flag is true, fire change event only if the saved color (color start),
+         * and the current color are different.
+         *
+         * @param {HTMLElement} source - Event source.
+         * @param {boolean} check - Whether to compare current color with the saved color.
          */
-        _triggerChange(source) {
-            if (savedColor !== stringify(state, format)) {
+        _change(source, check) {
+            if (!check || (check && savedColor !== state[format])) {
                 alwan._events._dispatch(CHANGE, source);
             }
         },
@@ -143,8 +154,9 @@ export const color = (alwan) => {
          *
          * @param {string|object} color - Color string or object.
          * @param {HTMLElement | undefined} source - Source element.
+         * @param {boolean} triggerChange - Whether to fire the change event or not.
          */
-        _set(color, source) {
+        _set(color, source, triggerChange) {
             let [parsedColor, parsedColorFormat] = parseColor(color);
             let rgb, hsl;
 
@@ -160,6 +172,10 @@ export const color = (alwan) => {
                 }
 
                 this._update(hsl, source, true, rgb);
+
+                if (triggerChange) {
+                    this._change(source);
+                }
             }
         },
 
