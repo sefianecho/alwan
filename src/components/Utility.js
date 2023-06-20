@@ -1,28 +1,28 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../constants/classnames";
-import { CLICK, FOCUS_OUT, DOC_ELEMENT, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
+import { BLUR, CLICK, DOC_ELEMENT, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
 import { addEvent } from "../core/events/binder";
-import { createButton, createElement, insertElement, removeElement, setHTML } from "../utils/dom";
+import { createButton, createElement, removeElement, setHTML } from "../utils/dom";
 
 /**
- * Creates utility component.
+ * Preview color and copy color string.
  *
- * @param {Element} parent - Container.
+ * @param {HTMLElement} ref - Element to insert utility elements into.
  * @param {Alwan} alwan - Alwan instance.
  * @returns {object} Utility component.
  */
-export const Utility = (parent, alwan) => {
+export const Utility = (ref, alwan) => {
     /**
      * Preview color.
      *
-     * @type {Element}
+     * @type {HTMLDivElement | null}
      */
     let previewElement;
 
     /**
      * Copy button.
      *
-     * @type {HTMLButtonElement}
+     * @type {HTMLButtonElement | null}
      */
     let copyButton;
 
@@ -32,9 +32,56 @@ export const Utility = (parent, alwan) => {
     let isCopied;
 
     /**
+     * Set button icon.
+     *
+     * @param {boolean} state - Copy state.
+     */
+    const updateIcon = (state) => {
+        isCopied = state;
+        setHTML(copyButton, state ? checkSVG : clipboardSVG);
+    };
+
+    /**
+     * Copy color fallback if browser doesn't support 'navigator.clipboard'.
+     *
+     * @param {string} color - Color to copy.
+     */
+    const fallback = (color) => {
+        let input = createElement(
+            INPUT,
+            '',
+            DOC_ELEMENT,
+            { value: color }
+        );
+        input.select();
+        ROOT.execCommand('copy');
+        input = removeElement(input);
+        // change icon.
+        updateIcon(true);
+    };
+
+    /**
+     * Copies the selected color to the clipboard.
+     */
+    const copyColor = () => {
+        if (! isCopied && ! alwan.config.disabled) {
+            const clipboard = navigator.clipboard;
+            const color = alwan._color._get();
+
+            if (clipboard) {
+                clipboard.writeText(color)
+                            .then(() => updateIcon(true))
+                            .catch(() => fallback(color));
+            } else {
+                fallback(color);
+            }
+        }
+    }
+
+    /**
      * API.
      */
-    const self = {
+    return {
         /**
          * Initialize utility component.
          *
@@ -43,76 +90,36 @@ export const Utility = (parent, alwan) => {
          */
         _init({ preview, copy }, instance) {
             alwan = instance;
-            if (copy !== !! copyButton) {
-                if (copy) {
-                    copyButton = createButton(COPY_BUTTON_CLASSNAME, previewElement || parent, { html: clipboardSVG }, INSERT_BEFORE_FIRST_CHILD);
-                } else {
-                    copyButton = removeElement(copyButton);
-                }
+
+            // Initialize elements.
+            previewElement = removeElement(previewElement);
+            copyButton = removeElement(copyButton);
+
+            if (preview) {
+                previewElement = createElement('',
+                    PREVIEW_CLASSNAME,
+                    ref,
+                    {},
+                    INSERT_BEFORE_FIRST_CHILD
+                );
             }
 
-            if (preview !== !! previewElement) {
-                if (preview) {
-                    previewElement = createElement('', PREVIEW_CLASSNAME, parent, false, INSERT_BEFORE_FIRST_CHILD);
-                } else {
-                    previewElement = removeElement(previewElement);
-                }
+            if (copy) {
+                copyButton = createButton(
+                    COPY_BUTTON_CLASSNAME,
+                    previewElement || ref,
+                    { html: clipboardSVG },
+                    INSERT_BEFORE_FIRST_CHILD
+                );
 
-                insertElement(copyButton, previewElement || parent, INSERT_BEFORE_FIRST_CHILD);
+                /**
+                 * Add events.
+                 */
+                addEvent(copyButton, CLICK, copyColor);
+                // Reset clipboard icon.
+                addEvent(copyButton, BLUR, () => isCopied && updateIcon(false));
+                addEvent(copyButton, MOUSE_OUT, () => copyButton.blur());
             }
         }
     }
-
-    /**
-     * Copies the selected color to the clipboard.
-     *
-     * @param {MouseEvent} e - Event.
-     */
-    const copyColor = ({ target }) => {
-        if (target === copyButton && ! isCopied && ! alwan.config.disabled) {
-
-            let clipboard = navigator.clipboard;
-            let color = alwan._color._get();
-            let input;
-
-            if (clipboard) {
-                clipboard.writeText(color);
-            } else {
-                input = createElement(INPUT, '', DOC_ELEMENT, { value: color });
-                input.select();
-                ROOT.execCommand('copy');
-                input = removeElement(input);
-            }
-            // change icon.
-            isCopied = true;
-            setHTML(copyButton, checkSVG);
-        }
-    }
-
-    /**
-     *  Updates the svg icon of the button.
-     *
-     * @param {MouseEvent|FocusEvent} e - Event.
-     */
-    const updateButtonIcon = e => {
-        if (e.target === copyButton) {
-            // If the color is copied (that means the copy button has changed its icon),
-            // and the button has lost focus or mouse left it, then set the icon back,
-            // to the clipboard svg.
-            if (isCopied) {
-                isCopied = false;
-                setHTML(copyButton, clipboardSVG);
-            }
-            copyButton.blur();
-        }
-    }
-
-    /**
-     * Bind events.
-     */
-    addEvent(parent, CLICK, copyColor);
-    addEvent(parent, MOUSE_OUT, updateButtonIcon);
-    addEvent(parent, FOCUS_OUT, updateButtonIcon);
-
-    return self;
 }

@@ -244,3 +244,13 @@ export const translate = (element, x, y) => {
 export const createSlider = (className, parent, max, step) => {
     return createElement(INPUT, SLIDER_CLASSNAME + ' ' + className, parent, { type: 'range', max, step });
 }
+
+/**
+ * Creates a container element.
+ *
+ * @param {Element} targetElement - Element used as a reference.
+ * @param {InsertPosition | undefined} where - Insert position relative to the targetElement
+ */
+export const createContainer = (targetElement, where) => {
+    return createElement('', CONTAINER_CLASSNAME, targetElement, {}, where);
+}

@@ -1,11 +1,11 @@
-import { ALWAN_CLASSNAME, CONTAINER_CLASSNAME } from "../constants/classnames";
+import { ALWAN_CLASSNAME } from "../constants/classnames";
 import { App } from "../components/App";
 import { Inputs } from "../components/Inputs";
 import { Palette } from "../components/Palette";
 import { Sliders } from "../components/Sliders";
 import { Swatches } from "../components/Swatches";
 import { Utility } from "../components/Utility";
-import { body, bodyElement, createElement } from "../utils/dom";
+import { bodyElement, createContainer, createElement } from "../utils/dom";
 
 /**
  * Shared Components.
@@ -26,22 +26,12 @@ let instanceCount = 0;
 const createComponents = (alwan) => {
 
     const root = createElement('', ALWAN_CLASSNAME, bodyElement());
-
-    /**
-     * Creates a new container element.
-     *
-     * @returns {Element} - Container Element.
-     */
-    const createContainer = () => {
-        return createElement('', CONTAINER_CLASSNAME, root);
-    }
-
     const _app = App(root, alwan);
     const _palette = Palette(root, alwan);
-    const container = createContainer();
+    const container = createContainer(root);
     const _utility = Utility(container, alwan);
     const _sliders = Sliders(container, alwan);
-    const _inputs = Inputs(createContainer(), alwan);
+    const _inputs = Inputs(container, alwan);
     const _swatches = Swatches(root, alwan);
 
     return {
@@ -96,7 +86,7 @@ export const useComponents = (alwan) => {
     if (_components) {
         // Nothing is changing, if components are shared and the option shared is true,
         // or the components are not shared and the option shared is false
-        // then just return the current compoenents.
+        // then just return the current components.
         if ((isShared(_components)) === shared) {
             return _components;
         }
@@ -105,7 +95,7 @@ export const useComponents = (alwan) => {
         _components._app._toggle(alwan, false, true);
         // If something changed, either the components were shared,
         // and the option shared is false which means set the components as,
-        // non-shared or the coponents were non-shared and we want to share them.
+        // non-shared or the components were non-shared and we want to share them.
         // in either cases we need to destroy the current components.
         destroyComponents(_components);
     }

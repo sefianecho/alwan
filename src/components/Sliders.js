@@ -4,24 +4,24 @@ import { addEvent } from "../core/events/binder";
 import { createElement, createSlider, removeElement } from "../utils/dom";
 
 /**
- * Creates sliders component.
+ * Creates hue and alpha sliders.
  *
- * @param {Element} parent - Element to append sliders to.
+ * @param {HTMLElement} ref - Element to append sliders to.
  * @param {Object} alwan - Alwan instance.
  * @returns {Object} Sliders component.
  */
-export const Sliders = (parent, alwan) => {
+export const Sliders = (ref, alwan) => {
     /**
      * Alpha slider.
      *
-     * @type {HTMLInputElement}
+     * @type {HTMLInputElement | null}
      */
     let alphaSlider;
 
     /**
      * Sliders container.
      */
-    const container = createElement('', SLIDERS_CLASSNAME, parent);
+    const container = createElement('', SLIDERS_CLASSNAME, ref);
 
     /**
      * Hue slider.
@@ -33,9 +33,11 @@ export const Sliders = (parent, alwan) => {
     /**
      * Updates color.
      *
-     * @param {InputEvent} param0 - Event.
+     * @param {InputEvent} e - Event.
      */
-    const handleChange = ({ target, type, target: { value } }) => {
+    const handleChange = (e) => {
+        const target = e.target;
+        const value = target.value;
         alwan._color._update(target === hueSlider ? { h: 360 - value } : { a: value * 1 });
         alwan._events._dispatch(type === CHANGE ? CHANGE : COLOR, target);
     }
@@ -57,13 +59,17 @@ export const Sliders = (parent, alwan) => {
         _init({ opacity }, instance) {
             alwan = instance || alwan;
 
-            if (opacity !== !! alphaSlider) {
-                if (opacity) {
-                    alphaSlider = createSlider(ALPHA_SLIDER_CLASSNAME, container, 1, 0.01);
-                } else {
-                    alphaSlider = removeElement(alphaSlider);
-                    alwan._color._update({ a: 1 });
-                }
+            alphaSlider = removeElement(alphaSlider);
+
+            if (opacity) {
+                alphaSlider = createSlider(
+                    ALPHA_SLIDER_CLASSNAME,
+                    container,
+                    1,
+                    0.01
+                );
+            } else {
+                alwan._color._update({ a: 1 });
             }
         },
 

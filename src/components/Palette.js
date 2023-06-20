@@ -1,17 +1,17 @@
 import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
-import { CHANGE, COLOR, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
+import { CHANGE, COLOR, DOC_ELEMENT, KEYBOARD_X, KEYBOARD_Y, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
-import { createElement, getBounds, translate, removeElement } from "../utils/dom"
+import { createElement, getBounds, translate, removeElement, bodyElement } from "../utils/dom"
 import { boundNumber, min } from "../utils/number";
 
 /**
- * Picker palette.
+ * Color picking area, pick color by dragging the marker.
  *
- * @param {Element} root - Root element to append the palette elements to.
+ * @param {HTMLElement} ref - Insert palette element relative to this element.
  * @param {Object} alwan - Alwan instance.
  * @returns {Object}
  */
-export const Palette = (root, alwan) => {
+export const Palette = (ref, alwan) => {
     /**
      * Marker X coordinate.
      *
@@ -34,11 +34,11 @@ export const Palette = (root, alwan) => {
     let paletteBounds;
 
     /**
-     * A transparent element cover the whole document.
+     * A transparent element that covers the whole document.
      *
-     * @type {Element}
+     * @type {HTMLDivElement | null}
      */
-    let overlayElement;
+    let backdropElement;
 
     /**
      * Indicates whether a pointer (mouse, pen or touch) is down.
@@ -48,48 +48,31 @@ export const Palette = (root, alwan) => {
     /**
      * Palette element.
      */
-    const palette = createElement('', PALETTE_CLASSNAME, root, { tabindex: '0' });
+    const palette = createElement('', PALETTE_CLASSNAME, ref, { tabindex: '0' });
 
     /**
-     * Palette marker.
+     * Palette's marker.
      */
     const marker = createElement('', MARKER_CLASSNAME, palette);
-
-    /**
-     * Move marker horizontally using the keyboard arrow keys.
-     */
-    const keyboardX = {
-        ArrowRight: 1,
-        ArrowLeft: -1
-    };
-
-    /**
-     * Move marker vertically using the keyboard arrow keys
-     */
-    const keyboardY = {
-        ArrowDown: 1,
-        ArrowUp: -1
-    };
 
     /**
      * Moves marker and updates the color state.
      * Moves it using a pointer (mouse, touch or pen) or keyboard arrow keys.
      *
-     * @param {Event} param0 - Pointer Event.
+     * @param {PointerEvent | null} e - Pointer Event.
      * @param {object} keyboard - Keyboard steps.
      * @param {Function} change - Callback function, called when color changes.
      */
-    const moveMarkerAndUpdateColor = ({ clientX, clientY }, keyboard, change) => {
-
-        let { x, y, width, height } = paletteBounds;
+    const moveMarkerAndUpdateColor = (e, keyboard, change) => {
+        let [ x, y, width, height ] = paletteBounds;
         let v, L;
 
-        if (keyboard) {
+        if (e) {
+            x = e.clientX - x;
+            y = e.clientY - y;
+        } else {
             x = markerX + keyboard.x * width / 100;
             y = markerY + keyboard.y * height / 100;
-        } else {
-            x = clientX - x;
-            y = clientY - y;
         }
 
         x = boundNumber(x, width);
@@ -122,15 +105,14 @@ export const Palette = (root, alwan) => {
      * @param {PointerEvent} e - Event.
      */
     const dragStart = e => {
-        if (! overlayElement) {
-            // overlayElement = createElement('', OVERLAY_CLASSNAME, root);
+        if (! backdropElement) {
+            backdropElement = createElement('', OVERLAY_CLASSNAME, DOC_ELEMENT);
         }
         // Save color state.
         alwan._color._saveState();
         paletteBounds = getBounds(palette);
         isPointerDown = true;
         moveMarkerAndUpdateColor(e);
-        // palette.focus();
     }
 
     /**
@@ -152,7 +134,7 @@ export const Palette = (root, alwan) => {
     const dragEnd = e => {
         if (isPointerDown) {
             alwan._color._triggerChange(palette);
-            overlayElement = removeElement(overlayElement);
+            backdropElement = removeElement(backdropElement);
             isPointerDown = false;
         }
     }
@@ -163,14 +145,16 @@ export const Palette = (root, alwan) => {
      * @param {KeyboardEvent} e - Event.
      */
     const handleKeyboard = e => {
-        let key = e.key;
+        const key = e.key;
+        const x = KEYBOARD_X[key] || 0;
+        const y = KEYBOARD_Y[key] || 0;
 
-        if (keyboardX[key] || keyboardY[key]) {
+        if (x || y) {
             e.preventDefault();
 
             paletteBounds = getBounds(palette);
 
-            moveMarkerAndUpdateColor({}, { x: keyboardX[key] || 0, y: keyboardY[key] || 0 },
+            moveMarkerAndUpdateColor(null, { x, y },
                 () => {
                     alwan._events._dispatch(CHANGE, palette);
                 }
@@ -210,8 +194,8 @@ export const Palette = (root, alwan) => {
             // Temporary hold the value of V in the HSV color space.
             markerY = L + S * min(L, 1 - L);
 
-            markerX = (markerY ? 2 * (1 - L / markerY) : 0) * paletteBounds.width;
-            markerY = (1 - markerY) * paletteBounds.height;
+            markerX = (markerY ? 2 * (1 - L / markerY) : 0) * paletteBounds[2];
+            markerY = (1 - markerY) * paletteBounds[3];
 
             translate(marker, markerX, markerY);
         },
