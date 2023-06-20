@@ -66,7 +66,7 @@ export const Utility = (ref, alwan) => {
     const copyColor = () => {
         if (! isCopied && ! alwan.config.disabled) {
             const clipboard = navigator.clipboard;
-            const color = alwan._color._get();
+            const color = alwan._color._get(true);
 
             if (clipboard) {
                 clipboard.writeText(color)

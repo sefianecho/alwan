@@ -89,6 +89,7 @@ export const Inputs = (ref, alwan) => {
         removeElement(inputsContainer);
         inputsContainer = createElement('', INPUTS_CLASSNAME, container, {}, INSERT_BEFORE_FIRST_CHILD);
 
+        const color = alwan._color._get();
         // Each letter in the format variable represent a color channel,
         // For multiple inputs, each color channel has an input field.
         // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
@@ -107,7 +108,7 @@ export const Inputs = (ref, alwan) => {
              * </label>
              */
             const labelElement = createElement('label', '', inputsContainer);
-            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, { type: 'text' });
+            inputsMap[field] = createElement(INPUT, INPUT_CLASSNAME, labelElement, { type: 'text', value: color[field] + '' });
             createElement('span', '', labelElement, { html: field });
         });
 
@@ -115,7 +116,7 @@ export const Inputs = (ref, alwan) => {
         * Bind events.
         */
         addEvent(inputsContainer, INPUT, handleChange);
-        addEvent(inputsContainer, CHANGE, handleChangeStop);
+        addEvent(inputsContainer, CHANGE, handleChange);
         // Select value on focus.
         addEvent(inputsContainer, FOCUS_IN, (e) => { e.target.select(); });
         // Close picker if enter pressed while focusing in inputs.
@@ -138,36 +139,32 @@ export const Inputs = (ref, alwan) => {
      *
      * @param {InputEvent} e - Event.
      */
-    const handleChange = ({ target }) => {
+    const handleChange = ({ target, type }) => {
 
-        if (! isChanged) {
-            alwan._color._save();
-            isChanged = true;
+        if (type === CHANGE) {
+            alwan._color._change(target, true);
+            isChanged = false;
+        } else {
+
+            if (! isChanged) {
+                alwan._color._save();
+                isChanged = true;
+            }
+
+            let str = target.value;
+            let color = {};
+
+            if (! isSingle()) {
+                // Copy inputs values into an object (rgb or hsl).
+                objectIterator(inputsMap, (input, key) => {
+                    color[key] = float(input.value);
+                });
+                // Convert the object into string.
+                str = stringify(color, formats[currentFormatIndex]);
+            }
+
+            alwan._color._set(str, target);
         }
-
-        let str = target.value;
-        let color = {};
-
-        if (! isSingle()) {
-            // Copy inputs values into an object (rgb or hsl).
-            objectIterator(inputsMap, (input, key) => {
-                color[key] = float(input.value);
-            });
-            // Convert the object into string.
-            str = stringify(color, formats[currentFormatIndex]);
-        }
-
-        alwan._color._set(str, target);
-    }
-
-    /**
-     * Handles when an input loses focus after its value was changed.
-     *
-     * @param {InputEvent} e - Event.
-     */
-    const handleChangeStop = e => {
-        alwan._color._change(e.target, true);
-        isChanged = false;
     }
 
     /**

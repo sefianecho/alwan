@@ -108,16 +108,6 @@ export const getBounds = (element) => {
 }
 
 /**
- * Gets an element parent.
- *
- * @param {Element} element - Element.
- * @returns {Element|null} - The parent element.
- */
-export const parent = (element) => {
-    return element.parentElement;
-}
-
-/**
  * Replaces an element in the DOM with another element.
  *
  * @param {Element} element - Element to replace another element.
@@ -138,6 +128,8 @@ export const removeElement = (element) => {
     if (element) {
         element.remove();
     }
+
+    return null;
 }
 
 /**
@@ -181,16 +173,6 @@ export const customProperty = (element, property, value) => {
     return '';
 }
 
-
-/**
- * Hides/Shows element.
- *
- * @param {Element} element - Element to show/hide.
- * @param {boolean} toggler - Whether to show (true) or hide the element.
- */
-export const toggleVisibility = (element, toggler = true) => {
-    element.style.display = toggler ? '' : 'none';
-}
 
 /**
  * Adds/Removes a class to/from an based on a boolean variable.

@@ -210,10 +210,10 @@ export const color = (alwan) => {
         },
 
         /**
-         * Gets current color as a string.
+         * Gets color state object or current color as a string
          *
-         * @returns {string}
+         * @returns {string | object}
          */
-        _get: () => stringify(state, format)
+        _get: (asString) => asString ? state[format] : state,
     }
 }
