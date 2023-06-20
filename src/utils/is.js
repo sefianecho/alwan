@@ -9,11 +9,9 @@ export const isString = (value) => {
 }
 
 /**
- * Trims a string.
+ * Checks if a value is not undefined or null.
  *
- * @param {string} str - String to trim.
- * @returns {string} trimmed string
+ * @param {Any} value - Value.
+ * @returns {Boolean}
  */
-export const trimString = (str) => {
-    return str.trim();
-}
+export const isset = value => value != null;
