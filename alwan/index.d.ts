@@ -13,68 +13,74 @@ declare class Alwan {
     open(): void;
     close(): void;
     toggle(): void;
-    on(type: Alwan.alwanEvent, handler: Alwan.Handler): void;
-    off(type?: Alwan.alwanEvent, handler?: Alwan.Handler): void;
+    on(type: Alwan.alwanEventType, listener: Alwan.alwanEventListener): void;
+    off(type?: Alwan.alwanEventType, listener?: Alwan.alwanEventListener): void;
     setColor(color: Alwan.Color): Alwan;
     getColor(): Alwan.colorValue;
-    addSwatch(color: Alwan.Color): void;
-    removeSwatch(swatch: string|number): void;
+    addSwatches(...swatches: Alwan.Color[]): void;
+    removeSwatches(...swatches: Array<Alwan.Color | number>): void;
     enable(): void;
     disable(): void;
     reset(): void;
     reposition(): void;
-    trigger(type: Alwan.alwanEvent): void;
+    trigger(type: Alwan.alwanEventType): void;
     destroy(): void;
 }
 
 declare namespace Alwan {
 
-
-    type stringify = () => string;
-
-
     interface RGB {
-        r: number,
-        g: number,
-        b: number,
-        a?: number,
-        toString?: stringify
+        r: number;
+        g: number;
+        b: number;
+    }
+
+    interface RGBA extends RGB {
+        a: number;
     }
 
     interface HSL {
-        h: number,
-        s: number,
-        l: number,
-        a?: number,
-        toString?: stringify
+        h: number;
+        s: number;
+        l: number;
+    }
+
+    interface HSLA extends HSL {
+        a: number;
     }
 
 
-    export type Color = string|RGB|HSL;
-    type colorArray = [number, number, number, number?, stringify?];
+    export type Color = string | RGBA | RGB | HSL | HSLA;
 
     type colorFormat = 'rgb'|'hsl'|'hex';
 
-    export type alwanEvent = 'open'|'close'|'change'|'color';
+    export type alwanEventType = 'open' | 'close' | 'change' | 'color';
 
-    type side = 'top'|'right'|'bottom'|'left';
-    type alignement = 'start'|'center'|'end';
-    type position = side | `${side}-${alignement}`;
+    type side = 'top' | 'right' | 'bottom'| 'left';
+    type alignment = 'start' | 'center' | 'end';
+    type position = side | `${side}-${alignment}`;
+    export interface colorValue {
+       readonly h: number;
+       readonly s: number;
+       readonly l: number;
 
+       readonly r: number;
+       readonly g: number;
+       readonly b: number;
 
-    interface colorValue {
-        value: string,
-        rgb: (asArray?: boolean) => RGB|colorArray,
-        hsl: (asArray?: boolean) => HSL|colorArray,
-        hex: () => string,
+       readonly a: number;
+
+       readonly rgb: string;
+       readonly hsl: string;
+       readonly hex: string;
     }
 
-    interface Event extends colorValue {
-        type: alwanEvent,
-        source?: Element|Alwan,
+    interface alwanEvent extends colorValue {
+        readonly type: alwanEventType,
+        readonly source: HTMLElement | undefined,
     }
 
-    export type Handler = (ev: Event) => void;
+    export type alwanEventListener = (ev: alwanEvent) => void;
 
     export interface alwanOptions {
         id?: string,
@@ -91,7 +97,7 @@ declare namespace Alwan {
         disabled?: boolean,
         format?: colorFormat,
         singleInput?: boolean,
-        inputs?: {
+        inputs?: boolean | {
             rgb?: boolean,
             hex?: boolean,
             hsl?: boolean,
