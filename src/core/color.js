@@ -1,7 +1,8 @@
+import { HSLToRGB, RGBToHEX } from "../colors/converter";
 import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
-import { CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
-import { setCustomProperty } from "../utils/dom";
+import { CHANGE, COLOR, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
+import { customProperty, setCustomProperty } from "../utils/dom";
 import { round } from "../utils/number.js";
 import { merge, objectIterator } from "../utils/object";
 
@@ -12,13 +13,6 @@ import { merge, objectIterator } from "../utils/object";
  * @returns {object} Core color state.
  */
 export const color = (alwan) => {
-
-    /**
-     * RGB string used to update UI.
-     *
-     * @type {string}
-     */
-    let rgbString;
 
     /**
      * Save an rgb string.
@@ -55,7 +49,12 @@ export const color = (alwan) => {
         b: 0,
 
         // Opacity value (0-1)
-        a: 1
+        a: 1,
+
+        // color strings.
+        rgb: '',
+        hex: '',
+        hsl: ''
     }
 
     /**
@@ -83,50 +82,40 @@ export const color = (alwan) => {
 
     return {
         /**
-         * Updates color state and the UI components.
+         * Updates color state and UI.
          *
-         * @param {object} hsl - HSL color object.
-         * @param {boolean} all - Whether to update the rest of the components (palette and sliders).
-         * @param {boolean} isInputs - If true don't update inputs.
-         * @param {boolean} isRGB - Color state changed from a RGB color.
+         * @param {object} hsl - HSL color components.
+         * @param {HTMLElement | undefined} source - Element that updating the color.
+         * @param {boolean | undefined} updateAll - Whether to update the palette and sliders components.
+         * @param {object | undefined} rgb - RGB color object.
          */
-        _update(hsl, all, isInputs, isRGB) {
+        _update(hsl, source, updateAll = false, rgb) {
             if (! config.disabled) {
 
                 merge(state, hsl);
+                merge(
+                    state,
+                    {
+                        s: round(state.S * 100),
+                        l: round(state.L * 100),
+                    },
+                    rgb || HSLToRGB(state)
+                );
 
-                let { h, S, L } = state;
-                let { _app: { _root }, _inputs, _palette, _sliders } = alwan._components;
+                const { _inputs, _palette, _sliders, _utility } = alwan._components;
+                const rgbString = stringify(state, RGB_FORMAT);
+                const [opaqueHex, alphaHex] = RGBToHEX(state);
 
-                if (! isRGB) {
-                    // Update rgb channels.
-                    h /= 30;
-                    state.r = fn(h, S, L);
-                    state.g = fn(h + 8, S, L);
-                    state.b = fn(h + 4, S, L);
-                }
-
-                state.s = round(S * 100);
-                state.l = round(L * 100);
-
-                rgbString = stringify(state, RGB_FORMAT);
+                state.hsl = stringify(state, HSL_FORMAT);
+                state.hex = opaqueHex + alphaHex;
+                state.rgb = rgbString;
 
                 // Update ui.
-                setCustomProperty(alwan._reference._element, COLOR_PROPERTY, rgbString);
-                setCustomProperty(_root, '--h', state.h);
-                setCustomProperty(_root, '--rgb', stringify(state, RGB_FORMAT, true));
-                setCustomProperty(_root, COLOR_PROPERTY, rgbString);
-
-                // Update Inputs.
-                if (! isInputs) {
-                    _inputs._update(config.singleInput || format === HEX_FORMAT ? { [format]: stringify(state, format) } : state);
-                }
-
-                // Update palette's marker position and sliders values.
-                if (all) {
-                    _palette._update(state);
-                    _sliders._update(state);
-                }
+                customProperty(alwan._reference._el(), COLOR, rgbString);
+                _palette._update(state, updateAll);
+                _utility._preview(rgbString);
+                _sliders._update(state, opaqueHex, updateAll);
+                _inputs._values(state);
             }
         },
 
@@ -139,7 +128,7 @@ export const color = (alwan) => {
 
         /**
          * Compares the current color state with the saved state. if they are different,
-         * then dipatch a change event.
+         * then dispatch a change event.
          *
          * @param {Element} source - Event source.
          */
@@ -171,14 +160,14 @@ export const color = (alwan) => {
 
             if (isChanged) {
                 if (isRGB) {
-                    updateHSLFromRGB(_color);
+                    // updateHSLFromRGB(_color);
                 } else {
-                    hsl = {
-                        h: _color.h,
-                        S: _color.s / 100,
-                        L: _color.l / 100,
-                        a: _color.a
-                    }
+                    // hsl = {
+                    //     h: _color.h,
+                    //     S: _color.s / 100,
+                    //     L: _color.l / 100,
+                    //     a: _color.a
+                    // }
                 }
 
                 this._update(hsl, true, isInputs, isRGB);

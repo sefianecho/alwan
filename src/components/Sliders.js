@@ -1,7 +1,7 @@
 import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME, SLIDERS_CLASSNAME } from "../constants/classnames";
-import { CHANGE, COLOR, INPUT } from "../constants/globals";
+import { CHANGE, COLOR, INPUT, RGB_FORMAT } from "../constants/globals";
 import { addEvent } from "../core/events/binder";
-import { createElement, createSlider, removeElement } from "../utils/dom";
+import { createElement, createSlider, customProperty, removeElement } from "../utils/dom";
 
 /**
  * Creates hue and alpha sliders.
@@ -74,14 +74,22 @@ export const Sliders = (ref, alwan) => {
         },
 
         /**
-         * Sets sliders values.
+         * Sets sliders values and updates alpha slider's background color.
          *
-         * @param {object} param0 - HSV color object.
+         * @param {object} param0 - Alwan color state object.
+         * @param {string} opaqueHex - Hex color without opacity.
+         * @param {boolean} updateAll - Whether to update sliders or not.
          */
-        _update({ h, a }) {
-            hueSlider.value = 360 - h;
-            if (alphaSlider) {
-                alphaSlider.value = a;
+        _update({ h, a }, opaqueHex, updateAll) {
+            // Update alpha slider's background color.
+            customProperty(alphaSlider, RGB_FORMAT, opaqueHex);
+
+            if (updateAll) {
+                hueSlider.value = 360 - h;
+
+                if (alphaSlider) {
+                    alphaSlider.value = a;
+                }
             }
         }
     };

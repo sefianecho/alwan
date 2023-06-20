@@ -223,9 +223,9 @@ export const Inputs = (ref, alwan) => {
         /**
          * Updates Input(s) value(s).
          *
-         * @param {Object} color - Color object.
+         * @param {Object} color - Alwan color state object.
          */
-        _update(color) {
+        _values(color) {
             if (! isChanged) {
                 objectIterator(inputsMap, (input, key) => {
                     input.value = color[key];

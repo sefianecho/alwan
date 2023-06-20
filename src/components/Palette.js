@@ -1,7 +1,7 @@
 import { BACKDROP_CLASSNAME, MARKER_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
 import { CHANGE, COLOR, DOC_ELEMENT, KEYBOARD_X, KEYBOARD_Y, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
-import { createElement, getBounds, translate, removeElement, bodyElement } from "../utils/dom"
+import { createElement, getBounds, translate, removeElement, customProperty } from "../utils/dom"
 import { boundNumber, min } from "../utils/number";
 
 /**
@@ -185,19 +185,25 @@ export const Palette = (ref, alwan) => {
         },
 
         /**
-         * Updates marker position from an hsv color object.
+         * Updates palette's hue and marker position.
          *
-         * @param {object} param0 - HSL color object.
+         * @param {object} param0 - Alwan color state object.
+         * @param {boolean} updateAll - Whether to update palette (update marker's position).
          */
-        _update({ S, L }) {
-            paletteBounds = getBounds(palette);
-            // Temporary hold the value of V in the HSV color space.
-            markerY = L + S * min(L, 1 - L);
+        _update({ h, S, L }, updateAll) {
+            // Update palette's hue.
+            customProperty(palette, 'h', h);
 
-            markerX = (markerY ? 2 * (1 - L / markerY) : 0) * paletteBounds[2];
-            markerY = (1 - markerY) * paletteBounds[3];
+            if (updateAll) {
+                paletteBounds = getBounds(palette);
+                // Temporary hold the value of V in the HSV color space.
+                markerY = L + S * min(L, 1 - L);
 
-            translate(marker, markerX, markerY);
+                markerX = (markerY ? 2 * (1 - L / markerY) : 0) * paletteBounds[2];
+                markerY = (1 - markerY) * paletteBounds[3];
+
+                translate(marker, markerX, markerY);
+            }
         },
 
         /**

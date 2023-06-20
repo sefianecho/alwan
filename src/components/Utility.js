@@ -1,8 +1,8 @@
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { COPY_BUTTON_CLASSNAME, PREVIEW_CLASSNAME } from "../constants/classnames";
-import { BLUR, CLICK, DOC_ELEMENT, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
+import { BLUR, CLICK, COLOR, DOC_ELEMENT, INPUT, INSERT_BEFORE_FIRST_CHILD, MOUSE_OUT, ROOT } from "../constants/globals";
 import { addEvent } from "../core/events/binder";
-import { createButton, createElement, removeElement, setHTML } from "../utils/dom";
+import { createButton, createElement, customProperty, removeElement, setHTML } from "../utils/dom";
 
 /**
  * Preview color and copy color string.
@@ -120,6 +120,15 @@ export const Utility = (ref, alwan) => {
                 addEvent(copyButton, BLUR, () => isCopied && updateIcon(false));
                 addEvent(copyButton, MOUSE_OUT, () => copyButton.blur());
             }
+        },
+
+        /**
+         * Previews current color.
+         *
+         * @param {string} color - Color string.
+         */
+        _preview(color) {
+            customProperty(previewElement, COLOR, color);
         }
     }
 }
