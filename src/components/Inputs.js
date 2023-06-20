@@ -180,7 +180,6 @@ export const Inputs = (ref, alwan) => {
         _init({ inputs, format }, instance) {
             alwan = instance || alwan;
             inputs = inputs || {};
-            inputsMap = {};
 
             formats = COLOR_FORMATS;
 
@@ -221,7 +220,7 @@ export const Inputs = (ref, alwan) => {
          */
         _values(color) {
             if (! isChanged) {
-                objectIterator(inputsMap, (input, key) => {
+                objectIterator(inputsMap || {}, (input, key) => {
                     input.value = color[key];
                 })
             }

@@ -3,7 +3,8 @@ import { CLOSE, ESCAPE, INSERT_AFTER, INSERT_AFTER_LAST_CHILD, OPEN, TAB} from "
 import { createPopover } from "../lib/popover";
 import { getElement, insertElement, removeElement, toggleClassName } from "../utils/dom";
 import { objectIterator, toArray } from "../utils/object";
-import { isString, isset } from "../utils/is";
+import { isString, isTogglable, isset } from "../utils/is";
+import { isShared } from "../core/component";
 
 /**
  * Creates App component and initialize components.
@@ -31,16 +32,18 @@ export const App = (root, alwan) => {
      */
     const _setup = (options, instance = alwan) => {
         alwan = instance;
-        const { theme, popover, target, position, margin, id, toggle, shared } = options;
+        const components = alwan._components;
+        const { theme, popover, target, position, margin, id } = options;
         const refElement = alwan._reference._el();
         const targetElement = getElement(target) || refElement;
+        const toggle = isTogglable(options);
 
-        if (isString(id) && ! shared) {
+        if (isString(id) && ! isShared(components)) {
             root.id = id;
         }
 
         // Initialize components.
-        objectIterator(alwan._components, ({ _init }) => {
+        objectIterator(components, ({ _init }) => {
             if (_init) {
                 _init(options, alwan);
             }
@@ -50,13 +53,13 @@ export const App = (root, alwan) => {
         root.dataset.theme = theme;
 
         // If toggle option changed to false, then open (show) the picker
-        if (! toggle && ! shared) {
+        if (! toggle) {
             _toggle(alwan, true, true);
         }
 
         // Hide reference element if both toggle and popover options are set to false,
         // and the components are not shared.
-        refElement.style.display = popover || toggle || shared ? '' : 'none';
+        refElement.style.display = popover || toggle ? '' : 'none';
 
         // Toggle popup class that makes the root's position fixed.
         toggleClassName(root, POPUP_CLASSNAME, popover);
@@ -97,7 +100,7 @@ export const App = (root, alwan) => {
      * @param {Function} isInViewport - Checks if popover target element is visible in the viewport.
      */
     const autoUpdate = (update, isInViewport) => {
-        if (isOpen || ! alwan.config.toggle) {
+        if (isOpen || ! isTogglable(alwan.config)) {
             if (isInViewport()) {
                 if (isOpen) {
                     // Update popover position if its target element is in the viewport,
@@ -173,9 +176,10 @@ export const App = (root, alwan) => {
      */
     const _toggle = (instance, state, forced) => {
         instance = instance || alwan;
-        let { shared, toggle, disabled } = instance.config;
 
-        if (! disabled || forced) {
+        const instanceConfig = instance.config;
+
+        if (! instanceConfig.disabled || forced) {
 
             if (! isset(state)) {
                 // If the instance doesn't control the components.
@@ -187,12 +191,12 @@ export const App = (root, alwan) => {
                 state = ! isOpen;
             }
 
-            if (state !== isOpen && (shared || toggle || forced)) {
+            if (state !== isOpen && (isTogglable(instanceConfig) || forced)) {
                 if (state) {
                     if (instance !== alwan) {
                         // Set components to point to the new instance,
                         // and update options.
-                        _setup(instance.config, instance);
+                        _setup(instanceConfig, instance);
                     }
 
                     // Update popover position before open.

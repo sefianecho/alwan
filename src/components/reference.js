@@ -2,7 +2,7 @@ import { PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
 import { CLICK } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
 import { bodyElement, createButton, removeElement, replaceElement, toggleClassName } from "../utils/dom";
-import { isString, isset } from "../utils/is";
+import { isString, isTogglable, isset } from "../utils/is";
 
 /**
  * Creates an element that controls (open/close) the color picker.
@@ -80,14 +80,13 @@ export const Reference = (userReference, alwan) => {
         _setDisabled(disabled) {
             if (isset(disabled)) {
                 const { config, _components } = alwan;
-                const { shared, toggle } = config;
                 const toggler = _components._app._toggle;
 
                 config.disabled = element.disabled = !! disabled;
 
                 if (disabled) {
                     toggler(alwan, false, true);
-                } else if (! shared && ! toggle) {
+                } else if (! isTogglable(config)) {
                     toggler(alwan, true, true);
                 }
             }

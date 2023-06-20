@@ -15,3 +15,12 @@ export const isString = (value) => {
  * @returns {Boolean}
  */
 export const isset = value => value != null;
+
+
+/**
+ * Checks if an instance is able to be toggled.
+ *
+ * @param {object} param0 - Alwan instance config.
+ * @returns {boolean}
+ */
+export const isTogglable = ({ shared, toggle }) => shared || toggle;

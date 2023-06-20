@@ -46,17 +46,17 @@ export default class Alwan {
         let config = alwan.config;
         let { color, disabled } = options;
         let core = alwan._color;
-        let app;
+        let components, app;
 
         alwan._reference._setDisabled(disabled);
 
         if (! config.disabled) {
             merge(config, options);
-            alwan._components = useComponents(alwan);
+            alwan._components = components = useComponents(alwan);
             alwan._reference._init(config);
-            app = alwan._components._app;
+            app = components._app;
 
-            if (isShared(alwan._components)) {
+            if (isShared(components)) {
                 app._toggle(null, false);
             }
 
