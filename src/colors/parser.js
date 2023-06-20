@@ -103,5 +103,7 @@ export const parseColor = (value = '', asString) => {
     // Round the transparency component to two numbers behind
     color.a = round(color.a * 100) / 100;
 
-    return asString ? stringify(color, format) : [color, format];
+    str = stringify(color, format);
+
+    return asString ? str : [color, format, str];
 }

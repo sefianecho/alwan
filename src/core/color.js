@@ -1,10 +1,10 @@
 import { HSLToRGB, RGBToHEX, RGBToHSL } from "../colors/converter";
 import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
-import { CHANGE, COLOR, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
-import { customProperty, setCustomProperty } from "../utils/dom";
+import { CHANGE, COLOR, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
+import { customProperty } from "../utils/dom";
 import { round } from "../utils/number.js";
-import { keys, merge, objectIterator } from "../utils/object";
+import { keys, merge } from "../utils/object";
 
 /**
  * Creates the core color state and UI updater.
@@ -61,24 +61,6 @@ export const color = (alwan) => {
      * Alwan options.
      */
     const config = alwan.config;
-
-    /**
-     * Gets color data.
-     *
-     * @param {object} color - Color object.
-     * @param {string} format - Color format.
-     * @param {boolean} asArray - Gets data as an array.
-     * @param {string} str - Color string.
-     * @returns {object} - Color data.
-     */
-    const colorData = (format, asArray, str) => {
-        return (format + (config.opacity ? 'a' : ''))
-                .split('')
-                .reduce((output, channel, index) => {
-                    output[asArray ? index : channel] = state[channel];
-                    return output;
-                }, merge(asArray ? [] : {}, { toString: () => str || stringify(state, format) }))
-    }
 
     return {
         /**
@@ -157,11 +139,11 @@ export const color = (alwan) => {
          * @param {boolean} triggerChange - Whether to fire the change event or not.
          */
         _set(color, source, triggerChange) {
-            let [parsedColor, parsedColorFormat] = parseColor(color);
+            let [parsedColor, parsedColorFormat, parsedColorString] = parseColor(color);
             let rgb, hsl;
 
-            // Update color state if the current color and the given color are different.
-            if (keys(parsedColor).some((channel) => parseColor[channel] !== state[channel])) {
+            // Update color state if the current color and the parsed color are different.
+            if (state[parsedColorFormat] !== parsedColorString) {
                 if (parsedColorFormat === RGB_FORMAT) {
                     rgb = parsedColor;
                     hsl = RGBToHSL(rgb);
