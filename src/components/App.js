@@ -3,8 +3,7 @@ import { CLOSE, ESCAPE, INSERT_AFTER, INSERT_AFTER_LAST_CHILD, OPEN, TAB} from "
 import { createPopover } from "../lib/popover";
 import { getElement, insertElement, removeElement, toggleClassName } from "../utils/dom";
 import { objectIterator, toArray } from "../utils/object";
-import { isString } from "../utils/string";
-import { isset } from "../utils/util";
+import { isString, isset } from "../utils/is";
 
 /**
  * Creates App component and initialize components.

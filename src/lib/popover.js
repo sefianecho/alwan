@@ -2,8 +2,7 @@ import { KEY_DOWN, POINTER_DOWN, RESIZE, ROOT, SCROLL } from "../constants/globa
 import { addEvent, removeEvent } from "../core/events/binder";
 import { getBounds, getOverflowAncestors, translate } from "../utils/dom";
 import { abs, isNumeric, round } from "../utils/number";
-import { isString } from "../utils/string";
-import { isset } from "../utils/util";
+import { isString, isset } from "../utils/is";
 
 // getBounds function array.
 const LEFT = 0; // Also the x coordinate.

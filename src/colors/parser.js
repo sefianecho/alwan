@@ -1,7 +1,7 @@
 import { DEFAULT_COLOR, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { createElement } from "../utils/dom";
 import { float, isNumeric, normalizeAngle, boundNumber, PI, round, int } from "../utils/number";
-import { isString } from "../utils/string";
+import { isString } from "../utils/is";
 import { stringify } from "./stringify";
 
 const ctx = createElement('canvas').getContext('2d');

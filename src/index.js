@@ -5,7 +5,7 @@ import { color } from "./core/color";
 import { Dispatcher } from "./core/events/dispatcher";
 import "./assets/scss/alwan.scss";
 import { defaults } from "./constants/defaults";
-import { isset } from "./utils/util.js";
+import { isset } from "./utils/is";
 import { getElement } from "./utils/dom";
 
 

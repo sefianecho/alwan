@@ -1,8 +1,7 @@
 import { BUTTON_CLASSNAME, CONTAINER_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
 import { BUTTON, DOC_ELEMENT, INPUT, INSERT_AFTER_LAST_CHILD, ROOT } from "../constants/globals";
 import { merge, objectIterator } from "./object";
-import { isString } from "./string";
-import { isset } from "./util";
+import { isString, isset } from "./is";
 
 /**
  * Gets the body element.

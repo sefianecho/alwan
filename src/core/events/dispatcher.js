@@ -1,6 +1,6 @@
 import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants/globals"
 import { merge, objectIterator } from "../../utils/object";
-import { isset } from "../../utils/util";
+import { isset } from "../../utils/is";
 
 /**
  * Alwan events.

@@ -2,8 +2,7 @@ import { PRESET_BUTTON_CLASSNAME } from "../constants/classnames";
 import { CLICK } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
 import { bodyElement, createButton, removeElement, replaceElement, toggleClassName } from "../utils/dom";
-import { isString } from "../utils/string";
-import { isset } from "../utils/util";
+import { isString, isset } from "../utils/is";
 
 /**
  * Creates an element that controls (open/close) the color picker.
