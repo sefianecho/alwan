@@ -1,12 +1,11 @@
 import { caretSVG } from "../assets/svg";
 import { COLLAPSE_BUTTON_CLASSNAME, COLLAPSE_CLASSNAME, SWATCHES_CLASSNAME, SWATCH_CLASSNAME } from "../constants/classnames";
 import { parseColor } from "../colors/parser";
-import { CHANGE, CLICK, COLOR, COLOR_PROPERTY } from "../constants/globals";
-import { createButton, createElement, parent, removeElement, setCustomProperty, setHTML, toggleClassName } from "../utils/dom";
+import { CHANGE, CLICK, COLOR } from "../constants/globals";
+import { createButton, createElement, customProperty, removeElement, toggleClassName } from "../utils/dom";
 import { int } from "../utils/number";
-import { isset } from "../utils/util";
 import { addEvent } from "../core/events/binder";
-import { isArray, merge } from "../utils/object";
+import { isArray } from "../utils/object";
 
 /**
  * Creates color swatches buttons.
@@ -62,9 +61,9 @@ export const Swatches = (ref, alwan) => {
                     container = createElement('', SWATCHES_CLASSNAME, ref);
                     // Create swatch buttons.
                     swatches.forEach(color => {
-                        setCustomProperty(
+                        customProperty(
                             createButton(SWATCH_CLASSNAME, container),
-                            COLOR_PROPERTY,
+                            COLOR,
                             parseColor(color, true)
                         );
                     });
@@ -83,7 +82,7 @@ export const Swatches = (ref, alwan) => {
                      */
                     addEvent(container, CLICK, ({ target }) => {
                         if(target !== container) {
-                            if (alwan._color._set(target.style.getPropertyValue(COLOR_PROPERTY))) {
+                            if (alwan._color._set(customProperty(target, COLOR))) {
                                 alwan._events._dispatch(COLOR, target);
                                 alwan._events._dispatch(CHANGE, target);
                             }

@@ -165,16 +165,20 @@ export const getOverflowAncestors = (element, ancestors = [ROOT]) => {
 }
 
 /**
- * Sets a CSS custom property.
+ * Sets a CSS custom property if value is not undefined, otherwise returns the value of,
+ * the given property.
  *
- * @param {HTMLElement} el  - Element to set its custom property.
- * @param {string} property - Property name.
- * @param {string} value    - Property value.
+ * @param {HTMLElement} element  - Element to set/get its custom property.
+ * @param {string} property - Custom property name.
+ * @param {string | undefined} value    - Custom property value.
  */
-export const setCustomProperty = (element, property, value) => {
-    if (element && isset(value)) {
-        element.style.setProperty(property, value);
+export const customProperty = (element, property, value) => {
+
+    if (element) {
+        return element.style[isset(value) ? 'setProperty' : 'getPropertyValue']('--alwan-' + property, value);
     }
+
+    return '';
 }
 
 

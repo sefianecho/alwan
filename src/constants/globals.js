@@ -26,8 +26,6 @@ export const HSL_FORMAT = 'hsl';
 export const TAB = 'Tab';
 export const ESCAPE = 'Escape';
 
-export const COLOR_PROPERTY = '--lw-' + COLOR;
-
 // Picker supported color formats.
 export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
 

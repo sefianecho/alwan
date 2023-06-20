@@ -1,4 +1,4 @@
-import { MARKER_CLASSNAME, OVERLAY_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
+import { BACKDROP_CLASSNAME, MARKER_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
 import { CHANGE, COLOR, DOC_ELEMENT, KEYBOARD_X, KEYBOARD_Y, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
 import { createElement, getBounds, translate, removeElement, bodyElement } from "../utils/dom"
@@ -106,7 +106,7 @@ export const Palette = (ref, alwan) => {
      */
     const dragStart = e => {
         if (! backdropElement) {
-            backdropElement = createElement('', OVERLAY_CLASSNAME, DOC_ELEMENT);
+            backdropElement = createElement('', BACKDROP_CLASSNAME, DOC_ELEMENT);
         }
         // Save color state.
         alwan._color._saveState();

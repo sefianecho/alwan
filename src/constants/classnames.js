@@ -14,8 +14,8 @@ export const INPUTS_CLASSNAME = `${ALWAN_CLASSNAME}__inputs`;
 export const SWATCH_CLASSNAME = `${ALWAN_CLASSNAME}__swatch`;
 export const SWATCHES_CLASSNAME = `${ALWAN_CLASSNAME}__swatches`;
 export const PRESET_BUTTON_CLASSNAME = `${ALWAN_CLASSNAME}__preset-button`;
-export const OVERLAY_CLASSNAME = `${ALWAN_CLASSNAME}__overlay`;
-export const COLLAPSE_BUTTON_CLASSNAME = `${ALWAN_CLASSNAME}__collapse-button`;
+export const BACKDROP_CLASSNAME = `${ALWAN_CLASSNAME}__backdrop`;
+export const COLLAPSE_BUTTON_CLASSNAME = `${ALWAN_CLASSNAME}__toggle-button`;
 
 export const POPUP_CLASSNAME = `${ALWAN_CLASSNAME}--popup`;
 export const OPEN_CLASSNAME = `${ALWAN_CLASSNAME}--open`;

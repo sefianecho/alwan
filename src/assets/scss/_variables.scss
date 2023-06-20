@@ -1,127 +1,128 @@
 @use 'sass:map';
 @use 'sass:math';
 
-$primary-color: #117ce0;
-$pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23d1d3d4' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23d1d3d4' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
+$transparency-pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23d1d3d4' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23d1d3d4' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
 $box-shadow: 0 0 2px rgba(0,0,0,0.7);
+$alwan-focus-color: #117ce0;
 
 
-// Alwan container.
 $alwan-max-width: 260px;
-// Light theme.
 $alwan-background: #fff;
 $alwan-foreground: #333;
+$alwan-outer-border-color: #ccc;
+$alwan-popup-z-index: 999999;
+
+// Dark.
+$alwan-dark-background: #111;
+$alwan-dark-outer-border-color: #aaa;
+$alwan-dark-foreground: #ccc;
+
+// Border.
 $alwan-border-color: #ccc;
+$alwan-dark-border-color: #34373a;
 
-// Dark theme.
-$alwan-background-dark: #111;
-$alwan-border-color-dark: #aaa;
-$alwan-foreground-dark: #ccc;
+// Container.
+$container-padding-y: 10px;
+$container-padding-x: 15px;
 
-// Separator border.
-$border-color: #ccc;
-$border-color-dark: #34373a;
+// Button.
+$button-padding-y: 8px;
+$button-padding-x: 4px;
+$button-hover-background: #f0f0f0;
+$button-dark-hover-background: #444;
 
-// Marker.
-$marker-width: 14px;
-$marker-height: $marker-width;
-$marker-top: math.div($marker-height, 2) * -1;
-$marker-left: math.div($marker-width, 2) * -1;
-$marker-box-shadow: $box-shadow;
-$marker-border: 2px solid #fff;
+// Preset button.
+$preset-button-width: 24px;
+$preset-button-height: $preset-button-width;
+$preset-button-border-radius: 4px;
+
 
 // Palette.
 $palette-height: 136px;
 
-// Container
-$container-border-color:#ccc;
-$container-padding-y: 10px;
-$container-padding-x: 15px;
-$container-padding: $container-padding-y $container-padding-x;
+// Marker.
+$marker-width: 14px;
+$marker-height: $marker-width;
+$marker-border: 2px solid #fff;
+
 
 // Preview.
-$preview-width: 40px;
-$preview-height: $preview-width;
-$preview-margin-right: 15px;
-$preview-border-radius: 0;
+$preview-area-border-width: 1px;
+$preview-area-width: 40px + $preview-area-border-width * 2;
+$preview-area-height: $preview-area-width;
+$preview-area-margin-right: 15px;
 
-// Sliders.
-// ------------------------------------------------
+
+// Slider.
 $alpha-slider-margin-top: 14px;
 
 // Track.
-$track-height: 15px;
+$slider-track-height: 15px;
 
 // Thumb.
-$thumb-height: 21px;
-$thumb-width: 14px;
-$thumb-background: #fff;
-$thumb-border-radius: 3px;
-$thumb-box-shadow: $box-shadow;
-$thumb-border-color:#8f8f8f;
+$slider-thumb-height: 21px;
+$slider-thumb-width: 14px;
+$slider-thumb-background: #fff;
+$slider-thumb-border-color: #8f8f8f;
+$slider-thumb-border-radius: 3px;
 
-$thumb-background-dark: #151515;
-$thumb-border-color-dark: #3c4146;
+$slider-thumb-dark-background: #151515;
+$slider-thumb-dark-border-color: #3c4146;
 
-// Input label.
-$input-background: #fff;
-$input-label-margin-right: 4px;
+// Label.
+$label-margin-right: 4px;
 $label-color: #555;
-$input-label-font-size: 13px;
-$input-label-font-family: system-ui;
+$label-font-size: 13px;
+$label-font-family: system-ui;
 
-$label-color-dark: #d8d8d8;
+$label-dark-color: #d8d8d8;
 
 // Input.
+$input-padding-y: 8px;
+$input-padding-x: 5px;
 $input-background: #fff;
-$input-padding: 8px 5px;
 $input-color: #333;
-$input-border: 1px solid #ccc;
-$input-border-hover-color: #a8a8a8;
+$input-font-size: 14px;
 $input-margin-bottom: 3px;
 $input-font-family: monospace;
-$input-font-size: 14px;
+$input-line-height: 1;
+$input-border-color-hover: #a8a8a8;
 
-$input-background-dark: #181818;
-$input-border-hover-color-dark: #484b4d;
+$input-dark-border-color-hover: #484b4d;
+$input-dark-background: #181818;
 
-// Swatches container.
-$swatches-background: #f5f5f5;
+// Swatches.
 $swatches-container-padding: 10px 15px 0 15px;
-$swatches-max-height: 100px;
+$swatches-container-background: #f5f5f5;
+$swatches-container-max-height: 100px;
 
-$swatches-background-dark: #0a0a0a;
+$swatches-container-dark-background: #0a0a0a;
 
-// Swatch button.
-$swatch-width: 22px;
-$swatch-height: 22px;
-$swatch-margin: 0 5px 10px 5px;
-$swatch-border-radius: 2px;
+$swatch-button-width: 22px;
+$swatch-button-height: $swatch-button-width;
+$swatch-button-margin: 0 5px 10px 5px;
+$swatch-button-border-radius: 2px;
 
-// Buttons.
-$button-padding: 8px 4px;
-$button-border-radius: 2px;
-$button-hover-background: #f0f0f0;
-$button-hover-background-dark: #444;
-
-// Preset reference button.
-$preset-button-height: 24px;
-$preset-button-width: 24px;
-$preset-button-border-radius: 4px;
-
+// Swatches toggle button.
+$swatches-toggle-button-height: 10px;
 
 $dark-theme: (
-    --alwan-bg: $alwan-background-dark,
-    --alwan-fg: $alwan-foreground-dark,
-    --alwan-bc: $alwan-border-color-dark,
-    --lw-swatches-bg: $swatches-background-dark,
-    --lw-bc: $border-color-dark,
-    --lw-thumb: $thumb-background-dark,
-    --lw-thumb-bc: $thumb-border-color-dark,
-    --lw-label: $label-color-dark,
-    --lw-input-bg: $input-background-dark,
-    --lw-input-hover-bc: $input-border-hover-color-dark,
-    --lw-btn-hover: $button-hover-background-dark
+	--alwan-bg: $alwan-dark-background,
+	--alwan-fg: $alwan-dark-foreground,
+	--alwan-outer-bc: $alwan-dark-outer-border-color,
+
+	--alwan-button-hover: $button-dark-hover-background,
+	--alwan-bc: $alwan-dark-border-color,
+
+	--alwan-thumb-bg: $slider-thumb-dark-background,
+	--alwan-thumb-bc: $slider-thumb-dark-border-color,
+
+	--alwan-label: $label-dark-color,
+
+	--alwan-input-bg: $input-dark-background,
+	--alwan-input-hover-bc: $input-dark-border-color-hover,
+
+	--alwan-swatches-bg: $swatches-container-dark-background,
 );
 
 
