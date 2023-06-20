@@ -158,7 +158,7 @@
             margin-top: - math.div($slider-thumb-height - $slider-track-height, 2);
             background-color: var(--alwan-thumb-bg, $slider-thumb-background);
             border: 1px solid var(--alwan-thumb-bc, $slider-thumb-border-color);
-            border-radius: $slider-thumb-border-radius + 1;
+            border-radius: $slider-thumb-border-radius;
             box-shadow: $box-shadow;
             cursor: ew-resize;
         }
