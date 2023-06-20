@@ -164,18 +164,25 @@ export const color = (alwan) => {
         },
 
         /**
-         * Gets color value.
+         * Creates and return color value.
          *
          * @returns {object} - Color value.
          */
-        _value() {
-            return {
-                value: rgbString,
-                rgb: asArray => colorData(RGB_FORMAT, asArray, rgbString),
-                hsl: asArray => colorData(HSL_FORMAT, asArray),
-                hex: () => stringify(state, HEX_FORMAT),
-            }
-        },
+        _value: () => ({
+            h: state.h,
+            s: state.s,
+            l: state.l,
+
+            r: state.r,
+            g: state.g,
+            b: state.b,
+
+            a: state.a,
+
+            hex: state.hex,
+            rgb: state.rgb,
+            hsl: state.hsl
+        }),
 
         /**
          * Sets a new color format.
