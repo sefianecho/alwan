@@ -25,7 +25,7 @@ export default class Alwan {
      * @param {Object} options - Options.
      */
     constructor(reference, options) {
-        let alwan = this;
+        const alwan = this;
 
         alwan.config = merge({}, Alwan.defaults);
         alwan._events = Dispatcher(alwan);
@@ -56,15 +56,13 @@ export default class Alwan {
             app._toggle(null, false);
         }
 
-        app._setup(config, alwan);
         alwan._reference._setDisabled(disabled);
 
         if (isset(color)) {
             core._set(color);
         }
 
-        // To update inputs values.
-        core._update();
+        app._setup(config, alwan);
     }
 
     /**
@@ -200,7 +198,7 @@ export default class Alwan {
      * Destroy picker and free up memory.
      */
     destroy() {
-        let alwan = this;
+        const alwan = this;
 
         alwan._reference._destroy();
         destroyComponents(alwan._components);

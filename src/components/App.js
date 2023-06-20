@@ -86,6 +86,8 @@ export const App = (root, alwan) => {
                 targetElement === refElement ? INSERT_AFTER : INSERT_AFTER_LAST_CHILD
             )
         }
+
+        alwan._color._update({}, null, true);
     }
 
     /**
@@ -192,7 +194,6 @@ export const App = (root, alwan) => {
                         // and update options.
                         _setup(instance.config, instance);
                     }
-                    alwan._color._update({}, true);
 
                     // Update popover position before open.
                     if (state) {
