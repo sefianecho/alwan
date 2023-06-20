@@ -2,7 +2,7 @@ import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
 import { CHANGE, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { setCustomProperty } from "../utils/dom";
-import { abs, max, min, normalizeAngle, round } from "../utils/number.js";
+import { round } from "../utils/number.js";
 import { merge, objectIterator } from "../utils/object";
 
 /**
@@ -64,40 +64,6 @@ export const color = (alwan) => {
     const config = alwan.config;
 
     /**
-     * Updates the hsl values from a RGB object.
-     *
-     * @param {object} rgb - RGB color object.
-     */
-    const updateHSLFromRGB = (rgb) => {
-
-        let { r, g, b } = rgb;
-        let cMax, cMin, d, l, h;
-
-        r /= 255;
-        g /= 255;
-        b /= 255;
-
-        cMax = max(r, g, b);
-        cMin = min(r, g, b);
-        d = cMax - cMin;
-        l = (cMax + cMin) / 2;
-
-        h = d === 0 ?
-                    0
-                : cMax === r ? (g - b) / d % 6
-                : cMax === g ? (b - r) / d + 2
-                : cMax === b ? (r - g) / d + 4
-                : 0;
-
-        // Merge rgb object and the converted HSL into the state.
-        merge(state, rgb, {
-            h: normalizeAngle(h * 60),
-            S: d ? d / (1 - abs(2 * l - 1)) : 0,
-            L: l
-        });
-    }
-
-    /**
      * Gets color data.
      *
      * @param {object} color - Color object.
@@ -114,20 +80,6 @@ export const color = (alwan) => {
                     return output;
                 }, merge(asArray ? [] : {}, { toString: () => str || stringify(state, format) }))
     }
-
-    /**
-     * Helper function used for converting HSL to RGB.
-     *
-     * @param {number} k - Positive coefficient.
-     * @param {number} s - HSL saturation.
-     * @param {number} l - HSL lightness.
-     * @returns {number} - RGB component.
-     */
-    const fn = (k, s, l) => {
-        k %= 12;
-        return round((l - s * min(l, 1 - l) * max(-1, min(k - 3, 9 - k, 1))) * 255);
-    }
-
 
     return {
         /**
