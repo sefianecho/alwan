@@ -88,7 +88,7 @@ export const Palette = (ref, alwan) => {
             alwan._color._update({
                 S: L === 1 || L === 0 ? 0 : (v - L) / min(L, 1 - L),
                 L
-            });
+            }, palette);
         }
     }
 

@@ -1,7 +1,7 @@
 import { KEY_DOWN, POINTER_DOWN, RESIZE, ROOT, SCROLL } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
 import { getBounds, getOverflowAncestors, translate } from "../utils/dom";
-import { abs, isNumeric, round } from "../utils/number";
+import { abs, float, isNumeric, round } from "../utils/number";
 import { isString, isset } from "../utils/is";
 
 // getBounds function array.

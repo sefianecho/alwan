@@ -43,26 +43,29 @@ export default class Alwan {
         options = options || {};
 
         let alwan = this;
-        let config = merge(alwan.config, options);
+        let config = alwan.config;
         let { color, disabled } = options;
         let core = alwan._color;
         let app;
 
-        alwan._components = useComponents(alwan);
-        alwan._reference._init(config);
-        app = alwan._components._app;
-
-        if (isShared(alwan._components)) {
-            app._toggle(null, false);
-        }
-
         alwan._reference._setDisabled(disabled);
 
-        if (isset(color)) {
-            core._set(color);
-        }
+        if (! config.disabled) {
+            merge(config, options);
+            alwan._components = useComponents(alwan);
+            alwan._reference._init(config);
+            app = alwan._components._app;
 
-        app._setup(config, alwan);
+            if (isShared(alwan._components)) {
+                app._toggle(null, false);
+            }
+
+            app._setup(config, alwan);
+
+            if (isset(color)) {
+                core._set(color);
+            }
+        }
     }
 
     /**
