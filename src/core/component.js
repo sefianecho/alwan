@@ -70,6 +70,7 @@ export const destroyComponents = (components) => {
     }
 
     components._app._destroy();
+    components._palette._destroy();
     components = {};
 }
 
