@@ -52,7 +52,7 @@ export const parseColor = (value = '', asString) => {
             str = stringify(value, format);
         }
     } else {
-        str = trimString(value);
+        str = value.trim();
     }
 
     /**
@@ -66,7 +66,7 @@ export const parseColor = (value = '', asString) => {
          * Normalize values.
          *
          * The hue value is so often given in degrees, it can be given as a number, however
-         * it might has a unit 'turn', 'rad' (radians) or 'grad' (gradians),
+         * it might has a unit 'turn', 'rad' (radians) or 'grad' (gradients),
          * If the hue has a unit other than deg, then convert it to degrees.
          */
         color = {
@@ -95,7 +95,7 @@ export const parseColor = (value = '', asString) => {
             }
         } else {
             // Parse rgb string into a rgb object.
-            let [r, g, b, a] = /\((.+)\)/.exec(str)[1].split(',').map(value => float(value));
+            const [r, g, b, a] = /\((.+)\)/.exec(str)[1].split(',').map(value => float(value));
             color = { r, g, b, a };
         }
     }
@@ -103,5 +103,5 @@ export const parseColor = (value = '', asString) => {
     // Round the transparency component to two numbers behind
     color.a = round(color.a * 100) / 100;
 
-    return asString ? stringify(color, format) : { _format: format, _color: color }
+    return asString ? stringify(color, format) : [color, format];
 }

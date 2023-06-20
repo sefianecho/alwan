@@ -1,10 +1,10 @@
-import { HSLToRGB, RGBToHEX } from "../colors/converter";
+import { HSLToRGB, RGBToHEX, RGBToHSL } from "../colors/converter";
 import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
 import { CHANGE, COLOR, COLOR_PROPERTY, HEX_FORMAT, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import { customProperty, setCustomProperty } from "../utils/dom";
 import { round } from "../utils/number.js";
-import { merge, objectIterator } from "../utils/object";
+import { keys, merge, objectIterator } from "../utils/object";
 
 /**
  * Creates the core color state and UI updater.
@@ -142,38 +142,25 @@ export const color = (alwan) => {
          * Sets a new color.
          *
          * @param {string|object} color - Color string or object.
-         * @param {boolean} isInputs - If true, inputs values don't get updated.
+         * @param {HTMLElement | undefined} source - Source element.
          */
-        _set(color, isInputs = false) {
-            let { _format, _color } = parseColor(color);
-            let isChanged = false;
-            let isRGB = _format === RGB_FORMAT;
-            let hsl;
+        _set(color, source) {
+            let [parsedColor, parsedColorFormat] = parseColor(color);
+            let rgb, hsl;
 
-            // Compare parsed color channels (components) to the color state,
-            // channels.
-            objectIterator(_color, (value, channel) => {
-                if (value !== state[channel]) {
-                    isChanged = true;
-                }
-            });
-
-            if (isChanged) {
-                if (isRGB) {
-                    // updateHSLFromRGB(_color);
+            // Update color state if the current color and the given color are different.
+            if (keys(parsedColor).some((channel) => parseColor[channel] !== state[channel])) {
+                if (parsedColorFormat === RGB_FORMAT) {
+                    rgb = parsedColor;
+                    hsl = RGBToHSL(rgb);
                 } else {
-                    // hsl = {
-                    //     h: _color.h,
-                    //     S: _color.s / 100,
-                    //     L: _color.l / 100,
-                    //     a: _color.a
-                    // }
+                    hsl = parsedColor;
+                    hsl.S = parsedColor.s / 100;
+                    hsl.L = parsedColor.l / 100;
                 }
 
-                this._update(hsl, true, isInputs, isRGB);
+                this._update(hsl, source, true, rgb);
             }
-
-            return isChanged;
         },
 
         /**
