@@ -289,6 +289,8 @@ select:focus,
 .picker-wrapper {
     width: 100%;
     margin-bottom: 3rem;
+    border: 1px solid transparent;
+    padding: 16px 10px;
 }
 .picker-label {
     line-height: 1.8;
@@ -303,7 +305,7 @@ select:focus,
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    background-color: var(--lw-color);
+    background-color: var(--alwan-color);
 }
 
 .target-wrapper {
@@ -317,6 +319,10 @@ select:focus,
     background-color: #f0f0f0;
     border: 2px dashed #aaa;
     font-weight: 600;
+}
+
+.selected {
+    border-color: #0c73d3;
 }
 
 ::-webkit-scrollbar {

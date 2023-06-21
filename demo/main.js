@@ -2,22 +2,21 @@ const previewArea = document.querySelector('.preview-area');
 const menuButton = document.querySelector('.menu-button');
 const sidePanel = document.querySelector('.panel');
 const closeButton = sidePanel.querySelector('.close-menu');
-const pickerSelect = sidePanel.querySelector('#picker');
 
 Alwan.defaults.swatches = ['red', 'green', 'blue'];
 
-const alwanText = new Alwan('#fg');
-const alwanBG = new Alwan('#bg', { color: 'red' });
-
-let picker;
-
-initialize('bg');
+const alwan = {
+    bg: new Alwan('#bg', { color: 'red' }),
+    fg: new Alwan('#fg')
+}
 
 
-function initialize(pickerId) {
-    picker = pickerId === 'fg' ? alwanText : alwanBG
+let selectedPicker = alwan.bg;
 
-    const options = picker.config;
+initialize(selectedPicker.config);
+
+
+function initialize(options) {
 
     for(const option in options) {
         if (Object.hasOwnProperty.call(options, option)) {
@@ -56,8 +55,12 @@ function updateOptions(e) {
     const el = e.target;
     let { type, value, checked, name } = el;
 
-    if (pickerSelect === el) {
-        return initialize(value);
+    if (name === 'picker') {
+        document.querySelector(`.picker-wrapper.selected`).classList.remove('selected');
+        document.querySelector(`#${value}-wrapper`).classList.add('selected');
+        selectedPicker = alwan[value];
+        initialize(selectedPicker.config);
+        return;
     }
 
     value = type === 'checkbox' ? checked : value;
@@ -78,20 +81,19 @@ function updateOptions(e) {
         options[name] = value;
     }
 
-    picker.setOptions(options);
+    selectedPicker.setOptions(options);
 }
 
 
-sidePanel.addEventListener('change', updateOptions);
 sidePanel.addEventListener('input', updateOptions);
 
 
-alwanText.on('color', (color) => {
-    previewArea.style.color = color.rgb() + '';
+alwan.fg.on('color', (color) => {
+    previewArea.style.color = color.rgb;
 });
 
-alwanBG.on('color', (color) => {
-    previewArea.style.backgroundColor = color.rgb() + '';
+alwan.bg.on('color', (color) => {
+    previewArea.style.backgroundColor = color.rgb;
 });
 
 
