@@ -106,6 +106,11 @@ export const App = (root, alwan) => {
                     // Update popover position if its target element is in the viewport,
                     // and picker is open.
                     update();
+
+                    if (alwan.config.closeOnScroll) {
+                        // Close picker when scrolling.
+                        _toggle(alwan, false);
+                    }
                 } else {
                     // This is reachable only if toggle is false,
                     // open picker if the popover target element becomes visible.

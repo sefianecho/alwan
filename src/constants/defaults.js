@@ -156,7 +156,8 @@ import { DEFAULT_COLOR } from "./globals";
     swatches: [],
 
     /**
-     * Share components with multiple alwan instances.
+     * Share components with multiple alwan instances (use less memory if there
+     * are multiple color picker instances).
      *
      * @type {boolean}
      */
@@ -168,4 +169,12 @@ import { DEFAULT_COLOR } from "./globals";
      * @type {boolean}
      */
     toggleSwatches: false,
+
+    /**
+     * Close color picker when scrolling, only if the color picker,
+     * is displayed as a popover and can be closed.
+     *
+     * @type {boolean}
+     */
+    closeOnScroll: false,
 }
