@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <style>
+        .ref {
+            width: 2em;
+            height: 2em;
+            background-color: var(--alwan-color);
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
-    <div id="ref"></div>
+
+    <div id="picker" class="ref"></div>
+
     <script defer src="main.js"></script>
 </body>
 </html>

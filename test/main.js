@@ -1,1 +1,1 @@
-const alwan = new Alwan('#ref');
+const alwan  = new Alwan('#picker');
