@@ -85,30 +85,31 @@ const alwan = new Alwan('#reference', {
 
 
 - `id` (default `''`) — Set the container's (widget) id.
-- `classname` (default `''`) — One or many classes (separated by a white space) to add to the preset button.
+- `classname` (default `''`) — Add classes (separated by a white space) to the preset button.
 - `theme` (default `light`) — Choose a theme, 'dark' or 'light'.
 - `toggle` (default `true`) — Toggle picker's visibility (Show/Hide), Setting this to false keeps the picker visible.
-- `popover` (default `true`) — Display picker as a popover, otherwise display it as a block (embeded in the page content).
-- `position` (default `bottom-start`) — Set the position of the popper relative to the reference element. The position has two values seperated by a dash (-). The first value is the direction (top, bottom, right, left) and the second value is the alignment (start, center, end), omitting this value will default to center.
+- `popover` (default `true`) — Display picker as a popover, otherwise display it as a block (embedded in the page content).
+- `position` (default `bottom-start`) — Set the position of the popper relative to the reference element. The position has two values separated by a dash (-). The first value is the direction (top, bottom, right, left) and the second value is the alignment (start, center, end), omitting this value will default to center.
 
     *Note: If the picker container has no space to be placed, it will auto-position itself based on the available space.*
-- `margin` (default `8`) — The gap (in pixels) between the picker container and the reference element.
+- `margin` (default `0`) — The gap (in pixels) between the picker container and the reference element.
 - `preset` (default `true`) — Replace the reference element with a pre-styled button.
 - `color` (default `#000`) — Initial color.
 - `default` (default `#000`) — Default color.
-- `target` (default `''`) — Target can be a selector or an HTML element, If the option popover is set to true, the picker container will be positionned retalive to this element else if popover option is set to false, the picker container will be appended as a child into this element.
+- `target` (default `''`) — Target can be a selector or an HTML element, If the option popover is set to true, the picker container will be positioned relative to this element else if popover option is set to false, the picker container will be appended as a child into this element.
 - `disabled` (default `false`) — Disable the picker, users won't be able to pick colors.
 - `format` (default `rgb`) — Initial color format.
 - `singleInput` (default `false`) — For the formats 'hsl' and 'rgb', choose a single input to display the color string, if false, display an input for each color channel.
-- `inputs` (default `{ hex: true, rgb: true,  hsl: true  }`) — Choose color formats for the picker input.
+- `inputs` (default `{ hex: true, rgb: true,  hsl: true  }`) — Choose color formats for the picker inputs.
 - `opacity` (default `true`) — Support alpha channel and display opacity slider.
 - `preview` (default `true`) — Preview the color.
 - `copy` (default `true`) — Add/Remove a copy button.
 - `swatches` (default `[]`) — Array of colors, invalid colors will default to rgb(0,0,0).
 - `toggleSwatches` (default `false`) — Show/Hide swatches container (Make swatches container collapsible).
-- `shared` (default `false`) — Picker widget shared between multiple instance (this is good if you have many color picker instances).
+- `shared` (default `false`) — Share components (widget) with multiple instances (using less memory if there are multiple color picker instances).
+- `closeOnScroll` (default `false`) — Close color picker when scrolling (only if the color picker is displayed as a popover and can be closed).
 
-**Note:** In the reference element you can access the css custom property `--lw-color` to get color value.
+**Note:** In the reference element you can access the css custom property `--alwan-color` to get color value.
 
 ## Events
 Use the method `on`, that has two parameters, `event` and `handler` (callback function).
@@ -124,15 +125,19 @@ alwan.on('event', ev => {
 | `change` | `event` | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event  |
 | `color` | `event` | Similar to the `input` event, fires every time the color changes |
 
-### Event object
+### Event object (v1.3)
 - `type` — Event type.
 - `source` — Event source.
-- **rgb**(asArray: `boolean`) : `object` — Get an RGB color object or an Array if `asArray` is set to true,
-call the method `toString()` on this object to get an RGB string.
-- **hsl**(asArray: `boolean`) : `object` — Get an HSL color object or an Array if `asArray` is set to true,
-call the method `toString()` on this object to get an HSL string.
-
-- **hex**() `string` — Gets a hex color.
+- `h`: `number` — Hue.
+- `s`: `number` — Saturation.
+- `l`: `number` — Lightness.
+- `r`: `number` — Red.
+- `g`: `number` — Green.
+- `b`: `number` — Blue.
+- `a`: `number` — alpha.
+- `rgb`: `string` — RGB color string.
+- `hsl`: `string` — HSL color string.
+- `hex`: `string` — Hex color.
 
 ```javascript
 // e.g.
@@ -140,18 +145,23 @@ alwan.on('change', (ev) => {
   ev.type                 // change
   ev.source               // Element
 
-  // RGB color.
-  ev.rgb()                // output: { r: 0, g: 0, b: 0, a: 1}
-  ev.rgb(true)            // output: [0, 0, 0, 0]
-  ev.rgb().toString()     // output: rgba(0, 0, 0, 1)
+  // HSL color components.
+  ev.h
+  ev.s
+  ev.l
 
-  // Hex color.
-  ev.hex()                // output: #000000
+  // RGB color components.
+  ev.r
+  ev.g
+  ev.b
 
-  // HSL color.
-  ev.hsl()               // output: { h: 0, s: 0, l: 0, a: 1 }
-  ev.hsl(true)           // output: [0, 0, 0, 0]
-  ev.hsl().toString()    // output: hsla(0, 0%, 0%, 1)
+  // Alpha channel.
+  ev.a
+
+  // Colors strings.
+  ev.rgb
+  ev.hsl
+  ev.hex
 })
 ```
 
@@ -173,9 +183,8 @@ picker.setColor('purple').trigger('change');
 - **disable**() — Disables picker (users won't be able to pick a color).
 - **enable**() — Enables picker.
 - **reposition**() — Updates picker position only if it's a popover.
-- **addSwatch**(color: `string`) — Adds a swatch button.
-- **removeSwatch**(swatch: `string | number`) — Removes color from the `Options.swatches` array, also removes its button from the swatches container.
+- **addSwatches**(...swatches: `Array<string | object>`) — Adds one or many color swatches.
+- **removeSwatches**(...items: `Array<string | object | number>`) — Removes one or many color swatches, items could be a color swatch or its index in the `config.swatches` array.
 
-  *Note:* swatch argument can be a color string in the `Options.swatches` array or an index.
 - **reset**() — Reset to default color.
 - **destroy**() — Removes the color picker functionality completely(free up memory).
