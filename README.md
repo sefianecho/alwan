@@ -30,9 +30,10 @@ A simple, lightweight, customizable, touch friendly color picker, written in van
 -   No dependencies.
 -   Copy color to the clipboard.
 -   Lightweight.
-    > ### _Note_
-    >
-    > If you are using React, use [react-alwan](https://github.com/SofianChouaib/react-alwan) instead.
+
+> ### _Note_
+>
+> If you are using React, use [react-alwan](https://github.com/SofianChouaib/react-alwan) instead.
 
 ## Demo
 
