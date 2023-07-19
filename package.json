@@ -9,6 +9,10 @@
     "build": "webpack --env prod",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist",
+    "images"
+  ],
   "keywords": [
     "color",
     "picker",
