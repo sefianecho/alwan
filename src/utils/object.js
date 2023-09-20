@@ -16,3 +16,23 @@ export const objectIterator = (object, fn) => {
        fn(object[prop], prop);
     }
 }
+
+
+/**
+ * Deep merge options.
+ *
+ * @param {object} config - Alwan config object.
+ * @param {object} options - User options.
+ */
+export const mergeOptions = (config, options) => {
+    objectIterator(options, (val, key) => {
+        if (key in config) {
+            if (typeof val === 'object' && !isArray(val)) {
+                config[key] = merge({}, config[key]);
+                mergeOptions(config[key], val);
+            } else {
+                config[key] = options[key];
+            }
+        }
+    });
+}

@@ -1,5 +1,5 @@
 import { Reference } from "./components/reference";
-import { merge, objectIterator, prototype, setPrototypeOf } from "./utils/object";
+import { merge, mergeOptions, objectIterator, prototype, setPrototypeOf } from "./utils/object";
 import { destroyComponents, isShared, useComponents } from "./core/component";
 import { color } from "./core/color";
 import { Dispatcher } from "./core/events/dispatcher";
@@ -51,7 +51,7 @@ export default class Alwan {
         alwan._reference._setDisabled(disabled);
 
         if (! config.disabled) {
-            merge(config, options);
+            mergeOptions(config, options);
             alwan._components = components = useComponents(alwan);
             alwan._reference._init(config);
             app = components._app;
