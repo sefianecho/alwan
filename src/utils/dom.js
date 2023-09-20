@@ -1,5 +1,5 @@
 import { BUTTON_CLASSNAME, CONTAINER_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
-import { BUTTON, DOC_ELEMENT, INPUT, INSERT_AFTER_LAST_CHILD, ROOT } from "../constants/globals";
+import { ARIA_LABEL, BUTTON, DOC_ELEMENT, INPUT, INSERT_AFTER_LAST_CHILD, ROOT } from "../constants/globals";
 import { merge, objectIterator } from "./object";
 import { isString, isset } from "./is";
 
@@ -199,11 +199,23 @@ export const toggleClassName = (element, tokens, toggler) => {
  * @param {string} className - Class.
  * @param {Element} targetElement - TargetElement.
  * @param {object} details - Button details.
+ * @param {string} label - Button label.
+ * @param {title} title - Button title.
  * @param {string} insertPosition - Button insert position.
  * @returns {Element} A button.
  */
-export const createButton = (className, targetElement, details, insertPosition) => {
-    return createElement(BUTTON, BUTTON_CLASSNAME + ' ' + className, targetElement, merge({ type: BUTTON }, details), insertPosition);
+export const createButton = (className, targetElement, details, label, title, insertPosition) => {
+    return createElement(
+        BUTTON,
+        BUTTON_CLASSNAME + ' ' + className,
+        targetElement,
+        merge({
+            type: BUTTON,
+            [ARIA_LABEL]: label,
+            title: title || label
+        }, details),
+        insertPosition
+    );
 }
 
 /**
@@ -238,4 +250,16 @@ export const createSlider = (className, parent, max, step) => {
  */
 export const createContainer = (targetElement, where) => {
     return createElement('', CONTAINER_CLASSNAME, targetElement, {}, where);
+}
+
+/**
+ * Adds aria label to an element.
+ *
+ * @param {HTMLElement} element - Element to label.
+ * @param {string} label - Label value.
+ */
+export const setLabel = (element, label) => {
+    if (element) {
+        element.setAttribute(ARIA_LABEL, label);
+    }
 }

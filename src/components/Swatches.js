@@ -62,7 +62,13 @@ export const Swatches = (ref, alwan) => {
                     // Create swatch buttons.
                     swatches.forEach(color => {
                         customProperty(
-                            createButton(SWATCH_CLASSNAME, container),
+                            createButton(
+                                SWATCH_CLASSNAME,
+                                container,
+                                {},
+                                alwan.config.i18n.buttons.swatch + ': ' + color,
+                                color
+                            ),
                             COLOR,
                             parseColor(color, true)
                         );

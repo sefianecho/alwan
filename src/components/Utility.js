@@ -90,7 +90,6 @@ export const Utility = (ref, alwan) => {
          */
         _init({ preview, copy }, instance) {
             alwan = instance;
-
             // Initialize elements.
             previewElement = removeElement(previewElement);
             copyButton = removeElement(copyButton);
@@ -109,7 +108,9 @@ export const Utility = (ref, alwan) => {
                     COPY_BUTTON_CLASSNAME,
                     previewElement || ref,
                     { html: clipboardSVG },
-                    INSERT_BEFORE_FIRST_CHILD
+                    alwan.config.i18n.buttons.copy,
+                    '',
+                    INSERT_BEFORE_FIRST_CHILD,
                 );
 
                 /**

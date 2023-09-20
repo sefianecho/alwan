@@ -4,7 +4,6 @@ import { stringify } from "../colors/stringify";
 import {
     CHANGE,
     CLICK,
-    COLOR,
     COLOR_FORMATS,
     FOCUS_IN,
     HEX_FORMAT,
@@ -207,7 +206,7 @@ export const Inputs = (ref, alwan) => {
                 build();
 
                 if (length > 1) {
-                    switchButton = createButton('', container, { html: switchInputsSVG });
+                    switchButton = createButton('', container, { html: switchInputsSVG }, alwan.config.i18n.buttons.changeFormat);
                     addEvent(switchButton, CLICK, changeFormat);
                 }
             }

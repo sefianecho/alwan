@@ -1,7 +1,7 @@
 import { BACKDROP_CLASSNAME, MARKER_CLASSNAME, PALETTE_CLASSNAME } from "../constants/classnames";
 import { DOC_ELEMENT, KEYBOARD_X, KEYBOARD_Y, KEY_DOWN, POINTER_DOWN, POINTER_MOVE, POINTER_UP, ROOT } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
-import { createElement, getBounds, translate, removeElement, customProperty } from "../utils/dom"
+import { createElement, getBounds, translate, removeElement, customProperty, setLabel } from "../utils/dom"
 import { boundNumber, min } from "../utils/number";
 
 /**
@@ -172,6 +172,7 @@ export const Palette = (ref, alwan) => {
          */
         _init(_options, instance) {
             alwan = instance || alwan;
+            setLabel(palette, alwan.config.i18n.palette);
         },
 
         /**

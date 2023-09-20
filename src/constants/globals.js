@@ -36,6 +36,8 @@ export const INSERT_BEFORE_FIRST_CHILD = 'afterbegin';
 export const INSERT_AFTER = 'afterend';
 export const INSERT_AFTER_LAST_CHILD = 'beforeend';
 
+export const ARIA_LABEL = 'aria-label';
+
 /**
  * Horizontal movement using the keyboard arrow keys.
  */

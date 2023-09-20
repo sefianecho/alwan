@@ -177,4 +177,20 @@ import { DEFAULT_COLOR } from "./globals";
      * @type {boolean}
      */
     closeOnScroll: false,
+
+    /**
+     * Internationalization of the interactive elements labels.
+     */
+    i18n: {
+        palette: 'Color picker',
+        buttons: {
+            copy: 'Copy color to clipboard',
+            changeFormat: 'Change color format',
+            swatch: 'Color swatch',
+        },
+        sliders: {
+            hue: 'Change hue',
+            alpha: 'Change opacity'
+        }
+    }
 }

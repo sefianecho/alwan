@@ -1,7 +1,7 @@
 import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME, SLIDERS_CLASSNAME } from "../constants/classnames";
-import { CHANGE, COLOR, INPUT, RGB_FORMAT } from "../constants/globals";
+import { CHANGE, INPUT, RGB_FORMAT } from "../constants/globals";
 import { addEvent } from "../core/events/binder";
-import { createElement, createSlider, customProperty, removeElement } from "../utils/dom";
+import { createElement, createSlider, customProperty, removeElement, setLabel } from "../utils/dom";
 
 /**
  * Creates hue and alpha sliders.
@@ -60,6 +60,8 @@ export const Sliders = (ref, alwan) => {
         _init({ opacity }, instance) {
             alwan = instance || alwan;
 
+            const { hue, alpha } = alwan.config.i18n.sliders;
+
             alphaSlider = removeElement(alphaSlider);
 
             if (opacity) {
@@ -72,6 +74,9 @@ export const Sliders = (ref, alwan) => {
             } else {
                 alwan._color._update({ a: 1 });
             }
+
+            setLabel(hueSlider, hue);
+            setLabel(alphaSlider, alpha);
         },
 
         /**
