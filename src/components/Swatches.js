@@ -81,7 +81,10 @@ export const Swatches = (ref, alwan) => {
                         /**
                          * Handles toggle swatches button click.
                          */
-                        addEvent(collapseButton, CLICK, () => toggleClassName(container, COLLAPSE_CLASSNAME));
+                        addEvent(collapseButton, CLICK, () => {
+                            toggleClassName(container, COLLAPSE_CLASSNAME);
+                            alwan.reposition();
+                        });
                     }
                     /**
                      * Handles clicks in the swatches container.
