@@ -128,7 +128,33 @@ _You can try these options in the [demo](https://sofianchouaib.github.io/alwan/)
 -   `shared` (default `false`) — Share components (widget) with multiple instances (using less memory if there are multiple color picker instances).
 -   `closeOnScroll` (default `false`) — Close color picker when scrolling (only if the color picker is displayed as a popover and can be closed).
 
+
 **Note:** In the reference element you can access the css custom property `--alwan-color` to get color value.
+
+### Accessibility (v1.4)
+Unlabeled interactive elements has a ARIA label attribute with a default values in english. You can change these labels in the options by modifying the `i18n` object.
+
+
+**Note:**: The title attribute of the copy button and the change format button is the same as the ARIA label. and for the swatch button its title is the color value in the swatches array.
+
+```javascript
+// Labels default values.
+    {
+        ...options,
+        i18n: {
+            palette: 'Color picker', // Palette's marker (picker) ARIA label.
+            buttons: {
+                copy: 'Copy color to clipboard', // Copy button ARIA label and title.
+                changeFormat: 'Change color format', // Change format button ARIA label and title.
+                swatch: 'Color swatch' // Swatch button ARIA label.
+            },
+            sliders: {
+                hue: 'Change hue', // Hue slider ARIA label.
+                alpha: 'Change opacity' // Alpha slider ARIA label.
+            }
+        }
+    }
+```
 
 ## Events
 
