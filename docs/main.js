@@ -22,7 +22,7 @@ function initialize(options) {
         if (Object.hasOwnProperty.call(options, option)) {
             const value = options[option];
 
-            if (option === 'id' || option === 'classname') {
+            if (option === 'id' || option === 'classname' || option === 'i18n') {
                 continue;
             }
 
@@ -81,6 +81,7 @@ function updateOptions(e) {
         options[name] = value;
     }
 
+    // console.log(options);
     selectedPicker.setOptions(options);
 }
 
