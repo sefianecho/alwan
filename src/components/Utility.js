@@ -56,6 +56,7 @@ export const Utility = (ref, alwan) => {
         input.select();
         ROOT.execCommand('copy');
         input = removeElement(input);
+        copyButton.focus();
         // change icon.
         updateIcon(true);
     };
