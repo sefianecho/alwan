@@ -12,10 +12,9 @@
 
 &nbsp;&nbsp;&nbsp;
 
-<div>
-  <img alt="minified size" src="https://img.shields.io/bundlephobia/min/alwan">
-  <img alt="minizipped size" src="https://img.shields.io/bundlephobia/minzip/alwan">
-</div>
+![npm bundle size](https://img.shields.io/bundlephobia/min/alwan)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/alwan)
+![npm](https://img.shields.io/npm/dt/alwan)
 
 A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.
 
