@@ -107,7 +107,20 @@ declare namespace Alwan {
         copy?: boolean,
         swatches?: Array<Color>,
         shared?: boolean,
-        toggleSwatches?: boolean
+        toggleSwatches?: boolean,
+        closeOnScroll?: boolean,
+        i18n?: {
+            palette?: string,
+            buttons?: {
+                copy?: string,
+                changeFormat?: string,
+                swatch?: string
+            },
+            sliders?: {
+                hue?: string,
+                alpha?: string,
+            }
+        }
     }
 }
 
