@@ -5,9 +5,8 @@
   "main": "dist/js/alwan.min.js",
   "types": "./alwan/index.d.ts",
   "scripts": {
-    "start": "webpack serve",
-    "build": "webpack --env prod",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "",
+    "build": ""
   },
   "files": [
     "dist",
@@ -23,20 +22,6 @@
   ],
   "author": "Sefiane Chouaib",
   "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.18.13",
-    "@babel/preset-env": "^7.18.10",
-    "babel-loader": "^8.2.5",
-    "css-loader": "^6.7.1",
-    "html-webpack-plugin": "^5.5.0",
-    "mini-css-extract-plugin": "^2.6.1",
-    "sass": "^1.54.7",
-    "sass-loader": "^13.0.2",
-    "terser-webpack-plugin": "^5.3.6",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.10.1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SofianChouaib/alwan.git"
