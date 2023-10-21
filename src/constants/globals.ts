@@ -1,3 +1,5 @@
+import type { colorFormat } from '../types';
+
 export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
@@ -21,15 +23,15 @@ export const BLUR = 'blur';
 export const FOCUS_IN = 'focusin';
 export const MOUSE_OUT = 'mouseout';
 
-export const HEX_FORMAT = 'hex';
-export const RGB_FORMAT = 'rgb';
-export const HSL_FORMAT = 'hsl';
+export const HEX_FORMAT: colorFormat = 'hex';
+export const RGB_FORMAT: colorFormat = 'rgb';
+export const HSL_FORMAT: colorFormat = 'hsl';
 
 export const TAB = 'Tab';
 export const ESCAPE = 'Escape';
 
 // Picker supported color formats.
-export const COLOR_FORMATS = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
+export const COLOR_FORMATS: colorFormat[] = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];
 
 // Element insert positions.
 export const INSERT_BEFORE_FIRST_CHILD = 'afterbegin';
@@ -43,7 +45,7 @@ export const ARIA_LABEL = 'aria-label';
  */
 export const KEYBOARD_X = {
     ArrowRight: 1,
-    ArrowLeft: -1
+    ArrowLeft: -1,
 };
 
 /**
@@ -51,5 +53,5 @@ export const KEYBOARD_X = {
  */
 export const KEYBOARD_Y = {
     ArrowDown: 1,
-    ArrowUp: -1
+    ArrowUp: -1,
 };
