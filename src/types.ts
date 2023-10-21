@@ -264,3 +264,9 @@ export interface EventEmitter {
     _on(type: alwanEventType, listener: alwanEventListener): void;
     _off(type?: alwanEventType, listener?: alwanEventListener): void;
 }
+
+export type EventListenerBinder = (
+    target: EventTarget,
+    type: string,
+    listener: EventListenerOrEventListenerObject
+) => void;
