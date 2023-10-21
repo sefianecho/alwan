@@ -225,3 +225,13 @@ export interface colorDetails extends RGB, HSL, A, Record<colorFormat, string> {
 export type Color = string | RGB | RGBA | HSL | HSLA;
 export type colorFormat = 'rgb' | 'hsl' | 'hex';
 export type InputFormats = Partial<Record<colorFormat, boolean>>;
+
+export type Attrs = Record<string, string>;
+export type DOMRectArray = [
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    right: number,
+    bottom: number
+];
