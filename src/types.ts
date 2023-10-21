@@ -288,3 +288,4 @@ export interface ISliders extends Component {
 export interface IInputs extends Component {
     _setValues(color: colorDetails): void;
 }
+export interface ISwatches extends Component {}
