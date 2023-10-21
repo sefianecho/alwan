@@ -6,6 +6,7 @@ export const DOC_ELEMENT = ROOT.documentElement;
 
 export const PALETTE_ID = 1;
 export const SLIDERS_ID = 2;
+export const INPUTS_ID = 3;
 
 export const DEFAULT_COLOR = '#000';
 
@@ -33,6 +34,7 @@ export const HSL_FORMAT: colorFormat = 'hsl';
 
 export const TAB = 'Tab';
 export const ESCAPE = 'Escape';
+export const ENTER = 'Enter';
 
 // Picker supported color formats.
 export const COLOR_FORMATS: colorFormat[] = [HEX_FORMAT, RGB_FORMAT, HSL_FORMAT];

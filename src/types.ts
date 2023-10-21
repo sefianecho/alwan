@@ -285,3 +285,6 @@ export interface IUtility extends Component {}
 export interface ISliders extends Component {
     _setValues(h: number, a: number): void;
 }
+export interface IInputs extends Component {
+    _setValues(color: colorDetails): void;
+}
