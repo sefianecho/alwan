@@ -5,6 +5,7 @@ export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
 export const PALETTE_ID = 1;
+export const SLIDERS_ID = 2;
 
 export const DEFAULT_COLOR = '#000';
 

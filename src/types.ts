@@ -282,3 +282,6 @@ export interface IPalette extends Component {
     _destroy(): void;
 }
 export interface IUtility extends Component {}
+export interface ISliders extends Component {
+    _setValues(h: number, a: number): void;
+}
