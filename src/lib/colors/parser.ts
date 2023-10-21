@@ -8,8 +8,8 @@ import {
 } from '../../constants/globals';
 import { Color, HSLA, RGBA, colorFormat } from '../../types';
 import { createElement } from '../../utils/dom';
-import { isString } from '../../utils/is';
-import { boundNumber, int, isNumeric, normalizeAngle, round } from '../../utils/math';
+import { isNumber, isString } from '../../utils/is';
+import { boundNumber, int, normalizeAngle, round } from '../../utils/math';
 import { isPlainObject } from '../../utils/object';
 import { stringify } from './stringify';
 
@@ -38,7 +38,7 @@ export function parseColor(
         if (isPlainObject(color)) {
             // Convert color object if valid to string.
             format = [RGB_FORMAT, HSL_FORMAT].find((format) =>
-                format.split('').every((key) => isNumeric(color[key as keyof Color]))
+                format.split('').every((key) => isNumber(color[key as keyof Color]))
             );
             if (format) {
                 str = stringify(color as RGBA | HSLA, format);

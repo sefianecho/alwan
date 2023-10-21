@@ -1,4 +1,4 @@
-export const { parseFloat: float, parseInt: int, isFinite: isNumeric } = Number;
+export const int = parseInt;
 export const { min, max, abs, round, PI } = Math;
 
 /**
