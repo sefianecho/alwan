@@ -235,3 +235,19 @@ export type DOMRectArray = [
     right: number,
     bottom: number
 ];
+
+export interface alwanValue extends colorDetails {}
+export interface IColorState {
+    _color: colorDetails;
+    _update(hsl: Partial<HSLA>, source?: HTMLElement, componentId?: number, rgb?: RGBA): void;
+    _setColor(
+        color: Color,
+        source?: HTMLElement,
+        componentId?: number,
+        triggerChange?: boolean
+    ): void;
+    _setFormat(format: colorFormat): void;
+    _cache(): void;
+    _change(source: HTMLElement): void;
+    _colorString(): string;
+}
