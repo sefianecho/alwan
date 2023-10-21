@@ -238,7 +238,7 @@ export type DOMRectArray = [
 
 export interface alwanValue extends colorDetails {}
 export interface IColorState {
-    _color: colorDetails;
+    _value: colorDetails;
     _update(hsl: Partial<HSLA>, source?: HTMLElement, componentId?: number, rgb?: RGBA): void;
     _setColor(
         color: Color,
@@ -260,7 +260,7 @@ export interface alwanEvent extends alwanValue {
 export type alwanEventListener = (ev: alwanEvent) => void;
 export type alwanEventAndListenersMap = Record<alwanEventType, alwanEventListener[]>;
 export interface EventEmitter {
-    _emit(type: alwanEventType, source?: HTMLElement, color?: colorDetails): void;
+    _emit(type: alwanEventType, source?: HTMLElement, value?: colorDetails): void;
     _on(type: alwanEventType, listener: alwanEventListener): void;
     _off(type?: alwanEventType, listener?: alwanEventListener): void;
 }

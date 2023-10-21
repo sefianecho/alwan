@@ -40,7 +40,7 @@ export const colorState = (alwan: Alwan): IColorState => {
         /**
          * Color details.
          */
-        _color: state,
+        _value: state,
 
         /**
          * Updates color state and UI.
