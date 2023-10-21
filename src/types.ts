@@ -293,3 +293,24 @@ export interface IReference extends Component {
     _el(): Element;
     _destroy(): void;
 }
+
+export interface alwanApp {
+    _setup(options: alwanOptions): void;
+    _isOpen(): boolean;
+    _toggle(state?: boolean, forced?: boolean): void;
+}
+
+export interface IPopover {
+    _update(): void;
+    _destroy(): void;
+}
+
+export type LabeledElement =
+    | HTMLInputElement
+    | HTMLSelectElement
+    | HTMLButtonElement
+    | ElementInternals
+    | HTMLMeterElement
+    | HTMLOutputElement
+    | HTMLProgressElement
+    | HTMLTextAreaElement;
