@@ -4,6 +4,8 @@ import { PI } from '../utils/math';
 export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
+export const PALETTE_ID = 1;
+
 export const DEFAULT_COLOR = '#000';
 
 export const BUTTON = 'button';
@@ -42,19 +44,13 @@ export const INSERT_AFTER_LAST_CHILD = 'beforeend';
 export const ARIA_LABEL = 'aria-label';
 
 /**
- * Horizontal movement using the keyboard arrow keys.
+ * Arrow keys move steps.
  */
-export const KEYBOARD_X = {
-    ArrowRight: 1,
-    ArrowLeft: -1,
-};
-
-/**
- * Vertical movement using the keyboard arrow keys.
- */
-export const KEYBOARD_Y = {
-    ArrowDown: 1,
-    ArrowUp: -1,
+export const ARROW_KEYS: Record<string, [x: number, y: number]> = {
+    ArrowUp: [0, -1],
+    ArrowDown: [0, 1],
+    ArrowRight: [1, 0],
+    ArrowLeft: [-1, 0],
 };
 
 export const ANGLE_COEFFICIENT_MAP: { [angle: string]: number } = {

@@ -270,3 +270,14 @@ export type EventListenerBinder = (
     type: string,
     listener: EventListenerOrEventListenerObject
 ) => void;
+
+// Components.
+export interface Component {
+    _init(config: alwanConfig): void;
+}
+
+export interface IPalette extends Component {
+    el: HTMLDivElement;
+    _updateMarker(s: number, v: number): void;
+    _destroy(): void;
+}
