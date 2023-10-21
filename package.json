@@ -3,15 +3,16 @@
   "version": "1.4.0",
   "description": "A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.",
   "main": "dist/js/alwan.min.js",
-  "types": "./alwan/index.d.ts",
+  "module": "dist/js/esm/alwan.min.js",
+  "typings": "dist/js/types/index.d.ts",
+  "type": "module",
   "scripts": {
-    "start": "",
-    "build": ""
+    "start": "rollup -c -w",
+    "prebuild": "rimraf dist",
+    "build": "tsc && rollup -c"
   },
   "files": [
-    "dist",
-    "images",
-    "alwan"
+    "dist"
   ],
   "keywords": [
     "color",
@@ -22,6 +23,22 @@
   ],
   "author": "Sefiane Chouaib",
   "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-typescript": "^7.23.0",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-terser": "^0.4.3",
+    "rimraf": "^5.0.5",
+    "rollup": "^3.29.4",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-scss": "^4.0.0",
+    "rollup-plugin-serve": "^2.0.2",
+    "sass": "^1.68.0",
+    "typescript": "^5.2.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SofianChouaib/alwan.git"
