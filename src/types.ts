@@ -281,3 +281,4 @@ export interface IPalette extends Component {
     _updateMarker(s: number, v: number): void;
     _destroy(): void;
 }
+export interface IUtility extends Component {}
