@@ -251,3 +251,16 @@ export interface IColorState {
     _change(source: HTMLElement): void;
     _colorString(): string;
 }
+
+export type alwanEventType = 'open' | 'close' | 'color' | 'change';
+export interface alwanEvent extends alwanValue {
+    readonly type: alwanEventType;
+    readonly source?: HTMLElement;
+}
+export type alwanEventListener = (ev: alwanEvent) => void;
+export type alwanEventAndListenersMap = Record<alwanEventType, alwanEventListener[]>;
+export interface EventEmitter {
+    _emit(type: alwanEventType, source?: HTMLElement, color?: colorDetails): void;
+    _on(type: alwanEventType, listener: alwanEventListener): void;
+    _off(type?: alwanEventType, listener?: alwanEventListener): void;
+}
