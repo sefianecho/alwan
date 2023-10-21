@@ -289,3 +289,7 @@ export interface IInputs extends Component {
     _setValues(color: colorDetails): void;
 }
 export interface ISwatches extends Component {}
+export interface IReference extends Component {
+    _el(): Element;
+    _destroy(): void;
+}
