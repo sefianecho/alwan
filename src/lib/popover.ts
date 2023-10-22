@@ -266,6 +266,7 @@ export const createPopover = (
         container.style.transform = '';
     };
 
+    _update();
     // Attach listeners.
     togglePopoverEvents(addEvent);
 
