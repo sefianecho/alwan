@@ -295,9 +295,11 @@ export interface IReference extends Component {
 }
 
 export interface alwanApp {
-    _setup(options: alwanOptions): void;
+    _setup(options?: alwanOptions): alwanApp;
     _isOpen(): boolean;
     _toggle(state?: boolean, forced?: boolean): void;
+    _reposition(): void;
+    _destroy(): void;
 }
 
 export interface IPopover {
