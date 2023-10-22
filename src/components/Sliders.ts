@@ -8,7 +8,6 @@ import { ARIA_LABEL, CHANGE, INPUT, SLIDERS_ID } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { ISliders } from '../types';
 import { createDivElement, createRangeInput, removeElement, setAttribute } from '../utils/dom';
-import { float } from '../utils/math';
 
 /**
  * Creates hue and opacity sliders.
@@ -29,7 +28,7 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
      */
     const handleChange = (e: Event) => {
         const target = <HTMLInputElement>e.target;
-        const value = float(target.value);
+        const value = +target.value;
 
         if (e.type === CHANGE) {
             _events._emit(CHANGE, target);

@@ -22,7 +22,7 @@ import {
     createElement,
     removeElement,
 } from '../utils/dom';
-import { float, max } from '../utils/math';
+import { max } from '../utils/math';
 import { ObjectForEach } from '../utils/object';
 
 /**
@@ -72,7 +72,7 @@ export const Inputs = (
 
             if (!isSingle()) {
                 ObjectForEach(inputsMap, (key, input) => {
-                    color[key] = float(input!.value);
+                    color[key] = +input!.value;
                 });
                 str = stringify(<RGBA | HSLA>color, formats[currentFormatIndex]);
             }
