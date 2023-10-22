@@ -33,7 +33,7 @@ export const Reference = (alwan: Alwan, userRef: Element | null): IReference => 
      * Handle click on the reference element.
      */
     const handleClick = () => {
-        // TODO: toggle.
+        alwan._app._toggle();
     };
 
     return {
