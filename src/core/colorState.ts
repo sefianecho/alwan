@@ -63,7 +63,7 @@ export const colorState = (alwan: Alwan): IColorState => {
                 state.hsl = stringify(state, HSL_FORMAT);
                 state.hex = RGBToHEX(state);
 
-                // TODO: update components.
+                alwan._app._update(state, componentId);
 
                 if (source && previousHex !== state.hex) {
                     emitEvent(COLOR, source, state);

@@ -242,7 +242,7 @@ export const createContainer = (targetElement: Element, where?: InsertPosition) 
  * @param value    - Custom property value.
  */
 export const setCustomProperty = (
-    element: HTMLElement | null,
+    element: HTMLElement | SVGAElement | null,
     property: string,
     value: string | number
 ) => {

@@ -296,6 +296,7 @@ export interface IReference extends Component {
 
 export interface alwanApp {
     _setup(options?: alwanOptions): alwanApp;
+    _update(state: colorDetails, componentId?: number): void;
     _isOpen(): boolean;
     _toggle(state?: boolean, forced?: boolean): void;
     _reposition(): void;

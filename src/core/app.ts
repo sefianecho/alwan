@@ -1,7 +1,15 @@
 import type Alwan from '..';
 import { Inputs, Palette, Reference, Sliders, Swatches, Utility } from '../components';
 import { ALWAN_CLASSNAME, OPEN_CLASSNAME, POPUP_CLASSNAME } from '../constants/classnames';
-import { INSERT_AFTER, INSERT_AFTER_LAST_CHILD } from '../constants/globals';
+import {
+    COLOR,
+    INPUTS_ID,
+    INSERT_AFTER,
+    INSERT_AFTER_LAST_CHILD,
+    PALETTE_ID,
+    RGB_FORMAT,
+    SLIDERS_ID,
+} from '../constants/globals';
 import { createPopover } from '../lib/popover';
 import type { IPopover, alwanApp } from '../types';
 import {
@@ -12,6 +20,7 @@ import {
     insertElement,
     removeElement,
     setAttribute,
+    setCustomProperty,
     toggleClassNames,
 } from '../utils/dom';
 import { isString } from '../utils/is';
@@ -95,6 +104,28 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             }
 
             return self;
+        },
+
+        /**
+         * Updates UI and components.
+         *
+         * @param state - Color state.
+         * @param componentId - Id of the component that updating the color.
+         */
+        _update(state, componentId) {
+            const { r, g, b, a, h, s, l, rgb } = state;
+            setCustomProperty(refElement, COLOR, rgb);
+            setCustomProperty(root, RGB_FORMAT, `${r},${g},${b}`);
+            setCustomProperty(root, 'a', a);
+            setCustomProperty(palette.el, 'h', h);
+
+            if (componentId !== PALETTE_ID && componentId !== SLIDERS_ID) {
+                palette._updateMarker(s / 100, l / 100);
+                sliders._setValues(h, a);
+            }
+            if (componentId !== INPUTS_ID) {
+                inputs._setValues(state);
+            }
         },
 
         /**

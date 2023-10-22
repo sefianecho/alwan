@@ -34,8 +34,8 @@
         z-index: $alwan-popup-z-index;
         border: 0;
         box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-                    0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-                    0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+            0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+            0px 3px 14px 2px rgba(0, 0, 0, 0.12);
     }
 
     // Container.
@@ -56,7 +56,7 @@
         user-select: none;
         cursor: crosshair;
         background: linear-gradient(to bottom, transparent, #000),
-                    linear-gradient(to right, #fff, hsl(var(--alwan-h, 0), 100%, 50%));
+            linear-gradient(to right, #fff, hsl(var(--h, 0), 100%, 50%));
 
         &:focus .alwan__marker {
             box-shadow: 0 0 1px 2px $alwan-focus-color;
@@ -99,7 +99,7 @@
             &:hover {
                 opacity: 1;
                 z-index: 100;
-                background-color: rgba(0,0,0,0.6);
+                background-color: rgba(0, 0, 0, 0.6);
             }
         }
     }
@@ -118,17 +118,15 @@
         outline: 0;
         -webkit-appearance: none;
         appearance: none;
-        --alwan-alpha: linear-gradient(90deg, transparent, var(--alwan-rgb)), var(--alwan-pattern);
-        --alwan-hue: linear-gradient(
-            -90deg,
-            #ff0000,
-            #ffff00,
-            #00ff00,
-            #00ffff,
-            #0000ff,
-            #ff00ff,
-            #ff0000
-        );
+        --alwan-alpha: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--alwan-pattern);
+        --alwan-hue: linear-gradient(-90deg,
+                #ff0000,
+                #ffff00,
+                #00ff00,
+                #00ffff,
+                #0000ff,
+                #ff00ff,
+                #ff0000);
 
         &:active {
             cursor: ew-resize;
@@ -233,7 +231,7 @@
         color: var(--alwan-fg, $input-color);
         font-size: $input-font-size;
         font-family: $input-font-family;
-        border:  1px solid var(--alwan-bc, $alwan-border-color);
+        border: 1px solid var(--alwan-bc, $alwan-border-color);
         margin-bottom: $input-margin-bottom;
         background-color: var(--alwan-input-bg, $input-background);
         line-height: $input-line-height;
@@ -247,7 +245,7 @@
             outline: 0;
             border-color: $alwan-focus-color;
 
-            + span {
+            +span {
                 color: $alwan-focus-color;
             }
         }
@@ -280,7 +278,7 @@
     }
 
     &__button {
-    	display: inline-block;
+        display: inline-block;
         background: transparent;
         color: var(--alwan-fg, $alwan-foreground);
         border: 1px solid transparent;
@@ -317,7 +315,7 @@
 
     &__swatch:focus,
     &__preset-button:focus {
-    	outline: 1px dashed var(--alwan-color);
+        outline: 1px dashed var(--color);
         outline-offset: 1px;
     }
 
@@ -326,7 +324,7 @@
     }
 
     &__backdrop {
-    	position: fixed;
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
@@ -334,6 +332,7 @@
         z-index: 9999999999;
         cursor: move;
     }
+
     &__swatch,
     &__preview,
     &__preset-button {
@@ -350,8 +349,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--alwan-color);
+            background: var(--color);
         }
+    }
+
+    &__preview::before {
+        background-color: rgba(var(--rgb), var(--a, 1));
     }
 
     &__toggle-button {
@@ -367,10 +370,10 @@
 
     &--collapse {
         &.alwan__swatches {
-           display: none;
+            display: none;
         }
 
-        & + .alwan__toggle-button svg {
+        &+.alwan__toggle-button svg {
             transform: rotate(180deg);
         }
     }
