@@ -236,7 +236,7 @@ export type DOMRectArray = [
     bottom: number
 ];
 
-export interface alwanValue extends colorDetails {}
+export interface alwanValue extends Readonly<colorDetails> {}
 export interface IColorState {
     _value: colorDetails;
     _update(hsl: Partial<HSLA>, source?: HTMLElement, componentId?: number, rgb?: RGBA): void;
