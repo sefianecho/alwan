@@ -5,12 +5,14 @@ import {
     CHANGE,
     CLICK,
     COLOR_FORMATS,
+    ENTER,
     FOCUS_IN,
     HEX_FORMAT,
     INPUT,
     INPUTS_ID,
     INSERT_AFTER,
     INSERT_BEFORE_FIRST_CHILD,
+    KEY_DOWN,
 } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import { stringify } from '../lib/colors/stringify';
@@ -32,10 +34,8 @@ import { ObjectForEach } from '../utils/object';
  * @param targetElement - Element to insert the inputs component to.
  * @returns - Inputs component.
  */
-export const Inputs = (
-    { config, _color: colorState }: Alwan,
-    targetElement: HTMLElement
-): IInputs => {
+export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
+    let { config, _color: colorState } = alwan;
     let container: HTMLDivElement | null;
     let inputsWrapper: HTMLDivElement | null;
     let switchButton: HTMLButtonElement | null;
@@ -128,11 +128,12 @@ export const Inputs = (
         addEvent(inputsWrapper, CHANGE, handleChange);
         // Select value on focus.
         addEvent(inputsWrapper, FOCUS_IN, (e) => (<HTMLInputElement>e.target).select());
-        // addEvent(
-        //     inputsWrapper,
-        //     KEY_DOWN,
-        //     (e) => (e as KeyboardEvent).key === ENTER &&
-        // );
+        // Close picker on Enter key press.
+        addEvent(
+            inputsWrapper,
+            KEY_DOWN,
+            (e) => (e as KeyboardEvent).key === ENTER && alwan._app._toggle(false)
+        );
     };
 
     /**
