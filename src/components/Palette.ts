@@ -13,7 +13,13 @@ import {
 } from '../constants/globals';
 import { addEvent, removeEvent } from '../core/events/binder';
 import { DOMRectArray, IPalette } from '../types';
-import { createDivElement, getBounds, removeElement, setAttribute, translate } from '../utils/dom';
+import {
+    createDivElement,
+    getBounds,
+    setAttribute,
+    toggleClassNames,
+    translate,
+} from '../utils/dom';
 import { boundNumber, min } from '../utils/math';
 
 /**
@@ -27,9 +33,6 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
     let markerX: number;
     let markerY: number;
     let paletteBounds: DOMRectArray;
-    // A transparent element that covers the whole document.
-    let backdropElement: HTMLDivElement | null;
-    let isPointerDown = false;
 
     const palette = createDivElement(PALETTE_CLASSNAME, parent, { tabindex: '0' });
     const marker = createDivElement(MARKER_CLASSNAME, palette);
@@ -74,40 +77,35 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
     };
 
     /**
-     * Starts dragging the marker.
-     *
-     * @param e - Pointerdown event.
-     */
-    const dragStart = (e: Event) => {
-        if (!backdropElement) {
-            backdropElement = createDivElement(BACKDROP_CLASSNAME, DOC_ELEMENT);
-        }
-        colorState._cache();
-        paletteBounds = getBounds(palette);
-        isPointerDown = true;
-        moveMarkerAndUpdateColor(<PointerEvent>e);
-    };
-
-    /**
      * Dragging the marker.
      *
      * @param e - Pointermove event.
      */
     const drag = (e: Event) => {
-        if (isPointerDown) {
-            moveMarkerAndUpdateColor(<PointerEvent>e);
-        }
+        moveMarkerAndUpdateColor(<PointerEvent>e);
     };
 
     /**
      * Drag end (released the marker).
      */
     const dragEnd = () => {
-        if (isPointerDown) {
-            colorState._change(palette);
-            backdropElement = removeElement(backdropElement);
-            isPointerDown = false;
-        }
+        colorState._change(palette);
+        toggleClassNames(DOC_ELEMENT, BACKDROP_CLASSNAME, false);
+        removeEvent(ROOT, POINTER_MOVE, drag);
+    };
+
+    /**
+     * Starts dragging the marker.
+     *
+     * @param e - Pointerdown event.
+     */
+    const dragStart = (e: Event) => {
+        colorState._cache();
+        paletteBounds = getBounds(palette);
+        toggleClassNames(DOC_ELEMENT, BACKDROP_CLASSNAME, true);
+        moveMarkerAndUpdateColor(<PointerEvent>e);
+        addEvent(ROOT, POINTER_MOVE, drag);
+        addEvent(ROOT, POINTER_UP, dragEnd, { once: true });
     };
 
     /**
@@ -131,8 +129,6 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
      * Bind events.
      */
     addEvent(palette, POINTER_DOWN, dragStart);
-    addEvent(ROOT, POINTER_MOVE, drag);
-    addEvent(ROOT, POINTER_UP, dragEnd);
     addEvent(palette, KEY_DOWN, handleKeyboard);
 
     return {
@@ -162,14 +158,6 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
             markerX = (v ? 2 * (1 - l / v) : 0) * paletteBounds[2];
             markerY = (1 - v) * paletteBounds[3];
             translate(marker, markerX, markerY);
-        },
-
-        /**
-         * Remove listeners attached to the document.
-         */
-        _destroy() {
-            removeEvent(ROOT, POINTER_MOVE, drag);
-            removeEvent(ROOT, POINTER_UP, dragEnd);
         },
     };
 };

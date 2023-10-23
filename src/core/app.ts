@@ -170,7 +170,6 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             if (popoverInstance) {
                 popoverInstance._destroy();
             }
-            palette._destroy();
             reference._destroy();
         },
     };

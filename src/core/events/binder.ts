@@ -6,9 +6,10 @@ import type { EventListenerBinder } from '../../types';
  * @param target Event target.
  * @param type - Event type.
  * @param listener - Event handler.
+ * @param options - Event listener options.
  */
-export const addEvent: EventListenerBinder = (target, type, listener) => {
-    target.addEventListener(type, listener);
+export const addEvent: EventListenerBinder = (target, type, listener, options) => {
+    target.addEventListener(type, listener, options);
 };
 
 /**

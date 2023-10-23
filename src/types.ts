@@ -268,7 +268,8 @@ export interface EventEmitter {
 export type EventListenerBinder = (
     target: EventTarget,
     type: string,
-    listener: EventListenerOrEventListenerObject
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | AddEventListenerOptions
 ) => void;
 
 // Components.
@@ -279,7 +280,6 @@ export interface Component {
 export interface IPalette extends Component {
     el: HTMLDivElement;
     _updateMarker(s: number, v: number): void;
-    _destroy(): void;
 }
 export interface IUtility extends Component {}
 export interface ISliders extends Component {
