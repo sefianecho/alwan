@@ -193,7 +193,7 @@ export interface alwanConfig {
 }
 
 type Optional<T> = {
-    [P in keyof T]?: Optional<T[P]>;
+    [P in keyof T]?: T[P] extends Color ? Color : Optional<T[P]>;
 };
 
 export type alwanOptions = Optional<alwanConfig>;
@@ -295,7 +295,7 @@ export interface IReference extends Component {
 }
 
 export interface alwanApp {
-    _setup(options?: alwanOptions): alwanApp;
+    _setup(options?: alwanOptions): void;
     _update(state: colorDetails, componentId?: number): void;
     _isOpen(): boolean;
     _toggle(state?: boolean, forced?: boolean): void;

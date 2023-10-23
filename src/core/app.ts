@@ -23,7 +23,7 @@ import {
     setCustomProperty,
     toggleClassNames,
 } from '../utils/dom';
-import { isString } from '../utils/is';
+import { isString, isset } from '../utils/is';
 import { deepMerge } from '../utils/object';
 
 /**
@@ -62,7 +62,8 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
          */
         _setup(options = {}) {
             const self = this;
-            const { id } = options;
+            const colorState = alwan._color;
+            const { id, color } = options;
             const { theme, toggle, popover, target } = deepMerge(config, options);
 
             [reference, palette, utility, sliders, inputs, swatches].forEach((component) => {
@@ -103,7 +104,11 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                 );
             }
 
-            return self;
+            if (isset(color)) {
+                colorState._setColor(color);
+            } else {
+                colorState._update({});
+            }
         },
 
         /**
