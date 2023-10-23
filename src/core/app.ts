@@ -11,7 +11,7 @@ import {
     SLIDERS_ID,
 } from '../constants/globals';
 import { createPopover } from '../lib/popover';
-import type { IPopover, alwanApp } from '../types';
+import type { HTMLElementHasDisabled, IPopover, alwanApp } from '../types';
 import {
     bodyElement,
     createContainer,
@@ -63,7 +63,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
         _setup(options = {}) {
             const self = this;
             const colorState = alwan._color;
-            const { id, color } = options;
+            const { id, color, disabled } = options;
             const { theme, toggle, popover, target } = deepMerge(config, options);
 
             [reference, palette, utility, sliders, inputs, swatches].forEach((component) => {
@@ -103,11 +103,22 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                     targetElement === refElement ? INSERT_AFTER : INSERT_AFTER_LAST_CHILD
                 );
             }
-
+            // Set color option.
             if (isset(color)) {
                 colorState._setColor(color);
             } else {
                 colorState._update({});
+            }
+            // Disable/Enable color picker.
+            if (isset(disabled)) {
+                (refElement as HTMLElementHasDisabled).disabled = !!disabled;
+                if (disabled) {
+                    if (popover) {
+                        self._toggle(false, true);
+                    } else if (!toggle) {
+                        self._toggle(true, true);
+                    }
+                }
             }
         },
 

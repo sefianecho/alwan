@@ -317,3 +317,12 @@ export type LabeledElement =
     | HTMLOutputElement
     | HTMLProgressElement
     | HTMLTextAreaElement;
+
+export type HTMLElementHasDisabled =
+    | HTMLButtonElement
+    | HTMLFieldSetElement
+    | HTMLInputElement
+    | HTMLSelectElement
+    | HTMLOptionElement
+    | HTMLTextAreaElement
+    | HTMLOptGroupElement;
