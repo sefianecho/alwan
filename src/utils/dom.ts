@@ -8,7 +8,7 @@ import {
     ROOT,
 } from '../constants/globals';
 import type { Attrs, DOMRectArray } from '../types';
-import { isElement, isString } from './is';
+import { isElement, isString, isset } from './is';
 import { ObjectForEach, merge, toArray } from './object';
 
 /**
@@ -82,9 +82,9 @@ export const setHTML = (element: Element, html: string) => {
  * @param name - Attribute name.
  * @param value - Attribute value.
  */
-export const setAttribute = (el: Element | null, name: string, value: string) => {
+export const setAttribute = (el: Element | null, name: string, value: string | number) => {
     if (el) {
-        el.setAttribute(name, value);
+        el.setAttribute(name, value + '');
     }
 };
 
@@ -117,7 +117,7 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
     }
 
     ObjectForEach(attributes || {}, (name, value) => {
-        if (value) {
+        if (isset(value)) {
             setAttribute(element, name, value);
         }
     });

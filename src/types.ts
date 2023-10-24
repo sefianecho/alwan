@@ -226,7 +226,7 @@ export type Color = string | RGB | RGBA | HSL | HSLA;
 export type colorFormat = 'rgb' | 'hsl' | 'hex';
 export type InputFormats = Partial<Record<colorFormat, boolean>>;
 
-export type Attrs = Record<string, string>;
+export type Attrs = Record<string, string | number>;
 export type DOMRectArray = [
     x: number,
     y: number,
