@@ -68,7 +68,7 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
                          */
                         addEvent(collapseButton, CLICK, () => {
                             toggleClassNames(<Element>container, COLLAPSE_CLASSNAME);
-                            // TODO: Reposition the popover.
+                            alwan._app._reposition();
                         });
                     }
                     /**
