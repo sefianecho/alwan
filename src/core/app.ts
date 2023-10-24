@@ -2,10 +2,12 @@ import type Alwan from '..';
 import { Inputs, Palette, Reference, Sliders, Swatches, Utility } from '../components';
 import { ALWAN_CLASSNAME, OPEN_CLASSNAME, POPUP_CLASSNAME } from '../constants/classnames';
 import {
+    CLOSE,
     COLOR,
     INPUTS_ID,
     INSERT_AFTER,
     INSERT_AFTER_LAST_CHILD,
+    OPEN,
     PALETTE_ID,
     RGB_FORMAT,
     SLIDERS_ID,
@@ -161,6 +163,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                 }
                 isOpen = state;
                 toggleClassNames(root, OPEN_CLASSNAME, state);
+                alwan._events._emit(isOpen ? OPEN : CLOSE, root);
             }
         },
         /**
