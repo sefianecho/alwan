@@ -19,33 +19,27 @@ import { createDivElement, createRangeInput, removeElement, setAttribute } from 
 export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElement): ISliders => {
     let alphaSlider: HTMLInputElement | null;
     const container = createDivElement(SLIDERS_CLASSNAME, parent);
-    const hueSlider = createRangeInput(HUE_SLIDER_CLASSNAME, container, '360', '1');
+    const hueSlider = createRangeInput(HUE_SLIDER_CLASSNAME, container, 360);
 
     /**
      * Updates hue and alpha of the color state.
-     *
-     * @param e - Change Event.
      */
-    const handleChange = (e: Event) => {
+    addEvent(container, INPUT, (e: Event) => {
         const target = <HTMLInputElement>e.target;
         const value = +target.value;
-
-        if (e.type === CHANGE) {
-            _events._emit(CHANGE, target);
-        } else {
-            colorState._update(
-                target === hueSlider ? { h: 360 - value } : { a: value },
-                target,
-                SLIDERS_ID
-            );
-        }
-    };
+        colorState._update(
+            target === hueSlider ? { h: 360 - value } : { a: value },
+            target,
+            SLIDERS_ID
+        );
+    });
 
     /**
-     * Bind events.
+     * Handles change stop (change event).
      */
-    addEvent(container, INPUT, handleChange);
-    addEvent(container, CHANGE, handleChange);
+    addEvent(container, CHANGE, ({ target }: Event) => {
+        _events._emit(CHANGE, target as HTMLInputElement);
+    });
 
     return {
         /**
@@ -56,7 +50,7 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
         _init({ opacity, i18n: { sliders } }) {
             alphaSlider = removeElement(alphaSlider);
             if (opacity) {
-                alphaSlider = createRangeInput(ALPHA_SLIDER_CLASSNAME, container, '1', '0.01');
+                alphaSlider = createRangeInput(ALPHA_SLIDER_CLASSNAME, container, 1, 0.01);
             } else {
                 colorState._update({ a: 1 });
             }

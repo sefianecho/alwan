@@ -216,7 +216,7 @@ export const createButton = (
  * @param step - Step property.
  * @returns - A new range input.
  */
-export const createRangeInput = (className: string, parent: Element, max: string, step: string) => {
+export const createRangeInput = (className: string, parent: Element, max: number, step = 1) => {
     return createElement(INPUT, SLIDER_CLASSNAME + ' ' + className, parent, '', {
         type: 'range',
         max,
