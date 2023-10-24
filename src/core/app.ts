@@ -62,7 +62,8 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
          *
          * @param options - Alwan options.
          */
-        _setup(options = {}) {
+        _setup(options) {
+            options = options || {};
             const self = this;
             const colorState = alwan._color;
             const { id, color, disabled } = options;
