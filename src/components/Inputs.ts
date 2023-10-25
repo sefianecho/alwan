@@ -61,23 +61,18 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
         let str = target.value;
         let color: Partial<Record<keyof colorDetails, number>> = {};
 
-        if (e.type === CHANGE) {
-            colorState._change(target);
-            isChanged = false;
-        } else {
-            if (!isChanged) {
-                colorState._cache();
-                isChanged = true;
-            }
-
-            if (!isSingle()) {
-                ObjectForEach(inputsMap, (key, input) => {
-                    color[key] = +input!.value;
-                });
-                str = stringify(<RGBA | HSLA>color, formats[currentFormatIndex]);
-            }
-            colorState._setColor(str, target, INPUTS_ID);
+        if (!isChanged) {
+            colorState._cache();
+            isChanged = true;
         }
+
+        if (!isSingle()) {
+            ObjectForEach(inputsMap, (key, input) => {
+                color[key] = +input!.value;
+            });
+            str = stringify(<RGBA | HSLA>color, formats[currentFormatIndex]);
+        }
+        colorState._setColor(str, target, INPUTS_ID);
     };
 
     /**
@@ -118,14 +113,20 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
                 '',
                 {
                     type: 'text',
-                    value: colorValue[<keyof colorDetails>field] + '',
+                    value: colorValue[<keyof colorDetails>field],
                 }
             );
             createElement('span', '', labelElement, field);
         });
 
         addEvent(inputsWrapper, INPUT, handleChange);
-        addEvent(inputsWrapper, CHANGE, handleChange);
+        /**
+         * Handle change stop.
+         */
+        addEvent(inputsWrapper, CHANGE, ({ target }: Event) => {
+            colorState._change(target as HTMLInputElement);
+            isChanged = false;
+        });
         // Select value on focus.
         addEvent(inputsWrapper, FOCUS_IN, (e) => (<HTMLInputElement>e.target).select());
         // Close picker on Enter key press.
