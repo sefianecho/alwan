@@ -10,6 +10,7 @@
     max-width: $alwan-max-width;
     background: var(--alwan-bg, $alwan-background);
     border: 1px solid var(--alwan-outer-bc, $alwan-outer-border-color);
+    overflow-y: auto;
 
     & * {
         box-sizing: border-box;

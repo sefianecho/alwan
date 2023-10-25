@@ -71,11 +71,12 @@ export const createPopover = (
     const sidesFlipOrder = fallbackSides[side] || fallbackSides.bottom;
     const alignmentsFlipOrder = fallbackAlignments[alignment] || fallbackAlignments.center;
     const overflowAncestors = getOverflowAncestors(target);
-
+    const containerStyle = container.style;
     /**
      * Updates the container's position.
      */
     const _update = () => {
+        containerStyle.height = '';
         const visualViewport = getBounds(ROOT);
         const targetBounds = getBounds(target);
         const containerBounds = getBounds(container);
@@ -153,6 +154,13 @@ export const createPopover = (
         translate(
             container,
             ...(<[x: number, y: number]>coordinates.map((value, axis) => {
+                if (axis && value === null) {
+                    containerStyle.height = visualViewport[5] - 6 /** Gap*2 */ + 'px';
+                    containerBounds[3] =
+                        visualViewport[5] -
+                        3 /** Gap between the window and the container top-bottom edges */;
+                }
+
                 return round(
                     isset(value)
                         ? value
