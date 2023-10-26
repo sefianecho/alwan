@@ -1,26 +1,10 @@
 import type Alwan from '..';
-import { BACKDROP_CLASSNAME, MARKER_CLASSNAME, PALETTE_CLASSNAME } from '../constants/classnames';
-import {
-    ARIA_LABEL,
-    ARROW_KEYS,
-    BLUR,
-    DOC_ELEMENT,
-    KEY_DOWN,
-    PALETTE_ID,
-    POINTER_DOWN,
-    POINTER_MOVE,
-    POINTER_UP,
-    ROOT,
-} from '../constants/globals';
-import { addEvent, removeEvent } from '../core/events/binder';
+import { MARKER_CLASSNAME, PALETTE_CLASSNAME } from '../constants/classnames';
+import { ARIA_LABEL, ARROW_KEYS, KEY_DOWN, PALETTE_ID } from '../constants/globals';
+import { addEvent } from '../core/events/binder';
+import { Draggable } from '../lib/draggable';
 import { DOMRectArray, IPalette } from '../types';
-import {
-    createDivElement,
-    getBounds,
-    setAttribute,
-    toggleClassNames,
-    translate,
-} from '../utils/dom';
+import { createDivElement, getBounds, setAttribute, translate } from '../utils/dom';
 import { boundNumber, min } from '../utils/math';
 
 /**
@@ -35,7 +19,7 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
     let markerY: number;
     let paletteBounds: DOMRectArray;
 
-    const palette = createDivElement(PALETTE_CLASSNAME, parent, { tabindex: '0' });
+    const palette = createDivElement(PALETTE_CLASSNAME, parent, { tabindex: 0 });
     const marker = createDivElement(MARKER_CLASSNAME, palette);
 
     /**
@@ -84,58 +68,31 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
         colorState._change(palette);
     };
 
-    /**
-     * Drag handler to add or remove.
-     *
-     * @param e - PointerEvent.
-     */
-    const drag = (e: Event) => {
-        if ((<PointerEvent>e).buttons) {
-            moveMarkerAndUpdateColor(e as PointerEvent);
-        } else {
-            // If pointer is up but the pointerup event didn't fire then
-            // remove dragging.
-            setDragging(false);
-        }
-    };
-
-    /**
-     * Set/Unset dragging by adding/removing pointermove event and add/remove
-     * the backdrop.
-     *
-     * @param dragging - Whether to set (true) or unset (false) dragging.
-     */
-    const setDragging = (dragging: boolean) => {
-        toggleClassNames(DOC_ELEMENT, BACKDROP_CLASSNAME, dragging);
-        (dragging ? addEvent : removeEvent)(ROOT, POINTER_MOVE, drag);
-    };
-
-    /**
-     * Drag end (released the marker).
-     */
-    const dragEnd = () => {
-        triggerChange();
-        setDragging(false);
-    };
-
-    /**
-     * Drag start.
-     */
-    addEvent(palette, POINTER_DOWN, (e) => {
-        colorState._cache();
-        paletteBounds = getBounds(palette);
-        moveMarkerAndUpdateColor(<PointerEvent>e);
+    Draggable(
+        palette,
+        /**
+         * Drag start.
+         *
+         * @param e - PointerEvent.
+         */
+        (e) => {
+            colorState._cache();
+            paletteBounds = getBounds(palette);
+            moveMarkerAndUpdateColor(<PointerEvent>e);
+        },
         /**
          * Drag move.
          */
-        setDragging(true);
-        // Handle if the window lose focus (blur) while dragging.
-        addEvent(window, BLUR, triggerChange, { once: true });
+        moveMarkerAndUpdateColor,
         /**
          * Drag end.
          */
-        addEvent(ROOT, POINTER_UP, dragEnd, { once: true });
-    });
+        triggerChange,
+        /**
+         * Window blur while dragging.
+         */
+        triggerChange
+    );
 
     /**
      * Moves marker using keyboard arrow keys.
