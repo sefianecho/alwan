@@ -46,13 +46,13 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
      */
     const _setValue = (newValue: number, emitChange?: boolean) => {
         newValue = roundBy(newValue, stepPrecision);
-        if (newValue !== value && newValue <= max && newValue >= 0) {
-            value = newValue;
-            updateUI(((rtl ? max - value : value) * getBounds(track)[2]) / max);
-            if (emitChange) {
+        if (newValue <= max && newValue >= 0) {
+            if (emitChange && newValue !== value) {
                 change(value, track);
                 change(value, track, true);
             }
+            value = newValue;
+            updateUI(((rtl ? max - value : value) * getBounds(track)[2]) / max);
         }
     };
 
