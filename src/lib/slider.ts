@@ -28,6 +28,7 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
     });
     const thumb = createDivElement('thumb', track);
     const stepPrecision = precision(step);
+    const thumbOffset = getBounds(track)[3] / 2;
 
     /**
      * Updates thumb position and aria-valuenow value.
@@ -46,13 +47,18 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
      */
     const _setValue = (newValue: number, emitChange?: boolean) => {
         newValue = roundBy(newValue, stepPrecision);
+
         if (newValue <= max && newValue >= 0) {
             if (emitChange && newValue !== value) {
-                change(value, track);
-                change(value, track, true);
+                change(newValue, track);
+                change(newValue, track, true);
             }
             value = newValue;
-            updateUI(((rtl ? max - value : value) * getBounds(track)[2]) / max);
+            trackBounds = getBounds(track);
+            updateUI(
+                thumbOffset +
+                    ((rtl ? max - value : value) * (trackBounds[2] - trackBounds[3])) / max
+            );
         }
     };
 
@@ -64,7 +70,8 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
     const move = (e: Event) => {
         let x = boundNumber(
             (<PointerEvent>e).clientX - trackBounds[0] /* track x coordinate */,
-            trackBounds[2] /** track width */
+            trackBounds[2] /** track width */ - thumbOffset,
+            thumbOffset
         );
         let offset = x % stepWidth;
         let newValue: number;
@@ -75,7 +82,7 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
             x += stepWidth;
         }
 
-        newValue = roundBy((x / stepWidth) * step, stepPrecision);
+        newValue = roundBy(((x - thumbOffset) / stepWidth) * step, stepPrecision);
         if (rtl) {
             newValue = max - newValue;
         }
@@ -103,7 +110,7 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
         track,
         (e) => {
             trackBounds = getBounds(track);
-            stepWidth = (step * trackBounds[2]) / max;
+            stepWidth = (step * (trackBounds[2] - trackBounds[3])) / max;
             startingValue = value;
             move(e);
         },
@@ -119,7 +126,7 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
         const steps = ARROW_KEYS[(<KeyboardEvent>e).key];
         if (steps) {
             e.preventDefault();
-            _setValue(value + step * (steps[0] - steps[1]), true);
+            _setValue(value + (rtl ? -1 : 1) * step * (steps[0] - steps[1]), true);
         }
     });
 
@@ -128,7 +135,7 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
      */
     addEvent(track, WHEEL, (e) => {
         e.preventDefault();
-        _setValue(value - sign((<WheelEvent>e).deltaY) * step, true);
+        _setValue(value + (rtl ? 1 : -1) * sign((<WheelEvent>e).deltaY) * step, true);
     });
 
     return {
