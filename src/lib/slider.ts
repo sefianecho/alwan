@@ -15,7 +15,7 @@ import { Draggable } from './draggable';
  * @param step - Slider step Attribute.
  * @returns - Created slider.
  */
-export const createSlider: SliderConstructor = (classname, parent, change, max, step) => {
+export const createSlider: SliderConstructor = (classname, parent, change, max, step, rtl) => {
     let trackBounds: DOMRectArray;
     let startingValue: number;
     let stepWidth: number;
@@ -48,7 +48,7 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
         newValue = roundBy(newValue, stepPrecision);
         if (newValue !== value && newValue <= max && newValue >= 0) {
             value = newValue;
-            updateUI((value * getBounds(track)[2]) / max);
+            updateUI(((rtl ? max - value : value) * getBounds(track)[2]) / max);
             if (emitChange) {
                 change(value, track);
                 change(value, track, true);
@@ -76,6 +76,9 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
         }
 
         newValue = roundBy((x / stepWidth) * step, stepPrecision);
+        if (rtl) {
+            newValue = max - newValue;
+        }
 
         if (newValue !== value) {
             value = newValue;

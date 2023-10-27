@@ -337,5 +337,6 @@ export type SliderConstructor = (
     targetElement: Element,
     onChange: (value: number, source: HTMLElement, stop?: boolean) => void,
     max: number,
-    step: number
+    step: number,
+    rtl?: boolean
 ) => Slider;
