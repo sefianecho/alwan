@@ -1,13 +1,9 @@
 import type Alwan from '..';
-import {
-    ALPHA_SLIDER_CLASSNAME,
-    HUE_SLIDER_CLASSNAME,
-    SLIDERS_CLASSNAME,
-} from '../constants/classnames';
-import { ARIA_LABEL, CHANGE, INPUT, SLIDERS_ID } from '../constants/globals';
-import { addEvent } from '../core/events/binder';
-import type { ISliders } from '../types';
-import { createDivElement, createRangeInput, removeElement, setAttribute } from '../utils/dom';
+import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME } from '../constants/classnames';
+import { ARIA_LABEL, CHANGE, SLIDERS_ID } from '../constants/globals';
+import { createSlider } from '../lib/slider';
+import type { ISliders, Slider } from '../types';
+import { createDivElement, removeElement, setAttribute } from '../utils/dom';
 
 /**
  * Creates hue and opacity sliders.
@@ -17,29 +13,29 @@ import { createDivElement, createRangeInput, removeElement, setAttribute } from 
  * @returns - Sliders component.
  */
 export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElement): ISliders => {
-    let alphaSlider: HTMLInputElement | null;
-    const container = createDivElement(SLIDERS_CLASSNAME, parent);
-    const hueSlider = createRangeInput(HUE_SLIDER_CLASSNAME, container, 360);
+    let alphaSlider: Slider | null;
 
     /**
-     * Updates hue and alpha of the color state.
+     * Handles sliders value change.
+     *
+     * @param value - Slider value.
+     * @param source - Target.
+     * @param stop - Whether it is a change stop.
      */
-    addEvent(container, INPUT, (e: Event) => {
-        const target = <HTMLInputElement>e.target;
-        const value = +target.value;
-        colorState._update(
-            target === hueSlider ? { h: 360 - value } : { a: value },
-            target,
-            SLIDERS_ID
-        );
-    });
+    const handleChange = (value: number, source: HTMLElement, stop?: boolean) => {
+        if (stop) {
+            _events._emit(CHANGE, source);
+        } else {
+            colorState._update(
+                source === hueSlider.el ? { h: value } : { a: value },
+                source,
+                SLIDERS_ID
+            );
+        }
+    };
 
-    /**
-     * Handles change stop (change event).
-     */
-    addEvent(container, CHANGE, ({ target }: Event) => {
-        _events._emit(CHANGE, target as HTMLInputElement);
-    });
+    const container = createDivElement('', parent);
+    const hueSlider = createSlider(HUE_SLIDER_CLASSNAME, container, handleChange, 360, 1, true);
 
     return {
         /**
@@ -48,14 +44,22 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
          * @param param0 - Options.
          */
         _init({ opacity, i18n: { sliders } }) {
-            alphaSlider = removeElement(alphaSlider);
+            alphaSlider = alphaSlider && removeElement(alphaSlider.el);
+
             if (opacity) {
-                alphaSlider = createRangeInput(ALPHA_SLIDER_CLASSNAME, container, 1, 0.01);
+                alphaSlider = createSlider(
+                    ALPHA_SLIDER_CLASSNAME,
+                    container,
+                    handleChange,
+                    1,
+                    0.01
+                );
+                setAttribute(alphaSlider.el, ARIA_LABEL, sliders.alpha);
             } else {
                 colorState._update({ a: 1 });
             }
-            setAttribute(hueSlider, ARIA_LABEL, sliders.hue);
-            setAttribute(alphaSlider, ARIA_LABEL, sliders.alpha);
+
+            setAttribute(hueSlider.el, ARIA_LABEL, sliders.hue);
         },
 
         /**
@@ -65,10 +69,8 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
          * @param a - Alpha (opacity).
          */
         _setValues(h, a) {
-            hueSlider.value = 360 - h + '';
-            if (alphaSlider) {
-                alphaSlider.value = a + '';
-            }
+            hueSlider._setValue(h);
+            alphaSlider && alphaSlider._setValue(a);
         },
     };
 };
