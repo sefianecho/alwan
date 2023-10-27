@@ -1,3 +1,4 @@
+import { SLIDER_CLASSNAME, SLIDER_THUMB_CLASSNAME } from '../constants/classnames';
 import { ARROW_KEYS, KEY_DOWN, WHEEL } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { DOMRectArray, SliderConstructor } from '../types';
@@ -21,12 +22,12 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
     let stepWidth: number;
     let value = 0;
 
-    const track = createDivElement('slider ' + classname, parent, {
+    const track = createDivElement(SLIDER_CLASSNAME + ' ' + classname, parent, {
         role: 'slider',
         tabindex: 0,
         'aria-valuemax': max,
     });
-    const thumb = createDivElement('thumb', track);
+    const thumb = createDivElement(SLIDER_THUMB_CLASSNAME, track);
     const stepPrecision = precision(step);
     const thumbOffset = getBounds(track)[3] / 2;
 
