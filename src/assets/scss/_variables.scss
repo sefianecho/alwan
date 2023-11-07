@@ -1,25 +1,14 @@
-@use 'sass:map';
 @use 'sass:math';
+@use 'properties' as prop;
+@use 'theme/dark';
 
-$transparency-pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23d1d3d4' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23d1d3d4' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
-$box-shadow: 0 0 2px rgba(0,0,0,0.7);
+$transparency-pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23D0D0D0' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23D0D0D0' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
+$box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3);
 $alwan-focus-color: #117ce0;
 
 
 $alwan-max-width: 260px;
-$alwan-background: #fff;
-$alwan-foreground: #333;
-$alwan-outer-border-color: #ccc;
 $alwan-popup-z-index: 999999;
-
-// Dark.
-$alwan-dark-background: #111;
-$alwan-dark-outer-border-color: #aaa;
-$alwan-dark-foreground: #ccc;
-
-// Border.
-$alwan-border-color: #ccc;
-$alwan-dark-border-color: #34373a;
 
 // Container.
 $container-padding-y: 10px;
@@ -28,20 +17,20 @@ $container-padding-x: 15px;
 // Button.
 $button-padding-y: 8px;
 $button-padding-x: 4px;
-$button-hover-background: #f0f0f0;
-$button-dark-hover-background: #444;
 
 // Preset button.
-$preset-button-width: 24px;
+$preset-button-width: 26px;
 $preset-button-height: $preset-button-width;
-$preset-button-border-radius: 4px;
+$preset-button-border-radius: 3px;
+$preset-button-border: 3px solid #f5f5f5;
+$preset-button-outline: 1px solid #333;
 
 
 // Palette.
 $palette-height: 136px;
 
 // Marker.
-$marker-width: 14px;
+$marker-width: 16px;
 $marker-height: $marker-width;
 $marker-border: 2px solid #fff;
 
@@ -51,85 +40,62 @@ $preview-area-border-width: 1px;
 $preview-area-width: 40px + $preview-area-border-width * 2;
 $preview-area-height: $preview-area-width;
 $preview-area-margin-right: 15px;
-
+$preview-border-radius: 5px;
 
 // Slider.
 $alpha-slider-margin-top: 14px;
 
+
 // Track.
 $slider-track-height: 15px;
+$slider-track-border-radius: 8px;
 
 // Thumb.
-$slider-thumb-height: 21px;
-$slider-thumb-width: 14px;
-$slider-thumb-background: #fff;
-$slider-thumb-border-color: #8f8f8f;
+$slider-thumb-height: 20px;
+$slider-thumb-width: 20px;
+$slider-thumb-border-color: #999;
 $slider-thumb-border-radius: 3px;
-
-$slider-thumb-dark-background: #151515;
-$slider-thumb-dark-border-color: #3c4146;
 
 // Label.
 $label-margin-right: 4px;
-$label-color: #555;
 $label-font-size: 13px;
 $label-font-family: system-ui;
-
-$label-dark-color: #d8d8d8;
 
 // Input.
 $input-padding-y: 8px;
 $input-padding-x: 5px;
-$input-background: #fff;
-$input-color: #333;
 $input-font-size: 14px;
 $input-margin-bottom: 3px;
 $input-font-family: monospace;
 $input-line-height: 1;
-$input-border-color-hover: #a8a8a8;
-
-$input-dark-border-color-hover: #484b4d;
-$input-dark-background: #181818;
+$input-border-radius: 2px;
 
 // Swatches.
 $swatches-container-padding: 10px 15px 0 15px;
-$swatches-container-background: #f5f5f5;
 $swatches-container-max-height: 100px;
-
-$swatches-container-dark-background: #0a0a0a;
 
 $swatch-button-width: 22px;
 $swatch-button-height: $swatch-button-width;
 $swatch-button-margin: 0 5px 10px 5px;
-$swatch-button-border-radius: 2px;
+$swatch-button-border-radius: 3px;
 
 // Swatches toggle button.
 $swatches-toggle-button-height: 10px;
 
-$dark-theme: (
-	--alwan-bg: $alwan-dark-background,
-	--alwan-fg: $alwan-dark-foreground,
-	--alwan-outer-bc: $alwan-dark-outer-border-color,
-
-	--alwan-button-hover: $button-dark-hover-background,
-	--alwan-bc: $alwan-dark-border-color,
-
-	--alwan-thumb-bg: $slider-thumb-dark-background,
-	--alwan-thumb-bc: $slider-thumb-dark-border-color,
-
-	--alwan-label: $label-dark-color,
-
-	--alwan-input-bg: $input-dark-background,
-	--alwan-input-hover-bc: $input-dark-border-color-hover,
-
-	--alwan-swatches-bg: $swatches-container-dark-background,
-);
-
-
 @mixin dark-theme() {
     &[data-theme="dark"] {
-        @each $property, $value in $dark-theme {
-            #{$property}: #{$value};
-        }
+        #{prop.$alwan-background}: dark.$alwan-background;
+        #{prop.$alwan-foreground}: dark.$alwan-foreground;
+        #{prop.$alwan-outer-border-color}: dark.$alwan-outer-border-color;
+        #{prop.$button-hover-background}: dark.$button-hover-background;
+        #{prop.$alwan-border-color}: dark.$alwan-border-color;
+        #{prop.$slider-thumb-background}: dark.$slider-thumb-background;
+        #{prop.$slider-thumb-hover-background}: dark.$slider-thumb-hover-background;
+        #{prop.$slider-thumb-hover-border-color}: dark.$slider-thumb-hover-border-color;
+        #{prop.$label-color}: dark.$label-color;
+        #{prop.$input-background}: dark.$input-background;
+        #{prop.$input-hover-background}: dark.$input-hover-background;
+        #{prop.$input-hover-border-color}: dark.$input-hover-border-color;
+        #{prop.$swatches-container-background}: dark.$swatches-container-background;
     }
 }

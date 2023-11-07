@@ -1,22 +1,24 @@
 @use 'sass:math';
+@use 'sass:color';
 @use 'variables' as *;
+@use 'theme/light';
+@use 'properties' as prop;
 
 :root {
     --alwan-pattern: #{$transparency-pattern-svg};
 }
 
 .alwan {
+    --color: rgba(var(--rgb), var(--a));
     width: 100%;
     max-width: $alwan-max-width;
-    background: var(--alwan-bg, $alwan-background);
-    border: 1px solid var(--alwan-outer-bc, $alwan-outer-border-color);
+    background: var(prop.$alwan-background, light.$alwan-background);
+    border: 1px solid var(prop.$alwan-outer-border-color, light.$alwan-outer-border-color);
     overflow-y: auto;
 
     & * {
         box-sizing: border-box;
     }
-
-    @include dark-theme();
 
     &:not(.alwan--open) {
         visibility: hidden;
@@ -27,6 +29,8 @@
         height: 0;
         border: 0;
     }
+
+    @include dark-theme();
 
     &--popup {
         position: fixed;
@@ -39,16 +43,18 @@
             0px 3px 14px 2px rgba(0, 0, 0, 0.12);
     }
 
-    // Container.
     &__container {
         position: relative;
         display: flex;
         align-items: center;
         padding: $container-padding-y $container-padding-x;
-        border-top: 1px solid var(--alwan-bc, $alwan-border-color);
+        border-top: 1px solid var(prop.$alwan-border-color, light.$alwan-border-color);
+
+        >* {
+            width: 100%;
+        }
     }
 
-    // Palette.
     &__palette {
         overflow: hidden;
         height: $palette-height;
@@ -74,14 +80,15 @@
         background: transparent;
         border: $marker-border;
         box-shadow: $box-shadow;
-        cursor: move;
+        cursor: grab;
     }
 
     &__preview {
         width: $preview-area-width;
         height: $preview-area-height;
         margin-right: $preview-area-margin-right;
-        border: $preview-area-border-width solid var(--alwan-bc, $alwan-border-color);
+        border: $preview-area-border-width solid var(prop.$alwan-border-color, light.$alwan-border-color);
+        border-radius: $preview-border-radius;
         flex-shrink: 0;
 
         & .alwan__copy-button {
@@ -102,120 +109,76 @@
                 z-index: 100;
                 background-color: rgba(0, 0, 0, 0.6);
             }
-        }
-    }
 
-    &__sliders {
-        width: 100%;
+            &:focus-visible {
+                border: 0;
+            }
+        }
     }
 
     &__slider {
-        display: block;
+        display: flex;
+        align-items: center;
+        height: $slider-track-height;
         width: 100%;
-        background-color: transparent;
-        margin: 0;
-        padding: 0;
+        border-radius: $slider-track-border-radius;
         cursor: pointer;
-        outline: 0;
-        -webkit-appearance: none;
-        appearance: none;
-        --alwan-alpha: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--alwan-pattern);
-        --alwan-hue: linear-gradient(-90deg,
-                #ff0000,
-                #ffff00,
-                #00ff00,
-                #00ffff,
-                #0000ff,
-                #ff00ff,
-                #ff0000);
+        touch-action: none;
+        user-select: none;
 
-        &:active {
-            cursor: ew-resize;
+        &:focus-visible {
+            outline: 2px solid color.change($alwan-focus-color, $alpha: 0.5);
+            outline-offset: 2px;
         }
 
-        &--alpha {
-            margin-top: $alpha-slider-margin-top;
-        }
-
-        // Webkit slider.
-        &::-webkit-slider-runnable-track {
-            -webkit-appearance: none;
-            appearance: none;
-            height: $slider-track-height;
-            border: 0;
-
-            &:active {
-                cursor: ew-resize;
-            }
-        }
-
-        &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            height: $slider-thumb-height;
-            width: $slider-thumb-width;
-            margin-top: - math.div($slider-thumb-height - $slider-track-height, 2);
-            background-color: var(--alwan-thumb-bg, $slider-thumb-background);
-            border: 1px solid var(--alwan-thumb-bc, $slider-thumb-border-color);
-            border-radius: $slider-thumb-border-radius;
-            box-shadow: $box-shadow;
-            cursor: ew-resize;
-        }
-
-        &:focus::-webkit-slider-thumb {
+        &:focus .alwan__thumb {
             border-color: $alwan-focus-color;
         }
 
-        &--hue::-webkit-slider-runnable-track {
-            background: var(--alwan-hue);
+        &:active .alwan__thumb {
+            cursor: grabbing;
+            outline: 5px solid color.change($alwan-focus-color, $alpha: 0.3);
         }
+    }
 
-        &--alpha::-webkit-slider-runnable-track {
-            background: var(--alwan-alpha);
-        }
+    &__thumb {
+        position: relative;
+        left: - math.div($slider-thumb-width, 2);
+        width: $slider-thumb-width;
+        height: $slider-thumb-height;
+        border: 1px solid $slider-thumb-border-color;
+        border-radius: 100%;
+        background-color: var(prop.$slider-thumb-background, light.$slider-thumb-background);
+        box-shadow: $box-shadow;
+        transition: outline 0.2s ease-out 0.05s;
+        cursor: grab;
 
-        // Firefox slider.
-        &::-moz-range-track {
-            height: $slider-track-height;
-            border: 0;
+        &:hover {
+            border-color: var(prop.$slider-thumb-hover-border-color, light.$slider-thumb-hover-border-color);
+            background: var(prop.$slider-thumb-hover-background, light.$slider-thumb-hover-background);
         }
+    }
 
-        &--hue::-moz-range-track {
-            background: var(--alwan-hue);
-        }
+    &__hue {
+        background: linear-gradient(90deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
+    }
 
-        &--alpha::-moz-range-track {
-            background: var(--alwan-alpha);
-        }
-
-        &::-moz-range-thumb {
-            box-sizing: border-box;
-            width: $slider-thumb-width;
-            height: $slider-thumb-height;
-            padding: 0;
-            background-color: var(--alwan-thumb-bg, $slider-thumb-background);
-            border: 1px solid var(--alwan-thumb-bc, $slider-thumb-border-color);
-            border-radius: $slider-thumb-border-radius;
-            box-shadow: $box-shadow;
-            cursor: ew-resize;
-        }
-
-        &:focus::-moz-range-thumb {
-            border-color: $alwan-focus-color;
-        }
+    &__alpha {
+        margin-top: $alpha-slider-margin-top;
+        background: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--alwan-pattern);
     }
 
     &__inputs {
         display: flex;
-        width: 100%;
 
         label {
             width: 100%;
             text-align: center;
             margin-right: $label-margin-right;
             text-transform: uppercase;
-            color: var(--alwan-label, $label-color);
+            color: var(prop.$label-color, light.$label-color);
             cursor: pointer;
+            line-height: 1;
             font-family: $label-font-family;
             font-size: $label-font-size;
             -webkit-user-select: none;
@@ -229,30 +192,34 @@
         width: 100%;
         padding: $input-padding-y $input-padding-x;
         text-align: center;
-        color: var(--alwan-fg, $input-color);
+        color: var(prop.$alwan-foreground, light.$input-color);
         font-size: $input-font-size;
         font-family: $input-font-family;
-        border: 1px solid var(--alwan-bc, $alwan-border-color);
+        border: 1px solid var(prop.$alwan-border-color, light.$alwan-border-color);
         margin-bottom: $input-margin-bottom;
-        background-color: var(--alwan-input-bg, $input-background);
+        background-color: var(prop.$input-background, light.$input-background);
         line-height: $input-line-height;
+        border-radius: $input-border-radius;
+        transition: border-color 0.2s, background-color 0.2s;
 
-        &::-webkit-outer-spin-button,
-        &::-webkit-inner-spin-button {
-            -webkit-appearance: none;
+        &::selection {
+            color: #fff;
+            background-color: $alwan-focus-color;
         }
 
         &:focus {
             outline: 0;
             border-color: $alwan-focus-color;
+            background-color: var(prop.$alwan-background, light.$alwan-background);
 
             +span {
                 color: $alwan-focus-color;
             }
         }
 
-        &:hover {
-            border-color: var(--alwan-input-hover-bc, $input-border-color-hover);
+        &:hover:not(:focus) {
+            background-color: var(prop.$input-hover-background, light.$input-hover-background);
+            border-color: var(prop.$input-hover-border-color, light.$input-hover-border-color);
         }
     }
 
@@ -260,28 +227,18 @@
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        background-color: var(--alwan-swatches-bg, $swatches-container-background);
+        background-color: var(prop.$swatches-container-background, light.$swatches-container-background);
         padding: $swatches-container-padding;
         max-height: $swatches-container-max-height;
         overflow-y: auto;
-        border-top: 1px solid var(--alwan-bc, $alwan-border-color);
-    }
-
-    &__swatch {
-        width: $swatch-button-width;
-        height: $swatch-button-height;
-        margin: $swatch-button-margin;
-        border-radius: $swatch-button-border-radius;
-
-        &:hover {
-            transform: scale(1.1);
-        }
+        border-top: 1px solid var(prop.$alwan-border-color, light.$alwan-border-color);
     }
 
     &__button {
         display: inline-block;
+        width: auto;
         background: transparent;
-        color: var(--alwan-fg, $alwan-foreground);
+        color: var(prop.$alwan-foreground, light.$alwan-foreground);
         border: 1px solid transparent;
         cursor: pointer;
         padding: $button-padding-y $button-padding-x;
@@ -294,10 +251,10 @@
         }
 
         &:hover {
-            background-color: var(--alwan-button-hover, $button-hover-background);
+            background-color: var(prop.$button-hover-background, light.$button-hover-background);
         }
 
-        &:focus-visible {
+        &:focus-visible:not(.alwan__preset-button) {
             border-color: $alwan-focus-color;
         }
 
@@ -308,16 +265,34 @@
         }
     }
 
+    &__swatch {
+        width: $swatch-button-width;
+        height: $swatch-button-height;
+        margin: $swatch-button-margin;
+        border-radius: $swatch-button-border-radius;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+
+        &:focus {
+            outline: 1px dashed var(--color);
+            outline-offset: 1px;
+        }
+    }
+
     &__preset-button {
         width: $preset-button-width;
         height: $preset-button-height;
         border-radius: $preset-button-border-radius;
-    }
+        border: $preset-button-border;
+        outline: $preset-button-outline;
 
-    &__swatch:focus,
-    &__preset-button:focus {
-        outline: 1px dashed var(--color);
-        outline-offset: 1px;
+        &:focus,
+        &:focus-visible {
+            outline-color: $alwan-focus-color;
+            box-shadow: 0 0 2px 2px $alwan-focus-color;
+        }
     }
 
     &__copy-button {
@@ -359,10 +334,6 @@
         }
     }
 
-    &__preview::before {
-        background-color: rgba(var(--rgb), var(--a, 1));
-    }
-
     &__toggle-button {
         display: flex;
         align-items: center;
@@ -370,7 +341,7 @@
         width: 100%;
         padding: 0;
         height: $swatches-toggle-button-height;
-        border-top: 1px solid var(--alwan-bc, $alwan-border-color);
+        border-top: 1px solid var(prop.$alwan-border-color, light.$alwan-border-color);
         overflow: hidden;
     }
 
