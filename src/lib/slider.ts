@@ -139,6 +139,18 @@ export const createSlider: SliderConstructor = (classname, parent, change, max, 
         _setValue(value + (rtl ? 1 : -1) * sign((<WheelEvent>e).deltaY) * step, true);
     });
 
+    /**
+     * Updates thumb position if the track element resizes.
+     */
+    new ResizeObserver(() => {
+        trackBounds = getBounds(track);
+        translate(
+            thumb,
+            thumbOffset + ((rtl ? max - value : value) * (trackBounds[2] - trackBounds[3])) / max,
+            0
+        );
+    }).observe(track);
+
     return {
         el: track,
         _setValue,
