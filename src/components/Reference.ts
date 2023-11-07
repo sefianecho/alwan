@@ -1,15 +1,9 @@
 import type Alwan from '..';
-import { PRESET_BUTTON_CLASSNAME } from '../constants/classnames';
+import { REFERENCE_CLASSNAME } from '../constants/classnames';
 import { CLICK } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { IReference } from '../types';
-import {
-    bodyElement,
-    createButton,
-    removeElement,
-    replaceElement,
-    toggleClassNames,
-} from '../utils/dom';
+import { bodyElement, createButton, removeElement, replaceElement } from '../utils/dom';
 import { isString } from '../utils/is';
 
 /**
@@ -23,11 +17,7 @@ export const Reference = (alwan: Alwan, userRef: Element | null): IReference => 
     /**
      * Reference element.
      */
-    let element: Element = userRef || createButton(PRESET_BUTTON_CLASSNAME, bodyElement());
-    /**
-     * Preset button classes.
-     */
-    let buttonClasses: string[] = [];
+    let element: Element = userRef || createButton('', bodyElement());
 
     /**
      * Handle click on the reference element.
@@ -51,12 +41,10 @@ export const Reference = (alwan: Alwan, userRef: Element | null): IReference => 
             if (userRef && preset !== (userRef !== element)) {
                 if (preset) {
                     // Replace user reference with a preset button.
-                    element = replaceElement(
-                        userRef,
-                        createButton(PRESET_BUTTON_CLASSNAME, undefined, '', {
-                            id: userRef.id,
-                        })
-                    );
+                    element = replaceElement(userRef, createButton());
+                    if (userRef.id) {
+                        element.id = userRef.id;
+                    }
                 } else {
                     // Replace preset button with the user reference.
                     element = replaceElement(element, userRef);
@@ -67,11 +55,7 @@ export const Reference = (alwan: Alwan, userRef: Element | null): IReference => 
 
             // Add custom classes to the preset button.
             if ((!userRef || preset) && isString(classname)) {
-                // Remove previously add classes.
-                toggleClassNames(element, buttonClasses, false);
-                buttonClasses = classname.split(/\s+/);
-                // Add the new classname.
-                toggleClassNames(element, buttonClasses, true);
+                element.className = (REFERENCE_CLASSNAME + classname).trim();
             }
         },
 
