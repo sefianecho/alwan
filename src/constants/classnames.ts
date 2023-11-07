@@ -13,7 +13,7 @@ export const INPUT_CLASSNAME = `${ALWAN_CLASSNAME}__input`;
 export const INPUTS_CLASSNAME = `${ALWAN_CLASSNAME}__inputs`;
 export const SWATCH_CLASSNAME = `${ALWAN_CLASSNAME}__swatch`;
 export const SWATCHES_CLASSNAME = `${ALWAN_CLASSNAME}__swatches`;
-export const PRESET_BUTTON_CLASSNAME = `${ALWAN_CLASSNAME}__preset-button`;
+export const REFERENCE_CLASSNAME = `${ALWAN_CLASSNAME}__reference `;
 export const BACKDROP_CLASSNAME = `${ALWAN_CLASSNAME}__backdrop`;
 export const COLLAPSE_BUTTON_CLASSNAME = `${ALWAN_CLASSNAME}__toggle-button`;
 

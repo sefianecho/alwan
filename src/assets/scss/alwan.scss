@@ -254,7 +254,7 @@
             background-color: var(prop.$button-hover-background, light.$button-hover-background);
         }
 
-        &:focus-visible:not(.alwan__preset-button) {
+        &:focus-visible:not(.alwan__reference) {
             border-color: $alwan-focus-color;
         }
 
@@ -281,12 +281,13 @@
         }
     }
 
-    &__preset-button {
+    &__reference {
         width: $preset-button-width;
         height: $preset-button-height;
         border-radius: $preset-button-border-radius;
         border: $preset-button-border;
         outline: $preset-button-outline;
+        cursor: pointer;
 
         &:focus,
         &:focus-visible {
@@ -316,7 +317,7 @@
 
     &__swatch,
     &__preview,
-    &__preset-button {
+    &__reference {
         position: relative;
         background: var(--alwan-pattern);
         background-clip: padding-box;
