@@ -23,7 +23,7 @@ import {
     removeElement,
     setAttribute,
     setCustomProperty,
-    toggleClassNames,
+    toggleClassName,
 } from '../utils/dom';
 import { isString, isset } from '../utils/is';
 import { deepMerge } from '../utils/object';
@@ -89,7 +89,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             // and the components are not shared.
             refElement.style.display = popover || toggle ? '' : 'none';
             // Toggle popup class that makes the root's position fixed.
-            toggleClassNames(root, POPUP_CLASSNAME, popover);
+            toggleClassName(root, POPUP_CLASSNAME, popover);
 
             if (popoverInstance) {
                 popoverInstance._destroy();
@@ -163,7 +163,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                     popoverInstance._update();
                 }
                 isOpen = state;
-                toggleClassNames(root, OPEN_CLASSNAME, state);
+                toggleClassName(root, OPEN_CLASSNAME, state);
                 alwan._events._emit(isOpen ? OPEN : CLOSE, root);
             }
         },

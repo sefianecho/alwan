@@ -8,7 +8,7 @@ import {
     ROOT,
 } from '../constants/globals';
 import { addEvent, removeEvent } from '../core/events/binder';
-import { toggleClassNames } from '../utils/dom';
+import { toggleClassName } from '../utils/dom';
 
 /**
  * Drags and moves an element.
@@ -58,7 +58,7 @@ export const Draggable = (
      * @param dragging - Whether to set (true) or unset (false) dragging.
      */
     const setDragging = (dragging: boolean) => {
-        toggleClassNames(DOC_ELEMENT, BACKDROP_CLASSNAME, dragging);
+        toggleClassName(DOC_ELEMENT, BACKDROP_CLASSNAME, dragging);
         (dragging ? addEvent : removeEvent)(ROOT, POINTER_MOVE, drag);
     };
 

@@ -15,7 +15,7 @@ import {
     createDivElement,
     removeElement,
     setCustomProperty,
-    toggleClassNames,
+    toggleClassName,
 } from '../utils/dom';
 import { isString } from '../utils/is';
 import { isArray } from '../utils/object';
@@ -67,7 +67,7 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
                          * Handles toggle swatches button click.
                          */
                         addEvent(collapseButton, CLICK, () => {
-                            toggleClassNames(<Element>container, COLLAPSE_CLASSNAME);
+                            toggleClassName(<Element>container, COLLAPSE_CLASSNAME);
                             alwan._app._reposition();
                         });
                     }

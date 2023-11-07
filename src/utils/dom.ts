@@ -237,24 +237,11 @@ export const setCustomProperty = (
  * Adds/Removes a class to/from an based on a boolean variable.
  *
  * @param element - Element.
- * @param tokens - Class name or array of classes.
- * @param toggler - Whether to add (true) or remove classnames.
+ * @param token - Class to add or to remove.
+ * @param forced - Whether to add (true), remove (false) or toggle (undefined) classnames .
  */
-export const toggleClassNames = (
-    element: Element,
-    tokens: string | string[],
-    toggler?: boolean
-) => {
-    if (isString(tokens)) {
-        tokens = [tokens];
-    }
-
-    tokens.forEach((token) => {
-        if (token) {
-            element.classList.toggle(token, toggler);
-        }
-    });
-};
+export const toggleClassName = (element: Element, token: string, forced?: boolean) =>
+    element.classList.toggle(token, forced);
 
 /**
  * Translates an element.
