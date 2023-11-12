@@ -78,8 +78,8 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
                         if (target !== container) {
                             alwan._color._setColor(
                                 (<HTMLButtonElement>target).style.getPropertyValue('--' + COLOR),
-                                <HTMLButtonElement>target,
                                 0,
+                                true,
                                 true
                             );
                         }

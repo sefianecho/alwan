@@ -164,7 +164,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                 }
                 isOpen = state;
                 toggleClassName(root, OPEN_CLASSNAME, state);
-                alwan._events._emit(isOpen ? OPEN : CLOSE, root);
+                alwan._events._emit(isOpen ? OPEN : CLOSE);
             }
         },
         /**

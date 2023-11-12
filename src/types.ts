@@ -1,3 +1,5 @@
+import type Alwan from '.';
+
 export interface alwanConfig {
     /**
      * Set the container's (widget) id.
@@ -239,28 +241,28 @@ export type DOMRectArray = [
 export interface alwanValue extends Readonly<colorDetails> {}
 export interface IColorState {
     _value: colorDetails;
-    _update(hsl: Partial<HSLA>, source?: HTMLElement, componentId?: number, rgb?: RGBA): void;
+    _update(hsl: Partial<HSLA>, componentId?: number, triggerEvent?: boolean, rgb?: RGBA): void;
     _setColor(
         color: Color,
-        source?: HTMLElement,
         componentId?: number,
-        triggerChange?: boolean
+        triggerChange?: boolean,
+        triggerColor?: boolean
     ): void;
     _setFormat(format: colorFormat): void;
     _cache(): void;
-    _change(source: HTMLElement): void;
+    _change(): void;
     _colorString(): string;
 }
 
 export type alwanEventType = 'open' | 'close' | 'color' | 'change';
 export interface alwanEvent extends alwanValue {
     readonly type: alwanEventType;
-    readonly source?: HTMLElement;
+    readonly source: Alwan;
 }
 export type alwanEventListener = (ev: alwanEvent) => void;
 export type alwanEventAndListenersMap = Record<alwanEventType, alwanEventListener[]>;
 export interface EventEmitter {
-    _emit(type: alwanEventType, source?: HTMLElement, value?: colorDetails): void;
+    _emit(type: alwanEventType, value?: colorDetails): void;
     _on(type: alwanEventType, listener: alwanEventListener): void;
     _off(type?: alwanEventType, listener?: alwanEventListener): void;
 }

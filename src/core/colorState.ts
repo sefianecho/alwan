@@ -50,7 +50,7 @@ export const colorState = (alwan: Alwan): IColorState => {
          * @param componentId - Component id of the component that updating the color state.
          * @param rgb - RGB color object.
          */
-        _update(hsl, source, componentId, rgb) {
+        _update(hsl, componentId, triggerEvent = true, rgb) {
             if (!config.disabled) {
                 previousHex = state.hex;
                 merge(state, hsl);
@@ -65,8 +65,8 @@ export const colorState = (alwan: Alwan): IColorState => {
 
                 alwan._app._update(state, componentId);
 
-                if (source && previousHex !== state.hex) {
-                    emitEvent(COLOR, source, state);
+                if (triggerEvent && previousHex !== state.hex) {
+                    emitEvent(COLOR, state);
                 }
             }
         },
@@ -75,10 +75,11 @@ export const colorState = (alwan: Alwan): IColorState => {
          * Updates color state from a string or a color object.
          *
          * @param color - Color string or Object.
-         * @param source - Source element.
          * @param componentId - The component that setting the color.
+         * @param triggerChange - Fire change event.
+         * @param triggerColor - Fire color event.
          */
-        _setColor(color, source, componentId, triggerChange) {
+        _setColor(color, componentId, triggerChange, triggerColor) {
             const [parsedColor, parsedColorFormat, parsedColorString] = parseColor(color);
             let rgb: RGBA | undefined, hsl: Partial<HSLA>;
 
@@ -89,10 +90,10 @@ export const colorState = (alwan: Alwan): IColorState => {
                 } else {
                     hsl = parsedColor;
                 }
-                this._update(hsl, source, componentId, rgb);
+                this._update(hsl, componentId, triggerColor, rgb);
 
                 if (triggerChange) {
-                    emitEvent(CHANGE, source, state);
+                    emitEvent(CHANGE, state);
                 }
             }
         },
@@ -107,12 +108,10 @@ export const colorState = (alwan: Alwan): IColorState => {
         /**
          * Compares the current color with the cashed color, if there are difference then
          * triggers change event.
-         *
-         * @param source - Event source.
          */
-        _change(source) {
+        _change() {
             if (cashedColor !== state[currentFormat]) {
-                emitEvent(CHANGE, source, state);
+                emitEvent(CHANGE, state);
             }
         },
 

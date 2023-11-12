@@ -57,8 +57,7 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
      * @param e - Input & Change event.
      */
     const handleChange = (e: Event) => {
-        const target = e.target as HTMLInputElement;
-        let str = target.value;
+        let str = (<HTMLInputElement>e.target).value;
         let color: Partial<Record<keyof colorDetails, number>> = {};
 
         if (!isChanged) {
@@ -72,7 +71,7 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
             });
             str = stringify(<RGBA | HSLA>color, formats[currentFormatIndex]);
         }
-        colorState._setColor(str, target, INPUTS_ID);
+        colorState._setColor(str, INPUTS_ID, false, true);
     };
 
     /**
@@ -123,8 +122,8 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
         /**
          * Handle change stop.
          */
-        addEvent(inputsWrapper, CHANGE, ({ target }: Event) => {
-            colorState._change(target as HTMLInputElement);
+        addEvent(inputsWrapper, CHANGE, () => {
+            colorState._change();
             isChanged = false;
         });
         // Select value on focus.

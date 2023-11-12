@@ -56,7 +56,6 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
                 s: l === 1 || l === 0 ? 0 : ((v - l) / min(l, 1 - l)) * 100,
                 l: l * 100,
             },
-            palette,
             PALETTE_ID
         );
     };
@@ -65,7 +64,7 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
      * Dispatch change event.
      */
     const triggerChange = () => {
-        colorState._change(palette);
+        colorState._change();
     };
 
     Draggable(
@@ -105,7 +104,7 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
             paletteBounds = getBounds(palette);
             colorState._cache();
             moveMarkerAndUpdateColor(null, steps);
-            colorState._change(palette);
+            colorState._change();
         }
     });
 

@@ -23,13 +23,12 @@ export const Emitter = (alwan: Alwan): EventEmitter => {
          * Dispatches an event.
          *
          * @param type - Event type
-         * @param source - Event source.
          * @param value - Color value.
          */
-        _emit(type, source, value = alwan._color._value) {
+        _emit(type, value = alwan._color._value) {
             if (!alwan.config.disabled) {
                 (listeners[type] || []).forEach((listener) => {
-                    listener(merge({ type, source }, value));
+                    listener(merge({ type, source: alwan }, value));
                 });
             }
         },

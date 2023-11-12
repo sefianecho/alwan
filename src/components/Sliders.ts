@@ -24,13 +24,9 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
      */
     const handleChange = (value: number, source: HTMLElement, stop?: boolean) => {
         if (stop) {
-            _events._emit(CHANGE, source);
+            _events._emit(CHANGE);
         } else {
-            colorState._update(
-                source === hueSlider.el ? { h: value } : { a: value },
-                source,
-                SLIDERS_ID
-            );
+            colorState._update(source === hueSlider.el ? { h: value } : { a: value }, SLIDERS_ID);
         }
     };
 
