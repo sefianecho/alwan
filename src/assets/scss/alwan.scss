@@ -1,11 +1,12 @@
 @use 'sass:math';
 @use 'sass:color';
 @use 'variables' as *;
-@use 'theme/light';
 @use 'properties' as prop;
+@use 'theme/light';
+@use 'theme/dark';
 
 :root {
-    --alwan-pattern: #{$transparency-pattern-svg};
+    #{prop.$transparency-pattern}: #{$transparency-pattern-svg};
 }
 
 .alwan {
@@ -30,7 +31,21 @@
         border: 0;
     }
 
-    @include dark-theme();
+    &[data-theme="dark"] {
+        #{prop.$alwan-background}: dark.$alwan-background;
+        #{prop.$alwan-foreground}: dark.$alwan-foreground;
+        #{prop.$alwan-outer-border-color}: dark.$alwan-outer-border-color;
+        #{prop.$button-hover-background}: dark.$button-hover-background;
+        #{prop.$alwan-border-color}: dark.$alwan-border-color;
+        #{prop.$slider-thumb-background}: dark.$slider-thumb-background;
+        #{prop.$slider-thumb-hover-background}: dark.$slider-thumb-hover-background;
+        #{prop.$slider-thumb-hover-border-color}: dark.$slider-thumb-hover-border-color;
+        #{prop.$label-color}: dark.$label-color;
+        #{prop.$input-background}: dark.$input-background;
+        #{prop.$input-hover-background}: dark.$input-hover-background;
+        #{prop.$input-hover-border-color}: dark.$input-hover-border-color;
+        #{prop.$swatches-container-background}: dark.$swatches-container-background;
+    }
 
     &--popup {
         position: fixed;

@@ -1,6 +1,4 @@
 @use 'sass:math';
-@use 'properties' as prop;
-@use 'theme/dark';
 
 $transparency-pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23D0D0D0' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23D0D0D0' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
 $box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3);
@@ -81,21 +79,3 @@ $swatch-button-border-radius: 3px;
 
 // Swatches toggle button.
 $swatches-toggle-button-height: 10px;
-
-@mixin dark-theme() {
-    &[data-theme="dark"] {
-        #{prop.$alwan-background}: dark.$alwan-background;
-        #{prop.$alwan-foreground}: dark.$alwan-foreground;
-        #{prop.$alwan-outer-border-color}: dark.$alwan-outer-border-color;
-        #{prop.$button-hover-background}: dark.$button-hover-background;
-        #{prop.$alwan-border-color}: dark.$alwan-border-color;
-        #{prop.$slider-thumb-background}: dark.$slider-thumb-background;
-        #{prop.$slider-thumb-hover-background}: dark.$slider-thumb-hover-background;
-        #{prop.$slider-thumb-hover-border-color}: dark.$slider-thumb-hover-border-color;
-        #{prop.$label-color}: dark.$label-color;
-        #{prop.$input-background}: dark.$input-background;
-        #{prop.$input-hover-background}: dark.$input-hover-background;
-        #{prop.$input-hover-border-color}: dark.$input-hover-border-color;
-        #{prop.$swatches-container-background}: dark.$swatches-container-background;
-    }
-}
