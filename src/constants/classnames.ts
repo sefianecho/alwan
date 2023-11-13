@@ -16,6 +16,5 @@ export const REFERENCE_CLASSNAME = `${ALWAN_CLASSNAME}__reference `;
 export const BACKDROP_CLASSNAME = `${ALWAN_CLASSNAME}__backdrop`;
 export const COLLAPSE_BUTTON_CLASSNAME = `${ALWAN_CLASSNAME}__toggle-button`;
 
-export const POPUP_CLASSNAME = `${ALWAN_CLASSNAME}--popup`;
 export const OPEN_CLASSNAME = `${ALWAN_CLASSNAME}--open`;
 export const COLLAPSE_CLASSNAME = `${ALWAN_CLASSNAME}--collapse`;

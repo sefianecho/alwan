@@ -1,6 +1,6 @@
 import type Alwan from '..';
 import { Inputs, Palette, Reference, Sliders, Swatches, Utility } from '../components';
-import { ALWAN_CLASSNAME, OPEN_CLASSNAME, POPUP_CLASSNAME } from '../constants/classnames';
+import { ALWAN_CLASSNAME, OPEN_CLASSNAME } from '../constants/classnames';
 import {
     CLOSE,
     COLOR,
@@ -21,7 +21,6 @@ import {
     getElement,
     insertElement,
     removeElement,
-    setAttribute,
     setCustomProperty,
     toggleClassName,
 } from '../utils/dom';
@@ -65,6 +64,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
         _setup(options) {
             options = options || {};
             const self = this;
+            const data = root.dataset;
             const colorState = alwan._color;
             const { id, color, disabled } = options;
             const { theme, toggle, popover, target } = deepMerge(config, options);
@@ -79,7 +79,9 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             // Set id.
             isString(id) && (root.id = id);
             // Set theme (dark or light).
-            setAttribute(root, 'data-theme', theme);
+            data.theme = theme;
+            // Set display mode.
+            data.display = popover ? 'popover' : 'block';
 
             // If toggle option changed to false, then open (show) the picker
             if (!toggle) {
@@ -88,8 +90,6 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             // Hide reference element if both toggle and popover options are set to false,
             // and the components are not shared.
             refElement.style.display = popover || toggle ? '' : 'none';
-            // Toggle popup class that makes the root's position fixed.
-            toggleClassName(root, POPUP_CLASSNAME, popover);
 
             if (popoverInstance) {
                 popoverInstance._destroy();

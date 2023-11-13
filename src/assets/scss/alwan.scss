@@ -24,13 +24,15 @@
 
     &:not(.alwan--open) {
         visibility: hidden;
+
+        &[data-display="block"] {
+            overflow: hidden;
+            height: 0;
+            border: 0;
+        }
     }
 
-    &:not(.alwan--popup, .alwan--open) {
-        overflow: hidden;
-        height: 0;
-        border: 0;
-    }
+
 
     &[data-theme="dark"] {
         #{prop.$alwan-background}: dark.$alwan-background;
@@ -48,7 +50,7 @@
         #{prop.$swatches-container-background}: dark.$swatches-container-background;
     }
 
-    &--popup {
+    &[data-display="popover"] {
         position: fixed;
         top: 0;
         left: 0;
