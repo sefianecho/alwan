@@ -101,6 +101,13 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
     };
 
     /**
+     * Handles window loses focus while dragging the marker (picker).
+     */
+    const windowBlur = () => {
+        colorState._change();
+    };
+
+    /**
      * Set/Unset dragging by adding/removing pointermove event and add/remove
      * the backdrop.
      *
@@ -109,21 +116,26 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
     const setDragging = (dragging: boolean) => {
         toggleClassName(DOC_ELEMENT, BACKDROP_CLASSNAME, dragging);
         (dragging ? addEvent : removeEvent)(ROOT, POINTER_MOVE, dragMove);
+        (dragging ? addEvent : removeEvent)(window, BLUR, windowBlur);
     };
 
     /**
      * Handles dragging the marker (picker).
      */
     addEvent(palette, POINTER_DOWN, (e) => {
+        /**
+         * Drag start.
+         */
         colorState._cache();
         paletteBounds = getBounds(palette);
         moveMarkerAndUpdateColor(<PointerEvent>e);
-
+        /**
+         * Drag move.
+         */
         setDragging(true);
         /**
-         * Handles window loses focus (blur) while dragging.
+         * Drag end.
          */
-        addEvent(window, BLUR, () => colorState._change(), { once: true });
         addEvent(ROOT, POINTER_UP, dragEnd, { once: true });
     });
 
