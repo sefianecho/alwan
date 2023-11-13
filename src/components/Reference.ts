@@ -1,5 +1,5 @@
 import type Alwan from '..';
-import { REFERENCE_CLASSNAME } from '../constants/classnames';
+import { BUTTON_CLASSNAME, REFERENCE_CLASSNAME } from '../constants/classnames';
 import { CLICK } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { IReference } from '../types';
@@ -55,7 +55,7 @@ export const Reference = (alwan: Alwan, userRef: Element | null): IReference => 
 
             // Add custom classes to the preset button.
             if ((!userRef || preset) && isString(classname)) {
-                element.className = (REFERENCE_CLASSNAME + classname).trim();
+                element.className = (BUTTON_CLASSNAME + REFERENCE_CLASSNAME + classname).trim();
             }
         },
 

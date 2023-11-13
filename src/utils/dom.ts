@@ -192,7 +192,7 @@ export const createButton = (
 ) => {
     return createElement(
         BUTTON,
-        BUTTON_CLASSNAME + ' ' + className,
+        BUTTON_CLASSNAME + className,
         targetElement,
         content,
         merge(
