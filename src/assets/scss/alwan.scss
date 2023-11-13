@@ -4,6 +4,7 @@
 @use 'properties' as prop;
 @use 'theme/light';
 @use 'theme/dark';
+@use 'util';
 
 :root {
     #{prop.$transparency-pattern}: #{$transparency-pattern-svg};
@@ -132,55 +133,100 @@
     }
 
     &__slider {
-        display: flex;
-        align-items: center;
-        height: $slider-track-height;
+        --hue-track: linear-gradient(90deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
+        --alpha-track: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--alwan-pattern);
+        display: block;
         width: 100%;
-        border-radius: $slider-track-border-radius;
+        height: $slider-track-height;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
         cursor: pointer;
-        touch-action: none;
-        user-select: none;
+        outline: 0;
+        -webkit-appearance: none;
+        appearance: none;
 
-        &:focus-visible {
+        &:active {
+            cursor: grabbing;
+        }
+
+        // Track.
+        // Track common styles.
+        @mixin track() {
+            width: 100%;
+            height: $slider-track-height;
+            border: 0;
+            border-radius: $slider-track-border-radius;
+        }
+
+        &::-webkit-slider-runnable-track {
+            -webkit-appearance: none;
+            appearance: none;
+            @include track();
+        }
+
+        &::-moz-range-track {
+            @include track();
+        }
+
+        @include util.slider-track(':focus-visible') {
             outline: 2px solid color.change($alwan-focus-color, $alpha: 0.5);
             outline-offset: 2px;
         }
 
-        &:focus .alwan__thumb {
-            border-color: $alwan-focus-color;
+        // Thumb.
+        @mixin thumb() {
+            height: $slider-thumb-height;
+            width: $slider-thumb-width;
+            border: 1px solid $slider-thumb-border-color;
+            border-radius: 100%;
+            background-color: var(prop.$slider-thumb-background, light.$slider-thumb-background);
+            box-shadow: $box-shadow;
+            cursor: grab;
+
+            &:hover {
+                border-color: var(prop.$slider-thumb-hover-border-color, light.$slider-thumb-hover-border-color);
+                background: var(prop.$slider-thumb-hover-background, light.$slider-thumb-hover-background);
+            }
         }
 
-        &:active .alwan__thumb {
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: math.div($slider-thumb-height - $slider-track-height, -2);
+            @include thumb();
+        }
+
+        &::-moz-range-thumb {
+            box-sizing: border-box;
+            padding: 0;
+            @include thumb();
+        }
+
+        @include util.slider-thumb(':active') {
             cursor: grabbing;
             outline: 5px solid color.change($alwan-focus-color, $alpha: 0.3);
         }
-    }
 
-    &__thumb {
-        position: relative;
-        left: - math.div($slider-thumb-width, 2);
-        width: $slider-thumb-width;
-        height: $slider-thumb-height;
-        border: 1px solid $slider-thumb-border-color;
-        border-radius: 100%;
-        background-color: var(prop.$slider-thumb-background, light.$slider-thumb-background);
-        box-shadow: $box-shadow;
-        transition: outline 0.2s ease-out 0.05s;
-        cursor: grab;
-
-        &:hover {
-            border-color: var(prop.$slider-thumb-hover-border-color, light.$slider-thumb-hover-border-color);
-            background: var(prop.$slider-thumb-hover-background, light.$slider-thumb-hover-background);
+        @include util.slider-thumb(':focus') {
+            border-color: $alwan-focus-color;
         }
     }
 
     &__hue {
-        background: linear-gradient(90deg, #ff0000, #ff00ff, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
+        direction: rtl;
+
+        @include util.slider-track() {
+            background: var(--hue-track);
+        }
     }
 
     &__alpha {
         margin-top: $alpha-slider-margin-top;
-        background: linear-gradient(90deg, transparent, rgb(var(--rgb))), var(--alwan-pattern);
+
+        @include util.slider-track() {
+            background: var(--alpha-track);
+        }
     }
 
     &__inputs {
@@ -291,7 +337,7 @@
         }
 
         &:focus {
-            outline: 1px dashed var(--color);
+            outline: 1px solid var(--color);
             outline-offset: 1px;
         }
     }

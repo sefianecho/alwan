@@ -1,8 +1,9 @@
-import { BUTTON_CLASSNAME, CONTAINER_CLASSNAME } from '../constants/classnames';
+import { BUTTON_CLASSNAME, CONTAINER_CLASSNAME, SLIDER_CLASSNAME } from '../constants/classnames';
 import {
     ARIA_LABEL,
     BUTTON,
     DOC_ELEMENT,
+    INPUT,
     INSERT_AFTER_LAST_CHILD,
     ROOT,
 } from '../constants/globals';
@@ -205,6 +206,18 @@ export const createButton = (
         insertPosition
     );
 };
+
+/**
+ * Creates a range input.
+ *
+ * @param classname - Slider classname.
+ * @param parent - Element to append slider to.
+ * @param max - Slider max value.
+ * @param step - Slider step.
+ * @returns - Slider element.
+ */
+export const createSlider = (classname: string, parent: HTMLElement, max: number, step = 1) =>
+    createElement(INPUT, SLIDER_CLASSNAME + classname, parent, '', { max, step, type: 'range' });
 
 /**
  * Creates a container element.

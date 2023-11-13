@@ -328,17 +328,3 @@ export type HTMLElementHasDisabled =
     | HTMLOptionElement
     | HTMLTextAreaElement
     | HTMLOptGroupElement;
-
-export interface Slider {
-    el: HTMLDivElement;
-    _setValue(newValue: number): void;
-}
-
-export type SliderConstructor = (
-    classname: string,
-    targetElement: Element,
-    onChange: (value: number, source: HTMLElement, stop?: boolean) => void,
-    max: number,
-    step: number,
-    rtl?: boolean
-) => Slider;

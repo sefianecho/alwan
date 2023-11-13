@@ -1,0 +1,19 @@
+@mixin slider-thumb($state: '') {
+    &#{$state}::-webkit-slider-thumb {
+        @content;
+    }
+
+    &#{$state}::-moz-range-thumb {
+        @content;
+    }
+}
+
+@mixin slider-track($state: '') {
+    &#{$state}::-webkit-slider-runnable-track {
+        @content;
+    }
+
+    &#{$state}::-moz-range-track {
+        @content;
+    }
+}
