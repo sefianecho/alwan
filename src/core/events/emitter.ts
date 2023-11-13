@@ -1,7 +1,7 @@
 import Alwan from '../..';
 import { CHANGE, CLOSE, COLOR, OPEN } from '../../constants/globals';
 import type { EventEmitter, alwanEventAndListenersMap } from '../../types';
-import { isset } from '../../utils/is';
+import { isFunction, isset } from '../../utils/is';
 import { ObjectForEach, merge } from '../../utils/object';
 
 /**
@@ -40,7 +40,7 @@ export const Emitter = (alwan: Alwan): EventEmitter => {
          * @param listener - Event listener callback.
          */
         _on(event, listener) {
-            if (listeners[event] && !listeners[event].includes(listener)) {
+            if (listeners[event] && !listeners[event].includes(listener) && isFunction(listener)) {
                 listeners[event].push(listener);
             }
         },

@@ -27,3 +27,11 @@ export const isElement = (value: unknown): value is Element => value instanceof 
  */
 export const isNumber = (value: unknown) =>
     Number.isFinite(isString(value) && value.trim() !== '' ? +value : value);
+
+/**
+ * Checks if a value is a function.
+ *
+ * @param value - Any value.
+ * @returns - value is a function.
+ */
+export const isFunction = (value: unknown): value is Function => typeof value === 'function';
