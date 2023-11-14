@@ -156,7 +156,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
         _toggle(state = !isOpen, forced = false) {
             if (
                 state !== isOpen &&
-                (!config.disabled || (forced && !state)) &&
+                (!config.disabled || (forced && (!state || !config.popover))) &&
                 (config.toggle || forced)
             ) {
                 if (state && popoverInstance) {
