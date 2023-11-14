@@ -1,4 +1,4 @@
-import { isset } from './is';
+import { isElement, isset } from './is';
 
 export const { keys, assign: merge, setPrototypeOf, prototype } = Object;
 export const { from: toArray, isArray } = Array;
@@ -8,7 +8,7 @@ export const { from: toArray, isArray } = Array;
  * @returns - Whether value is an object or not.
  */
 export const isPlainObject = (obj: unknown) =>
-    isset(obj) && typeof obj === 'object' && !isArray(obj);
+    isset(obj) && typeof obj === 'object' && !isArray(obj) && !isElement(obj);
 
 /**
  * Calls a function for each key-value pair in a given object.
@@ -29,6 +29,9 @@ export const ObjectForEach = <T extends {}>(
  * @returns - The target object.
  */
 export const deepMerge = <T extends {}, U extends {}>(target: T, source: U): T & U => {
+    if (!isPlainObject(target)) {
+        target = <T>{};
+    }
     ObjectForEach(source, (key, value) => {
         if (isset(value)) {
             merge(target, {
