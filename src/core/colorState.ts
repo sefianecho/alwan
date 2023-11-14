@@ -30,7 +30,6 @@ export const colorState = (alwan: Alwan): IColorState => {
         hsl: '',
         hex: '',
     };
-    const config = alwan.config;
     const emitEvent = alwan._events._emit;
     let currentFormat: colorFormat;
     let cashedColor: string;
@@ -51,23 +50,21 @@ export const colorState = (alwan: Alwan): IColorState => {
          * @param rgb - RGB color object.
          */
         _update(hsl, componentId, triggerEvent = true, rgb) {
-            if (!config.disabled) {
-                previousHex = state.hex;
-                merge(state, hsl);
-                merge(state, rgb || HSLToRGB(state));
+            previousHex = state.hex;
+            merge(state, hsl);
+            merge(state, rgb || HSLToRGB(state));
 
-                state.s = round(state.s);
-                state.l = round(state.l);
+            state.s = round(state.s);
+            state.l = round(state.l);
 
-                state.rgb = stringify(state);
-                state.hsl = stringify(state, HSL_FORMAT);
-                state.hex = RGBToHEX(state);
+            state.rgb = stringify(state);
+            state.hsl = stringify(state, HSL_FORMAT);
+            state.hex = RGBToHEX(state);
 
-                alwan._app._update(state, componentId);
+            alwan._app._update(state, componentId);
 
-                if (triggerEvent && previousHex !== state.hex) {
-                    emitEvent(COLOR, state);
-                }
+            if (triggerEvent && previousHex !== state.hex) {
+                emitEvent(COLOR, state);
             }
         },
 
@@ -121,7 +118,7 @@ export const colorState = (alwan: Alwan): IColorState => {
          * @param format - Color format to set.
          */
         _setFormat(format) {
-            currentFormat = config.format = format;
+            currentFormat = alwan.config.format = format;
         },
 
         /**

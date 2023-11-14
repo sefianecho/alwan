@@ -34,8 +34,9 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
     let markerX: number;
     let markerY: number;
     let paletteBounds: DOMRectArray;
+    let isDisabled: boolean;
 
-    const palette = createDivElement(PALETTE_CLASSNAME, parent, { tabindex: 0 });
+    const palette = createDivElement(PALETTE_CLASSNAME, parent);
     const marker = createDivElement(MARKER_CLASSNAME, palette);
 
     /**
@@ -123,20 +124,22 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
      * Handles dragging the marker (picker).
      */
     addEvent(palette, POINTER_DOWN, (e) => {
-        /**
-         * Drag start.
-         */
-        colorState._cache();
-        paletteBounds = getBounds(palette);
-        moveMarkerAndUpdateColor(<PointerEvent>e);
-        /**
-         * Drag move.
-         */
-        setDragging(true);
-        /**
-         * Drag end.
-         */
-        addEvent(ROOT, POINTER_UP, dragEnd, { once: true });
+        if (!isDisabled) {
+            /**
+             * Drag start.
+             */
+            colorState._cache();
+            paletteBounds = getBounds(palette);
+            moveMarkerAndUpdateColor(<PointerEvent>e);
+            /**
+             * Drag move.
+             */
+            setDragging(true);
+            /**
+             * Drag end.
+             */
+            addEvent(ROOT, POINTER_UP, dragEnd, { once: true });
+        }
     });
 
     /**
@@ -165,8 +168,10 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
          *
          * @param param0 - Alwan options.
          */
-        _init({ i18n }) {
+        _init({ i18n, disabled }) {
             setAttribute(palette, ARIA_LABEL, i18n.palette);
+            setAttribute(palette, 'tabindex', disabled ? '' : 0);
+            isDisabled = disabled;
         },
 
         /**

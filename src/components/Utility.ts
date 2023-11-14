@@ -61,7 +61,7 @@ export const Utility = (alwan: Alwan, parent: HTMLElement): IUtility => {
      * Copies the selected color to the clipboard.
      */
     const copyColor = () => {
-        if (!isCopied && !alwan.config.disabled) {
+        if (!isCopied) {
             const clipboard = navigator.clipboard;
             const color = alwan._color._colorString();
 

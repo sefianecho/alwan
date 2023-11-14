@@ -19,6 +19,7 @@ import {
     createContainer,
     createDivElement,
     getElements,
+    getInteractiveElements,
     insertElement,
     removeElement,
     setCustomProperty,
@@ -66,12 +67,12 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             const self = this;
             const data = root.dataset;
             const colorState = alwan._color;
-            const { id, color, disabled } = options;
-            const { theme, toggle, popover, target } = deepMerge(config, options);
+            const { id, color } = options;
+            const { theme, toggle, popover, target, disabled } = deepMerge(config, options);
 
-            [reference, palette, utility, sliders, inputs, swatches].forEach((component) => {
-                component._init(config);
-            });
+            [reference, palette, utility, sliders, inputs, swatches].forEach((component) =>
+                component._init(config)
+            );
 
             refElement = reference._el() as HTMLElement | SVGAElement;
             let targetElement = getElements(target)[0] || refElement;
@@ -113,14 +114,14 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                 colorState._update({});
             }
             // Disable/Enable color picker.
-            if (isset(disabled)) {
-                (refElement as HTMLElementHasDisabled).disabled = !!disabled;
-                if (disabled) {
-                    if (popover) {
-                        self._toggle(false, true);
-                    } else if (!toggle) {
-                        self._toggle(true, true);
-                    }
+            [refElement, ...getInteractiveElements(root)].forEach((element) => {
+                (element as HTMLElementHasDisabled).disabled = !!disabled;
+            });
+            if (disabled) {
+                if (popover) {
+                    self._toggle(false, true);
+                } else if (!toggle) {
+                    self._toggle(true, true);
                 }
             }
         },

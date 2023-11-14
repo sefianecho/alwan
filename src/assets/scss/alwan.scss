@@ -122,7 +122,7 @@
             margin: 0;
 
             &:focus,
-            &:hover {
+            &:hover:not(:disabled) {
                 opacity: 1;
                 z-index: 100;
                 background-color: rgba(0, 0, 0, 0.6);
@@ -184,12 +184,6 @@
             border-radius: 100%;
             background-color: var(prop.$slider-thumb-background, light.$slider-thumb-background);
             box-shadow: $box-shadow;
-            cursor: grab;
-
-            &:hover {
-                border-color: var(prop.$slider-thumb-hover-border-color, light.$slider-thumb-hover-border-color);
-                background: var(prop.$slider-thumb-hover-background, light.$slider-thumb-hover-background);
-            }
         }
 
         &::-webkit-slider-thumb {
@@ -205,13 +199,24 @@
             @include thumb();
         }
 
-        @include util.slider-thumb(':active') {
+        @include util.slider-thumb(':not(:disabled)', ':hover') {
+            cursor: grab;
+            border-color: var(prop.$slider-thumb-hover-border-color, light.$slider-thumb-hover-border-color);
+            background: var(prop.$slider-thumb-hover-background, light.$slider-thumb-hover-background);
+        }
+
+        @include util.slider-thumb(':active:not(:disabled)') {
             cursor: grabbing;
             outline: 5px solid color.change($alwan-focus-color, $alpha: 0.3);
         }
 
         @include util.slider-thumb(':focus') {
             border-color: $alwan-focus-color;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
         }
     }
 
@@ -280,9 +285,14 @@
             }
         }
 
-        &:hover:not(:focus) {
+        &:hover:not(:focus, :disabled) {
             background-color: var(prop.$input-hover-background, light.$input-hover-background);
             border-color: var(prop.$input-hover-border-color, light.$input-hover-border-color);
+        }
+
+        &:disabled,
+        &:disabled+span {
+            opacity: 0.5;
         }
     }
 
@@ -313,7 +323,7 @@
             cursor: not-allowed;
         }
 
-        &:hover {
+        &:hover:not(:disabled) {
             background-color: var(prop.$button-hover-background, light.$button-hover-background);
         }
 
@@ -334,7 +344,7 @@
         margin: $swatch-button-margin;
         border-radius: $swatch-button-border-radius;
 
-        &:hover {
+        &:hover:not(:disabled) {
             transform: scale(1.1);
         }
 

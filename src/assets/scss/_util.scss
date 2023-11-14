@@ -1,19 +1,19 @@
-@mixin slider-thumb($state: '') {
-    &#{$state}::-webkit-slider-thumb {
+@mixin slider-thumb($slider-state: '', $thumb-state: '') {
+    &#{$slider-state}::-webkit-slider-thumb#{$thumb-state} {
         @content;
     }
 
-    &#{$state}::-moz-range-thumb {
+    &#{$slider-state}::-moz-range-thumb#{$thumb-state} {
         @content;
     }
 }
 
-@mixin slider-track($state: '') {
-    &#{$state}::-webkit-slider-runnable-track {
+@mixin slider-track($slider-state: '', $track-state: '') {
+    &#{$slider-state}::-webkit-slider-runnable-track#{$track-state} {
         @content;
     }
 
-    &#{$state}::-moz-range-track {
+    &#{$slider-state}::-moz-range-track#{$track-state} {
         @content;
     }
 }
