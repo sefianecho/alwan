@@ -18,7 +18,7 @@ import {
     bodyElement,
     createContainer,
     createDivElement,
-    getElement,
+    getElements,
     insertElement,
     removeElement,
     setCustomProperty,
@@ -34,13 +34,13 @@ import { deepMerge } from '../utils/object';
  * @param userRef - User reference.
  * @returns - App.
  */
-export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
+export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
     const config = alwan.config;
     /**
      * Widget root element.
      */
     const root = createDivElement(ALWAN_CLASSNAME, bodyElement());
-    const reference = Reference(alwan, userRef);
+    const reference = Reference(alwan, getElements(ref)[0]);
     /**
      * Create components.
      */
@@ -74,7 +74,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             });
 
             refElement = reference._el() as HTMLElement | SVGAElement;
-            let targetElement = getElement(target) || refElement;
+            let targetElement = getElements(target)[0] || refElement;
 
             // Set id.
             isString(id) && (root.id = id);

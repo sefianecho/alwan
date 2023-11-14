@@ -23,30 +23,27 @@ export const bodyElement = () => ROOT.body;
  *
  * @param reference - CSS selector or a HTML element.
  * @param context - Element to search from.
- * @param all - Select all elements.
  */
-export const getElement = (reference: string | Element, context: Element = bodyElement()) => {
+export const getElements = (reference: string | Element, context: Element = bodyElement()) => {
     if (isString(reference) && reference.trim()) {
-        return context.querySelector(reference);
+        return toArray(context.querySelectorAll(reference));
     }
     // Reference must be an element in the page.
     if (isElement(reference) && bodyElement().contains(reference) && reference !== bodyElement()) {
-        return reference;
+        return [reference];
     }
 
-    return null;
+    return [];
 };
 
 /**
- * Gets an array of elements selected by a CSS selector.
+ * Gets interactive elements (inputs, buttons and elements with tabindex attribute).
  *
- * @param selector - CSS selector.
  * @param context - Element to search from.
- * @returns - Array of elements.
+ * @returns - Interactive elements (focusable).
  */
-export const getAllElements = (selector: string, context: ParentNode) => {
-    return toArray(context.querySelectorAll(selector));
-};
+export const getInteractiveElements = (context: HTMLElement) =>
+    getElements(`${INPUT},${BUTTON},[tabindex]`, context);
 
 /**
  * Inserts an element relative to another element (target element).

@@ -14,7 +14,6 @@ import type {
     alwanOptions,
     alwanValue,
 } from './types';
-import { getElement } from './utils/dom';
 import { isNumber } from './utils/is';
 import { ObjectForEach, deepMerge, prototype, setPrototypeOf } from './utils/object';
 import './assets/scss/alwan.scss';
@@ -40,11 +39,11 @@ export class Alwan {
     _events: EventEmitter;
     _color: IColorState;
     _app: alwanApp;
-    constructor(reference: string, options?: alwanOptions) {
+    constructor(reference: string | Element, options?: alwanOptions) {
         this.config = deepMerge({}, alwanDefaults);
         this._events = Emitter(this);
         this._color = colorState(this);
-        this._app = createApp(this, getElement(reference));
+        this._app = createApp(this, reference);
         this._app._setup(options);
     }
 

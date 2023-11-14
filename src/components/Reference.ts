@@ -13,7 +13,7 @@ import { isString } from '../utils/is';
  * @param userRef - User reference.
  * @returns - Reference component.
  */
-export const Reference = (alwan: Alwan, userRef: Element | null): IReference => {
+export const Reference = (alwan: Alwan, userRef?: Element): IReference => {
     /**
      * Reference element.
      */

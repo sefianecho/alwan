@@ -10,8 +10,8 @@ import type {
     side,
 } from '../types';
 import {
-    getAllElements,
     getBounds,
+    getInteractiveElements,
     getOverflowAncestors,
     isInViewport,
     translate,
@@ -209,7 +209,7 @@ export const createPopover = (
             if (key === ESCAPE) {
                 _toggle(false);
             } else if (key === TAB) {
-                const focusableElements = getAllElements('button,input,[tabindex]', container);
+                const focusableElements = getInteractiveElements(container);
                 const firstFocusableElement = focusableElements[0];
                 const lastFocusableElement = focusableElements.pop();
                 const elementToFocusOn =
