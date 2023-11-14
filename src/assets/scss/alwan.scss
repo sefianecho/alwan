@@ -373,8 +373,6 @@
     }
 
     &__backdrop {
-        position: relative;
-
         &::before {
             content: '';
             position: fixed;
