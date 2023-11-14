@@ -99,6 +99,7 @@
         border: $marker-border;
         box-shadow: $box-shadow;
         cursor: grab;
+        cursor: -webkit-grab;
     }
 
     &__preview {
@@ -150,6 +151,7 @@
 
         &:active {
             cursor: grabbing;
+            cursor: -webkit-grabbing;
         }
 
         // Track.
@@ -201,12 +203,14 @@
 
         @include util.slider-thumb(':not(:disabled)', ':hover') {
             cursor: grab;
+            cursor: -webkit-grab;
             border-color: var(prop.$slider-thumb-hover-border-color, light.$slider-thumb-hover-border-color);
             background: var(prop.$slider-thumb-hover-background, light.$slider-thumb-hover-background);
         }
 
         @include util.slider-thumb(':active:not(:disabled)') {
             cursor: grabbing;
+            cursor: -webkit-grabbing;
             outline: 5px solid color.change($alwan-focus-color, $alpha: 0.3);
         }
 
@@ -382,6 +386,7 @@
             bottom: 0;
             z-index: 9999999999;
             cursor: grabbing;
+            cursor: -webkit-grabbing;
         }
     }
 
