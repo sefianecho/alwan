@@ -55,7 +55,7 @@ export interface alwanConfig {
     /**
      * Set the gap (in pixels) between the picker container and the reference element.
      *
-     * @default `0`
+     * @default `4`
      */
     margin: number;
 

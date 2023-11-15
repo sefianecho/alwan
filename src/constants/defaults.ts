@@ -7,7 +7,7 @@ export const alwanDefaults: alwanConfig = {
     toggle: true,
     popover: true,
     position: 'bottom-start',
-    margin: 0,
+    margin: 4,
     preset: true,
     color: '#000',
     default: '#000',
