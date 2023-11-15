@@ -186,6 +186,7 @@ export interface alwanConfig {
             copy: string;
             changeFormat: string;
             swatch: string;
+            toggleSwatches: string;
         };
         sliders: {
             hue: string;

@@ -28,6 +28,7 @@ export const alwanDefaults: alwanConfig = {
             copy: 'Copy color to clipboard',
             changeFormat: 'Change color format',
             swatch: 'Color swatch',
+            toggleSwatches: 'Toggle Swatches',
         },
         sliders: {
             hue: 'Change hue',

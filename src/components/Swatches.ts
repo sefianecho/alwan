@@ -36,7 +36,7 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
          *
          * @param param0 - Alwan options.
          */
-        _init({ swatches, toggleSwatches, i18n }) {
+        _init({ swatches, toggleSwatches, i18n: { buttons } }) {
             if (isArray(swatches)) {
                 // Initialize.
                 container = removeElement(container);
@@ -52,7 +52,7 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
                                 container,
                                 '',
                                 {},
-                                i18n.buttons.swatch,
+                                buttons.swatch,
                                 isString(color) ? color : parseColor(color, true)
                             ),
                             COLOR,
@@ -62,7 +62,13 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
                     // Create or remove the collapse button depend if the toggleSwatches,
                     // option changes.
                     if (toggleSwatches) {
-                        collapseButton = createButton(COLLAPSE_BUTTON_CLASSNAME, parent, caretSVG);
+                        collapseButton = createButton(
+                            COLLAPSE_BUTTON_CLASSNAME,
+                            parent,
+                            caretSVG,
+                            {},
+                            buttons.toggleSwatches
+                        );
                         /**
                          * Handles toggle swatches button click.
                          */
