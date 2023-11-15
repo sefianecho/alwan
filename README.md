@@ -214,14 +214,14 @@ alwan.on('change', (ev) => {
 
 # Methods
 
-### Static methods:
+#### Static methods:
 
--   **version**(): `string` — Returns version.
+-   **version**(): `string` — Returns the version.
 -   **setDefaults**(defaults: `alwanOptions`) — Change default values for all instances (doesn't effect already instantiated instances).
 
-### Instance methods:
+#### Instance methods:
 
--   **setColor**(color: `string | object`) : `object` — Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events.
+-   **setColor**(color: `Color`) : `object` — Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events.
     If you want to trigger events add `.trigger(change | color | open | close)` to it
 
 ```javascript
@@ -229,19 +229,19 @@ alwan.on('change', (ev) => {
 picker.setColor('purple').trigger('change');
 ```
 
--   **getColor**() : `object` — Returns the color object.
+-   **getColor**() : `alwanValue` — Returns the color object.
 -   **open**() — Open/Show picker.
 -   **isOpen**() : `boolean` — Returns the state of the picker opened `true` or closed `false`.
 -   **toggle**() — Toggle picker, if its hidden show it else hide it.
--   **setOptions**(options: `object`) — Sets one or more options for the picker.
+-   **setOptions**(options: `alwanOptions`) — Sets one or more options for the picker.
 -   **trigger**(event: `string`) — Triggers an event.
 -   **on**(event: `string`, handler: `callback`) — Attaches an event handler function.
 -   **off**(event: `string`, handler: `callback`) — Removes an event handler, if the handler argument is omitted then all handlers attach to this event will be removed, calling this method without arguments will remove all handlers of all events.
 -   **disable**() — Disables picker (users won't be able to pick a color).
 -   **enable**() — Enables picker.
 -   **reposition**() — Updates picker position only if it's a popover.
--   **addSwatches**(...swatches: `Array<string | object>`) — Adds one or many color swatches.
--   **removeSwatches**(...items: `Array<string | object | number>`) — Removes one or many color swatches, items could be a color swatch or its index in the `config.swatches` array.
+-   **addSwatches**(...swatches: `Array<Color>`) — Adds one or many color swatches.
+-   **removeSwatches**(...items: `Array<Color | number>`) — Removes one or many color swatches, items could be a color swatch or its index in the `config.swatches` array.
 
 -   **reset**() — Reset to default color.
 -   **destroy**() — Removes the color picker functionality completely(free up memory).
