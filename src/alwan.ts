@@ -22,7 +22,7 @@ import './assets/scss/alwan.scss';
  */
 export class Alwan {
     /**
-     * @returns The latest version.
+     * @returns package version.
      */
     static version() {
         return version;
