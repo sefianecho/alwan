@@ -3,10 +3,10 @@
 &nbsp;&nbsp;&nbsp;
 
 <div align="center">
-  <img alt="alwan light theme" src="images/alwan-light.png">
+  <img alt="alwan light theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-light.jpg?raw=true">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-  <img alt="alwan dark theme" src="images/alwan-dark.png">
+  <img alt="alwan dark theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-dark.jpg?raw=true">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
@@ -110,7 +110,7 @@ _You can try these options in the [demo](https://sofianchouaib.github.io/alwan/)
 
     _Note: If the picker container has no space to be placed, it will auto-position itself based on the available space._
 
--   `margin` (default `0`) — The gap (in pixels) between the picker container and the reference element.
+-   `margin` (default `4`) — The gap (in pixels) between the picker container and the reference element.
 -   `preset` (default `true`) — Replace the reference element with a pre-styled button.
 -   `color` (default `#000`) — Initial color.
 -   `default` (default `#000`) — Default color.
@@ -124,15 +124,13 @@ _You can try these options in the [demo](https://sofianchouaib.github.io/alwan/)
 -   `copy` (default `true`) — Add/Remove a copy button.
 -   `swatches` (default `[]`) — Array of colors, invalid colors will default to rgb(0,0,0).
 -   `toggleSwatches` (default `false`) — Show/Hide swatches container (Make swatches container collapsible).
--   `shared` (default `false`) — Share components (widget) with multiple instances (using less memory if there are multiple color picker instances).
 -   `closeOnScroll` (default `false`) — Close color picker when scrolling (only if the color picker is displayed as a popover and can be closed).
 
-
-**Note:** In the reference element you can access the css custom property `--alwan-color` to get color value.
+**Note:** In the reference element you can access the css custom property `--color` (`--alwan-color` before v2.0.0) to get color value.
 
 ### Accessibility (v1.4)
-Unlabeled interactive elements has a ARIA label attribute with a default values in english. You can change these labels in the options by modifying the `i18n` object.
 
+Unlabeled interactive elements has a ARIA label attribute with a default values in english. You can change these labels in the options by modifying the `i18n` object.
 
 **Note:**: The title attribute of the copy button and the change format button is the same as the ARIA label. and for the swatch button its title is the color value in the swatches array.
 
@@ -175,7 +173,7 @@ alwan.on('event', (ev) => {
 ### Event object (v1.3)
 
 -   `type` — Event type.
--   `source` — Event source.
+-   `source` — Event source (color picker instance that is calling the event handler).
 -   `h`: `number` — Hue.
 -   `s`: `number` — Saturation.
 -   `l`: `number` — Lightness.
@@ -191,7 +189,7 @@ alwan.on('event', (ev) => {
 // e.g.
 alwan.on('change', (ev) => {
     ev.type; // change
-    ev.source; // Element
+    ev.source; // Color picker instance.
 
     // HSL color components.
     ev.h;
@@ -216,7 +214,7 @@ alwan.on('change', (ev) => {
 # Methods
 
 -   **setColor**(color: `string | object`) : `object` — Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events.
-    If you want to trigger events add `.trigger(change | color)` to it
+    If you want to trigger events add `.trigger(change | color | open | close)` to it
 
 ```javascript
 // Set color 'purple' and trigger 'change' event.
