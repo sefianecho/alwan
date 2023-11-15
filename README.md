@@ -128,7 +128,7 @@ _You can try these options in the [demo](https://sofianchouaib.github.io/alwan/)
 
 **Note:** In the reference element you can access the css custom property `--color` (`--alwan-color` before v2.0.0) to get color value.
 
-### Accessibility (v1.4)
+### Accessibility (since v1.4)
 
 Unlabeled interactive elements has a ARIA label attribute with a default values in english. You can change these labels in the options by modifying the `i18n` object.
 
@@ -143,7 +143,8 @@ Unlabeled interactive elements has a ARIA label attribute with a default values 
             buttons: {
                 copy: 'Copy color to clipboard', // Copy button ARIA label and title.
                 changeFormat: 'Change color format', // Change format button ARIA label and title.
-                swatch: 'Color swatch' // Swatch button ARIA label.
+                swatch: 'Color swatch', // Swatch button ARIA label.
+                toggleSwatches: 'Toggle Swatches' // Toggle swatches button ARIA label and title (since v2.0.0).
             },
             sliders: {
                 hue: 'Change hue', // Hue slider ARIA label.
@@ -170,7 +171,7 @@ alwan.on('event', (ev) => {
 | `change` | `event`  | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event |
 | `color`  | `event`  | Similar to the `input` event, fires every time the color changes                                   |
 
-### Event object (v1.3)
+### Event object (since v1.3)
 
 -   `type` — Event type.
 -   `source` — Event source (color picker instance that is calling the event handler).
@@ -212,6 +213,13 @@ alwan.on('change', (ev) => {
 ```
 
 # Methods
+
+### Static methods:
+
+-   **version**(): `string` — Returns version.
+-   **setDefaults**(defaults: `alwanOptions`) — Change default values for all instances (doesn't effect already instantiated instances).
+
+### Instance methods:
 
 -   **setColor**(color: `string | object`) : `object` — Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events.
     If you want to trigger events add `.trigger(change | color | open | close)` to it
