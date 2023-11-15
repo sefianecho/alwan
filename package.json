@@ -10,7 +10,7 @@
     "import": "./dist/js/esm/alwan.min.js",
     "require": "./dist/js/alwan.min.js"
   },
-      "scripts": {
+    "scripts": {
     "start": "rollup -c -w",
     "prebuild": "rimraf dist",
     "build": "tsc && rollup -c"
