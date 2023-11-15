@@ -305,7 +305,7 @@ select:focus,
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    background-color: var(--alwan-color);
+    background-color: var(--color);
 }
 
 .target-wrapper {
