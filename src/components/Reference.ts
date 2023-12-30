@@ -63,10 +63,13 @@ export const Reference = (alwan: Alwan, userRef?: Element): IReference => {
          * Destroy reference component.
          */
         _destroy() {
-            if (userRef && userRef !== element) {
-                replaceElement(element, userRef);
+            if (userRef) {
+                if (userRef !== element) {
+                    replaceElement(element, userRef);
+                }
+            } else {
+                removeElement(element);
             }
-            removeElement(element);
         },
     };
 };
