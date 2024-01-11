@@ -3,10 +3,10 @@
 &nbsp;&nbsp;&nbsp;
 
 <div align="center">
-  <img alt="alwan light theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-light.jpg?raw=true">
+  <img alt="alwan light theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-light.png?raw=true">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-  <img alt="alwan dark theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-dark.jpg?raw=true">
+  <img alt="alwan dark theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-dark.png?raw=true">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
@@ -18,7 +18,7 @@
 
 A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.
 
-## features
+## Features
 
 -   Touch friendly.
 -   Support dark theme.
