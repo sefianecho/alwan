@@ -29,6 +29,8 @@ const BOTTOM = 5;
 const START = 0;
 const CENTER = 1;
 const END = 2;
+// Margin between the popover container and the document edges.
+const GAP = 3;
 
 /**
  * Sides to fallback to for each side.
@@ -154,11 +156,11 @@ export const createPopover = (
         translate(
             container,
             ...(<[x: number, y: number]>coordinates.map((value, axis) => {
-                if (axis && value === null) {
-                    containerStyle.height = visualViewport[5] - 6 /** Gap*2 */ + 'px';
-                    containerBounds[3] =
-                        visualViewport[5] -
-                        3 /** Gap between the window and the container top-bottom edges */;
+                // Set custom height if the container height is greater than
+                // the viewport height.
+                if (axis && value === null && containerBounds[3] > visualViewport[5]) {
+                    containerStyle.height = visualViewport[5] - GAP * 2 + 'px';
+                    containerBounds[3] = visualViewport[5] - GAP;
                 }
 
                 return round(
@@ -220,9 +222,9 @@ export const createPopover = (
                         : // Pressing Tab while focusing on the palette with the shift key or focussing on the last,
                         // focusable element without shift key sends focus to the reference element (if it's focusable).
                         (shiftKey && target === firstFocusableElement) ||
-                          (!shiftKey && target === lastFocusableElement)
-                        ? reference
-                        : null;
+                            (!shiftKey && target === lastFocusableElement)
+                            ? reference
+                            : null;
 
                 if (elementToFocusOn) {
                     e.preventDefault();
