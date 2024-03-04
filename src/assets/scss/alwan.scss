@@ -12,7 +12,7 @@
 
 .alwan {
     --color: rgba(var(--rgb), var(--a));
-    width: 100%;
+    width: $alwan-max-width;
     max-width: $alwan-max-width;
     background: var(prop.$alwan-background, light.$alwan-background);
     border: 1px solid var(prop.$alwan-outer-border-color, light.$alwan-outer-border-color);
@@ -52,6 +52,7 @@
 
     &[data-display="popover"] {
         position: fixed;
+        width: 100%;
         top: 0;
         left: 0;
         z-index: $alwan-popup-z-index;

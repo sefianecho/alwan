@@ -175,8 +175,10 @@ export const createPopover = (
     /**
      * Auto updates popover position and picker visibility when the window resizes or,
      * one of the ancestors of the target element scrolls.
+     *
+     * @param e - scroll or resize event.
      */
-    const autoUpdate = () => {
+    const autoUpdate = ({ type }: Event) => {
         if (_isOpen() || !toggle) {
             if (isInViewport(target, overflowAncestors)) {
                 if (_isOpen()) {
@@ -184,7 +186,7 @@ export const createPopover = (
                     // and picker is open.
                     _update();
 
-                    if (closeOnScroll) {
+                    if (closeOnScroll && type === SCROLL) {
                         _toggle(false);
                     }
                 } else {

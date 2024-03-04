@@ -45,8 +45,8 @@ export const colorState = (alwan: Alwan): IColorState => {
          * Updates color state and UI.
          *
          * @param hsl - HSL color components.
-         * @param source - Element that updating the color state.
          * @param componentId - Component id of the component that updating the color state.
+         * @param triggerEvent - Whether to fire the 'color' event or not.
          * @param rgb - RGB color object.
          */
         _update(hsl, componentId, triggerEvent = true, rgb) {
