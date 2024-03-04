@@ -71,7 +71,7 @@ Add it to your page.
 <!-- Style -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alwan/dist/css/alwan.min.css" />
 
-<!-- Script -->
+<!-- Script (UMD) -->
 <script src="https://cdn.jsdelivr.net/npm/alwan/dist/js/alwan.min.js"></script>
 ```
 
@@ -81,8 +81,19 @@ Add it to your page.
 <!-- Style -->
 <link rel="stylesheet" href="https://unpkg.com/alwan/dist/css/alwan.min.css" />
 
-<!-- Script -->
+<!-- Script (UMD) -->
 <script src="https://unpkg.com/alwan/dist/js/alwan.min.js"></script>
+```
+##### Other CDN links
+```script
+// ES Module
+https://cdn.jsdelivr.net/npm/alwan/dist/js/esm/alwan.min.js
+https://unpkg.com/alwan/dist/js/esm/alwan.min.js
+
+// IIFE (since v2.0.3)
+https://cdn.jsdelivr.net/npm/alwan/dist/js/iife/alwan.min.js
+https://unpkg.com/alwan/dist/js/iife/alwan.min.js
+
 ```
 
 ## Usage
