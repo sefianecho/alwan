@@ -48,7 +48,7 @@ function build(format, prefix) {
                       ],
                   }
                 : {},
-            format === 'umd' ? { name } : {}
+            format === 'es' ? {} : { name }
         )
     );
 }
@@ -97,7 +97,7 @@ export default defineConfig(({ watch }) => {
     // Production configuration.
     return {
         input,
-        output: [...build('es', 'js/esm/'), ...build('umd', 'js/')],
+        output: [...build('es', 'js/esm/'), ...build('umd', 'js/'), ...build('iife', 'js/iife/')],
         plugins,
     };
 });
