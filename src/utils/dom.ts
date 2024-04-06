@@ -63,6 +63,16 @@ export const insertElement = (
 };
 
 /**
+ * Appends elements as children to an element.
+ *
+ * @param element - Element.
+ * @param children - Array of elements.
+ * @returns - void.
+ */
+export const appendChildren = (element: Element, ...children: Array<Element | null>) =>
+    element.append(...(children.filter(child => child) as Array<Element>));
+
+/**
  * Sets element's inner html.
  *
  * @param element - An HTML element.
@@ -90,18 +100,16 @@ export const setAttribute = (el: Element | null, name: string, value: string | n
  *
  * @param tagName - Element tag name.
  * @param className - Element class name.
- * @param targetElement - Insert the new element relative to this element using position.
+ * @param children - Array of elements to add as children.
  * @param attributes - Element Attributes.
- * @param insertPosition - Insert position.
- * @returns The new created element.
+ * @returns The newly created element.
  */
 export const createElement = <T extends keyof HTMLElementTagNameMap>(
     tagName: T,
     className?: string,
-    targetElement?: Element | null,
+    children: Array<Element | null> = [],
     content?: string,
     attributes?: Attrs,
-    insertPosition?: InsertPosition
 ) => {
     const element = ROOT.createElement(tagName);
 
@@ -119,9 +127,7 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
         }
     });
 
-    if (targetElement) {
-        insertElement(element, targetElement, insertPosition);
-    }
+    appendChildren(element, ...children);
 
     return element;
 };
@@ -130,17 +136,15 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
  * Creates a div element.
  *
  * @param classname - Element classname.
- * @param targetElement - Insert the new element relative to this element using position.
+ * @param children - Array of elements to add as children.
  * @param attributes - Element attributes.
- * @param insertPosition - Insert position.
  * @returns - New div element.
  */
 export const createDivElement = (
     classname: string,
-    targetElement?: Element | null,
+    children?: Array<Element | null>,
     attributes?: Attrs,
-    insertPosition?: InsertPosition
-) => createElement('div', classname, targetElement, '', attributes, insertPosition);
+) => createElement('div', classname, children, '', attributes);
 
 /**
  * Remove element from the document.
@@ -171,26 +175,23 @@ export const replaceElement = (element: Element, replacement: Element) => {
  * Creates a button Element.
  *
  * @param className - Class.
- * @param targetElement - TargetElement.
+ * @param content - Button innert html.
  * @param attrs - Button details.
- * @param label - Button label.
+ * @param label - Button aria label.
  * @param title - Button title.
- * @param insertPosition - Button insert position.
  * @returns - A new button element.
  */
 export const createButton = (
     className?: string,
-    targetElement?: HTMLElement | null,
     content?: string,
     attrs?: Attrs,
     label?: string,
     title?: string,
-    insertPosition?: InsertPosition
 ) => {
     return createElement(
         BUTTON,
         BUTTON_CLASSNAME + className,
-        targetElement,
+        [],
         content,
         merge(
             {
@@ -200,7 +201,6 @@ export const createButton = (
             },
             attrs
         ),
-        insertPosition
     );
 };
 
@@ -208,23 +208,20 @@ export const createButton = (
  * Creates a range input.
  *
  * @param classname - Slider classname.
- * @param parent - Element to append slider to.
  * @param max - Slider max value.
  * @param step - Slider step.
  * @returns - Slider element.
  */
-export const createSlider = (classname: string, parent: HTMLElement, max: number, step = 1) =>
-    createElement(INPUT, SLIDER_CLASSNAME + classname, parent, '', { max, step, type: 'range' });
+export const createSlider = (classname: string, max: number, step = 1) =>
+    createElement(INPUT, SLIDER_CLASSNAME + classname, [], '', { max, step, type: 'range' });
 
 /**
  * Creates a container element.
  *
- * @param targetElement - Element used as a reference.
- * @param where - Insert position relative to the targetElement
+ * @param children - Array of elements to append as children.
  */
-export const createContainer = (targetElement: Element, where?: InsertPosition) => {
-    return createDivElement(CONTAINER_CLASSNAME, targetElement, {}, where);
-};
+export const createContainer = (children?: Array<Element | null>) =>
+    createDivElement(CONTAINER_CLASSNAME, children);
 
 /**
  * Sets a CSS custom property to an element.
