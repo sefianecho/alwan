@@ -10,19 +10,18 @@ import {
     HEX_FORMAT,
     INPUT,
     INPUTS_ID,
-    INSERT_AFTER,
-    INSERT_BEFORE_FIRST_CHILD,
     KEY_DOWN,
 } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import { stringify } from '../lib/colors/stringify';
 import type { HSLA, IInputs, InputFormats, RGBA, colorDetails, colorFormat } from '../types';
 import {
+    appendChildren,
     createButton,
     createContainer,
     createDivElement,
     createElement,
-    removeElement,
+    setHTML,
 } from '../utils/dom';
 import { max } from '../utils/math';
 import { ObjectForEach } from '../utils/object';
@@ -31,10 +30,9 @@ import { ObjectForEach } from '../utils/object';
  * Creates inputs.
  *
  * @param param0 - Alwan instance.
- * @param targetElement - Element to insert the inputs component to.
  * @returns - Inputs component.
  */
-export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
+export const Inputs = (alwan: Alwan): IInputs => {
     let { config, _color: colorState } = alwan;
     let container: HTMLDivElement | null;
     let inputsWrapper: HTMLDivElement | null;
@@ -78,63 +76,36 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
      * Builds inputs.
      */
     const build = () => {
-        // Initialize inputs map.
-        inputsMap = {};
-        // Create inputs container.
-        removeElement(inputsWrapper);
-        inputsWrapper = createDivElement(
-            INPUTS_CLASSNAME,
-            container,
-            {},
-            INSERT_BEFORE_FIRST_CHILD
-        );
-        // Each letter in the format variable represent a color channel,
-        // For multiple inputs, each color channel has an input field.
-        // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
-        const format = formats[currentFormatIndex];
-        const fields = isSingle() ? [format] : (format + (config.opacity ? 'a' : '')).split('');
-        const colorValue = colorState._value;
+        if (inputsWrapper) {
+            // Initialize inputs map.
+            inputsMap = {};
+            // Remove all inputs.
+            setHTML(inputsWrapper, '');
+            // Each letter in the format variable represent a color channel,
+            // For multiple inputs, each color channel has an input field.
+            // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
+            const format = formats[currentFormatIndex];
+            const fields = isSingle() ? [format] : (format + (config.opacity ? 'a' : '')).split('');
+            const colorValue = colorState._value;
 
-        fields.forEach((field) => {
-            /**
-             * Create Input.
-             *
-             * <label>
-             *     <input type="text" class="alwan__input">
-             *     <span>${field}</span>
-             * </label>
-             */
-            const labelElement = createElement('label', '', inputsWrapper);
-            inputsMap[<keyof colorDetails>field] = createElement(
-                INPUT,
-                INPUT_CLASSNAME,
-                labelElement,
-                '',
-                {
-                    type: 'text',
-                    value: colorValue[<keyof colorDetails>field],
-                }
-            );
-            createElement('span', '', labelElement, field);
-        });
-
-        addEvent(inputsWrapper, INPUT, handleChange);
-        /**
-         * Handle change stop.
-         */
-        addEvent(inputsWrapper, CHANGE, () => {
-            colorState._change();
-            isChanged = false;
-        });
-        // Select value on focus.
-        addEvent(inputsWrapper, FOCUS_IN, (e) => (<HTMLInputElement>e.target).select());
-        // Close picker on Enter key press.
-        addEvent(
-            inputsWrapper,
-            KEY_DOWN,
-            (e) => (e as KeyboardEvent).key === ENTER && alwan._app._toggle(false)
-        );
-    };
+            appendChildren(inputsWrapper, ...fields.map(field => {
+                inputsMap[<keyof colorDetails>field] = createElement(
+                    INPUT,
+                    INPUT_CLASSNAME,
+                    [],
+                    '',
+                    {
+                        type: 'text', 
+                        value: colorValue[<keyof colorDetails>field] 
+                    }
+                );
+                return createElement('label', '', [
+                    inputsMap[<keyof colorDetails>field]!,
+                    createElement('span', '', [], field)
+                ]);
+            }));
+        }
+    }
 
     /**
      * Changes color format.
@@ -155,9 +126,9 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
          */
         _init({ inputs, format, i18n }) {
             // Initialize element.
-            container = removeElement(container);
-            switchButton = removeElement(switchButton);
+            container = inputsWrapper = switchButton = null;
             formats = COLOR_FORMATS;
+
             if (inputs !== true) {
                 inputs = inputs || {};
                 formats = formats.filter((format) => (<InputFormats>inputs)[format]);
@@ -169,20 +140,38 @@ export const Inputs = (alwan: Alwan, targetElement: HTMLElement): IInputs => {
             currentFormatIndex = max(formats.indexOf(format), 0);
             colorState._setFormat(formats[currentFormatIndex]);
             if (length) {
-                // Create container and insert it after the util-sliders container.
-                container = createContainer(targetElement, INSERT_AFTER);
-                build();
                 if (length > 1) {
                     switchButton = createButton(
                         '',
-                        container,
                         switchInputsSVG,
                         {},
                         i18n.buttons.changeFormat
                     );
                     addEvent(switchButton, CLICK, changeFormat);
                 }
+                inputsWrapper = createDivElement(INPUTS_CLASSNAME);
+                // Create container and insert it after the util-sliders container.
+                container = createContainer([inputsWrapper, switchButton]);
+                addEvent(inputsWrapper, INPUT, handleChange);
+                /**
+                * Handle change stop.
+                */
+                addEvent(inputsWrapper, CHANGE, () => {
+                    colorState._change();
+                    isChanged = false;
+                });
+                // Select value on focus.
+                addEvent(inputsWrapper, FOCUS_IN, (e) => (<HTMLInputElement>e.target).select());
+                // Close picker on Enter key press.
+                addEvent(
+                    inputsWrapper,
+                    KEY_DOWN,
+                    (e) => (e as KeyboardEvent).key === ENTER && alwan._app._toggle(false)
+                );
+                build();
             }
+
+            return container;
         },
 
         /**

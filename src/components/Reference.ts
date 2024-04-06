@@ -3,7 +3,7 @@ import { BUTTON_CLASSNAME, REFERENCE_CLASSNAME } from '../constants/classnames';
 import { CLICK } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { IReference } from '../types';
-import { bodyElement, createButton, removeElement, replaceElement } from '../utils/dom';
+import { appendChildren, bodyElement, createButton, removeElement, replaceElement } from '../utils/dom';
 import { isString } from '../utils/is';
 
 /**
@@ -17,20 +17,18 @@ export const Reference = (alwan: Alwan, userRef?: Element): IReference => {
     /**
      * Reference element.
      */
-    let element: Element = userRef || createButton('', bodyElement());
+    let element: Element = userRef || createButton();
+
+    if (!userRef) {
+        appendChildren(bodyElement(), element);
+    }
 
     /**
      * Handle click on the reference element.
      */
-    const handleClick = () => {
-        alwan._app._toggle();
-    };
+    const handleClick = () => alwan._app._toggle();
 
     return {
-        /**
-         * @returns - The reference element.
-         */
-        _el: () => element,
         /**
          * Initialize Reference element.
          *
@@ -57,6 +55,8 @@ export const Reference = (alwan: Alwan, userRef?: Element): IReference => {
             if ((!userRef || preset) && isString(classname)) {
                 element.className = (BUTTON_CLASSNAME + REFERENCE_CLASSNAME + classname).trim();
             }
+
+            return element;
         },
 
         /**

@@ -4,7 +4,6 @@ import {
     BUTTON,
     DOC_ELEMENT,
     INPUT,
-    INSERT_AFTER_LAST_CHILD,
     ROOT,
 } from '../constants/globals';
 import type { Attrs, DOMRectArray } from '../types';
@@ -44,23 +43,6 @@ export const getElements = (reference: string | Element, context: Element = body
  */
 export const getInteractiveElements = (context: HTMLElement) =>
     getElements(`${INPUT},${BUTTON},[tabindex]`, context);
-
-/**
- * Inserts an element relative to another element (target element).
- *
- * @param element - The element to be inserted.
- * @param targetElement - Element used as a reference.
- * @param where - Insert position relative to the targetElement.
- */
-export const insertElement = (
-    element: Element,
-    targetElement: Element,
-    where: InsertPosition = INSERT_AFTER_LAST_CHILD
-) => {
-    if (element && targetElement) {
-        targetElement.insertAdjacentElement(where, element);
-    }
-};
 
 /**
  * Appends elements as children to an element.
@@ -229,6 +211,7 @@ export const createContainer = (children?: Array<Element | null>) =>
  * @param element  - Element to set its CSS custom property.
  * @param property - Custom property name.
  * @param value    - Custom property value.
+ * @returns - Element.
  */
 export const setCustomProperty = (
     element: HTMLElement | SVGAElement | null,
@@ -238,6 +221,7 @@ export const setCustomProperty = (
     if (element) {
         element.style.setProperty('--' + property, value + '');
     }
+    return element;
 };
 
 /**

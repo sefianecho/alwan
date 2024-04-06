@@ -13,7 +13,6 @@ import type { ISwatches } from '../types';
 import {
     createButton,
     createDivElement,
-    removeElement,
     setCustomProperty,
     toggleClassName,
 } from '../utils/dom';
@@ -23,11 +22,13 @@ import { isArray } from '../utils/object';
 /**
  * Creates color swatches.
  *
- * @param parent - Element to insert swatches to.
+ * @param alwan - Alwan instance.
  * @returns - Swatches component.
  */
-export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
+export const Swatches = (alwan: Alwan): ISwatches => {
+
     let container: HTMLDivElement | null;
+    let swatchesContainer: HTMLDivElement | null;
     let collapseButton: HTMLButtonElement | null;
 
     return {
@@ -37,61 +38,68 @@ export const Swatches = (alwan: Alwan, parent: HTMLElement): ISwatches => {
          * @param param0 - Alwan options.
          */
         _init({ swatches, toggleSwatches, i18n: { buttons } }) {
-            if (isArray(swatches)) {
-                // Initialize.
-                container = removeElement(container);
-                collapseButton = removeElement(collapseButton);
-                if (swatches.length) {
-                    // Create swatches container.
-                    container = createDivElement(SWATCHES_CLASSNAME, parent);
-                    // Create swatch buttons.
-                    swatches.forEach((color) => {
-                        setCustomProperty(
-                            createButton(
-                                SWATCH_CLASSNAME,
-                                container,
-                                '',
-                                {},
-                                buttons.swatch,
-                                isString(color) ? color : parseColor(color, true)
-                            ),
-                            COLOR,
-                            parseColor(color, true)
-                        );
-                    });
-                    // Create or remove the collapse button depend if the toggleSwatches,
-                    // option changes.
-                    if (toggleSwatches) {
-                        collapseButton = createButton(
-                            COLLAPSE_BUTTON_CLASSNAME,
-                            parent,
-                            caretSVG,
-                            {},
-                            buttons.toggleSwatches
-                        );
-                        /**
-                         * Handles toggle swatches button click.
-                         */
-                        addEvent(collapseButton, CLICK, () => {
-                            toggleClassName(<Element>container, COLLAPSE_CLASSNAME);
-                            alwan._app._reposition();
-                        });
-                    }
-                    /**
-                     * Handles clicks in the swatches container.
-                     */
-                    addEvent(container, CLICK, ({ target }: Event) => {
-                        if (target !== container) {
-                            alwan._color._setColor(
-                                (<HTMLButtonElement>target).style.getPropertyValue('--' + COLOR),
-                                0,
-                                true,
-                                true
-                            );
-                        }
-                    });
-                }
+            if (!isArray(swatches)) {
+                return container;
             }
+
+            // Initialize elements.
+            container = swatchesContainer = collapseButton = null;
+
+            if (!swatches.length) {
+                return container;
+            }
+
+            swatchesContainer = container = createDivElement(
+                SWATCHES_CLASSNAME,
+                swatches.map(color =>
+                    // Set custom property on the created button and returns it (the button).
+                    setCustomProperty(
+                        createButton(
+                            SWATCH_CLASSNAME,
+                            '',
+                            {},
+                            buttons.swatch,
+                            isString(color) ? color: parseColor(color, true)
+                        ),
+                        COLOR,
+                        parseColor(color, true)
+                    )
+                )
+            );
+
+            if (toggleSwatches) {
+                collapseButton = createButton(
+                    COLLAPSE_BUTTON_CLASSNAME,
+                    caretSVG,
+                    {},
+                    buttons.toggleSwatches
+                );
+                /**
+                * Handles toggle swatches button click.
+                */
+                addEvent(collapseButton, CLICK, () => {
+                    toggleClassName(<Element>swatchesContainer, COLLAPSE_CLASSNAME);
+                    alwan._app._reposition();
+                });
+
+                container = createDivElement('', [swatchesContainer, collapseButton]);
+            }
+
+            /**
+            * Handles clicks in the swatches container.
+            */
+            addEvent(swatchesContainer, CLICK, ({ target }: Event) => {
+                if (target !== swatchesContainer) {
+                    alwan._color._setColor(
+                        (<HTMLButtonElement>target).style.getPropertyValue('--' + COLOR),
+                        0,
+                        true,
+                        true
+                    );
+                }
+            });
+
+            return container;
         },
     };
 };

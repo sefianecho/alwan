@@ -6,13 +6,13 @@ import {
     CLICK,
     DOC_ELEMENT,
     INPUT,
-    INSERT_BEFORE_FIRST_CHILD,
     MOUSE_OUT,
     ROOT,
 } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { IUtility } from '../types';
 import {
+    appendChildren,
     createButton,
     createDivElement,
     createElement,
@@ -24,10 +24,9 @@ import {
  * Previews and copies current color.
  *
  * @param alwan - Instance.
- * @param parent - Element to insert utility elements to.
  * @returns - Utility component.
  */
-export const Utility = (alwan: Alwan, parent: HTMLElement): IUtility => {
+export const Utility = (alwan: Alwan): IUtility => {
     let previewElement: HTMLDivElement | null;
     let copyButton: HTMLButtonElement | null;
     let isCopied = false;
@@ -48,7 +47,9 @@ export const Utility = (alwan: Alwan, parent: HTMLElement): IUtility => {
      * @param {string} color - Color to copy.
      */
     const fallback = (color: string) => {
-        const input = createElement(INPUT, '', DOC_ELEMENT, '', { value: color });
+        const input = createElement(INPUT);
+        appendChildren(DOC_ELEMENT, input);
+        input.value = color;
         input.select();
         ROOT.execCommand('copy');
         removeElement(input);
@@ -84,25 +85,14 @@ export const Utility = (alwan: Alwan, parent: HTMLElement): IUtility => {
          */
         _init({ preview, copy, i18n }) {
             // Initialize elements.
-            previewElement = removeElement(previewElement);
-            copyButton = removeElement(copyButton);
-            if (preview) {
-                previewElement = createDivElement(
-                    PREVIEW_CLASSNAME,
-                    parent,
-                    {},
-                    INSERT_BEFORE_FIRST_CHILD
-                );
-            }
+            previewElement = copyButton = null;
+
             if (copy) {
                 copyButton = createButton(
                     COPY_BUTTON_CLASSNAME,
-                    previewElement || parent,
                     clipboardSVG,
                     {},
                     i18n.buttons.copy,
-                    '',
-                    INSERT_BEFORE_FIRST_CHILD
                 );
                 /**
                  * Add events.
@@ -112,6 +102,15 @@ export const Utility = (alwan: Alwan, parent: HTMLElement): IUtility => {
                 addEvent(copyButton, BLUR, () => isCopied && setButtonIcon(false));
                 addEvent(copyButton, MOUSE_OUT, () => copyButton!.blur());
             }
+
+            if (preview) {
+                previewElement = createDivElement(
+                    PREVIEW_CLASSNAME,
+                    [copyButton],
+                );
+            }
+
+            return previewElement || copyButton;
         },
     };
 };

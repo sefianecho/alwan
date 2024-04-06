@@ -27,17 +27,16 @@ import { boundNumber, min } from '../utils/math';
  * Color picking area, pick color by dragging the marker.
  *
  * @param param0 - Alwan instance.
- * @param parent - Insert palette element relative to this element.
  * @returns - Palette component.
  */
-export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPalette => {
+export const Palette = ({ _color: colorState }: Alwan): IPalette => {
     let markerX: number;
     let markerY: number;
     let paletteBounds: DOMRectArray;
     let isDisabled: boolean;
 
-    const palette = createDivElement(PALETTE_CLASSNAME, parent);
-    const marker = createDivElement(MARKER_CLASSNAME, palette);
+    const marker = createDivElement(MARKER_CLASSNAME);
+    const palette = createDivElement(PALETTE_CLASSNAME, [marker]);
 
     /**
      * Moves marker and updates the color state.
@@ -159,11 +158,6 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
 
     return {
         /**
-         * Palette element.
-         */
-        el: palette,
-
-        /**
          * Initialize components.
          *
          * @param param0 - Alwan options.
@@ -172,6 +166,8 @@ export const Palette = ({ _color: colorState }: Alwan, parent: HTMLElement): IPa
             setAttribute(palette, ARIA_LABEL, i18n.palette);
             setAttribute(palette, 'tabindex', disabled ? '' : 0);
             isDisabled = disabled;
+
+            return palette;
         },
 
         /**

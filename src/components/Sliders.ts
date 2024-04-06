@@ -3,28 +3,22 @@ import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME } from '../constants/class
 import { ARIA_LABEL, CHANGE, INPUT, SLIDERS_ID } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { ISliders } from '../types';
-import { createDivElement, createSlider, removeElement, setAttribute } from '../utils/dom';
+import { createDivElement, createSlider, setAttribute } from '../utils/dom';
 
 /**
  * Creates hue and opacity sliders.
  *
  * @param param0 - Alwan instance.
- * @param parent - Element to insert sliders to.
  * @returns - Sliders component.
  */
-export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElement): ISliders => {
+export const Sliders = ({ _color: colorState, _events }: Alwan): ISliders => {
     let alphaSlider: HTMLInputElement | null;
-
-    const container = createDivElement('', parent);
-    const hueSlider = createSlider(HUE_SLIDER_CLASSNAME, container, 360);
+    let container;
+    const hueSlider = createSlider(HUE_SLIDER_CLASSNAME, 360);
     /**
      * Handle hue slider change, update hue in the color state.
      */
     addEvent(hueSlider, INPUT, () => colorState._update({ h: +hueSlider.value }, SLIDERS_ID));
-    /**
-     * Handles sliders change stop (change event).
-     */
-    addEvent(container, CHANGE, () => _events._emit(CHANGE));
 
     return {
         /**
@@ -33,10 +27,10 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
          * @param param0 - Options.
          */
         _init({ opacity, i18n: { sliders } }) {
-            alphaSlider = removeElement(alphaSlider);
+            alphaSlider = null;
 
             if (opacity) {
-                alphaSlider = createSlider(ALPHA_SLIDER_CLASSNAME, container, 1, 0.01);
+                alphaSlider = createSlider(ALPHA_SLIDER_CLASSNAME, 1, 0.01);
                 /**
                  * Handles alpha slider change, update alpha channel in the color state.
                  */
@@ -49,6 +43,14 @@ export const Sliders = ({ _color: colorState, _events }: Alwan, parent: HTMLElem
 
             setAttribute(hueSlider, ARIA_LABEL, sliders.hue);
             setAttribute(alphaSlider, ARIA_LABEL, sliders.alpha);
+
+            container = createDivElement('', [hueSlider, alphaSlider]);
+            /**
+            * Handles sliders change stop (change event).
+            */
+            addEvent(container, CHANGE, () => _events._emit(CHANGE));
+
+            return container;
         },
 
         /**

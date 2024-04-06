@@ -5,24 +5,23 @@ import {
     CLOSE,
     COLOR,
     INPUTS_ID,
-    INSERT_AFTER,
-    INSERT_AFTER_LAST_CHILD,
     OPEN,
     PALETTE_ID,
     RGB_FORMAT,
     SLIDERS_ID,
 } from '../constants/globals';
 import { createPopover } from '../lib/popover';
-import type { HTMLElementHasDisabled, IPopover, alwanApp } from '../types';
+import type { HTMLElementHasDisabled, IPopover, alwanApp, alwanConfig } from '../types';
 import {
+    appendChildren,
     bodyElement,
     createContainer,
     createDivElement,
     getElements,
     getInteractiveElements,
-    insertElement,
     removeElement,
     setCustomProperty,
+    setHTML,
     toggleClassName,
 } from '../utils/dom';
 import { isString, isset } from '../utils/is';
@@ -40,21 +39,29 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
     /**
      * Widget root element.
      */
-    const root = createDivElement(ALWAN_CLASSNAME, bodyElement());
+    const root = createDivElement(ALWAN_CLASSNAME);
     const reference = Reference(alwan, getElements(ref)[0]);
     /**
      * Create components.
      */
-    const palette = Palette(alwan, root);
-    const container = createContainer(root);
-    const utility = Utility(alwan, container);
-    const sliders = Sliders(alwan, container);
-    const inputs = Inputs(alwan, container);
-    const swatches = Swatches(alwan, root);
+    const palette = Palette(alwan);
+    const sliders = Sliders(alwan);
+    const inputs = Inputs(alwan);
+    const components = [
+        palette,
+        {
+            _init: (config: alwanConfig) => createContainer([Utility(alwan), sliders].map(component => component._init(config)))
+        },
+        inputs,
+        Swatches(alwan)
+    ];
 
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
     let refElement: HTMLElement | SVGAElement;
+
+    // Append root to the body.
+    appendChildren(bodyElement(), root);
 
     return {
         /**
@@ -69,13 +76,13 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             const colorState = alwan._color;
             const { id, color } = options;
             const { theme, toggle, popover, target, disabled } = deepMerge(config, options);
+            const targetElement = getElements(target)[0];
 
-            [reference, palette, utility, sliders, inputs, swatches].forEach((component) =>
-                component._init(config)
-            );
+            setHTML(root, '');
+            appendChildren(root, ...components.map(component => component._init(config)));
 
-            refElement = reference._el() as HTMLElement | SVGAElement;
-            let targetElement = getElements(target)[0] || refElement;
+            // initialize reference and returns the element.
+            refElement = <HTMLElement | SVGAElement>reference._init(config);
 
             // Set id.
             isString(id) && (root.id = id);
@@ -97,16 +104,23 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                 popoverInstance = null;
             }
             if (popover) {
-                popoverInstance = createPopover(targetElement, root, refElement, config, self);
+                popoverInstance = createPopover(
+                    targetElement || refElement,
+                    root,
+                    refElement,
+                    config,
+                    self
+                );
             } else {
                 // If there is a target element then append the color picker widget in it,
                 // otherwise insert it after the reference element.
-                insertElement(
-                    root,
-                    targetElement,
-                    targetElement === refElement ? INSERT_AFTER : INSERT_AFTER_LAST_CHILD
-                );
+                if (targetElement) {
+                    appendChildren(targetElement, root);
+                } else {
+                    refElement.after(root);
+                }
             }
+
             // Set color option.
             if (isset(color)) {
                 colorState._setColor(color);
@@ -137,7 +151,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             setCustomProperty(refElement, COLOR, rgb);
             setCustomProperty(root, RGB_FORMAT, `${r},${g},${b}`);
             setCustomProperty(root, 'a', a);
-            setCustomProperty(palette.el, 'h', h);
+            setCustomProperty(root, 'h', h);
 
             if (componentId !== PALETTE_ID && componentId !== SLIDERS_ID) {
                 palette._updateMarker(s / 100, l / 100);

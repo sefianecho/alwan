@@ -277,11 +277,10 @@ export type EventListenerBinder = (
 
 // Components.
 export interface Component {
-    _init(config: alwanConfig): void;
+    _init(config: alwanConfig): Element | null;
 }
 
 export interface IPalette extends Component {
-    el: HTMLDivElement;
     _updateMarker(s: number, v: number): void;
 }
 export interface IUtility extends Component {}
@@ -293,7 +292,6 @@ export interface IInputs extends Component {
 }
 export interface ISwatches extends Component {}
 export interface IReference extends Component {
-    _el(): Element;
     _destroy(): void;
 }
 
