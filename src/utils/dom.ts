@@ -1,4 +1,4 @@
-import { BUTTON_CLASSNAME, CONTAINER_CLASSNAME, SLIDER_CLASSNAME } from '../constants/classnames';
+import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from '../constants/classnames';
 import {
     ARIA_LABEL,
     BUTTON,
@@ -7,15 +7,17 @@ import {
     ROOT,
 } from '../constants/globals';
 import type { Attrs, DOMRectArray } from '../types';
-import { isElement, isString, isset } from './is';
-import { ObjectForEach, merge, toArray } from './object';
+import { isElement, isNumber, isString } from './is';
+import { ObjectForEach, toArray } from './object';
+
+export let BODY_ELE: HTMLElement;
 
 /**
- * Gets the body element.
- *
- * @returns Document's body.
+ * Initialize body element variable.
  */
-export const bodyElement = () => ROOT.body;
+export const initBodyElement = () => {
+    BODY_ELE = ROOT.body;
+}
 
 /**
  * Gets element.
@@ -23,12 +25,12 @@ export const bodyElement = () => ROOT.body;
  * @param reference - CSS selector or a HTML element.
  * @param context - Element to search from.
  */
-export const getElements = (reference: string | Element, context: Element = bodyElement()) => {
+export const getElements = (reference: string | Element, context: Element = BODY_ELE) => {
     if (isString(reference) && reference.trim()) {
         return toArray(context.querySelectorAll(reference));
     }
     // Reference must be an element in the page.
-    if (isElement(reference) && bodyElement().contains(reference) && reference !== bodyElement()) {
+    if (isElement(reference) && BODY_ELE.contains(reference) && reference !== BODY_ELE) {
         return [reference];
     }
 
@@ -72,7 +74,7 @@ export const setHTML = (element: Element, html: string) => {
  * @param value - Attribute value.
  */
 export const setAttribute = (el: Element | null, name: string, value: string | number) => {
-    if (el) {
+    if (el && (isNumber(value) || value)) {
         el.setAttribute(name, value + '');
     }
 };
@@ -103,11 +105,9 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
         setHTML(element, content);
     }
 
-    ObjectForEach(attributes || {}, (name, value) => {
-        if (isset(value)) {
-            setAttribute(element, name, value);
-        }
-    });
+    ObjectForEach(attributes || {}, (name, value) =>
+        setAttribute(element, name, value)
+    );
 
     appendChildren(element, ...children);
 
@@ -124,22 +124,15 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
  */
 export const createDivElement = (
     classname: string,
-    children?: Array<Element | null>,
-    attributes?: Attrs,
-) => createElement('div', classname, children, '', attributes);
+    ...children: Array<Element | null>
+) => createElement('div', classname, children);
 
 /**
- * Remove element from the document.
+ * Removes element form the DOM.
  *
  * @param element - Element to remove.
  */
-export const removeElement = (element?: Element | null) => {
-    if (element) {
-        element.remove();
-    }
-
-    return null;
-};
+export const removeElement = (element: Element) => element.remove();
 
 /**
  * Replaces an element in the DOM with another element.
@@ -156,33 +149,28 @@ export const replaceElement = (element: Element, replacement: Element) => {
 /**
  * Creates a button Element.
  *
+ * @param label - Button aria label.
  * @param className - Class.
  * @param content - Button innert html.
- * @param attrs - Button details.
- * @param label - Button aria label.
  * @param title - Button title.
  * @returns - A new button element.
  */
 export const createButton = (
+    label: string = '',
     className?: string,
     content?: string,
-    attrs?: Attrs,
-    label?: string,
-    title?: string,
+    title: string = label,
 ) => {
     return createElement(
         BUTTON,
         BUTTON_CLASSNAME + className,
         [],
         content,
-        merge(
-            {
-                type: BUTTON,
-                [ARIA_LABEL]: label,
-                title: title || label,
-            },
-            attrs
-        ),
+        {
+            type: BUTTON,
+            [ARIA_LABEL]: label,
+            title,
+        }
     );
 };
 
@@ -196,14 +184,6 @@ export const createButton = (
  */
 export const createSlider = (classname: string, max: number, step = 1) =>
     createElement(INPUT, SLIDER_CLASSNAME + classname, [], '', { max, step, type: 'range' });
-
-/**
- * Creates a container element.
- *
- * @param children - Array of elements to append as children.
- */
-export const createContainer = (children?: Array<Element | null>) =>
-    createDivElement(CONTAINER_CLASSNAME, children);
 
 /**
  * Sets a CSS custom property to an element.
@@ -260,7 +240,7 @@ export const getOverflowAncestors = (
         element = element.parentElement;
     }
 
-    if (!element || element === bodyElement()) {
+    if (!element || element === BODY_ELE) {
         return ancestors;
     }
 

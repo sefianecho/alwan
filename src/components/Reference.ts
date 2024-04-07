@@ -3,7 +3,7 @@ import { BUTTON_CLASSNAME, REFERENCE_CLASSNAME } from '../constants/classnames';
 import { CLICK } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { IReference } from '../types';
-import { appendChildren, bodyElement, createButton, removeElement, replaceElement } from '../utils/dom';
+import { BODY_ELE, appendChildren, createButton, removeElement, replaceElement } from '../utils/dom';
 import { isString } from '../utils/is';
 
 /**
@@ -20,7 +20,7 @@ export const Reference = (alwan: Alwan, userRef?: Element): IReference => {
     let element: Element = userRef || createButton();
 
     if (!userRef) {
-        appendChildren(bodyElement(), element);
+        appendChildren(BODY_ELE, element);
     }
 
     /**

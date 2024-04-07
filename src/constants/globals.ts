@@ -4,10 +4,6 @@ import { PI } from '../utils/math';
 export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
-export const PALETTE_ID = 1;
-export const SLIDERS_ID = 2;
-export const INPUTS_ID = 3;
-
 export const DEFAULT_COLOR = '#000';
 
 export const BUTTON = 'button';

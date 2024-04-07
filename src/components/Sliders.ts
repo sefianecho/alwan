@@ -1,6 +1,6 @@
 import type Alwan from '..';
 import { ALPHA_SLIDER_CLASSNAME, HUE_SLIDER_CLASSNAME } from '../constants/classnames';
-import { ARIA_LABEL, CHANGE, INPUT, SLIDERS_ID } from '../constants/globals';
+import { ARIA_LABEL, CHANGE, INPUT } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
 import type { ISliders } from '../types';
 import { createDivElement, createSlider, setAttribute } from '../utils/dom';
@@ -15,10 +15,11 @@ export const Sliders = ({ _color: colorState, _events }: Alwan): ISliders => {
     let alphaSlider: HTMLInputElement | null;
     let container;
     const hueSlider = createSlider(HUE_SLIDER_CLASSNAME, 360);
+
     /**
-     * Handle hue slider change, update hue in the color state.
+     * Handles hue slider change.
      */
-    addEvent(hueSlider, INPUT, () => colorState._update({ h: +hueSlider.value }, SLIDERS_ID));
+    addEvent(hueSlider, INPUT, () => colorState._update({ h: +hueSlider.value }));
 
     return {
         /**
@@ -32,11 +33,9 @@ export const Sliders = ({ _color: colorState, _events }: Alwan): ISliders => {
             if (opacity) {
                 alphaSlider = createSlider(ALPHA_SLIDER_CLASSNAME, 1, 0.01);
                 /**
-                 * Handles alpha slider change, update alpha channel in the color state.
+                 * Handles alpha slider change.
                  */
-                addEvent(alphaSlider, INPUT, () =>
-                    colorState._update({ a: +alphaSlider!.value }, SLIDERS_ID)
-                );
+                addEvent(alphaSlider, INPUT, () => colorState._update({ a: +alphaSlider!.value }));
             } else {
                 colorState._update({ a: 1 });
             }
@@ -44,7 +43,7 @@ export const Sliders = ({ _color: colorState, _events }: Alwan): ISliders => {
             setAttribute(hueSlider, ARIA_LABEL, sliders.hue);
             setAttribute(alphaSlider, ARIA_LABEL, sliders.alpha);
 
-            container = createDivElement('', [hueSlider, alphaSlider]);
+            container = createDivElement('', hueSlider, alphaSlider);
             /**
             * Handles sliders change stop (change event).
             */

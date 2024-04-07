@@ -1,11 +1,11 @@
 import type Alwan from '..';
 import { CHANGE, COLOR, HSL_FORMAT, RGB_FORMAT } from '../constants/globals';
-import { HSLToRGB, RGBToHEX, RGBToHSL } from '../lib/colors/conversions';
 import { parseColor } from '../lib/colors/parser';
 import { stringify } from '../lib/colors/stringify';
-import type { HSLA, IColorState, RGBA, colorDetails, colorFormat } from '../types';
+import type {  IColorState, RGBA, colorDetails, colorFormat } from '../types';
 import { round } from '../utils/math';
 import { merge } from '../utils/object';
+import { HSLToRGB, RGBToHEX, RGBToHSL } from '../lib/colors/conversions';
 
 /**
  * Creates a color state, updates it emit events when changes and,
@@ -45,14 +45,13 @@ export const colorState = (alwan: Alwan): IColorState => {
          * Updates color state and UI.
          *
          * @param hsl - HSL color components.
-         * @param componentId - Component id of the component that updating the color state.
-         * @param triggerEvent - Whether to fire the 'color' event or not.
-         * @param rgb - RGB color object.
+         * @param silent - If true then don't fire the color event.
+         * @param ignoreRGB - If true then don't update RGB values.
          */
-        _update(hsl, componentId, triggerEvent = true, rgb) {
+        _update(hsl, silent = false, ignoreRGB?: boolean) {
             previousHex = state.hex;
             merge(state, hsl);
-            merge(state, rgb || HSLToRGB(state));
+            !ignoreRGB && merge(state, HSLToRGB(state));
 
             state.s = round(state.s);
             state.l = round(state.l);
@@ -61,11 +60,22 @@ export const colorState = (alwan: Alwan): IColorState => {
             state.hsl = stringify(state, HSL_FORMAT);
             state.hex = RGBToHEX(state);
 
-            alwan._app._update(state, componentId);
+            alwan._app._updateUI(state);
 
-            if (triggerEvent && previousHex !== state.hex) {
+            if (!silent && previousHex !== state.hex) {
                 emitEvent(COLOR, state);
             }
+        },
+
+        /**
+         * Updates the state and the UI including the controls (palette & sliders).
+         *
+         * @param silent - If true then don't fire the color event.
+         * @param ignoreRGB - If true then don't update RGB values.
+         */
+        _updateAll(silent, ignoreRGB) {
+            this._update({}, silent, ignoreRGB);
+            alwan._app._updateControls(state);
         },
 
         /**
@@ -73,23 +83,20 @@ export const colorState = (alwan: Alwan): IColorState => {
          *
          * @param color - Color string or Object.
          * @param componentId - The component that setting the color.
-         * @param triggerChange - Fire change event.
-         * @param triggerColor - Fire color event.
+         * @param silentColorEvent - If true don't fire color event.
+         * @param silentChangeEvent - If true don't fire change event.
          */
-        _setColor(color, componentId, triggerChange, triggerColor) {
-            const [parsedColor, parsedColorFormat, parsedColorString] = parseColor(color);
-            let rgb: RGBA | undefined, hsl: Partial<HSLA>;
+        _setColor(color, silentColorEvent = true, silentChangeEvent = true) {
+            const [colorObject, colorFormat, colorString] = parseColor(color);
+            const isRGB = colorFormat === RGB_FORMAT;
 
-            if (state[parsedColorFormat] !== parsedColorString) {
-                if (parsedColorFormat === RGB_FORMAT) {
-                    rgb = <RGBA>parsedColor;
-                    hsl = RGBToHSL(rgb);
-                } else {
-                    hsl = parsedColor;
-                }
-                this._update(hsl, componentId, triggerColor, rgb);
+            if (state[colorFormat] !== colorString) {
+                // Merge parsed color to the state if it's hsl,
+                // if it's rgb then convert it to hsl and merge both rgb and hsl.
+                merge(state, colorObject, isRGB ? RGBToHSL(<RGBA>colorObject) : {});
+                this._updateAll(silentColorEvent, isRGB);
 
-                if (triggerChange) {
+                if (!silentChangeEvent) {
                     emitEvent(CHANGE, state);
                 }
             }

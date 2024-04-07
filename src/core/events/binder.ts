@@ -8,9 +8,8 @@ import type { EventListenerBinder } from '../../types';
  * @param listener - Event handler.
  * @param options - Event listener options.
  */
-export const addEvent: EventListenerBinder = (target, type, listener, options) => {
-    target.addEventListener(type, listener, options);
-};
+export const addEvent: EventListenerBinder = (target, type, listener, options) =>
+    target.addEventListener(type, listener, options)
 
 /**
  * Removes event listener from an element.
@@ -19,6 +18,5 @@ export const addEvent: EventListenerBinder = (target, type, listener, options) =
  * @param type - Event type.
  * @param listener - Event handler.
  */
-export const removeEvent: EventListenerBinder = (target, type, listener) => {
-    target.removeEventListener(type, listener);
-};
+export const removeEvent: EventListenerBinder = (target, type, listener) =>
+    target.removeEventListener(type, listener)

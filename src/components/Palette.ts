@@ -6,7 +6,6 @@ import {
     BLUR,
     DOC_ELEMENT,
     KEY_DOWN,
-    PALETTE_ID,
     POINTER_DOWN,
     POINTER_MOVE,
     POINTER_UP,
@@ -36,7 +35,8 @@ export const Palette = ({ _color: colorState }: Alwan): IPalette => {
     let isDisabled: boolean;
 
     const marker = createDivElement(MARKER_CLASSNAME);
-    const palette = createDivElement(PALETTE_CLASSNAME, [marker]);
+    const palette = createDivElement(PALETTE_CLASSNAME, marker);
+    const value = { s: 0, l: 0 };
 
     /**
      * Moves marker and updates the color state.
@@ -67,13 +67,9 @@ export const Palette = ({ _color: colorState }: Alwan): IPalette => {
         v = 1 - markerY / height;
         l = v * (1 - markerX / (2 * width));
 
-        colorState._update(
-            {
-                s: l === 1 || l === 0 ? 0 : ((v - l) / min(l, 1 - l)) * 100,
-                l: l * 100,
-            },
-            PALETTE_ID
-        );
+        value.s = l === 1 || l === 0 ? 0 : ((v - l) / min(l, 1 - l)) * 100;
+        value.l = l * 100;
+        colorState._update(value);
     };
 
     /**
@@ -103,9 +99,7 @@ export const Palette = ({ _color: colorState }: Alwan): IPalette => {
     /**
      * Handles window loses focus while dragging the marker (picker).
      */
-    const windowBlur = () => {
-        colorState._change();
-    };
+    const windowBlur = () => colorState._change()
 
     /**
      * Set/Unset dragging by adding/removing pointermove event and add/remove
@@ -177,10 +171,11 @@ export const Palette = ({ _color: colorState }: Alwan): IPalette => {
          * @param l - HSL lightness
          */
         _updateMarker(s, l) {
-            let v = l + s * min(l, 1 - l);
+            l /= 100;
+            s = l + s / 100 * min(l, 1 - l);
             paletteBounds = getBounds(palette);
-            markerX = (v ? 2 * (1 - l / v) : 0) * paletteBounds[2];
-            markerY = (1 - v) * paletteBounds[3];
+            markerX = (s ? 2 * (1 - l / s) : 0) * paletteBounds[2];
+            markerY = (1 - s) * paletteBounds[3];
             translate(marker, markerX, markerY);
         },
     };

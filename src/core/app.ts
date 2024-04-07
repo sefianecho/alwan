@@ -1,21 +1,18 @@
 import type Alwan from '..';
 import { Inputs, Palette, Reference, Sliders, Swatches, Utility } from '../components';
-import { ALWAN_CLASSNAME, OPEN_CLASSNAME } from '../constants/classnames';
+import { ALWAN_CLASSNAME, CONTAINER_CLASSNAME, OPEN_CLASSNAME } from '../constants/classnames';
 import {
     CLOSE,
     COLOR,
-    INPUTS_ID,
     OPEN,
-    PALETTE_ID,
     RGB_FORMAT,
-    SLIDERS_ID,
 } from '../constants/globals';
 import { createPopover } from '../lib/popover';
 import type { HTMLElementHasDisabled, IPopover, alwanApp, alwanConfig } from '../types';
 import {
+    BODY_ELE,
     appendChildren,
-    bodyElement,
-    createContainer,
+    initBodyElement,
     createDivElement,
     getElements,
     getInteractiveElements,
@@ -35,7 +32,8 @@ import { deepMerge } from '../utils/object';
  * @returns - App.
  */
 export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
-    const config = alwan.config;
+    initBodyElement();
+    const { config, _color: colorState } = alwan;
     /**
      * Widget root element.
      */
@@ -50,7 +48,11 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
     const components = [
         palette,
         {
-            _init: (config: alwanConfig) => createContainer([Utility(alwan), sliders].map(component => component._init(config)))
+            _init: (config: alwanConfig) =>
+                createDivElement(
+                    CONTAINER_CLASSNAME,
+                    ...[Utility(alwan), sliders].map(component => component._init(config))
+                )
         },
         inputs,
         Swatches(alwan)
@@ -61,7 +63,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
     let refElement: HTMLElement | SVGAElement;
 
     // Append root to the body.
-    appendChildren(bodyElement(), root);
+    appendChildren(BODY_ELE, root);
 
     return {
         /**
@@ -73,7 +75,6 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             options = options || {};
             const self = this;
             const data = root.dataset;
-            const colorState = alwan._color;
             const { id, color } = options;
             const { theme, toggle, popover, target, disabled } = deepMerge(config, options);
             const targetElement = getElements(target)[0];
@@ -125,12 +126,13 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             if (isset(color)) {
                 colorState._setColor(color);
             } else {
-                colorState._update({});
+                colorState._updateAll();
             }
+
             // Disable/Enable color picker.
-            [refElement, ...getInteractiveElements(root)].forEach((element) => {
-                (element as HTMLElementHasDisabled).disabled = !!disabled;
-            });
+            [refElement, ...getInteractiveElements(root)].forEach((element) =>
+                (element as HTMLElementHasDisabled).disabled = !!disabled
+            );
             if (disabled) {
                 if (popover) {
                     self._toggle(false, true);
@@ -141,25 +143,26 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
         },
 
         /**
-         * Updates UI and components.
+         * Updates UI.
          *
          * @param state - Color state.
-         * @param componentId - Id of the component that updating the color.
          */
-        _update(state, componentId) {
-            const { r, g, b, a, h, s, l, rgb } = state;
-            setCustomProperty(refElement, COLOR, rgb);
-            setCustomProperty(root, RGB_FORMAT, `${r},${g},${b}`);
-            setCustomProperty(root, 'a', a);
-            setCustomProperty(root, 'h', h);
+        _updateUI(state) {
+            setCustomProperty(refElement, COLOR, state.rgb);
+            setCustomProperty(root, RGB_FORMAT, `${state.r},${state.g},${state.b}`);
+            setCustomProperty(root, 'a', state.a);
+            setCustomProperty(root, 'h', state.h);
+            inputs._setValues(state);
+        },
 
-            if (componentId !== PALETTE_ID && componentId !== SLIDERS_ID) {
-                palette._updateMarker(s / 100, l / 100);
-                sliders._setValues(h, a);
-            }
-            if (componentId !== INPUTS_ID) {
-                inputs._setValues(state);
-            }
+        /**
+         * Updates the marker position in the palette and sliders values.
+         *
+         * @param param0 - Color state.
+         */
+        _updateControls({ h, a, s, l }) {
+            sliders._setValues(h, a);
+            palette._updateMarker(s, l);
         },
 
         /**

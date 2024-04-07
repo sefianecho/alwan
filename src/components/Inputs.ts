@@ -1,6 +1,6 @@
 import type Alwan from '..';
 import { switchInputsSVG } from '../assets/svg';
-import { INPUTS_CLASSNAME, INPUT_CLASSNAME } from '../constants/classnames';
+import { CONTAINER_CLASSNAME, INPUTS_CLASSNAME, INPUT_CLASSNAME } from '../constants/classnames';
 import {
     CHANGE,
     CLICK,
@@ -9,7 +9,6 @@ import {
     FOCUS_IN,
     HEX_FORMAT,
     INPUT,
-    INPUTS_ID,
     KEY_DOWN,
 } from '../constants/globals';
 import { addEvent } from '../core/events/binder';
@@ -18,7 +17,6 @@ import type { HSLA, IInputs, InputFormats, RGBA, colorDetails, colorFormat } fro
 import {
     appendChildren,
     createButton,
-    createContainer,
     createDivElement,
     createElement,
     setHTML,
@@ -41,35 +39,30 @@ export const Inputs = (alwan: Alwan): IInputs => {
     let currentFormatIndex: number;
     let inputsMap: Partial<Record<keyof colorDetails, HTMLInputElement>>;
     let isChanged = false;
-
-    /**
-     * Checks if inputs are one single input.
-     */
-    const isSingle = () => {
-        return config.singleInput || formats[currentFormatIndex] === HEX_FORMAT;
-    };
+    let isSingle: boolean;
 
     /**
      * Handles inputs change.
-     *
-     * @param e - Input & Change event.
      */
-    const handleChange = (e: Event) => {
-        let str = (<HTMLInputElement>e.target).value;
-        let color: Partial<Record<keyof colorDetails, number>> = {};
+    const handleChange = () => {
+        let color: Partial<Record<keyof colorDetails, number | string>> = {};
+        let format = formats[currentFormatIndex];
 
         if (!isChanged) {
             colorState._cache();
             isChanged = true;
         }
 
-        if (!isSingle()) {
-            ObjectForEach(inputsMap, (key, input) => {
-                color[key] = +input!.value;
-            });
-            str = stringify(<RGBA | HSLA>color, formats[currentFormatIndex]);
-        }
-        colorState._setColor(str, INPUTS_ID, false, true);
+        ObjectForEach(inputsMap, (key, input) =>
+            color[key] = input!.value
+        );
+
+        colorState._setColor(
+            isSingle ?
+                <string>(color[format]) :
+                stringify(<RGBA | HSLA>color, format),
+            false
+        );
     };
 
     /**
@@ -81,11 +74,12 @@ export const Inputs = (alwan: Alwan): IInputs => {
             inputsMap = {};
             // Remove all inputs.
             setHTML(inputsWrapper, '');
+            isSingle = formats[currentFormatIndex] === HEX_FORMAT || config.singleInput;
             // Each letter in the format variable represent a color channel,
             // For multiple inputs, each color channel has an input field.
             // e.g. for 'rgb' format fields array is [r, g, b] or [r, g, b, a] if opacity is true.
             const format = formats[currentFormatIndex];
-            const fields = isSingle() ? [format] : (format + (config.opacity ? 'a' : '')).split('');
+            const fields = isSingle ? [format] : (format + (config.opacity ? 'a' : '')).split('');
             const colorValue = colorState._value;
 
             appendChildren(inputsWrapper, ...fields.map(field => {
@@ -95,8 +89,8 @@ export const Inputs = (alwan: Alwan): IInputs => {
                     [],
                     '',
                     {
-                        type: 'text', 
-                        value: colorValue[<keyof colorDetails>field] 
+                        type: 'text',
+                        value: colorValue[<keyof colorDetails>field]
                     }
                 );
                 return createElement('label', '', [
@@ -142,32 +136,27 @@ export const Inputs = (alwan: Alwan): IInputs => {
             if (length) {
                 if (length > 1) {
                     switchButton = createButton(
+                        i18n.buttons.changeFormat,
                         '',
-                        switchInputsSVG,
-                        {},
-                        i18n.buttons.changeFormat
+                        switchInputsSVG
                     );
                     addEvent(switchButton, CLICK, changeFormat);
                 }
                 inputsWrapper = createDivElement(INPUTS_CLASSNAME);
-                // Create container and insert it after the util-sliders container.
-                container = createContainer([inputsWrapper, switchButton]);
-                addEvent(inputsWrapper, INPUT, handleChange);
+                container = createDivElement(CONTAINER_CLASSNAME, inputsWrapper, switchButton);
+
                 /**
-                * Handle change stop.
-                */
+                 * Inputs events.
+                 */
+                addEvent(inputsWrapper, INPUT, handleChange);
                 addEvent(inputsWrapper, CHANGE, () => {
                     colorState._change();
                     isChanged = false;
                 });
-                // Select value on focus.
-                addEvent(inputsWrapper, FOCUS_IN, (e) => (<HTMLInputElement>e.target).select());
-                // Close picker on Enter key press.
-                addEvent(
-                    inputsWrapper,
-                    KEY_DOWN,
-                    (e) => (e as KeyboardEvent).key === ENTER && alwan._app._toggle(false)
-                );
+                addEvent(inputsWrapper, FOCUS_IN, (e: Event) => (<HTMLInputElement>e.target).select());
+                // Pressing Enter causes the picker to close.
+                addEvent( inputsWrapper, KEY_DOWN, (e: Event) => (e as KeyboardEvent).key === ENTER && alwan._app._toggle(false));
+
                 build();
             }
 
@@ -180,9 +169,11 @@ export const Inputs = (alwan: Alwan): IInputs => {
          * @param color - Color.
          */
         _setValues(color) {
-            ObjectForEach(inputsMap || {}, (key, input) => {
-                input!.value = color[key] + '';
-            });
+            if (!isChanged) {
+                ObjectForEach(inputsMap || {}, (key, input) =>
+                    input!.value = color[key] + ''
+                );
+            }
         },
     };
 };

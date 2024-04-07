@@ -89,10 +89,9 @@ export const Utility = (alwan: Alwan): IUtility => {
 
             if (copy) {
                 copyButton = createButton(
+                    i18n.buttons.copy,
                     COPY_BUTTON_CLASSNAME,
                     clipboardSVG,
-                    {},
-                    i18n.buttons.copy,
                 );
                 /**
                  * Add events.
@@ -106,7 +105,7 @@ export const Utility = (alwan: Alwan): IUtility => {
             if (preview) {
                 previewElement = createDivElement(
                     PREVIEW_CLASSNAME,
-                    [copyButton],
+                    copyButton,
                 );
             }
 

@@ -51,14 +51,13 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 
             swatchesContainer = container = createDivElement(
                 SWATCHES_CLASSNAME,
-                swatches.map(color =>
+                ...swatches.map(color =>
                     // Set custom property on the created button and returns it (the button).
                     setCustomProperty(
                         createButton(
+                            buttons.swatch,
                             SWATCH_CLASSNAME,
                             '',
-                            {},
-                            buttons.swatch,
                             isString(color) ? color: parseColor(color, true)
                         ),
                         COLOR,
@@ -69,10 +68,9 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 
             if (toggleSwatches) {
                 collapseButton = createButton(
+                    buttons.toggleSwatches,
                     COLLAPSE_BUTTON_CLASSNAME,
-                    caretSVG,
-                    {},
-                    buttons.toggleSwatches
+                    caretSVG
                 );
                 /**
                 * Handles toggle swatches button click.
@@ -82,7 +80,7 @@ export const Swatches = (alwan: Alwan): ISwatches => {
                     alwan._app._reposition();
                 });
 
-                container = createDivElement('', [swatchesContainer, collapseButton]);
+                container = createDivElement('', swatchesContainer, collapseButton);
             }
 
             /**
@@ -92,9 +90,8 @@ export const Swatches = (alwan: Alwan): ISwatches => {
                 if (target !== swatchesContainer) {
                     alwan._color._setColor(
                         (<HTMLButtonElement>target).style.getPropertyValue('--' + COLOR),
-                        0,
-                        true,
-                        true
+                        false,
+                        false
                     );
                 }
             });
