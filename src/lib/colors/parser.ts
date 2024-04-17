@@ -1,14 +1,13 @@
 import {
     ANGLE_COEFFICIENT_MAP,
     DEFAULT_COLOR,
-    HEX_REGEX,
     HSL_FORMAT,
     HSL_REGEX,
     RGB_FORMAT,
 } from '../../constants/globals';
 import { Color, HSLA, RGBA, colorFormat } from '../../types';
 import { createElement } from '../../utils/dom';
-import { isNumber, isString } from '../../utils/is';
+import { isHex, isNumber, isString } from '../../utils/is';
 import { boundNumber, int, normalizeAngle, round } from '../../utils/math';
 import { isPlainObject } from '../../utils/object';
 import { stringify } from './stringify';
@@ -67,13 +66,19 @@ export function parseColor(
         format = HSL_FORMAT;
     } else {
         format = RGB_FORMAT;
+
+        // if string is hexadecimal without the '#' symbol.
+        if (isHex(str)) {
+            str = '#' + str;
+        }
+
         ctx.fillStyle = DEFAULT_COLOR;
         ctx.fillStyle = str;
         str = ctx.fillStyle;
         // ColorString is either hex or rgb string,
         // if it's hex convert it to rgb object,
         // if it's rgb then parse it to object.
-        if (HEX_REGEX.test(str)) {
+        if (str[0] === '#') {
             // Convert hex string to rgb object.
             parsedColor = {
                 r: int(str.slice(1, 3), 16),

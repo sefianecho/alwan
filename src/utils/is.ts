@@ -35,3 +35,11 @@ export const isNumber = (value: unknown) =>
  * @returns - value is a function.
  */
 export const isFunction = (value: unknown): value is Function => typeof value === 'function';
+
+/**
+ * Checks if a string is hexadecimal number.
+ *
+ * @param value - string.
+ * @returns - Whether value is hexadecimal.
+ */
+export const isHex = (value: string) => /^[\da-f]+$/i.test(value);

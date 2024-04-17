@@ -54,7 +54,7 @@ export const ANGLE_COEFFICIENT_MAP: { [angle: string]: number } = {
     rad: 180 / PI,
     grad: 0.9,
 };
+
 // Regex.
-export const HEX_REGEX = /^#[0-9a-f]{6}$/i;
 export const HSL_REGEX =
     /^hsla?\(\s*([+-]?\d*\.?\d+)(\w*)?\s*[\s,]\s*([+-]?\d*\.?\d+)%?\s*,?\s*([+-]?\d*\.?\d+)%?(?:\s*[\/,]\s*([+-]?\d*\.?\d+)(%)?)?\s*\)?$/;
