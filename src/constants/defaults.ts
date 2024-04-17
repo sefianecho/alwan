@@ -4,6 +4,7 @@ export const alwanDefaults: alwanConfig = {
     id: '',
     classname: '',
     theme: 'light',
+    parent: '',
     toggle: true,
     popover: true,
     position: 'bottom-start',

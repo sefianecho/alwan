@@ -22,6 +22,13 @@ export interface alwanConfig {
      */
     theme: 'light' | 'dark';
 
+    /*
+     * Append the picker to this element.
+     *
+     * @default ``
+     */
+    parent: string | Element;
+
     /**
      * Toggle picker's visibility (Show/Hide), Setting this to false keeps the picker visible.
      *

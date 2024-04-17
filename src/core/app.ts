@@ -62,9 +62,6 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
     let popoverInstance: IPopover | null = null;
     let refElement: HTMLElement | SVGAElement;
 
-    // Append root to the body.
-    appendChildren(BODY_ELE, root);
-
     return {
         /**
          * Setup color picker and update it with the given options.
@@ -76,9 +73,12 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             const self = this;
             const data = root.dataset;
             const { id, color } = options;
-            const { theme, toggle, popover, target, disabled } = deepMerge(config, options);
+            const { theme, parent, toggle, popover, target, disabled } = deepMerge(config, options);
+            const parentElement = getElements(parent)[0];
             const targetElement = getElements(target)[0];
 
+            // Append the root to the parent element.
+            appendChildren(parentElement || BODY_ELE, root);
             setHTML(root, '');
             appendChildren(root, ...components.map(component => component._init(config)));
 
@@ -113,10 +113,10 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                     self
                 );
             } else {
-                // If there is a target element then append the color picker widget in it,
-                // otherwise insert it after the reference element.
-                if (targetElement) {
-                    appendChildren(targetElement, root);
+                // If there is a target element  or a parent element then append
+                // the color picker widget in it, otherwise insert it after the reference element.
+                if (targetElement || parentElement) {
+                    appendChildren(targetElement || parentElement, root);
                 } else {
                     refElement.after(root);
                 }

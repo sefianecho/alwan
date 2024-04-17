@@ -25,17 +25,27 @@ export const initBodyElement = () => {
  * @param reference - CSS selector or a HTML element.
  * @param context - Element to search from.
  */
-export const getElements = (reference: string | Element, context: Element = BODY_ELE) => {
+export const getElements = (reference: string | Element, context: Element = DOC_ELEMENT) => {
     if (isString(reference) && reference.trim()) {
         return toArray(context.querySelectorAll(reference));
     }
     // Reference must be an element in the page.
-    if (isElement(reference) && BODY_ELE.contains(reference) && reference !== BODY_ELE) {
+    if (isElement(reference)) {
         return [reference];
     }
 
     return [];
 };
+
+/**
+ * Checks if an element is in the body element.
+ *
+ * @param element - Any element.
+ * @returns - boolean.
+ */
+export const isElementInBody = (element: Element) => 
+    element !== BODY_ELE &&
+    BODY_ELE.contains(element);
 
 /**
  * Gets interactive elements (inputs, buttons and elements with tabindex attribute).
