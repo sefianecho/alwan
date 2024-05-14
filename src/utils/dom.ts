@@ -27,9 +27,6 @@ export const getElements = (
 	return [];
 };
 
-export const isElementInBody = (element: Element) =>
-	element !== getBody() && getBody().contains(element);
-
 export const getInteractiveElements = (context: HTMLElement) =>
 	getElements(`${INPUT},${BUTTON},[tabindex]`, context);
 
@@ -92,7 +89,7 @@ export const replaceElement = (element: Element, replacement: Element) => {
 
 export const createButton = (
 	label: string = "",
-	className?: string,
+	className: string = "",
 	content?: string,
 	title: string = label,
 ) => {

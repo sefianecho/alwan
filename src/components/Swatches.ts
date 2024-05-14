@@ -45,10 +45,12 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 							buttons.swatch,
 							SWATCH_CLASSNAME,
 							"",
-							isString(color) ? color : parseColor(color, true),
+							isString(color)
+								? color
+								: <string>parseColor(color, true),
 						),
 						COLOR,
-						parseColor(color, true),
+						<string>parseColor(color, true),
 					),
 				),
 			);
@@ -83,8 +85,8 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 						(<HTMLButtonElement>target).style.getPropertyValue(
 							"--" + COLOR,
 						),
-						false,
-						false,
+						true,
+						true,
 					);
 				}
 			});

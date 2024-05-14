@@ -83,15 +83,10 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
 			);
 
 			isString(id) && (root.id = id);
-
 			merge(root.dataset, {
 				theme,
 				display: popover ? "popover" : "block",
 			});
-
-			if (!toggle) {
-				self._toggle(true, true);
-			}
 
 			// Hide reference element if both toggle and popover options are set to false,
 			refElement.style.display = popover || toggle ? "" : "none";
@@ -119,8 +114,8 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
 				}
 			}
 
-			if (isset(color)) {
-				colorState._setColor(color);
+			if (!toggle) {
+				self._toggle(true, true);
 			}
 
 			// Disable/Enable color picker.
@@ -136,8 +131,12 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
 				}
 			}
 
+			if (isset(color)) {
+				colorState._setColor(color);
+			}
+
 			// Update ui.
-			colorState._update({}, true, true, true);
+			colorState._update({}, false, true, true);
 		},
 
 		_toggle(state = !isOpen, forced = false) {

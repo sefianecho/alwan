@@ -97,7 +97,7 @@ export const createPopover = (
 			const targetStart = targetRect[axis];
 			const targetEnd = targetRect[endCoordinateIndex];
 
-			const viewportEnd = viewportRect[endCoordinateIndex];
+			const viewportEnd = viewportRect[endCoordinateIndex] - targetStart;
 
 			const offset = (popoverDimension + targetRect[dimensionIndex]) / 2;
 

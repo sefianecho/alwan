@@ -18,18 +18,13 @@ const ctx = createElement("canvas").getContext("2d")!;
  * Parses any value into an RGB or HSL objects.
  * Invalid values default to DEFAULT_COLOR in globals.
  */
-export function parseColor(color: Color, asString: true): string;
-export function parseColor(
-	color: Color,
-	asString?: false,
-): [RGBA | HSLA, colorFormat, string];
-export function parseColor(
+export const parseColor = (
 	color: Color,
 	asString?: boolean,
-): string | [RGBA | HSLA, colorFormat, string] {
+): string | [RGBA | HSLA, colorFormat] => {
 	let format: colorFormat | undefined;
 	let parsedColor: HSLA | RGBA;
-	let str: string = "";
+	let str = "";
 
 	if (isString(color)) {
 		str = color.trim();
@@ -92,7 +87,6 @@ export function parseColor(
 	}
 	// Round the transparency component to two numbers behind
 	parsedColor.a = round(parsedColor.a * 100) / 100;
-	str = stringify(parsedColor, format);
 
-	return asString ? str : [parsedColor, format, str];
-}
+	return asString ? stringify(parsedColor, format) : [parsedColor, format];
+};

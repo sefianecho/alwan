@@ -4,6 +4,7 @@ import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
 import { CHANGE, COLOR, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import type {
+	HSLA,
 	IColorState,
 	IInputs,
 	IPalette,
@@ -32,6 +33,7 @@ export const colorState = (alwan: Alwan): IColorState => {
 		hsl: "",
 		hex: "",
 	};
+	const config = alwan.config;
 	const emitEvent = alwan._events._emit;
 	let referenceElement: HTMLElement;
 	let rootElement: HTMLElement;
@@ -47,7 +49,7 @@ export const colorState = (alwan: Alwan): IColorState => {
 		_getColorString: () => state[currentFormat],
 
 		_setFormat(format) {
-			currentFormat = alwan.config.format = format;
+			currentFormat = config.format = format;
 		},
 
 		_setRef(ref) {
@@ -63,7 +65,7 @@ export const colorState = (alwan: Alwan): IColorState => {
 
 		_update(
 			hsl,
-			triggerColorEvent = false,
+			triggerColorEvent = true,
 			ignoreRGB,
 			updatePaletteAndSliders,
 		) {
@@ -94,18 +96,22 @@ export const colorState = (alwan: Alwan): IColorState => {
 				paletteComponent._updateMarker(state.s, state.l);
 			}
 
-			if (!triggerColorEvent && previousHex !== state.hex) {
+			if (triggerColorEvent && previousHex !== state.hex) {
 				emitEvent(COLOR, state);
 			}
 		},
 
-		_setColor(color, triggerColorEvent, triggerChangeEvent) {
-			const [colorObject, colorFormat, colorString] = parseColor(color);
+		_setColor(color, triggerColorEvent = false, triggerChangeEvent) {
+			const [colorObject, colorFormat] = <[RGBA | HSLA, colorFormat]>(
+				parseColor(color)
+			);
 			const isRGB = colorFormat === RGB_FORMAT;
 
-			if (state[colorFormat] !== colorString) {
-				// Merge parsed color to the state if it's hsl,
-				// if it's rgb then convert it to hsl and merge both rgb and hsl.
+			if (!config.opacity) {
+				colorObject.a = 1;
+			}
+
+			if (state[colorFormat] !== stringify(colorObject, colorFormat)) {
 				merge(
 					state,
 					colorObject,

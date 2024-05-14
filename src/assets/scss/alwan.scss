@@ -408,6 +408,7 @@
 		border-radius: $preset-button-border-radius;
 		border: $preset-button-border;
 		outline: $preset-button-outline;
+		flex-shrink: 0;
 
 		&:focus,
 		&:focus-visible {

@@ -61,7 +61,7 @@ export const Inputs = (alwan: Alwan): IInputs => {
 			isSingle
 				? <string>color[format]
 				: stringify(<RGBA | HSLA>color, format),
-			false,
+			true,
 		);
 	};
 

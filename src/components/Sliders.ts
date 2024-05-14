@@ -31,7 +31,6 @@ export const Sliders = ({ _color: colorState, _events }: Alwan): ISliders => {
 			} else {
 				colorState._value.a = 1;
 			}
-
 			setAttribute(hueSlider, ARIA_LABEL, sliders.hue);
 			setAttribute(alphaSlider, ARIA_LABEL, sliders.alpha);
 
