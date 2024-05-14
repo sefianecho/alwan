@@ -7,7 +7,7 @@ import {
     OPEN,
     RGB_FORMAT,
 } from '../constants/globals';
-import { createPopover } from '../lib/popover';
+import { createPopover } from '../popover';
 import type { HTMLElementHasDisabled, IPopover, alwanApp, alwanConfig } from '../types';
 import {
     BODY_ELE,
@@ -178,7 +178,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                 (config.toggle || forced)
             ) {
                 if (state && popoverInstance) {
-                    popoverInstance._update();
+                    popoverInstance._reposition();
                 }
                 isOpen = state;
                 toggleClassName(root, OPEN_CLASSNAME, state);
@@ -195,7 +195,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
          */
         _reposition() {
             if (popoverInstance) {
-                popoverInstance._update();
+                popoverInstance._reposition();
             }
         },
 

@@ -313,7 +313,7 @@ export interface alwanApp {
 }
 
 export interface IPopover {
-    _update(): void;
+    _reposition(): void;
     _destroy(): void;
 }
 

@@ -235,31 +235,8 @@ export const translate = (element: HTMLElement, x: number, y: number) => {
     element.style.transform = `translate(${x}px,${y}px)`;
 };
 
-/**
- * Gets overflow ancestor of an element (body element is not included).
- *
- * @param {Element} element - Element.
- * @param {array<Element|Document>} ancestors - Array of overflow ancestors.
- * @returns {array<Element|Document>}
- */
-export const getOverflowAncestors = (
-    element: Element | null,
-    ancestors: Array<Document | Element> = [ROOT]
-): typeof ancestors => {
-    if (element) {
-        element = element.parentElement;
-    }
-
-    if (!element || element === BODY_ELE) {
-        return ancestors;
-    }
-
-    if (/auto|scroll|overflow|clip|hidden/.test(getComputedStyle(element).overflow)) {
-        ancestors.push(element);
-    }
-
-    return getOverflowAncestors(element, ancestors);
-};
+export const getParentElement = (element: Element | Document) =>
+    element && element.parentElement || DOC_ELEMENT;
 
 /**
  * Gets element's bounding rect.
@@ -267,7 +244,7 @@ export const getOverflowAncestors = (
  * @param element - Element.
  * @returns - Element's bounds.
  */
-export const getBounds = (element: Document | Element): DOMRectArray => {
+export const getBounds = (element: Document | Element, addClientArea?: boolean): DOMRectArray => {
     let x, y, width, height, right, bottom;
 
     if (!isElement(element)) {
@@ -276,23 +253,11 @@ export const getBounds = (element: Document | Element): DOMRectArray => {
         height = bottom = DOC_ELEMENT.clientHeight;
     } else {
         ({ x, y, width, height, right, bottom } = element.getBoundingClientRect());
+        if (addClientArea) {
+            x += element.clientTop;
+            y += element.clientLeft;
+        }
     }
 
     return [x, y, width, height, right, bottom];
-};
-
-/**
- * Checks if target element is in the viewport.
- *
- * @param target - Element to check its visibility.
- * @param overflowAncestors - Overflow ancestors of the target.
- * @returns - Is element in the viewport.
- */
-export const isInViewport = (target: Element, overflowAncestors: Array<Element | Document>) => {
-    return overflowAncestors.every((ancestor) => {
-        const [x, y, , , right, bottom] = getBounds(target);
-        const [ancestorX, ancestorY, , , ancestorRight, ancestorBottom] = getBounds(ancestor);
-
-        return y < ancestorBottom && bottom > ancestorY && x < ancestorRight && right > ancestorX;
-    });
 };
