@@ -37,7 +37,7 @@ export const Sliders = ({ _color: colorState, _events }: Alwan): ISliders => {
                  */
                 addEvent(alphaSlider, INPUT, () => colorState._update({ a: +alphaSlider!.value }));
             } else {
-                colorState._update({ a: 1 });
+                colorState._value.a = 1;
             }
 
             setAttribute(hueSlider, ARIA_LABEL, sliders.hue);

@@ -249,8 +249,19 @@ export type DOMRectArray = [
 export interface alwanValue extends Readonly<colorDetails> {}
 export interface IColorState {
     _value: colorDetails;
-    _update(hsl: Partial<HSLA>, silent?: boolean, ignoreRGB?: boolean): void;
-    _updateAll(silent?: boolean, ignoreRGB?: boolean): void;
+    _setRef(ref: HTMLElement): void;
+    _update(
+        hsl: Partial<HSLA>,
+        silent?: boolean,
+        ignoreRGB?: boolean,
+        updatePaletteAndSliders?: boolean
+    ): void;
+    _setUIElements(
+        root: HTMLElement,
+        palette: IPalette,
+        sliders: ISliders,
+        inputs: IInputs
+    ): void;
     _setColor(
         color: Color,
         silentColorEvent?: boolean,
@@ -304,8 +315,6 @@ export interface IReference extends Component {
 
 export interface alwanApp {
     _setup(options?: alwanOptions): void;
-    _updateUI(state: colorDetails): void;
-    _updateControls(state: colorDetails): void;
     _isOpen(): boolean;
     _toggle(state?: boolean, forced?: boolean): void;
     _reposition(): void;

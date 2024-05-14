@@ -3,9 +3,7 @@ import { Inputs, Palette, Reference, Sliders, Swatches, Utility } from '../compo
 import { ALWAN_CLASSNAME, CONTAINER_CLASSNAME, OPEN_CLASSNAME } from '../constants/classnames';
 import {
     CLOSE,
-    COLOR,
     OPEN,
-    RGB_FORMAT,
 } from '../constants/globals';
 import { createPopover } from '../popover';
 import type { HTMLElementHasDisabled, IPopover, alwanApp, alwanConfig } from '../types';
@@ -17,12 +15,11 @@ import {
     getElements,
     getInteractiveElements,
     removeElement,
-    setCustomProperty,
     setHTML,
     toggleClassName,
 } from '../utils/dom';
 import { isString, isset } from '../utils/is';
-import { deepMerge } from '../utils/object';
+import { deepMerge, merge } from '../utils/object';
 
 /**
  * Creates and initialize components.
@@ -60,7 +57,8 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
 
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
-    let refElement: HTMLElement | SVGAElement;
+
+    colorState._setUIElements(root, palette, sliders, inputs);
 
     return {
         /**
@@ -71,26 +69,25 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
         _setup(options) {
             options = options || {};
             const self = this;
-            const data = root.dataset;
             const { id, color } = options;
             const { theme, parent, toggle, popover, target, disabled } = deepMerge(config, options);
+            const refElement = <HTMLElement>reference._init(config);
             const parentElement = getElements(parent)[0];
             const targetElement = getElements(target)[0];
 
-            // Append the root to the parent element.
-            appendChildren(parentElement || BODY_ELE, root);
+            colorState._setRef(refElement);
+
+            removeElement(root);
             setHTML(root, '');
             appendChildren(root, ...components.map(component => component._init(config)));
 
-            // initialize reference and returns the element.
-            refElement = <HTMLElement | SVGAElement>reference._init(config);
-
             // Set id.
             isString(id) && (root.id = id);
-            // Set theme (dark or light).
-            data.theme = theme;
-            // Set display mode.
-            data.display = popover ? 'popover' : 'block';
+
+            merge(root.dataset, {
+                theme,
+                display: popover ? 'popover' : 'block'
+            });
 
             // If toggle option changed to false, then open (show) the picker
             if (!toggle) {
@@ -104,6 +101,9 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                 popoverInstance._destroy();
                 popoverInstance = null;
             }
+
+            appendChildren(parentElement || BODY_ELE, root);
+
             if (popover) {
                 popoverInstance = createPopover(
                     targetElement || refElement,
@@ -125,8 +125,6 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             // Set color option.
             if (isset(color)) {
                 colorState._setColor(color);
-            } else {
-                colorState._updateAll();
             }
 
             // Disable/Enable color picker.
@@ -140,29 +138,9 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                     self._toggle(true, true);
                 }
             }
-        },
 
-        /**
-         * Updates UI.
-         *
-         * @param state - Color state.
-         */
-        _updateUI(state) {
-            setCustomProperty(refElement, COLOR, state.rgb);
-            setCustomProperty(root, RGB_FORMAT, `${state.r},${state.g},${state.b}`);
-            setCustomProperty(root, 'a', state.a);
-            setCustomProperty(root, 'h', state.h);
-            inputs._setValues(state);
-        },
-
-        /**
-         * Updates the marker position in the palette and sliders values.
-         *
-         * @param param0 - Color state.
-         */
-        _updateControls({ h, a, s, l }) {
-            sliders._setValues(h, a);
-            palette._updateMarker(s, l);
+            // update ui.
+            colorState._update({}, true, true, true);
         },
 
         /**
