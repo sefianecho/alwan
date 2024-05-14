@@ -1,4 +1,4 @@
-export const ALWAN_CLASSNAME = 'alwan';
+export const ALWAN_CLASSNAME = "alwan";
 export const CONTAINER_CLASSNAME = `${ALWAN_CLASSNAME}__container`;
 export const PALETTE_CLASSNAME = `${ALWAN_CLASSNAME}__palette`;
 export const MARKER_CLASSNAME = `${ALWAN_CLASSNAME}__marker`;

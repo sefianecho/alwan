@@ -1,19 +1,20 @@
-@mixin slider-thumb($slider-state: '', $thumb-state: '') {
-    &#{$slider-state}::-webkit-slider-thumb#{$thumb-state} {
-        @content;
-    }
+@mixin slider-thumb($slider-state: "", $thumb-state: "") {
+	&#{$slider-state}::-webkit-slider-thumb#{$thumb-state} {
+		@content;
+	}
 
-    &#{$slider-state}::-moz-range-thumb#{$thumb-state} {
-        @content;
-    }
+	&#{$slider-state}::-moz-range-thumb#{$thumb-state} {
+		@content;
+	}
 }
 
-@mixin slider-track($slider-state: '', $track-state: '') {
-    &#{$slider-state}::-webkit-slider-runnable-track#{$track-state} {
-        @content;
-    }
+@mixin slider-track($slider-state: "", $track-state: "") {
+	&#{$slider-state}::-webkit-slider-runnable-track#{$track-state} {
+		@content;
+	}
 
-    &#{$slider-state}::-moz-range-track#{$track-state} {
-        @content;
-    }
+	&#{$slider-state}::-moz-range-track#{$track-state} {
+		@content;
+	}
 }
+

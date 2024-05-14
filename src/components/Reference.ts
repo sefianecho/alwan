@@ -1,75 +1,69 @@
-import type Alwan from '..';
-import { BUTTON_CLASSNAME, REFERENCE_CLASSNAME } from '../constants/classnames';
-import { CLICK } from '../constants/globals';
-import { addEvent } from '../core/events/binder';
-import type { IReference } from '../types';
-import { BODY_ELE, appendChildren, createButton, isElementInBody, removeElement, replaceElement } from '../utils/dom';
-import { isString } from '../utils/is';
+import type Alwan from "..";
+import { BUTTON_CLASSNAME, REFERENCE_CLASSNAME } from "../constants/classnames";
+import { CLICK } from "../constants/globals";
+import { addEvent } from "../core/events/binder";
+import type { IReference } from "../types";
+import {
+	appendChildren,
+	createButton,
+	getBody,
+	isElementInBody,
+	removeElement,
+	replaceElement,
+} from "../utils/dom";
+import { isString } from "../utils/is";
 
-/**
- * Creates an element that controls (open/close) the color picker.
- *
- * @param alwan - Instance.
- * @param userRef - User reference.
- * @returns - Reference component.
- */
-export const Reference = (alwan: Alwan, userRef: Element | undefined): IReference => {
-    /**
-     * Reference element.
-     */
-    let element: Element = userRef && isElementInBody(userRef) ?  userRef : createButton();
+export const Reference = (
+	alwan: Alwan,
+	userRef: Element | undefined,
+): IReference => {
+	let refElement: Element =
+		userRef && isElementInBody(userRef) ? userRef : createButton();
 
-    if (element !== userRef) {
-        appendChildren(BODY_ELE, element);
-    }
+	if (refElement !== userRef) {
+		appendChildren(getBody(), refElement);
+	}
 
-    /**
-     * Handle click on the reference element.
-     */
-    const handleClick = () => alwan._app._toggle();
+	const handleClick = () => alwan._app._toggle();
 
-    return {
-        /**
-         * Initialize Reference element.
-         *
-         * @param param0 - Alwan config.
-         */
-        _init({ preset, classname }) {
-            // userRef === element means preset button is not set.
-            if (userRef && preset !== (userRef !== element)) {
-                if (preset) {
-                    // Replace user reference with a preset button.
-                    element = replaceElement(userRef, createButton());
-                    if (userRef.id) {
-                        element.id = userRef.id;
-                    }
-                } else {
-                    // Replace preset button with the user reference.
-                    element = replaceElement(element, userRef);
-                }
-            }
+	return {
+		_init({ preset, classname }) {
+			// userRef !== element means preset button is not set.
+			if (userRef && preset !== (userRef !== refElement)) {
+				if (preset) {
+					// Replace user reference with a preset button.
+					refElement = replaceElement(userRef, createButton());
+					if (userRef.id) {
+						refElement.id = userRef.id;
+					}
+				} else {
+					// Replace preset button with the user reference.
+					refElement = replaceElement(refElement, userRef);
+				}
+			}
 
-            addEvent(element, CLICK, handleClick);
+			addEvent(refElement, CLICK, handleClick);
 
-            // Add custom classes to the preset button.
-            if ((!userRef || preset) && isString(classname)) {
-                element.className = (BUTTON_CLASSNAME + REFERENCE_CLASSNAME + classname).trim();
-            }
+			// Add classes to the preset button.
+			if ((!userRef || preset) && isString(classname)) {
+				refElement.className = (
+					BUTTON_CLASSNAME +
+					REFERENCE_CLASSNAME +
+					classname
+				).trim();
+			}
 
-            return element;
-        },
+			return refElement;
+		},
 
-        /**
-         * Destroy reference component.
-         */
-        _destroy() {
-            if (userRef) {
-                if (userRef !== element) {
-                    replaceElement(element, userRef);
-                }
-            } else {
-                removeElement(element);
-            }
-        },
-    };
+		_destroy() {
+			if (userRef) {
+				if (userRef !== refElement) {
+					replaceElement(refElement, userRef);
+				}
+			} else {
+				removeElement(refElement);
+			}
+		},
+	};
 };

@@ -1,9 +1,8 @@
-@use 'sass:math';
+@use "sass:math";
 
 $transparency-pattern-svg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 20 20'><path fill='%23D0D0D0' d='M0 0h10v10H0Z'/><path fill='%23fff' d='M0 10h10v10H0Z'/><path fill='%23D0D0D0' d='M10 10h10v10H10Z'/><path fill='%23fff' d='M10 0h10v10H10Z'/></svg>");
 $box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3);
 $alwan-focus-color: #117ce0;
-
 
 $alwan-max-width: 260px;
 $alwan-popup-z-index: 999999;
@@ -23,7 +22,6 @@ $preset-button-border-radius: 3px;
 $preset-button-border: 3px solid #f5f5f5;
 $preset-button-outline: 1px solid #333;
 
-
 // Palette.
 $palette-height: 136px;
 
@@ -31,7 +29,6 @@ $palette-height: 136px;
 $marker-width: 16px;
 $marker-height: $marker-width;
 $marker-border: 2px solid #fff;
-
 
 // Preview.
 $preview-area-border-width: 1px;
@@ -42,7 +39,6 @@ $preview-border-radius: 5px;
 
 // Slider.
 $alpha-slider-margin-top: 14px;
-
 
 // Track.
 $slider-track-height: 15px;
@@ -79,3 +75,4 @@ $swatch-button-border-radius: 3px;
 
 // Swatches toggle button.
 $swatches-toggle-button-height: 10px;
+

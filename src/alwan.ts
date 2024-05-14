@@ -1,200 +1,124 @@
-import { version } from '../package.json';
-import { alwanDefaults } from './constants/defaults';
-import { createApp } from './core/app';
-import { colorState } from './core/colorState';
-import { Emitter } from './core/events/emitter';
+import { version } from "../package.json";
+import "./assets/scss/alwan.scss";
+import { alwanDefaults } from "./constants/defaults";
+import { createApp } from "./core/app";
+import { colorState } from "./core/colorState";
+import { Emitter } from "./core/events/emitter";
 import type {
-    Color,
-    EventEmitter,
-    IColorState,
-    alwanApp,
-    alwanConfig,
-    alwanEventListener,
-    alwanEventType,
-    alwanOptions,
-    alwanValue,
-} from './types';
-import { isNumber } from './utils/is';
-import { ObjectForEach, deepMerge, prototype, setPrototypeOf } from './utils/object';
-import './assets/scss/alwan.scss';
-/**
- * Alwan color picker.
- */
+	Color,
+	EventEmitter,
+	IColorState,
+	alwanApp,
+	alwanConfig,
+	alwanEventListener,
+	alwanEventType,
+	alwanOptions,
+	alwanValue,
+} from "./types";
+import { isNumber } from "./utils/is";
+import {
+	ObjectForEach,
+	deepMerge,
+	prototype,
+	setPrototypeOf,
+} from "./utils/object";
+
 export class Alwan {
-    /**
-     * @returns package version.
-     */
-    static version() {
-        return version;
-    }
-    /**
-     * Modifies default options for all instances (before instantiation).
-     * @param defaults - Options.
-     */
-    static setDefaults(defaults: alwanOptions) {
-        deepMerge(alwanDefaults, defaults);
-    }
+	static version() {
+		return version;
+	}
 
-    config: alwanConfig;
-    _events: EventEmitter;
-    _color: IColorState;
-    _app: alwanApp;
-    constructor(reference: string | Element, options?: alwanOptions) {
-        this.config = deepMerge({}, alwanDefaults);
-        this._events = Emitter(this);
-        this._color = colorState(this);
-        this._app = createApp(this, reference);
-        this._app._setup(options);
-    }
+	static setDefaults(defaults: alwanOptions) {
+		deepMerge(alwanDefaults, defaults);
+	}
 
-    /**
-     * Sets new options.
-     *
-     * @param options - New options.
-     */
-    setOptions(options: alwanOptions) {
-        this._app._setup(options);
-    }
+	config: alwanConfig;
+	_events: EventEmitter;
+	_color: IColorState;
+	_app: alwanApp;
+	constructor(reference: string | Element, options?: alwanOptions) {
+		this.config = deepMerge({}, alwanDefaults);
+		this._events = Emitter(this);
+		this._color = colorState(this);
+		this._app = createApp(this, reference);
+		this._app._setup(options);
+	}
 
-    /**
-     * Sets a new color.
-     *
-     * @param color - Color.
-     * @returns - Instance.
-     */
-    setColor(color: Color) {
-        this._color._setColor(color);
-        return this;
-    }
+	setOptions(options: alwanOptions) {
+		this._app._setup(options);
+	}
 
-    /**
-     * @returns - Gets color details (value).
-     */
-    getColor(): alwanValue {
-        return { ...this._color._value };
-    }
+	setColor(color: Color) {
+		this._color._setColor(color);
+		return this;
+	}
 
-    /**
-     * @returns the state of the picker whether it's opened or closed.
-     */
-    isOpen() {
-        return this._app._isOpen();
-    }
+	getColor(): alwanValue {
+		return { ...this._color._value };
+	}
 
-    /**
-     * Opens the color picker.
-     */
-    open() {
-        this._app._toggle(true);
-    }
+	isOpen() {
+		return this._app._isOpen();
+	}
 
-    /**
-     * Closes the color picker.
-     */
-    close() {
-        this._app._toggle(false);
-    }
+	open() {
+		this._app._toggle(true);
+	}
 
-    /**
-     * Toggles (open/close) the color picker.
-     */
-    toggle() {
-        this._app._toggle();
-    }
+	close() {
+		this._app._toggle(false);
+	}
 
-    /**
-     * Attaches an event listener.
-     *
-     * @param type - Event type.
-     * @param listener - Event listener (handler).
-     */
-    on(type: alwanEventType, listener: alwanEventListener) {
-        this._events._on(type, listener);
-    }
+	toggle() {
+		this._app._toggle();
+	}
 
-    /**
-     * Detaches one or more event handlers.
-     *
-     * Note:
-     * omitting handler, remove all handlers from the event,
-     * omitting both event type and handler, remove all handlers that are,
-     * attached to all events.
-     *
-     * @param type - Event type.
-     * @param listener - Event listener (handler).
-     */
-    off(type?: alwanEventType, listener?: alwanEventListener) {
-        this._events._off(type, listener);
-    }
+	on(type: alwanEventType, listener: alwanEventListener) {
+		this._events._on(type, listener);
+	}
 
-    /**
-     * Adds color swatches.
-     *
-     * @param swatches - Color swatches.
-     */
-    addSwatches(...swatches: Color[]) {
-        this._app._setup({ swatches: this.config.swatches.concat(swatches) });
-    }
+	off(type?: alwanEventType, listener?: alwanEventListener) {
+		this._events._off(type, listener);
+	}
 
-    /**
-     * Removes color swatches.
-     *
-     * @param swatches - Color swatches or color swatches indexes.
-     */
-    removeSwatches(...swatches: Array<number | Color>) {
-        this._app._setup({
-            swatches: this.config.swatches.filter(
-                (swatch, index) =>
-                    !swatches.some((item) => (isNumber(item) ? +item === index : item === swatch))
-            ),
-        });
-    }
+	addSwatches(...swatches: Color[]) {
+		this._app._setup({ swatches: this.config.swatches.concat(swatches) });
+	}
 
-    /**
-     * Enables the color picker.
-     */
-    enable() {
-        this._app._setup({ disabled: false });
-    }
+	removeSwatches(...swatches: Array<number | Color>) {
+		this._app._setup({
+			swatches: this.config.swatches.filter(
+				(swatch, index) =>
+					!swatches.some((item) =>
+						isNumber(item) ? +item === index : item === swatch,
+					),
+			),
+		});
+	}
 
-    /**
-     * Disables the color picker.
-     */
-    disable() {
-        this._app._setup({ disabled: true });
-    }
+	enable() {
+		this._app._setup({ disabled: false });
+	}
 
-    /**
-     * Resets to default color.
-     */
-    reset() {
-        this._color._setColor(this.config.default);
-    }
+	disable() {
+		this._app._setup({ disabled: true });
+	}
 
-    /**
-     * Repositions picker if it's displayed as a popover.
-     */
-    reposition() {
-        this._app._reposition();
-    }
+	reset() {
+		this._color._setColor(this.config.default);
+	}
 
-    /**
-     * Executes all handlers attached to the specified event.
-     *
-     * @param type - Event type.
-     */
-    trigger(type: alwanEventType) {
-        this._events._emit(type);
-    }
+	reposition() {
+		this._app._reposition();
+	}
 
-    /**
-     * Destroy picker and free up memory.
-     */
-    destroy() {
-        this._app._destroy();
-        // Remove all properties of this instance.
-        ObjectForEach(this, (key) => delete this[key]);
-        // Empty instance prototype.
-        setPrototypeOf(this, prototype);
-    }
+	trigger(type: alwanEventType) {
+		this._events._emit(type);
+	}
+
+	destroy() {
+		this._app._destroy();
+		ObjectForEach(this, (key) => delete this[key]);
+		setPrototypeOf(this, prototype);
+	}
 }

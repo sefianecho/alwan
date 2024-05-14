@@ -12,21 +12,17 @@ export const END = 2;
 // Margin between the popover and the window edges.
 export const GAP = 3;
 
-/**
- * Sides to fallback to for each side.
- */
+// Sides to fallback to for each side.
 export const fallbackSides: Record<side, number[]> = {
-    top: [TOP, BOTTOM, RIGHT, LEFT],
-    bottom: [BOTTOM, TOP, RIGHT, LEFT],
-    right: [RIGHT, LEFT, TOP, BOTTOM],
-    left: [LEFT, RIGHT, TOP, BOTTOM],
+	top: [TOP, BOTTOM, RIGHT, LEFT],
+	bottom: [BOTTOM, TOP, RIGHT, LEFT],
+	right: [RIGHT, LEFT, TOP, BOTTOM],
+	left: [LEFT, RIGHT, TOP, BOTTOM],
 };
 
-/**
- * Alignments to fallback to for each alignment.
- */
+// Alignments to fallback to for each alignment.
 export const fallbackAlignments: Record<alignment, number[]> = {
-    start: [START, CENTER, END],
-    center: [CENTER, START, END],
-    end: [END, CENTER, START],
+	start: [START, CENTER, END],
+	center: [CENTER, START, END],
+	end: [END, CENTER, START],
 };
