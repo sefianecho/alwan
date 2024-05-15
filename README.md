@@ -136,14 +136,15 @@ _You can try these options in the [demo](https://sofianchouaib.github.io/alwan/)
 -   `swatches` (default `[]`) — Array of colors, invalid colors will default to rgb(0,0,0).
 -   `toggleSwatches` (default `false`) — Show/Hide swatches container (Make swatches container collapsible).
 -   `closeOnScroll` (default `false`) — Close color picker when scrolling (only if the color picker is displayed as a popover and can be closed).
+-   `parent` (default `''`) — An HTML Element (or a selector) to set as a parent to the picker, this option behaves the same as the target option if popover is false (the target option takes precedence in this case).
 
-**Note:** In the reference element you can access the css custom property `--color` (`--alwan-color` before v2.0.0) to get color value.
+_**Note:** In the reference element you can access the CSS custom property `--color` (`--alwan-color` before v2.0.0) to get color value_
 
 ### Accessibility (since v1.4)
 
-Unlabeled interactive elements has a ARIA label attribute with a default values in english. You can change these labels in the options by modifying the `i18n` object.
+Unlabeled interactive elements has a ARIA label attribute with a default values in English. You can change these labels in the options by modifying the `i18n` object.
 
-**Note:**: The title attribute of the copy button and the change format button is the same as the ARIA label. and for the swatch button its title is the color value in the swatches array.
+**Note:**: The title attribute of the copy button and the change format button is the same as the ARIA label, and for the swatch button its title is the color value in the swatches array.
 
 ```javascript
 // Labels default values.
