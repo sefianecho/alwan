@@ -49,6 +49,9 @@ export const setAttribute = (
 	}
 };
 
+export const joinClassnames = (...classnames: string[]) =>
+	classnames.join(" ").trim();
+
 export const createElement = <T extends keyof HTMLElementTagNameMap>(
 	tagName: T,
 	className?: string,
@@ -93,15 +96,21 @@ export const createButton = (
 	content?: string,
 	title: string = label,
 ) => {
-	return createElement(BUTTON, BUTTON_CLASSNAME + className, [], content, {
-		type: BUTTON,
-		[ARIA_LABEL]: label,
-		title,
-	});
+	return createElement(
+		BUTTON,
+		joinClassnames(BUTTON_CLASSNAME, className),
+		[],
+		content,
+		{
+			type: BUTTON,
+			[ARIA_LABEL]: label,
+			title,
+		},
+	);
 };
 
 export const createSlider = (classname: string, max: number, step = 1) =>
-	createElement(INPUT, SLIDER_CLASSNAME + classname, [], "", {
+	createElement(INPUT, joinClassnames(SLIDER_CLASSNAME, classname), [], "", {
 		max,
 		step,
 		type: "range",

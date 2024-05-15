@@ -7,6 +7,7 @@ import {
 	appendChildren,
 	createButton,
 	getBody,
+	joinClassnames,
 	removeElement,
 	replaceElement,
 } from "../utils/dom";
@@ -50,10 +51,11 @@ export const Reference = (
 
 			// Add classes to the preset button.
 			if (!userRef || preset) {
-				refElement.className =
-					BUTTON_CLASSNAME +
-					REFERENCE_CLASSNAME +
-					(isString(classname) ? classname.trim() : "");
+				refElement.className = joinClassnames(
+					BUTTON_CLASSNAME,
+					REFERENCE_CLASSNAME,
+					isString(classname) ? classname : "",
+				);
 			}
 
 			return refElement;
