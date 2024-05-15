@@ -1,6 +1,6 @@
 {
   "name": "alwan",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.",
   "main": "./dist/js/alwan.min.js",
   "module": "./dist/js/esm/alwan.min.js",
