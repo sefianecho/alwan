@@ -27,9 +27,11 @@ import { isNumber, isString, isset } from "../utils/is";
 import { abs, round } from "../utils/math";
 import { toArray } from "../utils/object";
 import {
+	BOTTOM,
 	CENTER,
 	END,
 	GAP,
+	HEIGHT,
 	START,
 	fallbackAlignments,
 	fallbackSides,
@@ -134,11 +136,11 @@ export const createPopover = (
 				if (
 					axis &&
 					value === null &&
-					popoverRect[3] > viewportRect[5]
+					popoverRect[HEIGHT] > viewportRect[BOTTOM]
 				) {
 					popoverStyleDeclaration.height =
-						viewportRect[5] - GAP * 2 + "px";
-					popoverRect[3] = viewportRect[5] - GAP;
+						viewportRect[BOTTOM] - GAP * 2 + "px";
+					popoverRect[HEIGHT] = viewportRect[BOTTOM] - GAP;
 				}
 
 				return round(
@@ -152,7 +154,7 @@ export const createPopover = (
 		);
 	};
 
-	const updatePosition = ({ type }: Event) => {
+	const autoUpdatePosition = ({ type }: Event) => {
 		if (_isOpen() || !toggle) {
 			if (isInViewport(target, overflowAncestors)) {
 				if (_isOpen()) {
@@ -227,9 +229,9 @@ export const createPopover = (
 	 */
 	const togglePopoverEvents = (fn: EventListenerBinder) => {
 		overflowAncestors.forEach((ancestor) =>
-			fn(ancestor, SCROLL, updatePosition),
+			fn(ancestor, SCROLL, autoUpdatePosition),
 		);
-		fn(window, RESIZE, updatePosition);
+		fn(window, RESIZE, autoUpdatePosition);
 		fn(ROOT, KEY_DOWN, handleKeyboard);
 		fn(ROOT, POINTER_DOWN, handleBackdropClick);
 		if (shadowRoot) {

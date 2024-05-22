@@ -3,6 +3,8 @@ import { alignment, side } from "../types";
 // Indexes in the DOMRectArray.
 export const LEFT = 0; // Also the x coordinate.
 export const TOP = 1; // Also the y coordinate.
+export const WIDTH = 2;
+export const HEIGHT = 3;
 export const RIGHT = 4;
 export const BOTTOM = 5;
 
