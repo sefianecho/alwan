@@ -161,3 +161,13 @@ export const getBoundingRectArray = (
 
 	return [x, y, width, height, right, bottom];
 };
+
+export const getShadowRoot = (node: Node | null): ShadowRoot | null => {
+	if (!node || node === getBody()) {
+		return null;
+	}
+	if (node instanceof ShadowRoot) {
+		return node;
+	}
+	return getShadowRoot(node.parentNode);
+};

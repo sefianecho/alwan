@@ -1,6 +1,6 @@
 import type Alwan from "..";
 import { BUTTON_CLASSNAME, REFERENCE_CLASSNAME } from "../constants/classnames";
-import { CLICK } from "../constants/globals";
+import { CLICK, DOC_ELEMENT } from "../constants/globals";
 import { addEvent, removeEvent } from "../core/events/binder";
 import type { IReference } from "../types";
 import {
@@ -20,7 +20,7 @@ export const Reference = (
 	let refElement: Element;
 	const body = getBody();
 	const userRef =
-		element && element !== body && body.contains(element) ? element : null;
+		element && element !== body && element !== DOC_ELEMENT ? element : null;
 
 	const handleClick = () => alwan._app._toggle();
 

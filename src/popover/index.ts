@@ -20,6 +20,7 @@ import type {
 import {
 	getBoundingRectArray,
 	getInteractiveElements,
+	getShadowRoot,
 	translate,
 } from "../utils/dom";
 import { isNumber, isString, isset } from "../utils/is";
@@ -51,6 +52,7 @@ export const createPopover = (
 		fallbackAlignments[alignment] || fallbackAlignments.center;
 	const overflowAncestors = getOverflowAncestors(target);
 	const popoverStyleDeclaration = popoverElement.style;
+	const shadowRoot = getShadowRoot(alwanReferenceElement);
 
 	const setPosition = () => {
 		popoverStyleDeclaration.height = "";
@@ -208,6 +210,8 @@ export const createPopover = (
 	const handleBackdropClick = ({ target }: Event) => {
 		if (
 			_isOpen() &&
+			// Alwan reference element in a shadow dom and target is the shadow root.
+			(!shadowRoot || target !== shadowRoot.host) &&
 			target !== alwanReferenceElement &&
 			!popoverElement.contains(target as Node) &&
 			!toArray((<LabeledElement>alwanReferenceElement).labels || []).some(
@@ -228,6 +232,9 @@ export const createPopover = (
 		fn(window, RESIZE, updatePosition);
 		fn(ROOT, KEY_DOWN, handleKeyboard);
 		fn(ROOT, POINTER_DOWN, handleBackdropClick);
+		if (shadowRoot) {
+			fn(shadowRoot, POINTER_DOWN, handleBackdropClick);
+		}
 	};
 
 	togglePopoverEvents(addEvent);
