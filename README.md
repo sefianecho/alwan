@@ -36,7 +36,7 @@ A simple, lightweight, customizable, touch friendly color picker, written in van
 
 ## Demo
 
-[Click here to try it](https://sofianchouaib.github.io/alwan/)
+[Click here to try it](https://sefianecho.github.io/alwan/)
 
 ## Getting started
 
