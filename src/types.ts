@@ -299,7 +299,7 @@ export type EventBinder = <T extends EventTarget, U extends keyof EventMap>(
 
 // Components.
 export interface Component {
-    _init(config: alwanConfig): Element | null;
+    _init(config: alwanConfig): Element | null | undefined;
 }
 
 export interface ISelector extends Component {

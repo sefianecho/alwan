@@ -113,7 +113,7 @@
 		border-radius: $preview-border-radius;
 		flex-shrink: 0;
 
-		& .alwan__copy-button {
+		& .alwan__cp {
 			position: relative;
 			display: flex;
 			justify-content: center;
@@ -417,7 +417,7 @@
 		}
 	}
 
-	&__copy-button {
+	&__cp {
 		margin-right: $preview-area-margin-right;
 	}
 

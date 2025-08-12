@@ -23,6 +23,7 @@ export const CHANGE = "change";
 export const BLUR = "blur";
 export const FOCUS_IN = "focusin";
 export const MOUSE_OUT = "mouseout";
+export const MOUSE_LEAVE = "mouseleave";
 export const WHEEL = "wheel";
 
 export const HEX_FORMAT: colorFormat = "hex";

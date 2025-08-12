@@ -188,3 +188,8 @@ export const getShadowRoot = (node: Node | null): ShadowRoot | null => {
 
 export const createContainer = (children: Array<Element | null>) =>
     createDivElement("alwan__container", children);
+
+export const setElementVisibility = (
+    element: HTMLElement | SVGElement,
+    hidden?: boolean,
+) => (element.style.display = hidden ? "none" : "");
