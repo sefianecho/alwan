@@ -286,11 +286,14 @@ export interface EventEmitter {
     _on(type: alwanEventType, listener: alwanEventListener): void;
     _off(type?: alwanEventType, listener?: alwanEventListener): void;
 }
-
-export type EventListenerBinder = (
-    target: EventTarget,
-    type: string,
-    listener: EventListenerOrEventListenerObject,
+type EventMap = DocumentEventMap &
+    HTMLElementEventMap &
+    ShadowRootEventMap &
+    WindowEventMap;
+export type EventBinder = <T extends EventTarget, U extends keyof EventMap>(
+    target: T,
+    type: U,
+    listener: (e: EventMap[U]) => void,
     options?: boolean | AddEventListenerOptions,
 ) => void;
 

@@ -1,11 +1,7 @@
-import type { EventListenerBinder } from "../../types";
+import type { EventBinder } from "../../types";
 
-export const addEvent: EventListenerBinder = (
-	target,
-	type,
-	listener,
-	options,
-) => target.addEventListener(type, listener, options);
+export const addEvent: EventBinder = (target, type, listener, options) =>
+    target.addEventListener(type, listener as EventListener, options);
 
-export const removeEvent: EventListenerBinder = (target, type, listener) =>
-	target.removeEventListener(type, listener);
+export const removeEvent: EventBinder = (target, type, listener) =>
+    target.removeEventListener(type, listener as EventListener);
