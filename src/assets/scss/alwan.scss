@@ -375,7 +375,7 @@
 			);
 		}
 
-		&:focus-visible:not(.alwan__reference) {
+		&:focus-visible:not(.alwan__ref) {
 			border-color: $alwan-focus-color;
 		}
 
@@ -402,7 +402,7 @@
 		}
 	}
 
-	&__reference {
+	&__ref {
 		width: $preset-button-width;
 		height: $preset-button-height;
 		border-radius: $preset-button-border-radius;
@@ -437,7 +437,7 @@
 
 	&__swatch,
 	&__preview,
-	&__reference {
+	&__ref {
 		position: relative;
 		background: var(--alwan-pattern);
 		background-clip: padding-box;

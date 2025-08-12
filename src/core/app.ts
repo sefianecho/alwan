@@ -1,9 +1,9 @@
 import type Alwan from "..";
 import { createComponents, renderComponents } from "../components";
-import { Reference } from "../components/Reference";
 import { ALWAN_CLASSNAME, OPEN_CLASSNAME } from "../constants/classnames";
-import { CLOSE, OPEN } from "../constants/globals";
+import { CLICK, CLOSE, OPEN } from "../constants/globals";
 import { createPopover } from "../popover";
+import { getRef } from "../ref";
 import type {
     HTMLElementHasDisabled,
     IInputs,
@@ -21,21 +21,25 @@ import {
     getElements,
     getInteractiveElements,
     removeElement,
+    replaceElement,
     setInnerHTML,
     toggleClassName,
 } from "../utils/dom";
 import { isString, isset } from "../utils/is";
 import { deepMerge, merge } from "../utils/object";
+import { addEvent, removeEvent } from "./events/binder";
 
-export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
+export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
     const { config, _color: colorState } = alwan;
     const root = createDivElement(ALWAN_CLASSNAME);
-    const reference = Reference(alwan, getElements(ref)[0]);
+    const handleClick = () => alwan.toggle();
+    // const reference = Reference(alwan, getElements(ref)[0]);
     const [palette, utility, sliders, inputs, swatches] = createComponents(
         alwan,
     ) as [IPalette, IUtility, ISliders, IInputs, ISwatches];
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
+    let ref: HTMLElement | SVGElement;
 
     colorState._setUIElements(root, palette, sliders, inputs);
 
@@ -46,11 +50,16 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             const { id, color } = options;
             const { theme, parent, toggle, popover, target, disabled } =
                 deepMerge(config, options);
-            const refElement = <HTMLElement>reference._init(config);
+            // const refElement = <HTMLElement>reference._init(config);
             const parentElement = getElements(parent)[0];
             const targetElement = getElements(target)[0];
 
-            colorState._setRef(refElement);
+            ref = getRef(ref || userRef, userRef, config) as
+                | HTMLElement
+                | SVGElement;
+            addEvent(ref, CLICK, handleClick);
+
+            colorState._setRef(ref);
 
             removeElement(root);
             setInnerHTML(root, "");
@@ -69,7 +78,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             });
 
             // Hide reference element if both toggle and popover options are set to false,
-            refElement.style.display = popover || toggle ? "" : "none";
+            ref.style.display = popover || toggle ? "" : "none";
 
             if (popoverInstance) {
                 popoverInstance._destroy();
@@ -78,9 +87,9 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             if (popover) {
                 appendChildren(parentElement || getBody(), root);
                 popoverInstance = createPopover(
-                    targetElement || refElement,
+                    targetElement || ref,
                     root,
-                    refElement,
+                    ref,
                     config,
                     self,
                 );
@@ -90,7 +99,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
                 if (targetElement || parentElement) {
                     appendChildren(targetElement || parentElement, root);
                 } else {
-                    refElement.after(root);
+                    ref.after(root);
                 }
             }
 
@@ -99,7 +108,7 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             }
 
             // Disable/Enable color picker.
-            [refElement, ...getInteractiveElements(root)].forEach(
+            [ref, ...getInteractiveElements(root)].forEach(
                 (element) =>
                     ((element as HTMLElementHasDisabled).disabled = !!disabled),
             );
@@ -147,7 +156,12 @@ export const createApp = (alwan: Alwan, ref: string | Element): alwanApp => {
             if (popoverInstance) {
                 popoverInstance._destroy();
             }
-            reference._destroy();
+            if (userRef) {
+                removeEvent(userRef, CLICK, handleClick);
+                replaceElement(userRef, ref);
+            } else {
+                removeElement(ref);
+            }
         },
     };
 };

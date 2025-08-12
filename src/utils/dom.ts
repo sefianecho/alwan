@@ -86,7 +86,9 @@ export const createDivElement = (
 export const removeElement = (element: Element) => element.remove();
 
 export const replaceElement = (element: Element, replacement: Element) => {
-    element.replaceWith(replacement);
+    if (element && element !== replacement) {
+        element.replaceWith(replacement);
+    }
     return replacement;
 };
 
@@ -95,6 +97,7 @@ export const createButton = (
     className: string = "",
     content?: string,
     title: string = label,
+    attrs: Attrs = {},
 ) => {
     return createElement(
         BUTTON,
@@ -105,6 +108,7 @@ export const createButton = (
             type: BUTTON,
             [ARIA_LABEL]: label,
             title,
+            ...attrs,
         },
     );
 };
