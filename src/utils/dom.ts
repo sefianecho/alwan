@@ -8,7 +8,7 @@ import {
 } from "../constants/globals";
 import type { Attrs, DOMRectArray } from "../types";
 import { isElement, isNumber, isString } from "./is";
-import { ObjectForEach, toArray } from "./object";
+import { ObjectForEach, isArray, toArray } from "./object";
 
 export const getBody = () => ROOT.body;
 
@@ -55,33 +55,44 @@ export const joinClassnames = (...classnames: string[]) =>
 export const createElement = <T extends keyof HTMLElementTagNameMap>(
     tagName: T,
     className?: string,
-    children: Array<Element | null> = [],
-    content?: string,
-    attributes?: Attrs,
+    content: string | Element | null | Array<Element | null> = "",
+    attributes: Attrs = {},
+    ariaLabel?: string,
 ) => {
     const element = ROOT.createElement(tagName);
 
     if (className) {
-        element.className = className;
+        element.className = className.trim();
     }
 
     if (content) {
-        setInnerHTML(element, content);
+        if (isString(content)) {
+            element.innerHTML = content;
+        } else {
+            element.append(
+                ...((isArray(content) ? content : [content]) as Node[]).filter(
+                    (child) => child,
+                ),
+            );
+        }
     }
 
-    ObjectForEach(attributes || {}, (name, value) =>
-        setAttribute(element, name, value),
+    ObjectForEach(
+        ariaLabel ? { ...attributes, "aria-label": ariaLabel } : attributes,
+        (name, value) => setAttribute(element, name, value),
     );
-
-    appendChildren(element, ...children);
 
     return element;
 };
 
 export const createDivElement = (
-    classname: string,
-    ...children: Array<Element | null>
-) => createElement("div", classname, children);
+    ...args: [
+        className?: string,
+        content?: Element | null | string | Array<Element | null>,
+        attrs?: Attrs,
+        ariaLabel?: string,
+    ]
+) => createElement("div", ...args);
 
 export const removeElement = (element: Element) => element.remove();
 
@@ -102,7 +113,6 @@ export const createButton = (
     return createElement(
         BUTTON,
         joinClassnames(BUTTON_CLASSNAME, className),
-        [],
         content,
         {
             type: BUTTON,
@@ -114,7 +124,7 @@ export const createButton = (
 };
 
 export const createSlider = (classname: string, max: number, step = 1) =>
-    createElement(INPUT, joinClassnames(SLIDER_CLASSNAME, classname), [], "", {
+    createElement(INPUT, joinClassnames(SLIDER_CLASSNAME, classname), "", {
         max,
         step,
         type: "range",
@@ -177,4 +187,4 @@ export const getShadowRoot = (node: Node | null): ShadowRoot | null => {
 };
 
 export const createContainer = (children: Array<Element | null>) =>
-    createDivElement("alwan__container", ...children);
+    createDivElement("alwan__container", children);

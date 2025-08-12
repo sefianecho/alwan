@@ -25,7 +25,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
     const { config, _color: colorState } = alwan;
     const root = createDivElement(ALWAN_CLASSNAME);
     const handleClick = () => alwan.toggle();
-    const [palette, utility, sliders, inputs, swatches] =
+    const [selector, utility, sliders, inputs, swatches] =
         createComponents(alwan);
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
@@ -47,7 +47,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
         // On setcolor.
         ({ a, h, s, l }) => {
             sliders._setValues(h, a);
-            palette._updateMarker(s, l);
+            selector._updateCursor(s, l);
         },
     );
 
@@ -72,7 +72,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             appendChildren(
                 root,
                 ...renderComponents(
-                    [palette, [utility, sliders], inputs, swatches],
+                    [selector, [utility, sliders], inputs, swatches],
                     config,
                 ),
             );

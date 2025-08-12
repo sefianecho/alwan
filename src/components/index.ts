@@ -2,7 +2,7 @@ import { Alwan } from "../alwan";
 import type {
     Component,
     IInputs,
-    IPalette,
+    ISelector,
     ISliders,
     ISwatches,
     IUtility,
@@ -11,15 +11,15 @@ import type {
 import { createContainer } from "../utils/dom";
 import { isArray } from "../utils/object";
 import { Inputs } from "./Inputs";
-import { Palette } from "./Palette";
+import { Selector } from "./Selector";
 import { Sliders } from "./Sliders";
 import { Swatches } from "./Swatches";
 import { Utility } from "./Utility";
 
 export const createComponents = (alwan: Alwan) =>
-    [Palette, Utility, Sliders, Inputs, Swatches].map<Component>((component) =>
+    [Selector, Utility, Sliders, Inputs, Swatches].map<Component>((component) =>
         component(alwan),
-    ) as [IPalette, IUtility, ISliders, IInputs, ISwatches];
+    ) as [ISelector, IUtility, ISliders, IInputs, ISwatches];
 
 export const renderComponents = (
     components: Array<Component | Component[]>,

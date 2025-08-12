@@ -75,9 +75,9 @@
 		}
 	}
 
-	&__palette {
+	&__selector {
 		overflow: hidden;
-		height: $palette-height;
+		height: $selector-height;
 		outline: 0;
 		touch-action: none;
 		user-select: none;
@@ -85,20 +85,20 @@
 		background: linear-gradient(to bottom, transparent, #000),
 			linear-gradient(to right, #fff, hsl(var(--h, 0), 100%, 50%));
 
-		&:focus .alwan__marker {
+		&:focus .alwan__cursor {
 			box-shadow: 0 0 1px 2px $alwan-focus-color;
 		}
 	}
 
-	&__marker {
+	&__cursor {
 		position: relative;
-		top: math.div($marker-height, 2) * -1;
-		left: math.div($marker-width, 2) * -1;
-		width: $marker-width;
-		height: $marker-height;
+		top: math.div($cursor-height, 2) * -1;
+		left: math.div($cursor-width, 2) * -1;
+		width: $cursor-width;
+		height: $cursor-height;
 		border-radius: 100%;
 		background: transparent;
-		border: $marker-border;
+		border: $cursor-border;
 		box-shadow: $box-shadow;
 		cursor: grab;
 		cursor: -webkit-grab;
@@ -419,20 +419,6 @@
 
 	&__copy-button {
 		margin-right: $preview-area-margin-right;
-	}
-
-	&__backdrop {
-		&::before {
-			content: "";
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			z-index: 9999999999;
-			cursor: grabbing;
-			cursor: -webkit-grabbing;
-		}
 	}
 
 	&__swatch,

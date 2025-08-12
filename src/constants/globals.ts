@@ -34,27 +34,19 @@ export const ESCAPE = "Escape";
 export const ENTER = "Enter";
 
 export const COLOR_FORMATS: colorFormat[] = [
-	HEX_FORMAT,
-	RGB_FORMAT,
-	HSL_FORMAT,
+    HEX_FORMAT,
+    RGB_FORMAT,
+    HSL_FORMAT,
 ];
 
 export const ARIA_LABEL = "aria-label";
 
-// Arrow keys move steps.
-export const ARROW_KEYS: Record<string, [x: number, y: number]> = {
-	ArrowUp: [0, -1],
-	ArrowDown: [0, 1],
-	ArrowRight: [1, 0],
-	ArrowLeft: [-1, 0],
-};
-
 export const ANGLE_COEFFICIENT_MAP: { [angle: string]: number } = {
-	deg: 1,
-	turn: 360,
-	rad: 180 / PI,
-	grad: 0.9,
+    deg: 1,
+    turn: 360,
+    rad: 180 / PI,
+    grad: 0.9,
 };
 
 export const HSL_REGEX =
-	/^hsla?\(\s*([+-]?\d*\.?\d+)(\w*)?\s*[\s,]\s*([+-]?\d*\.?\d+)%?\s*,?\s*([+-]?\d*\.?\d+)%?(?:\s*[\/,]\s*([+-]?\d*\.?\d+)(%)?)?\s*\)?$/;
+    /^hsla?\(\s*([+-]?\d*\.?\d+)(\w*)?\s*[\s,]\s*([+-]?\d*\.?\d+)%?\s*,?\s*([+-]?\d*\.?\d+)%?(?:\s*[\/,]\s*([+-]?\d*\.?\d+)(%)?)?\s*\)?$/;

@@ -6,15 +6,11 @@ import { CHANGE, COLOR, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import type {
     HSLA,
     IColorState,
-    IInputs,
-    IPalette,
-    ISliders,
     RGBA,
     colorDetails,
     colorFormat,
     colorStateHook,
 } from "../types";
-import { setCustomProperty } from "../utils/dom";
 import { round } from "../utils/math";
 import { merge } from "../utils/object";
 
@@ -38,11 +34,6 @@ export const colorState = (alwan: Alwan): IColorState => {
     const emitEvent = alwan._events._emit;
     let onUpdate: colorStateHook;
     let onSetColor: colorStateHook;
-    let referenceElement: HTMLElement;
-    let rootElement: HTMLElement;
-    let paletteComponent: IPalette;
-    let slidersComponent: ISliders;
-    let inputsComponent: IInputs;
     let currentFormat: colorFormat;
     let cashedColor: string;
 
@@ -95,7 +86,7 @@ export const colorState = (alwan: Alwan): IColorState => {
                     colorObject,
                     isRGB ? RGBToHSL(<RGBA>colorObject) : {},
                 );
-                this._update({}, triggerColorEvent, isRGB, true);
+                this._update({}, triggerColorEvent, isRGB);
                 onSetColor(state);
 
                 if (triggerChangeEvent) {

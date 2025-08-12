@@ -302,8 +302,8 @@ export interface Component {
     _init(config: alwanConfig): Element | null;
 }
 
-export interface IPalette extends Component {
-    _updateMarker(s: number, l: number): void;
+export interface ISelector extends Component {
+    _updateCursor(s: number, l: number): void;
 }
 export interface IUtility extends Component {}
 export interface ISliders extends Component {
