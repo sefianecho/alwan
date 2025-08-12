@@ -4,138 +4,117 @@ import { parseColor } from "../colors/parser";
 import { stringify } from "../colors/stringify";
 import { CHANGE, COLOR, HSL_FORMAT, RGB_FORMAT } from "../constants/globals";
 import type {
-	HSLA,
-	IColorState,
-	IInputs,
-	IPalette,
-	ISliders,
-	RGBA,
-	colorDetails,
-	colorFormat,
+    HSLA,
+    IColorState,
+    IInputs,
+    IPalette,
+    ISliders,
+    RGBA,
+    colorDetails,
+    colorFormat,
+    colorStateHook,
 } from "../types";
 import { setCustomProperty } from "../utils/dom";
 import { round } from "../utils/math";
 import { merge } from "../utils/object";
 
 export const colorState = (alwan: Alwan): IColorState => {
-	const state: colorDetails = {
-		h: 0,
-		s: 0,
-		l: 0,
+    const state: colorDetails = {
+        h: 0,
+        s: 0,
+        l: 0,
 
-		r: 0,
-		g: 0,
-		b: 0,
+        r: 0,
+        g: 0,
+        b: 0,
 
-		a: 1,
+        a: 1,
 
-		rgb: "",
-		hsl: "",
-		hex: "",
-	};
-	const config = alwan.config;
-	const emitEvent = alwan._events._emit;
-	let referenceElement: HTMLElement;
-	let rootElement: HTMLElement;
-	let paletteComponent: IPalette;
-	let slidersComponent: ISliders;
-	let inputsComponent: IInputs;
-	let currentFormat: colorFormat;
-	let cashedColor: string;
+        rgb: "",
+        hsl: "",
+        hex: "",
+    };
+    const config = alwan.config;
+    const emitEvent = alwan._events._emit;
+    let onUpdate: colorStateHook;
+    let onSetColor: colorStateHook;
+    let referenceElement: HTMLElement;
+    let rootElement: HTMLElement;
+    let paletteComponent: IPalette;
+    let slidersComponent: ISliders;
+    let inputsComponent: IInputs;
+    let currentFormat: colorFormat;
+    let cashedColor: string;
 
-	return {
-		_value: state,
+    return {
+        _value: state,
 
-		_getColorString: () => state[currentFormat],
+        _getColorString: () => state[currentFormat],
+        _setHooks(onUpdateFn, onSetColorFn) {
+            onUpdate = onUpdateFn;
+            onSetColor = onSetColorFn;
+        },
 
-		_setFormat(format) {
-			currentFormat = config.format = format;
-		},
+        _setFormat(format) {
+            currentFormat = config.format = format;
+        },
 
-		_setRef(ref) {
-			referenceElement = ref;
-		},
+        _update(hsl, triggerColorEvent = true, ignoreRGB) {
+            const previousHex = state.hex;
 
-		_setUIElements(root, palette, sliders, inputs) {
-			rootElement = root;
-			paletteComponent = palette;
-			slidersComponent = sliders;
-			inputsComponent = inputs;
-		},
+            merge(state, hsl);
+            !ignoreRGB && merge(state, HSLToRGB(state));
 
-		_update(
-			hsl,
-			triggerColorEvent = true,
-			ignoreRGB,
-			updatePaletteAndSliders,
-		) {
-			const previousHex = state.hex;
+            state.s = round(state.s);
+            state.l = round(state.l);
 
-			merge(state, hsl);
-			!ignoreRGB && merge(state, HSLToRGB(state));
+            state.rgb = stringify(state);
+            state.hsl = stringify(state, HSL_FORMAT);
+            state.hex = RGBToHEX(state);
 
-			state.s = round(state.s);
-			state.l = round(state.l);
+            onUpdate(state);
 
-			state.rgb = stringify(state);
-			state.hsl = stringify(state, HSL_FORMAT);
-			state.hex = RGBToHEX(state);
+            if (triggerColorEvent && previousHex !== state.hex) {
+                emitEvent(COLOR, state);
+            }
+        },
 
-			setCustomProperty(referenceElement, COLOR, state.rgb);
-			setCustomProperty(
-				rootElement,
-				RGB_FORMAT,
-				`${state.r},${state.g},${state.b}`,
-			);
-			setCustomProperty(rootElement, "a", state.a);
-			setCustomProperty(rootElement, "h", state.h);
-			inputsComponent._setValues(state);
+        _setColor(color, triggerColorEvent = false, triggerChangeEvent) {
+            const [colorObject, colorFormat] = <[RGBA | HSLA, colorFormat]>(
+                parseColor(color)
+            );
+            const isRGB = colorFormat === RGB_FORMAT;
 
-			if (updatePaletteAndSliders) {
-				slidersComponent._setValues(state.h, state.a);
-				paletteComponent._updateMarker(state.s, state.l);
-			}
+            if (!config.opacity) {
+                colorObject.a = 1;
+            }
 
-			if (triggerColorEvent && previousHex !== state.hex) {
-				emitEvent(COLOR, state);
-			}
-		},
+            if (state[colorFormat] !== stringify(colorObject, colorFormat)) {
+                merge(
+                    state,
+                    colorObject,
+                    isRGB ? RGBToHSL(<RGBA>colorObject) : {},
+                );
+                this._update({}, triggerColorEvent, isRGB, true);
+                onSetColor(state);
 
-		_setColor(color, triggerColorEvent = false, triggerChangeEvent) {
-			const [colorObject, colorFormat] = <[RGBA | HSLA, colorFormat]>(
-				parseColor(color)
-			);
-			const isRGB = colorFormat === RGB_FORMAT;
+                if (triggerChangeEvent) {
+                    emitEvent(CHANGE, state);
+                }
+            }
+        },
 
-			if (!config.opacity) {
-				colorObject.a = 1;
-			}
+        _cache() {
+            cashedColor = state[currentFormat];
+        },
 
-			if (state[colorFormat] !== stringify(colorObject, colorFormat)) {
-				merge(
-					state,
-					colorObject,
-					isRGB ? RGBToHSL(<RGBA>colorObject) : {},
-				);
-				this._update({}, triggerColorEvent, isRGB, true);
-
-				if (triggerChangeEvent) {
-					emitEvent(CHANGE, state);
-				}
-			}
-		},
-
-		_cache() {
-			cashedColor = state[currentFormat];
-		},
-
-		/**
-		 * Emit change event if the color have changed compared to the cashed color.
-		 */
-		_change() {
-			if (cashedColor !== state[currentFormat]) {
-				emitEvent(CHANGE, state);
-			}
-		},
-	};
+        /**
+         * Emit change event if the color have changed compared to the cashed color.
+         */
+        _change() {
+            if (cashedColor !== state[currentFormat]) {
+                emitEvent(CHANGE, state);
+            }
+        },
+    };
 };

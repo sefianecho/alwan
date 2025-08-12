@@ -250,23 +250,17 @@ export type DOMRectArray = [
     bottom: number,
 ];
 
+export type colorStateHook = (color: colorDetails) => void;
 export interface alwanValue extends Readonly<colorDetails> {}
 export interface IColorState {
     _value: colorDetails;
+    _setHooks(onUpdate: colorStateHook, onColorSet: colorStateHook): void;
     _getColorString(): string;
     _setFormat(format: colorFormat): void;
-    _setRef(ref: HTMLElement | SVGElement): void;
-    _setUIElements(
-        root: HTMLElement,
-        palette: IPalette,
-        sliders: ISliders,
-        inputs: IInputs,
-    ): void;
     _update(
         hsl: Partial<HSLA>,
         triggerColorEvent?: boolean,
         ignoreRGB?: boolean,
-        updatePaletteAndSliders?: boolean,
     ): void;
     _setColor(
         color: Color,

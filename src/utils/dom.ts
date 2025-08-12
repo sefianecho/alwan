@@ -121,7 +121,7 @@ export const createSlider = (classname: string, max: number, step = 1) =>
     });
 
 export const setCustomProperty = (
-    element: HTMLElement | SVGAElement | null,
+    element: HTMLElement | SVGElement | null,
     property: string,
     value: string | number,
 ) => {

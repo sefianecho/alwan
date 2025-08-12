@@ -1,19 +1,10 @@
 import type Alwan from "..";
 import { createComponents, renderComponents } from "../components";
 import { ALWAN_CLASSNAME, OPEN_CLASSNAME } from "../constants/classnames";
-import { CLICK, CLOSE, OPEN } from "../constants/globals";
+import { CLICK, CLOSE, COLOR, OPEN, RGB_FORMAT } from "../constants/globals";
 import { createPopover } from "../popover";
 import { getRef } from "../ref";
-import type {
-    HTMLElementHasDisabled,
-    IInputs,
-    IPalette,
-    IPopover,
-    ISliders,
-    ISwatches,
-    IUtility,
-    alwanApp,
-} from "../types";
+import type { HTMLElementHasDisabled, IPopover, alwanApp } from "../types";
 import {
     appendChildren,
     createDivElement,
@@ -22,6 +13,7 @@ import {
     getInteractiveElements,
     removeElement,
     replaceElement,
+    setCustomProperty,
     setInnerHTML,
     toggleClassName,
 } from "../utils/dom";
@@ -33,15 +25,31 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
     const { config, _color: colorState } = alwan;
     const root = createDivElement(ALWAN_CLASSNAME);
     const handleClick = () => alwan.toggle();
-    // const reference = Reference(alwan, getElements(ref)[0]);
-    const [palette, utility, sliders, inputs, swatches] = createComponents(
-        alwan,
-    ) as [IPalette, IUtility, ISliders, IInputs, ISwatches];
+    const [palette, utility, sliders, inputs, swatches] =
+        createComponents(alwan);
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
     let ref: HTMLElement | SVGElement;
 
-    colorState._setUIElements(root, palette, sliders, inputs);
+    colorState._setHooks(
+        // On update.
+        (color) => {
+            setCustomProperty(ref, COLOR, color.rgb);
+            setCustomProperty(root, "a", color.a);
+            setCustomProperty(root, "h", color.h);
+            setCustomProperty(
+                root,
+                RGB_FORMAT,
+                `${color.r},${color.g},${color.b}`,
+            );
+            inputs._setValues(color);
+        },
+        // On setcolor.
+        ({ a, h, s, l }) => {
+            sliders._setValues(h, a);
+            palette._updateMarker(s, l);
+        },
+    );
 
     return {
         _setup(options) {
@@ -50,7 +58,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             const { id, color } = options;
             const { theme, parent, toggle, popover, target, disabled } =
                 deepMerge(config, options);
-            // const refElement = <HTMLElement>reference._init(config);
+
             const parentElement = getElements(parent)[0];
             const targetElement = getElements(target)[0];
 
@@ -58,8 +66,6 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                 | HTMLElement
                 | SVGElement;
             addEvent(ref, CLICK, handleClick);
-
-            colorState._setRef(ref);
 
             removeElement(root);
             setInnerHTML(root, "");
@@ -125,7 +131,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             }
 
             // Update ui.
-            colorState._update({}, false, true, true);
+            colorState._update({}, false, false);
         },
 
         _toggle(state = !isOpen, forced = false) {
