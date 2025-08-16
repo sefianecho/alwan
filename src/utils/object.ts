@@ -1,4 +1,4 @@
-import { isElement, isset } from "./is";
+import { isElement, isset } from ".";
 
 export const { keys, assign: merge, setPrototypeOf, prototype } = Object;
 export const { from: toArray, isArray } = Array;

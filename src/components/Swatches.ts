@@ -10,7 +10,7 @@ import {
     setCustomProperty,
     toggleClassName,
 } from "../utils/dom";
-import { isString } from "../utils/is";
+import { isString } from "../utils";
 import { isArray } from "../utils/object";
 
 export const Swatches = (alwan: Alwan): ISwatches => {

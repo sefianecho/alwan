@@ -1,6 +1,6 @@
 import { version } from "../package.json";
 import "./assets/scss/alwan.scss";
-import { alwanDefaults } from "./constants/defaults";
+import { alwanDefaults } from "./defaults";
 import { createApp } from "./core/app";
 import { colorState } from "./core/colorState";
 import { Emitter } from "./core/events/emitter";
@@ -16,7 +16,7 @@ import type {
     alwanValue,
 } from "./types";
 import { getElements } from "./utils/dom";
-import { isNumber } from "./utils/is";
+import { isNumber } from "./utils";
 import {
     ObjectForEach,
     deepMerge,

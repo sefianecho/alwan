@@ -1,4 +1,3 @@
-export const int = parseInt;
 export const { min, max, abs, round, PI } = Math;
 
 export const clamp = (value: number, end = 100, start = 0) =>

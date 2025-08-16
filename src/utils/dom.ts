@@ -1,6 +1,6 @@
 import { BUTTON, DOC_ELEMENT, INPUT, ROOT } from "../constants";
 import type { Attrs, DOMRectArray } from "../types";
-import { isElement, isNumber, isString } from "./is";
+import { isElement, isNumber, isString } from ".";
 import { ObjectForEach, isArray, toArray } from "./object";
 
 export const getBody = () => ROOT.body;

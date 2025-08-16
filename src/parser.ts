@@ -1,9 +1,9 @@
-import { RGBToHSL } from "./colors/conversions";
+import { RGBToHSL } from "./converter";
 import { DEFAULT_COLOR, HSL_FORMAT, RGB_FORMAT } from "./constants";
 import { stringify } from "./stringify";
 import { Color, HSLA, RGBA } from "./types";
 import { createElement } from "./utils/dom";
-import { isNumber, isString } from "./utils/is";
+import { isNumber, isString } from "./utils";
 import { PI, clamp, normalizeAngle, round, toDecimal } from "./utils/math";
 import { isPlainObject } from "./utils/object";
 

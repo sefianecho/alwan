@@ -1,5 +1,5 @@
 import type Alwan from "..";
-import { HSLToRGB, RGBToHEX } from "../colors/conversions";
+import { HSLToRGB, RGBToHEX } from "../converter";
 import { CHANGE, COLOR } from "../constants";
 import { parseColor } from "../parser";
 import { stringify } from "../stringify";

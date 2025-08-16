@@ -1,6 +1,5 @@
 import type Alwan from "..";
 import { createComponents, renderComponents } from "../components";
-import { ALWAN_CLASSNAME, OPEN_CLASSNAME } from "../constants/classnames";
 import { CLICK, CLOSE, COLOR, OPEN, RGB_FORMAT } from "../constants";
 import { createPopover } from "../popover";
 import { getRef } from "../ref";
@@ -17,13 +16,13 @@ import {
     setInnerHTML,
     toggleClassName,
 } from "../utils/dom";
-import { isString, isset } from "../utils/is";
+import { isString, isset } from "../utils";
 import { deepMerge, merge } from "../utils/object";
 import { addEvent, removeEvent } from "./events/binder";
 
 export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
     const { config, _color: colorState } = alwan;
-    const root = createDivElement(ALWAN_CLASSNAME);
+    const root = createDivElement("alwan");
     const handleClick = () => alwan.toggle();
     const [selector, utility, sliders, inputs, swatches] =
         createComponents(alwan);
@@ -144,7 +143,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                     popoverInstance._reposition();
                 }
                 isOpen = state;
-                toggleClassName(root, OPEN_CLASSNAME, state);
+                toggleClassName(root, "alwan--open", state);
                 alwan._events._emit(isOpen ? OPEN : CLOSE);
             }
         },

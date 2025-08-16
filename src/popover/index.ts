@@ -23,7 +23,7 @@ import {
     getShadowRoot,
     translate,
 } from "../utils/dom";
-import { isNumber, isString, isset } from "../utils/is";
+import { isNumber, isString, isset } from "../utils";
 import { abs, round } from "../utils/math";
 import { toArray } from "../utils/object";
 import {

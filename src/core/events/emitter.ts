@@ -1,7 +1,7 @@
 import Alwan from "../..";
 import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants";
 import type { EventEmitter, alwanEventAndListenersMap } from "../../types";
-import { isFunction, isset } from "../../utils/is";
+import { isFunction, isset } from "../../utils";
 import { ObjectForEach, merge } from "../../utils/object";
 
 export const Emitter = (alwan: Alwan): EventEmitter => {
