@@ -1,11 +1,4 @@
-import { BUTTON_CLASSNAME } from "../constants/classnames";
-import {
-    ARIA_LABEL,
-    BUTTON,
-    DOC_ELEMENT,
-    INPUT,
-    ROOT,
-} from "../constants/globals";
+import { BUTTON, DOC_ELEMENT, INPUT, ROOT } from "../constants";
 import type { Attrs, DOMRectArray } from "../types";
 import { isElement, isNumber, isString } from "./is";
 import { ObjectForEach, isArray, toArray } from "./object";
@@ -115,14 +108,14 @@ export const createButton = (
 ) => {
     return createElement(
         BUTTON,
-        joinClassnames(BUTTON_CLASSNAME, className),
+        "alwan__button " + className,
         content,
         {
             type: BUTTON,
-            [ARIA_LABEL]: label,
             title,
             ...attrs,
         },
+        label,
     );
 };
 

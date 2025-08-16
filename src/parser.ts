@@ -1,5 +1,5 @@
 import { RGBToHSL } from "./colors/conversions";
-import { DEFAULT_COLOR, HSL_FORMAT, RGB_FORMAT } from "./constants/globals";
+import { DEFAULT_COLOR, HSL_FORMAT, RGB_FORMAT } from "./constants";
 import { stringify } from "./stringify";
 import { Color, HSLA, RGBA } from "./types";
 import { createElement } from "./utils/dom";

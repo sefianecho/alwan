@@ -5,7 +5,7 @@ import {
     POINTER_MOVE,
     POINTER_UP,
     ROOT,
-} from "../constants/globals";
+} from "../constants";
 import { addEvent, removeEvent } from "../core/events/binder";
 import { DOMRectArray, ISelector } from "../types";
 import {

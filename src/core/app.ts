@@ -1,7 +1,7 @@
 import type Alwan from "..";
 import { createComponents, renderComponents } from "../components";
 import { ALWAN_CLASSNAME, OPEN_CLASSNAME } from "../constants/classnames";
-import { CLICK, CLOSE, COLOR, OPEN, RGB_FORMAT } from "../constants/globals";
+import { CLICK, CLOSE, COLOR, OPEN, RGB_FORMAT } from "../constants";
 import { createPopover } from "../popover";
 import { getRef } from "../ref";
 import type { HTMLElementHasDisabled, IPopover, alwanApp } from "../types";

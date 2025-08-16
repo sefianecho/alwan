@@ -1,6 +1,6 @@
 import type Alwan from "..";
 import { caretSVG } from "../assets/svg";
-import { CLICK, COLOR } from "../constants/globals";
+import { CLICK, COLOR } from "../constants";
 import { addEvent } from "../core/events/binder";
 import { parseColor } from "../parser";
 import type { ISwatches } from "../types";

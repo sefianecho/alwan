@@ -1,6 +1,6 @@
 import type Alwan from "..";
 import { checkSVG, clipboardSVG } from "../assets/svg";
-import { BLUR, CLICK, MOUSE_LEAVE } from "../constants/globals";
+import { BLUR, CLICK, MOUSE_LEAVE } from "../constants";
 import { addEvent } from "../core/events/binder";
 import type { IUtility } from "../types";
 import {

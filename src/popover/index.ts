@@ -6,7 +6,7 @@ import {
     ROOT,
     SCROLL,
     TAB,
-} from "../constants/globals";
+} from "../constants";
 import { addEvent, removeEvent } from "../core/events/binder";
 import type {
     EventBinder,

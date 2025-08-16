@@ -9,7 +9,7 @@ import {
     HEX_FORMAT,
     INPUT,
     KEY_DOWN,
-} from "../constants/globals";
+} from "../constants";
 import { addEvent } from "../core/events/binder";
 import type { Color, IInputs, colorDetails, colorFormat } from "../types";
 import {

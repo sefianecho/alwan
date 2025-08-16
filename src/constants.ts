@@ -1,13 +1,10 @@
-import type { colorFormat } from "../types";
-import { PI } from "../utils/math";
+import type { colorFormat } from "./types";
 
 export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
 export const DEFAULT_COLOR = "#000";
-
 export const BUTTON = "button";
-
 export const OPEN = "open";
 export const CLOSE = "close";
 export const COLOR = "color";
@@ -22,10 +19,7 @@ export const INPUT = "input";
 export const CHANGE = "change";
 export const BLUR = "blur";
 export const FOCUS_IN = "focusin";
-export const MOUSE_OUT = "mouseout";
 export const MOUSE_LEAVE = "mouseleave";
-export const WHEEL = "wheel";
-
 export const HEX_FORMAT: colorFormat = "hex";
 export const RGB_FORMAT: colorFormat = "rgb";
 export const HSL_FORMAT: colorFormat = "hsl";
@@ -39,15 +33,3 @@ export const COLOR_FORMATS: colorFormat[] = [
     RGB_FORMAT,
     HSL_FORMAT,
 ];
-
-export const ARIA_LABEL = "aria-label";
-
-export const ANGLE_COEFFICIENT_MAP: { [angle: string]: number } = {
-    deg: 1,
-    turn: 360,
-    rad: 180 / PI,
-    grad: 0.9,
-};
-
-export const HSL_REGEX =
-    /^hsla?\(\s*([+-]?\d*\.?\d+)(\w*)?\s*[\s,]\s*([+-]?\d*\.?\d+)%?\s*,?\s*([+-]?\d*\.?\d+)%?(?:\s*[\/,]\s*([+-]?\d*\.?\d+)(%)?)?\s*\)?$/;

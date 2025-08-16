@@ -1,6 +1,6 @@
 import type Alwan from "..";
 import { HSLToRGB, RGBToHEX } from "../colors/conversions";
-import { CHANGE, COLOR } from "../constants/globals";
+import { CHANGE, COLOR } from "../constants";
 import { parseColor } from "../parser";
 import { stringify } from "../stringify";
 import type {

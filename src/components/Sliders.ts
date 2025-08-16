@@ -1,5 +1,5 @@
 import type Alwan from "..";
-import { CHANGE, INPUT } from "../constants/globals";
+import { CHANGE, INPUT } from "../constants";
 import { addEvent } from "../core/events/binder";
 import type { ISliders } from "../types";
 import { createDivElement, createSlider } from "../utils/dom";
