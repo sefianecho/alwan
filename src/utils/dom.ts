@@ -1,4 +1,4 @@
-import { BUTTON_CLASSNAME, SLIDER_CLASSNAME } from "../constants/classnames";
+import { BUTTON_CLASSNAME } from "../constants/classnames";
 import {
     ARIA_LABEL,
     BUTTON,
@@ -126,12 +126,23 @@ export const createButton = (
     );
 };
 
-export const createSlider = (classname: string, max: number, step = 1) =>
-    createElement(INPUT, joinClassnames(SLIDER_CLASSNAME, classname), "", {
-        max,
-        step,
-        type: "range",
-    });
+export const createSlider = (
+    ariaLabel: string,
+    sliderName: string,
+    max: number,
+    step = 1,
+) =>
+    createElement(
+        INPUT,
+        "alwan__slider alwan__" + sliderName,
+        "",
+        {
+            type: "range",
+            max,
+            step,
+        },
+        ariaLabel,
+    );
 
 export const setCustomProperty = (
     element: HTMLElement | SVGElement | null,
