@@ -259,14 +259,11 @@ export interface IColorState {
     _setFormat(format: colorFormat): void;
     _update(
         hsl: Partial<HSLA>,
-        triggerColorEvent?: boolean,
-        ignoreRGB?: boolean,
+        rgb?: RGBA | false,
+        emitColor?: boolean,
+        emitChange?: boolean,
     ): void;
-    _setColor(
-        color: Color,
-        triggerColorEvent?: boolean,
-        triggerChangeEvent?: boolean,
-    ): void;
+    _setColor(color: Color, emitColor?: boolean, emitChange?: boolean): void;
     _cache(): void;
     _change(): void;
 }

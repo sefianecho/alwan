@@ -1,8 +1,8 @@
 import type Alwan from "..";
 import { caretSVG } from "../assets/svg";
-import { parseColor } from "../colors/parser";
 import { CLICK, COLOR } from "../constants/globals";
 import { addEvent } from "../core/events/binder";
+import { parseColor } from "../parser";
 import type { ISwatches } from "../types";
 import {
     createButton,
@@ -28,20 +28,21 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 
             container = createDivElement(
                 "alwan__swatches",
-                swatches.map((color) =>
-                    setCustomProperty(
+                swatches.map((color) => {
+                    color = isString(color)
+                        ? color
+                        : (parseColor(color, true, true) as string);
+                    return setCustomProperty(
                         createButton(
                             buttons.swatch,
                             "alwan__swatch",
                             "",
-                            isString(color)
-                                ? color
-                                : (parseColor(color, true) as string),
+                            color,
                         ),
                         COLOR,
-                        parseColor(color, true) as string,
-                    ),
-                ),
+                        color,
+                    );
+                }),
             );
 
             // Handles clicks in the swatches container.
