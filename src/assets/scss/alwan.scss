@@ -268,7 +268,7 @@
 	&__inputs {
 		display: flex;
 
-		label {
+		> label {
 			width: 100%;
 			text-align: center;
 			margin-right: $label-margin-right;

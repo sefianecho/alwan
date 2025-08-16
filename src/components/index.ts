@@ -24,7 +24,7 @@ export const createComponents = (alwan: Alwan) =>
 export const renderComponents = (
     components: Array<Component | Component[]>,
     config: alwanConfig,
-): Array<Element | null> =>
+): Array<Element | null | undefined> =>
     components.map((component) =>
         isArray(component)
             ? createContainer(renderComponents(component, config))

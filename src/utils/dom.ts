@@ -32,7 +32,7 @@ export const getInteractiveElements = (context: HTMLElement) =>
 
 export const appendChildren = (
     element: Element,
-    ...children: Array<Element | null>
+    ...children: Array<Element | null | undefined>
 ) => element.append(...(children.filter((child) => child) as Array<Element>));
 
 export const setInnerHTML = (element: Element, html: string) => {
@@ -55,7 +55,7 @@ export const joinClassnames = (...classnames: string[]) =>
 export const createElement = <T extends keyof HTMLElementTagNameMap>(
     tagName: T,
     className?: string,
-    content: string | Element | null | Array<Element | null> = "",
+    content?: string | Element | null | Array<Element | undefined | null>,
     attributes: Attrs = {},
     ariaLabel?: string,
 ) => {
@@ -88,7 +88,7 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
 export const createDivElement = (
     ...args: [
         className?: string,
-        content?: Element | null | string | Array<Element | null>,
+        content?: Element | null | string | Array<Element | null | undefined>,
         attrs?: Attrs,
         ariaLabel?: string,
     ]
@@ -96,7 +96,10 @@ export const createDivElement = (
 
 export const removeElement = (element: Element) => element.remove();
 
-export const replaceElement = (element: Element, replacement: Element) => {
+export const replaceElement = <T extends Element>(
+    element: Element,
+    replacement: T,
+): T => {
     if (element && element !== replacement) {
         element.replaceWith(replacement);
     }
@@ -186,7 +189,7 @@ export const getShadowRoot = (node: Node | null): ShadowRoot | null => {
     return getShadowRoot(node.parentNode);
 };
 
-export const createContainer = (children: Array<Element | null>) =>
+export const createContainer = (children: Array<Element | null | undefined>) =>
     createDivElement("alwan__container", children);
 
 export const setElementVisibility = (
