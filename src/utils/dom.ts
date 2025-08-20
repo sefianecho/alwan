@@ -158,39 +158,32 @@ export const translate = (element: HTMLElement, x: number, y: number) => {
     element.style.transform = `translate(${x}px,${y}px)`;
 };
 
-export const getParentElement = (element: Element | Document) =>
-    (element && element.parentElement) || getBody();
+export const getParentElement = (element: Element | null) =>
+    element && element.parentElement;
 
 export const getBoundingRectArray = (
-    element: Document | Element,
-    addClientArea?: boolean,
+    element: Element,
+    isContentBox?: boolean,
 ): DOMRectArray => {
-    let x, y, width, height, right, bottom;
+    let { x, y, width, height } = element.getBoundingClientRect();
 
-    if (!isElement(element)) {
-        x = y = 0;
-        width = right = DOC_ELEMENT.clientWidth;
-        height = bottom = DOC_ELEMENT.clientHeight;
-    } else {
-        ({ x, y, width, height, right, bottom } =
-            element.getBoundingClientRect());
-        if (addClientArea) {
-            x += element.clientTop;
-            y += element.clientLeft;
-        }
+    if (isContentBox) {
+        x += element.clientLeft - element.scrollLeft;
+        y += element.clientTop - element.scrollTop;
     }
 
-    return [x, y, width, height, right, bottom];
+    return [x, y, width, height, width + x, height + y];
 };
 
 export const getShadowRoot = (node: Node | null): ShadowRoot | null => {
-    if (!node || node === getBody()) {
-        return null;
-    }
+    node = node && node.parentNode;
     if (node instanceof ShadowRoot) {
         return node;
     }
-    return getShadowRoot(node.parentNode);
+    if (!node || node === getBody()) {
+        return null;
+    }
+    return getShadowRoot(node);
 };
 
 export const createContainer = (children: Array<Element | null | undefined>) =>
@@ -200,3 +193,50 @@ export const setElementVisibility = (
     element: HTMLElement | SVGElement,
     hidden?: boolean,
 ) => (element.style.display = hidden ? "none" : "");
+
+const topLayerSelectors = [":popover-open", ":modal"] as const;
+const isTopLayer = (element: Element) =>
+    topLayerSelectors.some((selector) => {
+        try {
+            return element.matches(selector);
+        } catch (_) {
+            return false;
+        }
+    });
+const isContainingBlock = (element: Element) => {
+    const {
+        transform,
+        perspective,
+        filter,
+        containerType,
+        backdropFilter,
+        willChange,
+        contain,
+    } = getComputedStyle(element);
+
+    return (
+        transform !== "none" ||
+        perspective !== "none" ||
+        containerType !== "normal" ||
+        backdropFilter !== "none" ||
+        filter !== "none" ||
+        (willChange && /\b(transform|perspective|filter)\b/.test(willChange)) ||
+        (contain && /\b(paint|layout|strict|content)\b/.test(contain))
+    );
+};
+
+export const getOffsetParentBoundingRect = (
+    element: Element | null,
+): number[] => {
+    element = getParentElement(element);
+
+    if (!element || element === DOC_ELEMENT || isTopLayer(element)) {
+        return [0, 0];
+    }
+
+    if (isContainingBlock(element)) {
+        return getBoundingRectArray(element, true);
+    }
+
+    return getOffsetParentBoundingRect(element);
+};

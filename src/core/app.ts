@@ -106,6 +106,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                 } else {
                     ref.after(root);
                 }
+                self._toggle(!toggle || (!disabled && isOpen), true);
             }
 
             if (!toggle) {
@@ -135,16 +136,19 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
 
         _toggle(state = !isOpen, forced = false) {
             if (
-                state !== isOpen &&
-                (!config.disabled || (forced && (!state || !config.popover))) &&
-                (config.toggle || forced)
+                ((!popoverInstance || popoverInstance._isVisible()) &&
+                    !config.disabled &&
+                    config.toggle) ||
+                forced
             ) {
-                if (state && popoverInstance) {
-                    popoverInstance._reposition();
-                }
-                isOpen = state;
                 toggleClassName(root, "alwan--open", state);
-                alwan._events._emit(isOpen ? OPEN : CLOSE);
+                if (popoverInstance) {
+                    popoverInstance._reposition(state, isOpen);
+                }
+                if (state !== isOpen) {
+                    isOpen = state;
+                    alwan._events._emit(isOpen ? OPEN : CLOSE);
+                }
             }
         },
 
@@ -152,7 +156,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
 
         _reposition() {
             if (popoverInstance) {
-                popoverInstance._reposition();
+                popoverInstance._reposition(isOpen, isOpen);
             }
         },
 

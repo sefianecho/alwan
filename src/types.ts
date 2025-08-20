@@ -323,7 +323,8 @@ export interface alwanApp {
 }
 
 export interface IPopover {
-    _reposition(): void;
+    _isVisible(): boolean;
+    _reposition(isOpenNow: boolean, wasOpenBefore?: boolean): void;
     _destroy(): void;
 }
 

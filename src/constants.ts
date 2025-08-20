@@ -28,6 +28,8 @@ export const TAB = "Tab";
 export const ESCAPE = "Escape";
 export const ENTER = "Enter";
 
+export const CAPTURE_PHASE = { capture: true };
+
 export const COLOR_FORMATS: colorFormat[] = [
     HEX_FORMAT,
     RGB_FORMAT,
