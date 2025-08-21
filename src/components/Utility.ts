@@ -1,19 +1,19 @@
 import type Alwan from "..";
 import { checkSVG, clipboardSVG } from "../assets/svg";
 import { BLUR, CLICK, MOUSE_LEAVE } from "../constants";
-import { addEvent } from "../core/events/binder";
 import type { IUtility } from "../types";
 import {
     createButton,
     createDivElement,
     setElementVisibility,
+    addEvent,
 } from "../utils/dom";
 
 /**
  * Color preview and copy Button.
  */
 export const Utility = (alwan: Alwan): IUtility => ({
-    _init({ preview, copy, i18n }) {
+    _render({ preview, copy, i18n }) {
         let copyButton: HTMLButtonElement | undefined;
         let setIcon: (isCopied?: boolean) => void;
         let clipboardIcon: SVGElement;
@@ -39,7 +39,7 @@ export const Utility = (alwan: Alwan): IUtility => ({
             if (clipboard) {
                 addEvent(copyButton, CLICK, () =>
                     clipboard
-                        .writeText(alwan._color._getColorString())
+                        .writeText(alwan.s._toString())
                         .then(() => setIcon(true)),
                 );
                 addEvent(copyButton, BLUR, () => setIcon());

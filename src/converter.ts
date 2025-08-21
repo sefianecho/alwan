@@ -1,4 +1,4 @@
-import type { HSLA, RGB, RGBA, colorDetails } from "./types";
+import type { HSLA, RGBA, colorDetails } from "./types";
 import { abs, max, min, normalizeAngle, round } from "./utils/math";
 
 const decimalToHex = (decimal: number) =>
@@ -19,7 +19,7 @@ const fn = (k: number, s: number, l: number) => {
     return round((l - s * min(l, 1 - l) * max(-1, min(k - 3, 9 - k, 1))) * 255);
 };
 
-export const HSLToRGB = ({ h, s, l }: colorDetails): RGB => {
+export const HSLToRGB = ({ h, s, l, a }: colorDetails): RGBA => {
     h /= 30;
     s /= 100;
     l /= 100;
@@ -27,6 +27,7 @@ export const HSLToRGB = ({ h, s, l }: colorDetails): RGB => {
         r: fn(h, s, l),
         g: fn(h + 8, s, l),
         b: fn(h + 4, s, l),
+        a,
     };
 };
 

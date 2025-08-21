@@ -10,20 +10,21 @@ import {
     INPUT,
     KEY_DOWN,
 } from "../constants";
-import { addEvent } from "../core/events/binder";
-import type { Color, IInputs, colorDetails, colorFormat } from "../types";
+import { stringify } from "../stringify";
+import type { IInputs, colorDetails, colorFormat } from "../types";
 import {
     createButton,
     createContainer,
     createDivElement,
     createElement,
     replaceElement,
+    addEvent,
 } from "../utils/dom";
 import { max } from "../utils/math";
 import { ObjectForEach } from "../utils/object";
 
 export const Inputs = (alwan: Alwan): IInputs => {
-    let { config, _color: colorState } = alwan;
+    let { config, s: colorState } = alwan;
     let inputsMap: Partial<Record<keyof colorDetails, HTMLInputElement>>;
     let inputsFormat: colorFormat;
     let isChanged = false;
@@ -37,7 +38,10 @@ export const Inputs = (alwan: Alwan): IInputs => {
         }
 
         ObjectForEach(inputsMap, (key, input) => (color[key] = input!.value));
-        colorState._setColor((color[inputsFormat] || color) as Color, true);
+        colorState._parse(
+            (color[inputsFormat] as string) || stringify(color as colorDetails),
+            true,
+        );
     };
 
     const build = () => {
@@ -79,7 +83,7 @@ export const Inputs = (alwan: Alwan): IInputs => {
     };
 
     return {
-        _init({ inputs, format, i18n }) {
+        _render({ inputs, format, i18n }) {
             let inputsGroup: HTMLDivElement;
             let inputsWrapper: HTMLDivElement;
             let formats = COLOR_FORMATS;
@@ -133,8 +137,7 @@ export const Inputs = (alwan: Alwan): IInputs => {
             addEvent(
                 inputsWrapper,
                 KEY_DOWN,
-                (e: KeyboardEvent) =>
-                    e.key === ENTER && alwan._app._toggle(false),
+                (e: KeyboardEvent) => e.key === ENTER && alwan.c._toggle(false),
             );
 
             return createContainer([inputsWrapper, switchBtn]);

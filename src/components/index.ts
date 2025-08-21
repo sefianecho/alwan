@@ -28,5 +28,5 @@ export const renderComponents = (
     components.map((component) =>
         isArray(component)
             ? createContainer(renderComponents(component, config))
-            : component._init(config),
+            : component._render(config),
     );

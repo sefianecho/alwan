@@ -9,7 +9,6 @@ import {
     getBody,
     getElements,
     getInteractiveElements,
-    removeElement,
     replaceElement,
     setColorProperty,
     setElementVisibility,
@@ -116,7 +115,6 @@ export const controller = (
             }
 
             colorState._parse(color);
-            return self;
         },
 
         _toggle(state = !isOpen, forced = false) {
@@ -146,7 +144,7 @@ export const controller = (
         },
 
         _destroy() {
-            removeElement(root);
+            root.remove();
             if (popoverInstance) {
                 popoverInstance._destroy();
             }
@@ -154,7 +152,7 @@ export const controller = (
                 removeEvent(userRef, CLICK, handleClick);
                 replaceElement(ref, userRef);
             } else {
-                removeElement(ref);
+                ref.remove();
             }
         },
     };

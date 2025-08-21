@@ -1,7 +1,7 @@
 import { BUTTON, DOC_ELEMENT, INPUT, ROOT } from "../constants";
-import type { Attrs, DOMRectArray } from "../types";
+import type { Attrs, DOMRectArray, EventBinder } from "../types";
 import { isElement, isNumber, isString } from ".";
-import { ObjectForEach, isArray, toArray } from "./object";
+import { ObjectForEach, isArray } from "./object";
 
 export const getBody = () => ROOT.body;
 
@@ -10,7 +10,7 @@ export const getElements = (
     context: Element = DOC_ELEMENT,
 ) => {
     if (isString(reference) && reference.trim()) {
-        return toArray(context.querySelectorAll(reference));
+        return [...context.querySelectorAll(reference)];
     }
     // Reference must be an element in the page.
     if (isElement(reference)) {
@@ -21,29 +21,9 @@ export const getElements = (
 };
 
 export const getInteractiveElements = (context: HTMLElement) =>
-    getElements(`${INPUT},${BUTTON},[tabindex]`, context);
-
-export const appendChildren = (
-    element: Element,
-    ...children: Array<Element | null | undefined>
-) => element.append(...(children.filter((child) => child) as Array<Element>));
-
-export const setInnerHTML = (element: Element, html: string) => {
-    element.innerHTML = html;
-};
-
-export const setAttribute = (
-    el: Element | null,
-    name: string,
-    value: string | number,
-) => {
-    if (el && (isNumber(value) || value)) {
-        el.setAttribute(name, value + "");
-    }
-};
-
-export const joinClassnames = (...classnames: string[]) =>
-    classnames.join(" ").trim();
+    getElements(`${INPUT},${BUTTON},[tabindex]`, context) as Array<
+        HTMLInputElement | HTMLButtonElement
+    >;
 
 export const createElement = <T extends keyof HTMLElementTagNameMap>(
     tagName: T,
@@ -72,7 +52,11 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
 
     ObjectForEach(
         ariaLabel ? { ...attributes, "aria-label": ariaLabel } : attributes,
-        (name, value) => setAttribute(element, name, value),
+        (name, value) => {
+            if (isNumber(value) || value) {
+                element.setAttribute(name, value + "");
+            }
+        },
     );
 
     return element;
@@ -87,10 +71,8 @@ export const createDivElement = (
     ]
 ) => createElement("div", ...args);
 
-export const removeElement = (element: Element) => element.remove();
-
 export const replaceElement = <T extends Element>(
-    element: Element,
+    element: Element | undefined,
     replacement: T,
 ): T => {
     if (element && element !== replacement) {
@@ -137,16 +119,10 @@ export const createSlider = (
         ariaLabel,
     );
 
-export const setCustomProperty = (
-    element: HTMLElement | SVGElement | null,
-    property: string,
-    value: string | number,
-) => {
-    if (element) {
-        element.style.setProperty("--" + property, value + "");
-    }
-    return element;
-};
+export const setColorProperty = (
+    element: HTMLElement | SVGElement,
+    color: string,
+) => element.style.setProperty("--color", color);
 
 export const toggleClassName = (
     element: Element,
@@ -157,9 +133,6 @@ export const toggleClassName = (
 export const translate = (element: HTMLElement, x: number, y: number) => {
     element.style.transform = `translate(${x}px,${y}px)`;
 };
-
-export const getParentElement = (element: Element | null) =>
-    element && element.parentElement;
 
 export const getBoundingRectArray = (
     element: Element,
@@ -240,3 +213,9 @@ export const getOffsetParentBoundingRect = (
 
     return getOffsetParentBoundingRect(element);
 };
+
+export const addEvent: EventBinder = (target, type, listener, options) =>
+    target.addEventListener(type, listener as EventListener, options);
+
+export const removeEvent: EventBinder = (target, type, listener) =>
+    target.removeEventListener(type, listener as EventListener);

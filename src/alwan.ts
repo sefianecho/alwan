@@ -1,14 +1,14 @@
 import { version } from "../package.json";
 import "./assets/scss/alwan.scss";
 import { alwanDefaults } from "./defaults";
-import { createApp } from "./core/app";
-import { colorState } from "./core/colorState";
-import { Emitter } from "./core/events/emitter";
+import { controller } from "./core/controller";
+import { colorState } from "./core/state";
+import { eventEmitter } from "./core/eventEmitter";
 import type {
     Color,
     EventEmitter,
     IColorState,
-    alwanApp,
+    IController,
     alwanConfig,
     alwanEventListener,
     alwanEventType,
@@ -34,15 +34,15 @@ export class Alwan {
     }
 
     config: alwanConfig;
-    _events: EventEmitter;
-    _color: IColorState;
-    _app: alwanApp;
+    e: EventEmitter;
+    s: IColorState;
+    c: IController;
     constructor(reference: string | Element, options?: alwanOptions) {
         this.config = deepMerge({}, alwanDefaults);
-        this._events = Emitter(this);
-        this._color = colorState(this);
-        this._app = createApp(this, getElements(reference)[0]);
-        this._app._setup(options);
+        this.e = eventEmitter(this);
+        this.s = colorState(this);
+        this.c = controller(this, getElements(reference)[0]);
+        this.c._setup(options || {});
     }
 
     setOptions(options: alwanOptions) {
@@ -50,44 +50,44 @@ export class Alwan {
     }
 
     setColor(color: Color) {
-        this._color._setColor(color);
+        this.s._parse(color);
         return this;
     }
 
     getColor(): alwanValue {
-        return { ...this._color._value };
+        return { ...this.s._value };
     }
 
     isOpen() {
-        return this._app._isOpen();
+        return this.c._isOpen();
     }
 
     open() {
-        this._app._toggle(true);
+        this.c._toggle(true);
     }
 
     close() {
-        this._app._toggle(false);
+        this.c._toggle(false);
     }
 
     toggle() {
-        this._app._toggle();
+        this.c._toggle();
     }
 
     on(type: alwanEventType, listener: alwanEventListener) {
-        this._events._on(type, listener);
+        this.e._on(type, listener);
     }
 
     off(type?: alwanEventType, listener?: alwanEventListener) {
-        this._events._off(type, listener);
+        this.e._off(type, listener);
     }
 
     addSwatches(...swatches: Color[]) {
-        this._app._setup({ swatches: this.config.swatches.concat(swatches) });
+        this.c._setup({ swatches: this.config.swatches.concat(swatches) });
     }
 
     removeSwatches(...swatches: Array<number | Color>) {
-        this._app._setup({
+        this.c._setup({
             swatches: this.config.swatches.filter(
                 (swatch, index) =>
                     !swatches.some((item) =>
@@ -98,28 +98,30 @@ export class Alwan {
     }
 
     enable() {
-        this._app._setup({ disabled: false });
+        this.c._setup({ disabled: false });
     }
 
     disable() {
-        this._app._setup({ disabled: true });
+        this.c._setup({ disabled: true });
     }
 
     reset() {
-        this._color._setColor(this.config.default);
+        this.s._parse(this.config.default);
     }
 
     reposition() {
-        this._app._reposition();
+        this.c._reposition();
     }
 
     trigger(type: alwanEventType) {
-        this._events._emit(type);
+        this.e._emit(type);
     }
 
     destroy() {
-        this._app._destroy();
-        ObjectForEach(this, (key) => delete this[key]);
+        this.c._destroy();
+        ObjectForEach(this, (key) => {
+            (this[key] as null) = null;
+        });
         setPrototypeOf(this, prototype);
     }
 }

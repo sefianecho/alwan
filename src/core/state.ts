@@ -4,9 +4,7 @@ import { CHANGE, COLOR } from "../constants";
 import { parseColor } from "../parser";
 import { stringify } from "../stringify";
 import type {
-    HSLA,
     IColorState,
-    RGBA,
     colorDetails,
     colorFormat,
     colorStateHook,
@@ -31,7 +29,7 @@ export const colorState = (alwan: Alwan): IColorState => {
         hex: "",
     };
     const config = alwan.config;
-    const emitEvent = alwan._events._emit;
+    const emitEvent = alwan.e._emit;
     let onUpdate: colorStateHook;
     let onSetColor: colorStateHook;
     let currentFormat: colorFormat;
@@ -40,7 +38,7 @@ export const colorState = (alwan: Alwan): IColorState => {
     return {
         _value: state,
 
-        _getColorString: () => state[currentFormat],
+        _toString: () => state[currentFormat],
         _setHooks(onUpdateFn, onSetColorFn) {
             onUpdate = onUpdateFn;
             onSetColor = onSetColorFn;
@@ -71,12 +69,9 @@ export const colorState = (alwan: Alwan): IColorState => {
             }
         },
 
-        _setColor(color, emitColor = false, emitChange) {
+        _parse(color, emitColor = false, emitChange) {
             this._update(
-                ...(parseColor(color, config.opacity) as [
-                    HSLA,
-                    RGBA | undefined,
-                ]),
+                ...parseColor(color, config.opacity),
                 emitColor,
                 emitChange,
             );

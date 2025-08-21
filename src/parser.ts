@@ -21,8 +21,7 @@ const HSL_REGEX =
 export const parseColor = (
     color: Color,
     opacity?: boolean,
-    toString?: boolean,
-): [HSLA, RGBA | undefined] | string => {
+): [HSLA, RGBA | undefined] => {
     let rgb: RGBA | undefined;
     let hsl: HSLA | undefined;
     let str = "";
@@ -79,10 +78,6 @@ export const parseColor = (
     hsl.a = opacity ? round(hsl.a * 100) / 100 : 1;
     if (rgb) {
         rgb.a = hsl.a;
-    }
-
-    if (toString) {
-        return stringify(rgb || hsl, !rgb);
     }
 
     return [hsl, rgb];

@@ -9,13 +9,12 @@ import {
     SCROLL,
     TAB,
 } from "./constants";
-import { addEvent, removeEvent } from "./core/events/binder";
 import type {
     EventBinder,
     IPopover,
     LabeledElement,
     alignment,
-    alwanApp,
+    IController,
     alwanConfig,
     side,
 } from "./types";
@@ -25,6 +24,8 @@ import {
     getInteractiveElements,
     getShadowRoot,
     translate,
+    addEvent,
+    removeEvent,
 } from "./utils/dom";
 import { isNumber, isString } from "./utils";
 import { round } from "./utils/math";
@@ -62,7 +63,7 @@ export const createPopover = (
     floating: HTMLElement,
     ref: Element,
     { margin, position, closeOnScroll, toggle, disabled }: alwanConfig,
-    { _toggle, _isOpen }: alwanApp,
+    { _toggle, _isOpen }: IController,
 ): IPopover => {
     margin = isNumber(margin) ? +margin : 0;
     let isTargetVisible: boolean;

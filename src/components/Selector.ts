@@ -6,12 +6,13 @@ import {
     POINTER_UP,
     ROOT,
 } from "../constants";
-import { addEvent, removeEvent } from "../core/events/binder";
 import { DOMRectArray, ISelector } from "../types";
 import {
     createDivElement,
     getBoundingRectArray,
     translate,
+    addEvent,
+    removeEvent,
 } from "../utils/dom";
 import { clamp, min } from "../utils/math";
 
@@ -25,7 +26,7 @@ const ARROW_KEYS_Y: { [k: string]: number } = {
     ArrowDown: 1,
 };
 
-export const Selector = ({ _color: colorState }: Alwan): ISelector => {
+export const Selector = ({ s: colorState }: Alwan): ISelector => {
     let selectorEl: HTMLDivElement;
     let cursor: HTMLDivElement;
     let cursorX: number;
@@ -94,7 +95,7 @@ export const Selector = ({ _color: colorState }: Alwan): ISelector => {
     };
 
     return {
-        _init({ i18n, disabled }) {
+        _render({ i18n, disabled }) {
             cursor = createDivElement("alwan__cursor");
             selectorEl = createDivElement(
                 "alwan__selector",

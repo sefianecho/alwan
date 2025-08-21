@@ -203,7 +203,7 @@ export interface alwanConfig {
 }
 
 type Optional<T> = {
-    [P in keyof T]?: T[P] extends Color ? Color : Optional<T[P]>;
+    [P in keyof T]?: T[P] extends Color ? T[P] : Optional<T[P]>;
 };
 
 export type alwanOptions = Optional<alwanConfig>;
@@ -212,35 +212,25 @@ export type side = "top" | "right" | "bottom" | "left";
 export type alignment = "start" | "center" | "end";
 export type popoverPosition = side | `${side}-${alignment}`;
 
-export interface RGB {
+export interface RGBA {
     r: number;
     g: number;
     b: number;
+    a: number;
 }
-
-export interface HSL {
+export interface HSLA {
     h: number;
     s: number;
     l: number;
-}
-
-export interface A {
     a: number;
 }
 
-export interface RGBA extends RGB, A {}
-export interface HSLA extends HSL, A {}
-
-export interface colorDetails
-    extends RGB,
-        HSL,
-        A,
-        Record<colorFormat, string> {}
-export type Color = string | RGB | RGBA | HSL | HSLA;
 export type colorFormat = "rgb" | "hsl" | "hex";
+export interface colorDetails extends RGBA, HSLA, Record<colorFormat, string> {}
+export type Color = string | RGBA | HSLA;
 export type InputFormats = Partial<Record<colorFormat, boolean>>;
 
-export type Attrs = Record<string, string | number>;
+export type Attrs = Record<string, string | number | boolean | undefined>;
 export type DOMRectArray = [
     x: number,
     y: number,
@@ -255,7 +245,7 @@ export interface alwanValue extends Readonly<colorDetails> {}
 export interface IColorState {
     _value: colorDetails;
     _setHooks(onUpdate: colorStateHook, onColorSet: colorStateHook): void;
-    _getColorString(): string;
+    _toString(): string;
     _setFormat(format: colorFormat): void;
     _update(
         hsl: Partial<HSLA>,
@@ -263,7 +253,7 @@ export interface IColorState {
         emitColor?: boolean,
         emitChange?: boolean,
     ): void;
-    _setColor(color: Color, emitColor?: boolean, emitChange?: boolean): void;
+    _parse(color: Color, emitColor?: boolean, emitChange?: boolean): void;
     _cache(): void;
     _change(): void;
 }
@@ -296,7 +286,7 @@ export type EventBinder = <T extends EventTarget, U extends keyof EventMap>(
 
 // Components.
 export interface Component {
-    _init(config: alwanConfig): Element | null | undefined;
+    _render(config: alwanConfig): Element | null | undefined;
 }
 
 export interface ISelector extends Component {
@@ -337,12 +327,3 @@ export type LabeledElement =
     | HTMLOutputElement
     | HTMLProgressElement
     | HTMLTextAreaElement;
-
-export type HTMLElementHasDisabled =
-    | HTMLButtonElement
-    | HTMLFieldSetElement
-    | HTMLInputElement
-    | HTMLSelectElement
-    | HTMLOptionElement
-    | HTMLTextAreaElement
-    | HTMLOptGroupElement;

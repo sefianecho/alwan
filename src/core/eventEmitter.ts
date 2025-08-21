@@ -1,10 +1,9 @@
-import Alwan from "../..";
-import { CHANGE, CLOSE, COLOR, OPEN } from "../../constants";
-import type { EventEmitter, alwanEventAndListenersMap } from "../../types";
-import { isFunction, isset } from "../../utils";
-import { ObjectForEach, merge } from "../../utils/object";
+import Alwan from "..";
+import { CHANGE, CLOSE, COLOR, OPEN } from "../constants";
+import type { EventEmitter, alwanEventAndListenersMap } from "../types";
+import { ObjectForEach, merge } from "../utils/object";
 
-export const Emitter = (alwan: Alwan): EventEmitter => {
+export const eventEmitter = (alwan: Alwan): EventEmitter => {
     const listeners: alwanEventAndListenersMap = {
         [OPEN]: [],
         [CLOSE]: [],
@@ -13,30 +12,26 @@ export const Emitter = (alwan: Alwan): EventEmitter => {
     };
 
     return {
-        _emit(type, value = alwan._color._value) {
+        _emit(type, value = alwan.s._value) {
             (listeners[type] || []).forEach((listener) =>
                 listener(merge({ type, source: alwan }, value)),
             );
         },
 
         _on(event, listener) {
-            if (
-                listeners[event] &&
-                !listeners[event].includes(listener) &&
-                isFunction(listener)
-            ) {
+            if (listener && !(listeners[event] || []).includes(listener)) {
                 listeners[event].push(listener);
             }
         },
 
         _off(event, listener) {
-            if (!isset(event)) {
+            if (!event) {
                 // Remove all listeners.
                 ObjectForEach(listeners, (event) => {
                     listeners[event] = [];
                 });
             } else if (listeners[event]) {
-                if (isset(listener)) {
+                if (listener) {
                     listeners[event] = listeners[event].filter(
                         (fn) => fn !== listener,
                     );
