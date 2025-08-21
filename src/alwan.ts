@@ -46,7 +46,7 @@ export class Alwan {
     }
 
     setOptions(options: alwanOptions) {
-        this._app._setup(options);
+        options && this.c._setup(options);
     }
 
     setColor(color: Color) {

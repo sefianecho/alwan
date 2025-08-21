@@ -314,8 +314,8 @@ export interface IReference extends Component {
     _destroy(): void;
 }
 
-export interface alwanApp {
-    _setup(options?: alwanOptions): void;
+export interface IController {
+    _setup(options: alwanOptions): void;
     _isOpen(): boolean;
     _toggle(state?: boolean, forced?: boolean): void;
     _reposition(): void;

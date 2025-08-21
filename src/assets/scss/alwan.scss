@@ -7,459 +7,477 @@
 @use "util";
 
 :root {
-	#{prop.$transparency-pattern}: #{$transparency-pattern-svg};
+    #{prop.$transparency-pattern}: #{$transparency-pattern-svg};
 }
 
 .alwan {
-	--color: rgba(var(--rgb), var(--a));
-	width: $alwan-max-width;
-	max-width: $alwan-max-width;
-	background: var(prop.$alwan-background, light.$alwan-background);
-	border: 1px solid
-		var(prop.$alwan-outer-border-color, light.$alwan-outer-border-color);
-	overflow-y: auto;
+    width: $alwan-max-width;
+    max-width: $alwan-max-width;
+    background: var(prop.$alwan-background, light.$alwan-background);
+    border: 1px solid
+        var(prop.$alwan-outer-border-color, light.$alwan-outer-border-color);
+    overflow: hidden;
 
-	& * {
-		box-sizing: border-box;
-	}
+    & * {
+        box-sizing: border-box;
+    }
 
-	&:not(.alwan--open) {
-		visibility: hidden;
+    & > div {
+        width: $alwan-max-width;
+    }
 
-		&[data-display="block"] {
-			overflow: hidden;
-			height: 0;
-			border: 0;
-		}
-	}
+    &:not(.alwan--open) {
+        visibility: hidden;
 
-	&[data-theme="dark"] {
-		#{prop.$alwan-background}: dark.$alwan-background;
-		#{prop.$alwan-foreground}: dark.$alwan-foreground;
-		#{prop.$alwan-outer-border-color}: dark.$alwan-outer-border-color;
-		#{prop.$button-hover-background}: dark.$button-hover-background;
-		#{prop.$alwan-border-color}: dark.$alwan-border-color;
-		#{prop.$slider-thumb-background}: dark.$slider-thumb-background;
-		#{prop.$slider-thumb-hover-background}: dark.$slider-thumb-hover-background;
-		#{prop.$slider-thumb-hover-border-color}: dark.$slider-thumb-hover-border-color;
-		#{prop.$label-color}: dark.$label-color;
-		#{prop.$input-background}: dark.$input-background;
-		#{prop.$input-hover-background}: dark.$input-hover-background;
-		#{prop.$input-hover-border-color}: dark.$input-hover-border-color;
-		#{prop.$swatches-container-background}: dark.$swatches-container-background;
-	}
+        &:not([data-popover]) {
+            overflow: hidden;
+            height: 0;
+            border: 0;
+        }
+    }
 
-	&[data-display="popover"] {
-		position: fixed;
-		width: 100%;
-		top: 0;
-		left: 0;
-		z-index: $alwan-popup-z-index;
-		border: 0;
-		box-shadow:
-			0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-			0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-			0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-	}
+    &[data-popover] {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: $alwan-popup-z-index;
+        border: 0;
+        overflow: auto;
+        box-shadow:
+            0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+            0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+            0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
 
-	&__container {
-		position: relative;
-		display: flex;
-		align-items: center;
-		padding: $container-padding-y $container-padding-x;
-		border-top: 1px solid
-			var(prop.$alwan-border-color, light.$alwan-border-color);
+    &[data-theme="dark"] {
+        #{prop.$alwan-background}: dark.$alwan-background;
+        #{prop.$alwan-foreground}: dark.$alwan-foreground;
+        #{prop.$alwan-outer-border-color}: dark.$alwan-outer-border-color;
+        #{prop.$button-hover-background}: dark.$button-hover-background;
+        #{prop.$alwan-border-color}: dark.$alwan-border-color;
+        #{prop.$slider-thumb-background}: dark.$slider-thumb-background;
+        #{prop.$slider-thumb-hover-background}: dark.$slider-thumb-hover-background;
+        #{prop.$slider-thumb-hover-border-color}: dark.$slider-thumb-hover-border-color;
+        #{prop.$label-color}: dark.$label-color;
+        #{prop.$input-background}: dark.$input-background;
+        #{prop.$input-hover-background}: dark.$input-hover-background;
+        #{prop.$input-hover-border-color}: dark.$input-hover-border-color;
+        #{prop.$swatches-container-background}: dark.$swatches-container-background;
+    }
 
-		> * {
-			width: 100%;
-		}
-	}
+    &__container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: $container-padding-y $container-padding-x;
+        border-top: 1px solid
+            var(prop.$alwan-border-color, light.$alwan-border-color);
 
-	&__selector {
-		overflow: hidden;
-		height: $selector-height;
-		outline: 0;
-		touch-action: none;
-		user-select: none;
-		cursor: crosshair;
-		background: linear-gradient(to bottom, transparent, #000),
-			linear-gradient(to right, #fff, hsl(var(--h, 0), 100%, 50%));
+        > * {
+            width: 100%;
+        }
+    }
 
-		&:focus .alwan__cursor {
-			box-shadow: 0 0 1px 2px $alwan-focus-color;
-		}
-	}
+    &__selector {
+        overflow: hidden;
+        height: $selector-height;
+        outline: 0;
+        touch-action: none;
+        user-select: none;
+        background:
+            linear-gradient(to bottom, transparent, #000),
+            linear-gradient(to right, #fff, hsl(var(--h, 0), 100%, 50%));
 
-	&__cursor {
-		position: relative;
-		top: math.div($cursor-height, 2) * -1;
-		left: math.div($cursor-width, 2) * -1;
-		width: $cursor-width;
-		height: $cursor-height;
-		border-radius: 100%;
-		background: transparent;
-		border: $cursor-border;
-		box-shadow: $box-shadow;
-		cursor: grab;
-		cursor: -webkit-grab;
-	}
+        &:focus .alwan__cursor {
+            box-shadow: 0 0 1px 2px $alwan-focus-color;
+        }
 
-	&__preview {
-		width: $preview-area-width;
-		height: $preview-area-height;
-		margin-right: $preview-area-margin-right;
-		border: $preview-area-border-width solid
-			var(prop.$alwan-border-color, light.$alwan-border-color);
-		border-radius: $preview-border-radius;
-		flex-shrink: 0;
+        &[tabindex] {
+            cursor: crosshair;
 
-		& .alwan__cp {
-			position: relative;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			width: 100%;
-			height: 100%;
-			color: #fff;
-			opacity: 0;
-			border-radius: 0;
-			margin: 0;
+            &:active,
+            &:active > .alwan__cursor {
+                cursor: grabbing;
+            }
 
-			&:focus,
-			&:hover:not(:disabled) {
-				opacity: 1;
-				z-index: 100;
-				background-color: rgba(0, 0, 0, 0.6);
-			}
+            .alwan__cursor {
+                cursor: grab;
+                cursor: -webkit-grab;
+            }
+        }
+    }
 
-			&:focus-visible {
-				border: 0;
-			}
-		}
-	}
+    &__cursor {
+        position: relative;
+        top: math.div($cursor-height, 2) * -1;
+        left: math.div($cursor-width, 2) * -1;
+        width: $cursor-width;
+        height: $cursor-height;
+        border-radius: 100%;
+        background: transparent;
+        border: $cursor-border;
+        box-shadow: $box-shadow;
+    }
 
-	&__slider {
-		--hue-track: linear-gradient(
-			90deg,
-			#ff0000,
-			#ff00ff,
-			#0000ff,
-			#00ffff,
-			#00ff00,
-			#ffff00,
-			#ff0000
-		);
-		--alpha-track: linear-gradient(90deg, transparent, rgb(var(--rgb))),
-			var(--alwan-pattern);
-		display: block;
-		width: 100%;
-		height: $slider-track-height;
-		background-color: transparent;
-		margin: 0;
-		padding: 0;
-		cursor: pointer;
-		outline: 0;
-		-webkit-appearance: none;
-		appearance: none;
+    &__preview {
+        --color: rgb(var(--rgb), var(--a));
+        width: $preview-area-width;
+        height: $preview-area-height;
+        margin-right: $preview-area-margin-right;
+        border: $preview-area-border-width solid
+            var(prop.$alwan-border-color, light.$alwan-border-color);
+        border-radius: $preview-border-radius;
+        flex-shrink: 0;
 
-		&:active {
-			cursor: grabbing;
-			cursor: -webkit-grabbing;
-		}
+        & .alwan__cp {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            color: #fff;
+            opacity: 0;
+            border-radius: 0;
+            margin: 0;
 
-		// Track.
-		// Track common styles.
-		@mixin track() {
-			width: 100%;
-			height: $slider-track-height;
-			border: 0;
-			border-radius: $slider-track-border-radius;
-		}
+            &:focus,
+            &:hover:not(:disabled) {
+                opacity: 1;
+                z-index: 100;
+                background-color: rgba(0, 0, 0, 0.6);
+            }
 
-		&::-webkit-slider-runnable-track {
-			-webkit-appearance: none;
-			appearance: none;
-			@include track();
-		}
+            &:focus-visible {
+                border: 0;
+            }
+        }
+    }
 
-		&::-moz-range-track {
-			@include track();
-		}
+    &__slider {
+        --hue-track: linear-gradient(
+            90deg,
+            #ff0000,
+            #ff00ff,
+            #0000ff,
+            #00ffff,
+            #00ff00,
+            #ffff00,
+            #ff0000
+        );
+        --alpha-track:
+            linear-gradient(90deg, transparent, rgb(var(--rgb))),
+            var(--alwan-pattern);
+        display: block;
+        width: 100%;
+        height: $slider-track-height;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        outline: 0;
+        -webkit-appearance: none;
+        appearance: none;
 
-		@include util.slider-track(":focus-visible") {
-			outline: 2px solid color.change($alwan-focus-color, $alpha: 0.5);
-			outline-offset: 2px;
-		}
+        &:active {
+            cursor: grabbing;
+            cursor: -webkit-grabbing;
+        }
 
-		// Thumb.
-		@mixin thumb() {
-			height: $slider-thumb-height;
-			width: $slider-thumb-width;
-			border: 1px solid $slider-thumb-border-color;
-			border-radius: 100%;
-			background-color: var(
-				prop.$slider-thumb-background,
-				light.$slider-thumb-background
-			);
-			box-shadow: $box-shadow;
-		}
+        // Track.
+        // Track common styles.
+        @mixin track() {
+            width: 100%;
+            height: $slider-track-height;
+            border: 0;
+            border-radius: $slider-track-border-radius;
+        }
 
-		&::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			appearance: none;
-			margin-top: math.div(
-				$slider-thumb-height - $slider-track-height,
-				-2
-			);
-			@include thumb();
-		}
+        &::-webkit-slider-runnable-track {
+            -webkit-appearance: none;
+            appearance: none;
+            @include track();
+        }
 
-		&::-moz-range-thumb {
-			box-sizing: border-box;
-			padding: 0;
-			@include thumb();
-		}
+        &::-moz-range-track {
+            @include track();
+        }
 
-		@include util.slider-thumb(":not(:disabled)", ":hover") {
-			cursor: grab;
-			cursor: -webkit-grab;
-			border-color: var(
-				prop.$slider-thumb-hover-border-color,
-				light.$slider-thumb-hover-border-color
-			);
-			background: var(
-				prop.$slider-thumb-hover-background,
-				light.$slider-thumb-hover-background
-			);
-		}
+        @include util.slider-track(":focus-visible") {
+            outline: 2px solid color.change($alwan-focus-color, $alpha: 0.5);
+            outline-offset: 2px;
+        }
 
-		@include util.slider-thumb(":active:not(:disabled)") {
-			cursor: grabbing;
-			cursor: -webkit-grabbing;
-			outline: 5px solid color.change($alwan-focus-color, $alpha: 0.3);
-		}
+        // Thumb.
+        @mixin thumb() {
+            height: $slider-thumb-height;
+            width: $slider-thumb-width;
+            border: 1px solid $slider-thumb-border-color;
+            border-radius: 100%;
+            background-color: var(
+                prop.$slider-thumb-background,
+                light.$slider-thumb-background
+            );
+            box-shadow: $box-shadow;
+        }
 
-		@include util.slider-thumb(":focus") {
-			border-color: $alwan-focus-color;
-		}
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: math.div(
+                $slider-thumb-height - $slider-track-height,
+                -2
+            );
+            @include thumb();
+        }
 
-		&:disabled {
-			opacity: 0.5;
-			cursor: default;
-		}
-	}
+        &::-moz-range-thumb {
+            box-sizing: border-box;
+            padding: 0;
+            @include thumb();
+        }
 
-	&__hue {
-		direction: rtl;
+        @include util.slider-thumb(":not(:disabled)", ":hover") {
+            cursor: grab;
+            cursor: -webkit-grab;
+            border-color: var(
+                prop.$slider-thumb-hover-border-color,
+                light.$slider-thumb-hover-border-color
+            );
+            background: var(
+                prop.$slider-thumb-hover-background,
+                light.$slider-thumb-hover-background
+            );
+        }
 
-		@include util.slider-track() {
-			background: var(--hue-track);
-		}
-	}
+        @include util.slider-thumb(":active:not(:disabled)") {
+            cursor: grabbing;
+            cursor: -webkit-grabbing;
+            outline: 5px solid color.change($alwan-focus-color, $alpha: 0.3);
+        }
 
-	&__alpha {
-		margin-top: $alpha-slider-margin-top;
+        @include util.slider-thumb(":focus") {
+            border-color: $alwan-focus-color;
+        }
 
-		@include util.slider-track() {
-			background: var(--alpha-track);
-		}
-	}
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
 
-	&__inputs {
-		display: flex;
+    &__hue {
+        direction: rtl;
 
-		> label {
-			width: 100%;
-			text-align: center;
-			margin-right: $label-margin-right;
-			text-transform: uppercase;
-			color: var(prop.$label-color, light.$label-color);
-			cursor: pointer;
-			line-height: 1;
-			font-family: $label-font-family;
-			font-size: $label-font-size;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			user-select: none;
-		}
-	}
+        @include util.slider-track() {
+            background: var(--hue-track);
+        }
+    }
 
-	&__input {
-		display: block;
-		width: 100%;
-		padding: $input-padding-y $input-padding-x;
-		text-align: center;
-		color: var(prop.$alwan-foreground, light.$input-color);
-		font-size: $input-font-size;
-		font-family: $input-font-family;
-		border: 1px solid
-			var(prop.$alwan-border-color, light.$alwan-border-color);
-		margin-bottom: $input-margin-bottom;
-		background-color: var(prop.$input-background, light.$input-background);
-		line-height: $input-line-height;
-		border-radius: $input-border-radius;
-		transition:
-			border-color 0.2s,
-			background-color 0.2s;
+    &__alpha {
+        margin-top: $alpha-slider-margin-top;
 
-		&::selection {
-			color: #fff;
-			background-color: $alwan-focus-color;
-		}
+        @include util.slider-track() {
+            background: var(--alpha-track);
+        }
+    }
 
-		&:focus {
-			outline: 0;
-			border-color: $alwan-focus-color;
-			background-color: var(
-				prop.$alwan-background,
-				light.$alwan-background
-			);
+    &__inputs {
+        display: flex;
 
-			+ span {
-				color: $alwan-focus-color;
-			}
-		}
+        > label {
+            width: 100%;
+            text-align: center;
+            margin-right: $label-margin-right;
+            text-transform: uppercase;
+            color: var(prop.$label-color, light.$label-color);
+            cursor: pointer;
+            line-height: 1;
+            font-family: $label-font-family;
+            font-size: $label-font-size;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+    }
 
-		&:hover:not(:focus, :disabled) {
-			background-color: var(
-				prop.$input-hover-background,
-				light.$input-hover-background
-			);
-			border-color: var(
-				prop.$input-hover-border-color,
-				light.$input-hover-border-color
-			);
-		}
+    &__input {
+        display: block;
+        width: 100%;
+        padding: $input-padding-y $input-padding-x;
+        text-align: center;
+        color: var(prop.$alwan-foreground, light.$input-color);
+        font-size: $input-font-size;
+        font-family: $input-font-family;
+        border: 1px solid
+            var(prop.$alwan-border-color, light.$alwan-border-color);
+        margin-bottom: $input-margin-bottom;
+        background-color: var(prop.$input-background, light.$input-background);
+        line-height: $input-line-height;
+        border-radius: $input-border-radius;
+        transition:
+            border-color 0.2s,
+            background-color 0.2s;
 
-		&:disabled,
-		&:disabled + span {
-			opacity: 0.5;
-		}
-	}
+        &::selection {
+            color: #fff;
+            background-color: $alwan-focus-color;
+        }
 
-	&__swatches {
-		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
-		background-color: var(
-			prop.$swatches-container-background,
-			light.$swatches-container-background
-		);
-		padding: $swatches-container-padding;
-		max-height: $swatches-container-max-height;
-		overflow-y: auto;
-		border-top: 1px solid
-			var(prop.$alwan-border-color, light.$alwan-border-color);
-	}
+        &:focus {
+            outline: 0;
+            border-color: $alwan-focus-color;
+            background-color: var(
+                prop.$alwan-background,
+                light.$alwan-background
+            );
 
-	&__button {
-		display: inline-block;
-		width: auto;
-		background: transparent;
-		color: var(prop.$alwan-foreground, light.$alwan-foreground);
-		border: 1px solid transparent;
-		cursor: pointer;
-		padding: $button-padding-y $button-padding-x;
-		transition: background-color 0.2s ease-in-out;
-		outline: 0;
+            + span {
+                color: $alwan-focus-color;
+            }
+        }
 
-		&:disabled {
-			opacity: 0.5;
-			cursor: not-allowed;
-		}
+        &:hover:not(:focus, :disabled) {
+            background-color: var(
+                prop.$input-hover-background,
+                light.$input-hover-background
+            );
+            border-color: var(
+                prop.$input-hover-border-color,
+                light.$input-hover-border-color
+            );
+        }
 
-		&:hover:not(:disabled) {
-			background-color: var(
-				prop.$button-hover-background,
-				light.$button-hover-background
-			);
-		}
+        &:disabled,
+        &:disabled + span {
+            opacity: 0.5;
+        }
+    }
 
-		&:focus-visible:not(.alwan__ref) {
-			border-color: $alwan-focus-color;
-		}
+    &__swatches {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        background-color: var(
+            prop.$swatches-container-background,
+            light.$swatches-container-background
+        );
+        padding: $swatches-container-padding;
+        max-height: $swatches-container-max-height;
+        overflow-y: auto;
+        border-top: 1px solid
+            var(prop.$alwan-border-color, light.$alwan-border-color);
+    }
 
-		svg {
-			fill: currentColor;
-			pointer-events: none;
-			vertical-align: middle;
-		}
-	}
+    &__button {
+        display: inline-block;
+        width: auto;
+        background: transparent;
+        color: var(prop.$alwan-foreground, light.$alwan-foreground);
+        border: 1px solid transparent;
+        cursor: pointer;
+        padding: $button-padding-y $button-padding-x;
+        transition: background-color 0.2s ease-in-out;
+        outline: 0;
 
-	&__swatch {
-		width: $swatch-button-width;
-		height: $swatch-button-height;
-		margin: $swatch-button-margin;
-		border-radius: $swatch-button-border-radius;
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
-		&:hover:not(:disabled) {
-			transform: scale(1.1);
-		}
+        &:hover:not(:disabled) {
+            background-color: var(
+                prop.$button-hover-background,
+                light.$button-hover-background
+            );
+        }
 
-		&:focus {
-			outline: 1px solid var(--color);
-			outline-offset: 1px;
-		}
-	}
+        &:focus-visible:not(.alwan__ref) {
+            border-color: $alwan-focus-color;
+        }
 
-	&__ref {
-		width: $preset-button-width;
-		height: $preset-button-height;
-		border-radius: $preset-button-border-radius;
-		border: $preset-button-border;
-		outline: $preset-button-outline;
-		flex-shrink: 0;
+        svg {
+            fill: currentColor;
+            pointer-events: none;
+            vertical-align: middle;
+        }
+    }
 
-		&:focus,
-		&:focus-visible {
-			outline-color: $alwan-focus-color;
-			box-shadow: 0 0 2px 2px $alwan-focus-color;
-		}
-	}
+    &__swatch {
+        width: $swatch-button-width;
+        height: $swatch-button-height;
+        margin: $swatch-button-margin;
+        border-radius: $swatch-button-border-radius;
 
-	&__cp {
-		margin-right: $preview-area-margin-right;
-	}
+        &:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
 
-	&__swatch,
-	&__preview,
-	&__ref {
-		position: relative;
-		background: var(--alwan-pattern);
-		background-clip: padding-box;
-		overflow: hidden;
-		padding: 0;
+        &:focus {
+            outline: 1px solid var(--color);
+            outline-offset: 1px;
+        }
+    }
 
-		&::before {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: var(--color);
-		}
-	}
+    &__ref {
+        width: $preset-button-width;
+        height: $preset-button-height;
+        border-radius: $preset-button-border-radius;
+        border: $preset-button-border;
+        outline: $preset-button-outline;
+        flex-shrink: 0;
 
-	&__toggle-button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 100%;
-		padding: 0;
-		height: $swatches-toggle-button-height;
-		border-top: 1px solid
-			var(prop.$alwan-border-color, light.$alwan-border-color);
-		overflow: hidden;
-	}
+        &:focus,
+        &:focus-visible {
+            outline-color: $alwan-focus-color;
+            box-shadow: 0 0 2px 2px $alwan-focus-color;
+        }
+    }
 
-	&--collapse {
-		&.alwan__swatches {
-			display: none;
-		}
+    &__cp {
+        margin-right: $preview-area-margin-right;
+    }
 
-		& + .alwan__toggle-button svg {
-			transform: rotate(180deg);
-		}
-	}
+    &__swatch,
+    &__preview,
+    &__ref {
+        position: relative;
+        background: var(--alwan-pattern);
+        background-clip: padding-box;
+        overflow: hidden;
+        padding: 0;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color);
+        }
+    }
+
+    &__toggle-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0;
+        height: $swatches-toggle-button-height;
+        border-top: 1px solid
+            var(prop.$alwan-border-color, light.$alwan-border-color);
+        overflow: hidden;
+    }
+
+    &--collapse {
+        &.alwan__swatches {
+            display: none;
+        }
+
+        & + .alwan__toggle-button svg {
+            transform: rotate(180deg);
+        }
+    }
 }

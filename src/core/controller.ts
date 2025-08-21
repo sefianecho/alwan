@@ -1,31 +1,34 @@
 import type Alwan from "..";
 import { createComponents, renderComponents } from "../components";
-import { CLICK, CLOSE, COLOR, OPEN, RGB_FORMAT } from "../constants";
+import { CLICK, CLOSE, OPEN } from "../constants";
 import { createPopover } from "../popover";
 import { getRef } from "../ref";
-import type { HTMLElementHasDisabled, IPopover, alwanApp } from "../types";
+import type { IPopover, IController } from "../types";
 import {
-    appendChildren,
     createDivElement,
     getBody,
     getElements,
     getInteractiveElements,
     removeElement,
     replaceElement,
-    setCustomProperty,
-    setInnerHTML,
+    setColorProperty,
+    setElementVisibility,
     toggleClassName,
+    addEvent,
+    removeEvent,
 } from "../utils/dom";
-import { isString, isset } from "../utils";
-import { deepMerge, merge } from "../utils/object";
-import { addEvent, removeEvent } from "./events/binder";
+import { deepMerge } from "../utils/object";
 
-export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
-    const { config, _color: colorState } = alwan;
-    const root = createDivElement("alwan");
+export const controller = (
+    alwan: Alwan,
+    userRef: Element | null,
+): IController => {
+    const { config, s: colorState } = alwan;
     const handleClick = () => alwan.toggle();
     const [selector, utility, sliders, inputs, swatches] =
         createComponents(alwan);
+    let root: HTMLDivElement;
+    let innerEl: HTMLDivElement;
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
     let ref: HTMLElement | SVGElement;
@@ -33,14 +36,8 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
     colorState._setHooks(
         // On update.
         (color) => {
-            setCustomProperty(ref, COLOR, color.rgb);
-            setCustomProperty(root, "a", color.a);
-            setCustomProperty(root, "h", color.h);
-            setCustomProperty(
-                root,
-                RGB_FORMAT,
-                `${color.r},${color.g},${color.b}`,
-            );
+            setColorProperty(ref, color.rgb);
+            innerEl.style.cssText = `--rgb:${color.r},${color.g},${color.b};--a:${color.a};--h:${color.h}`;
             inputs._setValues(color);
         },
         // On setcolor.
@@ -52,47 +49,47 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
 
     return {
         _setup(options) {
-            options = options || {};
             const self = this;
-            const { id, color } = options;
+            const { id, color = colorState._value.hsl } = options;
             const { theme, parent, toggle, popover, target, disabled } =
                 deepMerge(config, options);
 
-            const parentElement = getElements(parent)[0];
-            const targetElement = getElements(target)[0];
+            let parentEl = getElements(parent)[0];
+            let targetEl = getElements(target)[0];
 
             ref = getRef(ref || userRef, userRef, config) as
                 | HTMLElement
                 | SVGElement;
             addEvent(ref, CLICK, handleClick);
 
-            removeElement(root);
-            setInnerHTML(root, "");
-            appendChildren(
-                root,
-                ...renderComponents(
+            innerEl = createDivElement(
+                "",
+                renderComponents(
                     [selector, [utility, sliders], inputs, swatches],
                     config,
                 ),
             );
 
-            isString(id) && (root.id = id);
-            merge(root.dataset, {
-                theme,
-                display: popover ? "popover" : "block",
-            });
+            root = replaceElement(
+                root,
+                createDivElement("alwan", innerEl, {
+                    id,
+                    "data-theme": theme,
+                    "data-popover": !!popover,
+                }),
+            );
 
             // Hide reference element if both toggle and popover options are set to false,
-            ref.style.display = popover || toggle ? "" : "none";
+            setElementVisibility(ref, !popover && !toggle);
 
             if (popoverInstance) {
                 popoverInstance._destroy();
                 popoverInstance = null;
             }
             if (popover) {
-                appendChildren(parentElement || getBody(), root);
+                toggle && (parentEl = parentEl || getBody());
                 popoverInstance = createPopover(
-                    targetElement || ref,
+                    targetEl || ref,
                     root,
                     ref,
                     config,
@@ -101,37 +98,25 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             } else {
                 // If there is a target element  or a parent element then append
                 // the color picker widget in it, otherwise insert it after the reference element.
-                if (targetElement || parentElement) {
-                    appendChildren(targetElement || parentElement, root);
-                } else {
-                    ref.after(root);
-                }
+                parentEl = targetEl || parentEl;
+                // Open if toggle is false, or leave it as the previous state if
+                // the color picker is not disabled.
                 self._toggle(!toggle || (!disabled && isOpen), true);
             }
 
-            if (!toggle) {
-                self._toggle(true, true);
-            }
+            parentEl ? parentEl.append(root) : ref.after(root);
 
-            // Disable/Enable color picker.
-            [ref, ...getInteractiveElements(root)].forEach(
-                (element) =>
-                    ((element as HTMLElementHasDisabled).disabled = !!disabled),
-            );
             if (disabled) {
-                if (popover) {
-                    self._toggle(false, true);
-                } else if (!toggle) {
-                    self._toggle(true, true);
-                }
+                [
+                    ref as HTMLButtonElement,
+                    ...getInteractiveElements(root),
+                ].forEach((element) => {
+                    element.disabled = true;
+                });
             }
 
-            if (isset(color)) {
-                colorState._setColor(color);
-            }
-
-            // Update ui.
-            colorState._update({}, false, false);
+            colorState._parse(color);
+            return self;
         },
 
         _toggle(state = !isOpen, forced = false) {
@@ -147,7 +132,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
                 }
                 if (state !== isOpen) {
                     isOpen = state;
-                    alwan._events._emit(isOpen ? OPEN : CLOSE);
+                    alwan.e._emit(isOpen ? OPEN : CLOSE);
                 }
             }
         },
@@ -167,7 +152,7 @@ export const createApp = (alwan: Alwan, userRef: Element | null): alwanApp => {
             }
             if (userRef) {
                 removeEvent(userRef, CLICK, handleClick);
-                replaceElement(userRef, ref);
+                replaceElement(ref, userRef);
             } else {
                 removeElement(ref);
             }
