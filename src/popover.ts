@@ -12,7 +12,6 @@ import {
 import type {
     EventBinder,
     IPopover,
-    LabeledElement,
     alignment,
     IController,
     alwanConfig,
@@ -196,14 +195,17 @@ export const createPopover = (
         });
     }
 
-    const closeByPointer = ({ target }: PointerEvent) => {
+    // We don't close if one of these elements is in the event's composed path.
+    const excludedTargets = [
+        floating,
+        ref,
+        ...((ref as HTMLButtonElement).labels || []),
+    ];
+    const closeByPointer = (e: PointerEvent) => {
+        const path = e.composedPath();
         if (
             isFloatingVisible &&
-            // Alwan reference element in a shadow dom and target is the shadow root.
-            (!shadowRoot || target !== shadowRoot.host) &&
-            ![ref, floating, ...((ref as LabeledElement).labels || [])].some(
-                (node) => node.contains(target as Node),
-            )
+            !excludedTargets.some((el) => path.includes(el))
         ) {
             _toggle(false);
         }
@@ -236,7 +238,6 @@ export const createPopover = (
         fn(ROOT, SCROLL, updatePositionOnScroll, CAPTURE_PHASE);
         fn(ROOT, POINTER_DOWN, closeByPointer);
         if (shadowRoot) {
-            fn(shadowRoot, POINTER_DOWN, closeByPointer);
             fn(shadowRoot, SCROLL, updatePositionOnScroll, CAPTURE_PHASE);
         }
     };

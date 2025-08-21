@@ -317,13 +317,3 @@ export interface IPopover {
     _reposition(isOpenNow: boolean, wasOpenBefore?: boolean): void;
     _destroy(): void;
 }
-
-export type LabeledElement =
-    | HTMLInputElement
-    | HTMLSelectElement
-    | HTMLButtonElement
-    | ElementInternals
-    | HTMLMeterElement
-    | HTMLOutputElement
-    | HTMLProgressElement
-    | HTMLTextAreaElement;
