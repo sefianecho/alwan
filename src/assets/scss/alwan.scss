@@ -179,6 +179,8 @@
         outline: 0;
         -webkit-appearance: none;
         appearance: none;
+        touch-action: none;
+        user-select: none;
 
         &:active {
             cursor: grabbing;
