@@ -1,9 +1,9 @@
 import { RGBToHSL } from "./converter";
-import { DEFAULT_COLOR, HSL_FORMAT, RGB_FORMAT } from "./constants";
+import { DEFAULT_COLOR } from "./constants";
 import { stringify } from "./stringify";
-import { Color, HSLA, RGBA } from "./types";
+import { HSLA, RGBA, colorFormat } from "./types";
 import { createElement } from "./utils/dom";
-import { isNumber, isString } from "./utils";
+import { getColorObjectFormat, isString } from "./utils";
 import { PI, clamp, normalizeAngle, round, toDecimal } from "./utils/math";
 import { isPlainObject } from "./utils/object";
 
@@ -19,23 +19,21 @@ const HSL_REGEX =
     /a?\(\s*([+-]?\d*\.?\d+)(\w*)?\s*[\s,]\s*([+-]?\d*\.?\d+)%?\s*,?\s*([+-]?\d*\.?\d+)%?(?:\s*[\/,]\s*([+-]?\d*\.?\d+)(%)?)?\s*\)?$/;
 
 export const parseColor = (
-    color: Color,
+    color: unknown,
     opacity?: boolean,
 ): [HSLA, RGBA | undefined] => {
     let rgb: RGBA | undefined;
     let hsl: HSLA | undefined;
+    let format: colorFormat | undefined;
     let str = "";
 
     if (isString(color)) {
         str = color.trim();
     } else if (isPlainObject(color)) {
-        [RGB_FORMAT, HSL_FORMAT].some(
-            (format) =>
-                [...format].every((key) =>
-                    isNumber(color[key as keyof Color]),
-                ) &&
-                (str = stringify(color as HSLA | RGBA, format === HSL_FORMAT)),
-        );
+        format = getColorObjectFormat(color);
+        if (format) {
+            str = stringify(color as HSLA | RGBA, format);
+        }
     }
 
     if (/^hsl/.test(str)) {
@@ -69,7 +67,7 @@ export const parseColor = (
                 a: 1,
             };
         } else {
-            const [r, g, b, a] = str.match(/\d+\.?\d*/g)!.map(Number);
+            const [r, g, b, a] = str.match(/[\d\.]+/g)!.map(Number);
             rgb = { r, g, b, a };
         }
 

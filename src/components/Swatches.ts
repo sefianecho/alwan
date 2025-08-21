@@ -9,7 +9,7 @@ import {
     toggleClassName,
     addEvent,
 } from "../utils/dom";
-import { isString } from "../utils";
+import { getColorObjectFormat, isString } from "../utils";
 import { isArray } from "../utils/object";
 import { stringify } from "../stringify";
 
@@ -29,7 +29,9 @@ export const Swatches = (alwan: Alwan): ISwatches => {
             container = createDivElement(
                 "alwan__swatches",
                 swatches.map((color) => {
-                    const str = isString(color) ? color : stringify(color);
+                    const str = isString(color)
+                        ? color
+                        : stringify(color, getColorObjectFormat(color as {}));
                     const button = createButton(
                         buttons.swatch,
                         "alwan__swatch",

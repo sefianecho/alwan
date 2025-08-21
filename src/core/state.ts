@@ -1,6 +1,6 @@
 import type Alwan from "..";
 import { HSLToRGB, RGBToHEX } from "../converter";
-import { CHANGE, COLOR } from "../constants";
+import { CHANGE, COLOR, HSL_FORMAT } from "../constants";
 import { parseColor } from "../parser";
 import { stringify } from "../stringify";
 import type {
@@ -58,7 +58,7 @@ export const colorState = (alwan: Alwan): IColorState => {
             state.l = round(state.l);
 
             state.rgb = stringify(state);
-            state.hsl = stringify(state, true);
+            state.hsl = stringify(state, HSL_FORMAT);
             state.hex = RGBToHEX(state);
 
             onUpdate(state);

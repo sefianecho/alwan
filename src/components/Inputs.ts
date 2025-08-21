@@ -39,7 +39,8 @@ export const Inputs = (alwan: Alwan): IInputs => {
 
         ObjectForEach(inputsMap, (key, input) => (color[key] = input!.value));
         colorState._parse(
-            (color[inputsFormat] as string) || stringify(color as colorDetails),
+            (color[inputsFormat] as string) ||
+                stringify(color as colorDetails, inputsFormat),
             true,
         );
     };
