@@ -148,17 +148,6 @@ export const getBoundingRectArray = (
     return [x, y, width, height, width + x, height + y];
 };
 
-export const getShadowRoot = (node: Node | null): ShadowRoot | null => {
-    node = node && node.parentNode;
-    if (node instanceof ShadowRoot) {
-        return node;
-    }
-    if (!node || node === getBody()) {
-        return null;
-    }
-    return getShadowRoot(node);
-};
-
 export const createContainer = (children: Array<Element | null | undefined>) =>
     createDivElement("alwan__container", children);
 
@@ -167,51 +156,53 @@ export const setElementVisibility = (
     hidden?: boolean,
 ) => (element.style.display = hidden ? "none" : "");
 
+const isContainingBlock = ({
+    transform,
+    perspective,
+    filter,
+    containerType,
+    backdropFilter,
+    willChange,
+    contain,
+}: CSSStyleDeclaration) =>
+    transform !== "none" ||
+    perspective !== "none" ||
+    containerType !== "normal" ||
+    backdropFilter !== "none" ||
+    filter !== "none" ||
+    (willChange && /\b(transform|perspective|filter)\b/.test(willChange)) ||
+    (contain && /\b(paint|layout|strict|content)\b/.test(contain));
+
 const topLayerSelectors = [":popover-open", ":modal"] as const;
-const isTopLayer = (element: Element) =>
+const isTopLayer = (node: Node) =>
+    isElement(node) &&
     topLayerSelectors.some((selector) => {
         try {
-            return element.matches(selector);
+            return node.matches(selector);
         } catch (_) {
             return false;
         }
     });
-const isContainingBlock = (element: Element) => {
-    const {
-        transform,
-        perspective,
-        filter,
-        containerType,
-        backdropFilter,
-        willChange,
-        contain,
-    } = getComputedStyle(element);
-
-    return (
-        transform !== "none" ||
-        perspective !== "none" ||
-        containerType !== "normal" ||
-        backdropFilter !== "none" ||
-        filter !== "none" ||
-        (willChange && /\b(transform|perspective|filter)\b/.test(willChange)) ||
-        (contain && /\b(paint|layout|strict|content)\b/.test(contain))
-    );
-};
 
 export const getOffsetParentBoundingRect = (
-    element: Element | null,
+    node: Node | null,
+    root: ShadowRoot | null,
 ): number[] => {
-    element = getParentElement(element);
+    node = node && node.parentNode;
 
-    if (!element || element === DOC_ELEMENT || isTopLayer(element)) {
+    if (!node || node === ROOT || isTopLayer(node)) {
         return [0, 0];
     }
 
-    if (isContainingBlock(element)) {
-        return getBoundingRectArray(element, true);
+    if (node === root) {
+        node = root.host;
     }
 
-    return getOffsetParentBoundingRect(element);
+    if (isElement(node) && isContainingBlock(getComputedStyle(node))) {
+        return getBoundingRectArray(node, true);
+    }
+
+    return getOffsetParentBoundingRect(node, root);
 };
 
 export const addEvent: EventBinder = (target, type, listener, options) =>

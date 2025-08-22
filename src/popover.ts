@@ -21,7 +21,6 @@ import {
     getBoundingRectArray,
     getOffsetParentBoundingRect,
     getInteractiveElements,
-    getShadowRoot,
     translate,
     addEvent,
     removeEvent,
@@ -68,12 +67,14 @@ export const createPopover = (
     let isTargetVisible: boolean;
     let isFloatingVisible = _isOpen();
 
+    let rootNode = target.getRootNode();
+
     const [side, alignment] = (
         isString(position) ? position.split("-") : []
     ) as [side, alignment];
 
     const floatingStyle = floating.style;
-    const shadowRoot = getShadowRoot(ref);
+    const shadowRoot = rootNode instanceof ShadowRoot ? rootNode : null;
 
     const focusableElements = getInteractiveElements(floating);
     const firstFocusableElement = focusableElements[0];
@@ -83,7 +84,10 @@ export const createPopover = (
         const viewport = [DOC_ELEMENT.clientWidth, DOC_ELEMENT.clientHeight];
         const targetRect = getBoundingRectArray(target);
         const floatingRect = getBoundingRectArray(floating);
-        const offsetParentRect = getOffsetParentBoundingRect(floating);
+        const offsetParentRect = getOffsetParentBoundingRect(
+            floating,
+            shadowRoot,
+        );
 
         const coordinates: [x: number, y: number] = [-1, -1];
 
@@ -223,10 +227,15 @@ export const createPopover = (
         );
     });
 
-    const updatePositionOnScroll = () => {
-        updatePosition();
-        if (closeOnScroll) {
-            _toggle(false);
+    const updatePositionOnScroll = ({ target: t }: Event) => {
+        if (
+            (shadowRoot && (t as Node).contains(shadowRoot.host)) ||
+            (t as Node).contains(target)
+        ) {
+            updatePosition();
+            if (closeOnScroll) {
+                _toggle(false);
+            }
         }
     };
 
