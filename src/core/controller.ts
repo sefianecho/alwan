@@ -53,12 +53,13 @@ export const controller = (
             const { theme, parent, toggle, popover, target, disabled } =
                 deepMerge(config, options);
 
-            let parentEl = getElements(parent)[0];
-            let targetEl = getElements(target)[0];
-
             ref = getRef(ref || userRef, userRef, config) as
                 | HTMLElement
                 | SVGElement;
+
+            let parentEl = getElements(parent)[0];
+            let targetEl = getElements(target)[0] || ref;
+
             addEvent(ref, CLICK, handleClick);
 
             innerEl = createDivElement(
@@ -86,9 +87,9 @@ export const controller = (
                 popoverInstance = null;
             }
             if (popover) {
-                toggle && (parentEl = parentEl || getBody());
+                parentEl = parentEl || (toggle && getBody());
                 popoverInstance = createPopover(
-                    targetEl || ref,
+                    targetEl,
                     root,
                     ref,
                     config,
@@ -97,13 +98,13 @@ export const controller = (
             } else {
                 // If there is a target element  or a parent element then append
                 // the color picker widget in it, otherwise insert it after the reference element.
-                parentEl = targetEl || parentEl;
+                // parentEl = targetEl || parentEl;
                 // Open if toggle is false, or leave it as the previous state if
                 // the color picker is not disabled.
                 self._toggle(!toggle || (!disabled && isOpen), true);
             }
 
-            parentEl ? parentEl.append(root) : ref.after(root);
+            parentEl ? parentEl.append(root) : targetEl.after(root);
 
             if (disabled) {
                 [
