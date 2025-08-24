@@ -10,7 +10,7 @@ import type {
     IColorState,
     IController,
     alwanConfig,
-    alwanEventListener,
+    alwanEventHandler,
     alwanEventType,
     alwanOptions,
     alwanValue,
@@ -74,11 +74,11 @@ export class Alwan {
         this.c._toggle();
     }
 
-    on(type: alwanEventType, listener: alwanEventListener) {
+    on(type: alwanEventType, listener: alwanEventHandler) {
         this.e._on(type, listener);
     }
 
-    off(type?: alwanEventType, listener?: alwanEventListener) {
+    off(type?: alwanEventType, listener?: alwanEventHandler) {
         this.e._off(type, listener);
     }
 

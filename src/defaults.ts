@@ -24,7 +24,7 @@ export const alwanDefaults: alwanConfig = {
     toggleSwatches: false,
     closeOnScroll: false,
     i18n: {
-        palette: "Color picker",
+        picker: "Color picker",
         buttons: {
             copy: "Copy color to clipboard",
             changeFormat: "Change color format",

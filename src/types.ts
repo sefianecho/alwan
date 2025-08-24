@@ -267,15 +267,15 @@ export interface alwanEvent extends alwanValue {
     readonly type: alwanEventType;
     readonly source: Alwan;
 }
-export type alwanEventListener = (ev: alwanEvent) => void;
+export type alwanEventHandler = (ev: alwanEvent) => void;
 export type alwanEventAndListenersMap = Record<
     alwanEventType,
-    alwanEventListener[]
+    alwanEventHandler[]
 >;
 export interface EventEmitter {
     _emit(type: alwanEventType, value?: colorDetails): void;
-    _on(type: alwanEventType, listener: alwanEventListener): void;
-    _off(type?: alwanEventType, listener?: alwanEventListener): void;
+    _on(type: alwanEventType, listener: alwanEventHandler): void;
+    _off(type?: alwanEventType, listener?: alwanEventHandler): void;
 }
 type EventMap = DocumentEventMap &
     HTMLElementEventMap &
