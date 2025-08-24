@@ -101,7 +101,7 @@ export const Selector = ({ s: colorState }: Alwan): ISelector => {
                 "alwan__selector",
                 cursor,
                 disabled ? {} : { tabindex: 0 },
-                i18n.palette,
+                i18n.picker || i18n.palette,
             );
             if (!disabled) {
                 addEvent(selectorEl, POINTER_DOWN, dragStart);

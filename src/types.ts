@@ -188,6 +188,10 @@ export interface alwanConfig {
      * }`
      */
     i18n: {
+        picker: string;
+        /**
+         * Deprecated – Replaced by i18n.picker
+         **/
         palette: string;
         buttons: {
             copy: string;
