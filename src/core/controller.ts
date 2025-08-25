@@ -22,15 +22,17 @@ export const controller = (
     alwan: Alwan,
     userRef: Element | null,
 ): IController => {
-    const { config, s: colorState } = alwan;
-    const handleClick = () => alwan.toggle();
-    const [selector, utility, sliders, inputs, swatches] =
-        createComponents(alwan);
-    let root: HTMLDivElement;
-    let innerEl: HTMLDivElement;
+    let innerEl = createDivElement();
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
     let ref: HTMLElement | SVGElement;
+
+    const { config, s: colorState } = alwan;
+    const root = createDivElement(innerEl, "alwan");
+    const [selector, utility, sliders, inputs, swatches] =
+        createComponents(alwan);
+
+    const handleClick = () => alwan.toggle();
 
     colorState._setHooks(
         // On update.
@@ -62,21 +64,18 @@ export const controller = (
 
             addEvent(ref, CLICK, handleClick);
 
-            innerEl = createDivElement(
-                "",
-                renderComponents(
-                    [selector, [utility, sliders], inputs, swatches],
-                    config,
-                ),
-            );
+            id && (root.id = id);
+            toggleModifierClass(root, "dark", theme === "dark");
+            toggleModifierClass(root, "block", !popover);
 
-            root = replaceElement(
-                root,
-                createDivElement("alwan", innerEl, {
-                    id,
-                    "data-theme": theme,
-                    "data-popover": !!popover,
-                }),
+            innerEl = replaceElement(
+                innerEl,
+                createDivElement(
+                    renderComponents(
+                        [selector, [utility, sliders], inputs, swatches],
+                        config,
+                    ),
+                ),
             );
 
             // Hide reference element if both toggle and popover options are set to false,
@@ -96,9 +95,6 @@ export const controller = (
                     self,
                 );
             } else {
-                // If there is a target element  or a parent element then append
-                // the color picker widget in it, otherwise insert it after the reference element.
-                // parentEl = targetEl || parentEl;
                 // Open if toggle is false, or leave it as the previous state if
                 // the color picker is not disabled.
                 self._toggle(!toggle || (!disabled && isOpen), true);
@@ -120,7 +116,8 @@ export const controller = (
 
         _toggle(state = !isOpen, forced = false) {
             if (
-                ((!popoverInstance || popoverInstance._isVisible()) &&
+                (state !== isOpen &&
+                    (!popoverInstance || popoverInstance._isVisible()) &&
                     !config.disabled &&
                     config.toggle) ||
                 forced
@@ -129,10 +126,8 @@ export const controller = (
                 if (popoverInstance) {
                     popoverInstance._reposition(state, isOpen);
                 }
-                if (state !== isOpen) {
-                    isOpen = state;
-                    alwan.e._emit(isOpen ? OPEN : CLOSE);
-                }
+                isOpen = state;
+                alwan.e._emit(isOpen ? OPEN : CLOSE);
             }
         },
 
