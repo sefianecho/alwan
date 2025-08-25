@@ -6,7 +6,7 @@ import {
     createButton,
     createDivElement,
     setColorProperty,
-    toggleClassName,
+    toggleModifierClass,
     addEvent,
 } from "../utils/dom";
 import { getColorObjectFormat, isString } from "../utils";
@@ -27,7 +27,6 @@ export const Swatches = (alwan: Alwan): ISwatches => {
             }
 
             container = createDivElement(
-                "alwan__swatches",
                 swatches.map((color) => {
                     const str = isString(color)
                         ? color
@@ -47,6 +46,7 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 
                     return button;
                 }),
+                "alwan__swatches",
             );
 
             if (!toggleSwatches) {
@@ -55,7 +55,7 @@ export const Swatches = (alwan: Alwan): ISwatches => {
 
             collapseFn = (collapse = !isCollapsed) => {
                 isCollapsed = collapse;
-                toggleClassName(container!, "alwan--collapse", isCollapsed);
+                toggleModifierClass(container!, "collapse", isCollapsed);
                 alwan.c._reposition();
             };
 
@@ -67,7 +67,7 @@ export const Swatches = (alwan: Alwan): ISwatches => {
             addEvent(collapseButton, CLICK, () => collapseFn());
             collapseFn(isCollapsed);
 
-            return createDivElement("", [container, collapseButton]);
+            return createDivElement([container, collapseButton]);
         },
     };
 };

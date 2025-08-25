@@ -15,7 +15,7 @@ export const Sliders = ({ s: colorState, e: _events }: Alwan): ISliders => {
                 ? createSlider(sliders.alpha, "alpha", 1, 0.01)
                 : null;
 
-            container = createDivElement("", [hue, alpha]);
+            container = createDivElement([hue, alpha]);
 
             addEvent(container, CHANGE, () => _events._emit(CHANGE));
             addEvent(container, INPUT, ({ target }) =>

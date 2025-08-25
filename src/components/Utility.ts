@@ -5,7 +5,7 @@ import type { IUtility } from "../types";
 import {
     createButton,
     createDivElement,
-    setElementVisibility,
+    hideElement,
     addEvent,
 } from "../utils/dom";
 
@@ -30,8 +30,8 @@ export const Utility = (alwan: Alwan): IUtility => ({
                 copyButton.children as unknown as SVGElement[];
 
             setIcon = (isCopied) => {
-                setElementVisibility(clipboardIcon, isCopied);
-                setElementVisibility(checkIcon, !isCopied);
+                hideElement(clipboardIcon, isCopied);
+                hideElement(checkIcon, !isCopied);
             };
             setIcon(false);
 
@@ -48,7 +48,7 @@ export const Utility = (alwan: Alwan): IUtility => ({
         }
 
         return preview
-            ? createDivElement("alwan__preview", copyButton)
+            ? createDivElement(copyButton, "alwan__preview")
             : copyButton;
     },
 });

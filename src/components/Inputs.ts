@@ -63,7 +63,6 @@ export const Inputs = (alwan: Alwan): IInputs => {
          * </div>
          */
         return createDivElement(
-            "alwan__inputs",
             fields.map((field) =>
                 createElement("label", "", [
                     (inputsMap[field as keyof typeof inputsMap] = createElement(
@@ -80,6 +79,7 @@ export const Inputs = (alwan: Alwan): IInputs => {
                     createElement("span", "", field),
                 ]),
             ),
+            "alwan__inputs",
         );
     };
 
@@ -124,7 +124,7 @@ export const Inputs = (alwan: Alwan): IInputs => {
             }
 
             inputsGroup = build();
-            inputsWrapper = createDivElement("", [inputsGroup]);
+            inputsWrapper = createDivElement(inputsGroup);
 
             addEvent(inputsWrapper, INPUT, handleChange);
             addEvent(inputsWrapper, CHANGE, () => {

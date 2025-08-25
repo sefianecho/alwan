@@ -96,14 +96,14 @@ export const Selector = ({ s: colorState }: Alwan): ISelector => {
 
     return {
         _render({ i18n, disabled }) {
-            cursor = createDivElement("alwan__cursor");
+            cursor = createDivElement("", "alwan__cursor");
             selectorEl = createDivElement(
-                "alwan__selector",
                 cursor,
-                disabled ? {} : { tabindex: 0 },
+                "alwan__selector",
                 i18n.picker || i18n.palette,
             );
             if (!disabled) {
+                selectorEl.tabIndex = 0;
                 addEvent(selectorEl, POINTER_DOWN, dragStart);
                 addEvent(selectorEl, KEY_DOWN, handleKeyboard);
             }

@@ -11,8 +11,8 @@ import {
     getInteractiveElements,
     replaceElement,
     setColorProperty,
-    setElementVisibility,
-    toggleClassName,
+    hideElement,
+    toggleModifierClass,
     addEvent,
     removeEvent,
 } from "../utils/dom";
@@ -80,7 +80,7 @@ export const controller = (
             );
 
             // Hide reference element if both toggle and popover options are set to false,
-            setElementVisibility(ref, !popover && !toggle);
+            hideElement(ref, !popover && !toggle);
 
             if (popoverInstance) {
                 popoverInstance._destroy();
@@ -125,7 +125,7 @@ export const controller = (
                     config.toggle) ||
                 forced
             ) {
-                toggleClassName(root, "alwan--open", state);
+                toggleModifierClass(root, OPEN, state);
                 if (popoverInstance) {
                     popoverInstance._reposition(state, isOpen);
                 }

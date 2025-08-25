@@ -5,12 +5,12 @@ import { ObjectForEach, isArray } from "./object";
 
 export const getBody = () => ROOT.body;
 
-export const getElements = (
-    reference: string | Element,
+export const getElements = <T extends Element>(
+    reference: string | T,
     context: Element = DOC_ELEMENT,
-) => {
+): T[] => {
     if (isString(reference) && reference.trim()) {
-        return [...context.querySelectorAll(reference)];
+        return [...context.querySelectorAll<T>(reference)];
     }
     // Reference must be an element in the page.
     if (isElement(reference)) {
@@ -21,14 +21,15 @@ export const getElements = (
 };
 
 export const getInteractiveElements = (context: HTMLElement) =>
-    getElements(`${INPUT},${BUTTON},[tabindex]`, context) as Array<
-        HTMLInputElement | HTMLButtonElement
-    >;
+    getElements<HTMLInputElement | HTMLButtonElement>(
+        `${INPUT},${BUTTON},[tabindex]`,
+        context,
+    );
 
 export const createElement = <T extends keyof HTMLElementTagNameMap>(
     tagName: T,
     className?: string,
-    content?: string | Element | null | Array<Element | undefined | null>,
+    content?: string | Node | null | Array<Node | undefined | null>,
     attributes: Attrs = {},
     ariaLabel?: string,
 ) => {
@@ -43,8 +44,8 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
             element.innerHTML = content;
         } else {
             element.append(
-                ...((isArray(content) ? content : [content]) as Node[]).filter(
-                    (child) => child,
+                ...(isArray(content) ? content : [content]).filter(
+                    (child): child is Node => !!child,
                 ),
             );
         }
@@ -63,13 +64,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
 };
 
 export const createDivElement = (
-    ...args: [
-        className?: string,
-        content?: Element | null | string | Array<Element | null | undefined>,
-        attrs?: Attrs,
-        ariaLabel?: string,
-    ]
-) => createElement("div", ...args);
+    children?: Node | null | string | Array<Node | null | undefined>,
+    className?: string,
+    ariaLabel?: string,
+) => createElement("div", className, children, {}, ariaLabel);
 
 export const replaceElement = <T extends Element>(
     element: Element | undefined,
@@ -124,11 +122,11 @@ export const setColorProperty = (
     color: string,
 ) => element.style.setProperty("--color", color);
 
-export const toggleClassName = (
+export const toggleModifierClass = (
     element: Element,
     token: string,
     forced?: boolean,
-) => element.classList.toggle(token, forced);
+) => element.classList.toggle("alwan--" + token, forced);
 
 export const translate = (element: HTMLElement, x: number, y: number) => {
     element.style.transform = `translate(${x}px,${y}px)`;
@@ -148,10 +146,10 @@ export const getBoundingRectArray = (
     return [x, y, width, height, width + x, height + y];
 };
 
-export const createContainer = (children: Array<Element | null | undefined>) =>
-    createDivElement("alwan__container", children);
+export const createContainer = (children: Array<Node | null | undefined>) =>
+    createDivElement(children, "alwan__container");
 
-export const setElementVisibility = (
+export const hideElement = (
     element: HTMLElement | SVGElement,
     hidden?: boolean,
 ) => (element.style.display = hidden ? "none" : "");
