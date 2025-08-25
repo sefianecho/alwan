@@ -1,6 +1,13 @@
 # Alwan
 
-&nbsp;&nbsp;&nbsp;
+A lightweight, customizable, and touch-friendly color picker implemented in vanilla JavaScript, with no external dependencies.
+
+![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/alwan?style=for-the-badge&color=%2357ad10)
+![npm bundle size](https://img.shields.io/bundlephobia/min/alwan?style=for-the-badge)
+![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/alwan?style=for-the-badge)
+![NPM Version](https://img.shields.io/npm/v/alwan?style=for-the-badge)
+
+---
 
 <div align="center">
   <img alt="alwan light theme" src="https://github.com/SofianChouaib/alwan/blob/main/images/alwan-light.png?raw=true">
@@ -10,33 +17,23 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
-&nbsp;&nbsp;&nbsp;
-
-![npm bundle size](https://img.shields.io/bundlephobia/min/alwan)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/alwan)
-![npm](https://img.shields.io/npm/dt/alwan)
-
-A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.
-
-## Features
-
--   Touch friendly.
--   Support dark theme.
--   Alpha channel (opacity).
--   Support 3 color formats hsl, rgb and hex.
--   Keyboard accessible.
--   Simple easy to use interface (inspired by google chrome's color picker).
--   No dependencies.
--   Copy color to the clipboard.
--   Lightweight.
-
-> ### _Note_
->
-> If you are using React, use [react-alwan](https://github.com/SofianChouaib/react-alwan) instead.
+---
 
 ## Demo
 
-[Click here to try it](https://sefianecho.github.io/alwan/)
+👉 [Try it live](https://sefianecho.github.io/alwan/)
+
+## Features
+
+-   Lightweight and efficient.
+-   Touch-friendly interface.
+-   Supports dark theme.
+-   Includes alpha channel (opacity) control.
+-   Supports multiple color formats: HSL, RGB, and HEX.
+-   Fully keyboard accessible.
+-   Simple and intuitive user interface, inspired by Google Chrome’s color picker.
+-   No external dependencies.
+-   Allows copying color values to the clipboard.
 
 ## Getting started
 
@@ -61,46 +58,40 @@ import alwan from 'alwan';
 import 'alwan/dist/css/alwan.min.css';
 ```
 
-### CDN
+## CDN
 
 Add it to your page.
 
--   Jsdelivr CDN
+### CSS (required)
 
 ```html
-<!-- Style -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alwan/dist/css/alwan.min.css" />
-
-<!-- Script (UMD) -->
-<script src="https://cdn.jsdelivr.net/npm/alwan/dist/js/alwan.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alwan@2/dist/css/alwan.min.css"/>
 ```
 
--   Unpkg CDN
+### Javascript (Choose one)
 
+#### UMD
 ```html
-<!-- Style -->
-<link rel="stylesheet" href="https://unpkg.com/alwan/dist/css/alwan.min.css" />
-
-<!-- Script (UMD) -->
-<script src="https://unpkg.com/alwan/dist/js/alwan.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/alwan@2/dist/js/alwan.min.js"></script>
 ```
-##### Other CDN links
-```script
-// ES Module
-https://cdn.jsdelivr.net/npm/alwan/dist/js/esm/alwan.min.js
-https://unpkg.com/alwan/dist/js/esm/alwan.min.js
 
-// IIFE (since v2.0.3)
-https://cdn.jsdelivr.net/npm/alwan/dist/js/iife/alwan.min.js
-https://unpkg.com/alwan/dist/js/iife/alwan.min.js
-
+#### ES Module
+```html
+<script type="module">
+    import Alwan from "https://cdn.jsdelivr.net/npm/alwan@2/dist/js/esm/alwan.min.js";
+</script>
 ```
+
+#### IIFE
+```html
+<script src="https://unpkg.com/alwan@2/dist/js/iife/alwan.min.js"></script>
+```
+
+**Note:** You can also use the [unpkg CDN](https://unpkg.com/alwan@2/dist/) as an alternative.
 
 ## Usage
 
-Alwan can take two arguments,
-a reference element either a selector or an HTML element (required),
-and options object (optional).
+Alwan accepts two arguments: a reference element, which can be either a selector or an HTML element (required), and an optional options object.
 
 ```javascript
 const alwan = new Alwan('#reference', {
@@ -109,58 +100,66 @@ const alwan = new Alwan('#reference', {
 ```
 
 ## Options
+> _You can explore and experiment with these options in the [demo](https://sefianecho.github.io/alwan/)_.
 
-_You can try these options in the [demo](https://sofianchouaib.github.io/alwan/), play around with it_
+| Option           | Type                    | Default        | Description                                                                                                                                                                             |
+|------------------|-------------------------|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`             | `string`                | `""`           | Assign an ID to the color picker widget.                                                                                                                                                |
+| `classname`      | `string`                | `""`           | Adds one or more classes (separated by spaces) to the preset button.                                                                                                                    |
+| `theme`          | `light\|dark`           | `light`        | Choose between the 'dark' and 'light' themes.                                                                                                                                           |
+| `toggle`         | `boolean`               | `true`         | Toggles the visibility of the color picker. Setting this option to false keeps the picker always visible.                                                                               |
+| `popover`        | `boolean`               | `true`         | Determines whether the color picker is displayed as a popover (true) or inline within the page content (false).                                                                         |
+| `position`       | `popoverPosition`       | `bottom‑start` | Sets the popover’s placement relative to the target or reference element. Format: side-alignment (side: top, right, bottom, left; alignment: start, center, end, with center optional).<br>The picker will automatically adjust if there is insufficient space. |
+| `margin`         | `number`                | `4`            | Sets the distance, in pixels, between the picker container and the popover target element (either `target` or the reference element).                                                   |
+| `preset`         | `boolean`               | `true`         | Replaces the reference element with a pre-styled button.                                                                                                                                |
+| `color`          | `Color`                 | `#000`         | Sets the initial color of the color picker.                                                                                                                                             |
+| `default`        | `Color`                 | `""`           | Specifies the default color of the color picker.                                                                                                                                        |
+| `target`         | `string\|Element`       | `""`           | A selector or HTML element used as the reference. When popover is true, the picker is positioned relative to it; when false, the picker is inserted immediately after it.               |
+| `disabled`       | `boolean`               | `false`        | Disables the color picker, preventing users from selecting colors.                                                                                                                      |
+| `format`         | `colorFormat`           | `rgb`          | Determines how the color value is represented (hex, rgb, or hsl).                                                                                                                       |
+| `inputs`         | `boolean\|inputFormats` | `true`         | Controls color input fields. Accepts true (all inputs), false (no inputs), or an object to enable specific formats (e.g., `{ hsl: true, rgb: false, hex: true }`).                      |
+| `singleInput`    | `boolean`               | `false`        | Uses one input for the full color value instead of separate inputs for each color component.                                                                                            |
+| `opacity`        | `boolean`               | `true`         | Enables alpha channel for transparency.                                                                                                                                                 |
+| `preview`        | `boolean`               | `true`         | Adds a preview element for the selected color.                                                                                                                                          |
+| `copy`           | `boolean`               | `true`         | Adds a button to copy the selected color.                                                                                                                                               |
+| `swatches`       | `Color[]`               | `[]`           | Array of predefined colors displayed as selectable swatches; invalid values default to #000.                                                                                            |
+| `toggleSwatches` | `boolean`               | `false`        | Adds a button to toggle the swatches container.                                                                                                                                         |
+| `colorOnScroll`  | `boolean`               | `false`        | Closes the popover picker on scroll.                                                                                                                                                    |
+| `parent`         | `string\|Element`       | `""`           | Selector or HTML element that the picker container is appended to.                                                                                                                      |
 
--   `id` (default `''`) — Set the container's (widget) id.
--   `classname` (default `''`) — Add classes (separated by a white space) to the preset button.
--   `theme` (default `light`) — Choose a theme, 'dark' or 'light'.
--   `toggle` (default `true`) — Toggle picker's visibility (Show/Hide), Setting this to false keeps the picker visible.
--   `popover` (default `true`) — Display picker as a popover, otherwise display it as a block (embedded in the page content).
--   `position` (default `bottom-start`) — Set the position of the popper relative to the reference element. The position has two values separated by a dash (-). The first value is the direction (top, bottom, right, left) and the second value is the alignment (start, center, end), omitting this value will default to center.
+**Note:** _In the reference element you can access the CSS custom property `--color` (`--alwan-color` before `v2.0.0`) to get color value_
 
-    _Note: If the picker container has no space to be placed, it will auto-position itself based on the available space._
+#### Accessibility (since `v1.4`)
 
--   `margin` (default `4`) — The gap (in pixels) between the picker container and the reference element.
--   `preset` (default `true`) — Replace the reference element with a pre-styled button.
--   `color` (default `#000`) — Initial color.
--   `default` (default `#000`) — Default color.
--   `target` (default `''`) — Target can be a selector or an HTML element, If the option popover is set to true, the picker container will be positioned relative to this element else if popover option is set to false, the picker container will be appended as a child into this element.
--   `disabled` (default `false`) — Disable the picker, users won't be able to pick colors.
--   `format` (default `rgb`) — Initial color format.
--   `singleInput` (default `false`) — For the formats 'hsl' and 'rgb', choose a single input to display the color string, if false, display an input for each color channel.
--   `inputs` (default `{ hex: true, rgb: true,  hsl: true  }`) — Choose color formats for the picker inputs.
--   `opacity` (default `true`) — Support alpha channel and display opacity slider.
--   `preview` (default `true`) — Preview the color.
--   `copy` (default `true`) — Add/Remove a copy button.
--   `swatches` (default `[]`) — Array of colors, invalid colors will default to rgb(0,0,0).
--   `toggleSwatches` (default `false`) — Show/Hide swatches container (Make swatches container collapsible).
--   `closeOnScroll` (default `false`) — Close color picker when scrolling (only if the color picker is displayed as a popover and can be closed).
--   `parent` (default `''`) — An HTML Element (or a selector) to set as a parent to the picker, this option behaves the same as the target option if popover is false (the target option takes precedence in this case).
+All interactive elements include ARIA labels with default values in English. These labels can be customized through the i18n option.
 
-_**Note:** In the reference element you can access the CSS custom property `--color` (`--alwan-color` before v2.0.0) to get color value_
-
-### Accessibility (since v1.4)
-
-Unlabeled interactive elements has a ARIA label attribute with a default values in English. You can change these labels in the options by modifying the `i18n` object.
-
-**Note:**: The title attribute of the copy button and the change format button is the same as the ARIA label, and for the swatch button its title is the color value in the swatches array.
+**ℹ️ Note:**: _The title attribute of the copy button and the change-format button is identical to their ARIA label. For swatch buttons, the title attribute is set to the corresponding color value from the swatches array._
 
 ```javascript
-// Labels default values.
+// i18n default values.
     {
-        ...options,
         i18n: {
-            palette: 'Color picker', // Palette's marker (picker) ARIA label.
+            // Deprecated – use `picker` instead.
+            palette: 'Color picker',
+            // ARIA label for the color picking area.
+            picker: 'Color picker',
+
             buttons: {
-                copy: 'Copy color to clipboard', // Copy button ARIA label and title.
-                changeFormat: 'Change color format', // Change format button ARIA label and title.
-                swatch: 'Color swatch', // Swatch button ARIA label.
-                toggleSwatches: 'Toggle Swatches' // Toggle swatches button ARIA label and title (since v2.0.0).
+                // ARIA label and title for the copy button.
+                copy: 'Copy color to clipboard',
+                // ARIA label and title for the change-format button.
+                changeFormat: 'Change color format',
+                // ARIA label for swatch buttons.
+                swatch: 'Color swatch',
+                // ARIA label and title for the toggle-swatches button (since v2.0.0).
+                toggleSwatches: 'Toggle Swatches'
             },
+
             sliders: {
-                hue: 'Change hue', // Hue slider ARIA label.
-                alpha: 'Change opacity' // Alpha slider ARIA label.
+                // ARIA label for the hue slider.
+                hue: 'Change hue',
+                // ARIA label for the alpha slider.
+                alpha: 'Change opacity'
             }
         }
     }
@@ -168,7 +167,7 @@ Unlabeled interactive elements has a ARIA label attribute with a default values 
 
 ## Events
 
-Use the method `on`, that has two parameters, `event` and `handler` (callback function).
+Use the `on` method, which accepts two parameters: `event` and `handler` (a callback function).
 
 ```javascript
 alwan.on('event', (ev) => {
@@ -178,15 +177,15 @@ alwan.on('event', (ev) => {
 
 | Event    | Argument | Description                                                                                        |
 | -------- | -------- | -------------------------------------------------------------------------------------------------- |
-| `open`   | `event`  | Fires when the picker get opened                                                                   |
-| `close`  | `event`  | Fires when the picker get closed                                                                   |
-| `change` | `event`  | Fires when an alternation to the color is committed by the user, similar to the DOM `change` event |
-| `color`  | `event`  | Similar to the `input` event, fires every time the color changes                                   |
+| `open`   | `event`  | Fired when the color picker is opened.                                                             |
+| `close`  | `event`  | Fired when the color picker is closed.                                                             |
+| `change` | `event`  | Fired when a change to the color is committed, similar to the native DOM `change` event.           |
+| `color`  | `event`  | Fired continuously as the color changes, similar to the native DOM input event.                    |
 
 ### Event object (since v1.3)
 
 -   `type` — Event type.
--   `source` — Event source (color picker instance that is calling the event handler).
+-   `source` — The color picker instance that triggered the event handler.
 -   `h`: `number` — Hue.
 -   `s`: `number` — Saturation.
 -   `l`: `number` — Lightness.
@@ -229,31 +228,28 @@ alwan.on('change', (ev) => {
 #### Static methods:
 
 -   **version**(): `string` — Returns the version.
--   **setDefaults**(defaults: `alwanOptions`) — Change default values for all instances (doesn't effect already instantiated instances).
+-   **setDefaults**(defaults: `alwanOptions`) — Updates the default options for all new instances (does not affect existing ones).
 
 #### Instance methods:
 
--   **setColor**(color: `Color`) : `object` — Sets a color from a string or a color object, this method doesn't trigger `change` or `color` events.
-    If you want to trigger events add `.trigger(change | color | open | close)` to it
-
-```javascript
-// Set color 'purple' and trigger 'change' event.
-picker.setColor('purple').trigger('change');
-```
-
+-   **setColor**(color: `Color`) : `Alwan` — Sets the picker's color programmatically. Accepts any supported color format (`hex`, `rgb`, or `hsl`).
 -   **getColor**() : `alwanValue` — Returns the color object.
--   **open**() — Open/Show picker.
--   **isOpen**() : `boolean` — Returns the state of the picker opened `true` or closed `false`.
--   **toggle**() — Toggle picker, if its hidden show it else hide it.
--   **setOptions**(options: `alwanOptions`) — Sets one or more options for the picker.
--   **trigger**(event: `string`) — Triggers an event.
--   **on**(event: `string`, handler: `callback`) — Attaches an event handler function.
--   **off**(event: `string`, handler: `callback`) — Removes an event handler, if the handler argument is omitted then all handlers attach to this event will be removed, calling this method without arguments will remove all handlers of all events.
--   **disable**() — Disables picker (users won't be able to pick a color).
--   **enable**() — Enables picker.
--   **reposition**() — Updates picker position only if it's a popover.
--   **addSwatches**(...swatches: `Array<Color>`) — Adds one or many color swatches.
--   **removeSwatches**(...items: `Array<Color | number>`) — Removes one or many color swatches, items could be a color swatch or its index in the `config.swatches` array.
+-   **open**() — Opens or shows the color picker.
+-   **close**() — Closes or hides the color picker.
+-   **isOpen**() : `boolean` — `true` when the picker is open, `false` when closed.
+-   **toggle**() — Opens the picker if closed, or closes it if open.
+-   **setOptions**(options: `alwanOptions`) — Updates the picker's options dynamically.
+-   **trigger**(event: `alwanEventType`) — Programmatically triggers the specified event on the color picker.
+-   **on**(event: `alwanEventType`, handler: `alwanEventHandler`) — Attaches an event handler to the color picker.
+-   **off**(event?: `alwanEventType`, handler?: `alwanEventHandler`) — Detaches event handlers; omit `handler` to remove all handlers for an event, omit `event` to remove all handlers entirely.
+-   **disable**() — Disables the color picker, preventing any user interaction.
+-   **enable**() — Enables the color picker, allowing user interaction.
+-   **reposition**() — Updates the popover’s position relative to its target element.
+-   **addSwatches**(...swatches: `Array<Color>`) — Adds one or more color values to the picker's swatches array.
+-   **removeSwatches**(...items: `Array<Color | number>`) — Removes one or more color swatches. Each item can be a color value or its index in the `config.swatches` array.
+-   **reset**() — Resets the color picker to its default color.
+-   **destroy**() — Completely removes the color picker functionality and frees associated memory.
 
--   **reset**() — Reset to default color.
--   **destroy**() — Removes the color picker functionality completely(free up memory).
+## See also
+
+- [react-alwan](https://github.com/sefianecho/react-alwan) – React wrapper for this library
