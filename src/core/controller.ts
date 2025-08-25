@@ -1,8 +1,8 @@
 import type Alwan from "..";
 import { createComponents, renderComponents } from "../components";
-import { CLICK, CLOSE, OPEN } from "../constants";
+import { CLOSE, OPEN } from "../constants";
 import { createPopover } from "../popover";
-import { getRef } from "../ref";
+import { refController } from "../ref";
 import type { IPopover, IController } from "../types";
 import {
     createDivElement,
@@ -13,8 +13,6 @@ import {
     setColorProperty,
     hideElement,
     toggleModifierClass,
-    addEvent,
-    removeEvent,
 } from "../utils/dom";
 import { deepMerge } from "../utils/object";
 
@@ -28,11 +26,10 @@ export const controller = (
     let ref: HTMLElement | SVGElement;
 
     const { config, s: colorState } = alwan;
+    const refCtrl = refController(userRef, () => alwan.toggle());
     const root = createDivElement(innerEl, "alwan");
     const [selector, utility, sliders, inputs, swatches] =
         createComponents(alwan);
-
-    const handleClick = () => alwan.toggle();
 
     colorState._setHooks(
         // On update.
@@ -55,14 +52,9 @@ export const controller = (
             const { theme, parent, toggle, popover, target, disabled } =
                 deepMerge(config, options);
 
-            ref = getRef(ref || userRef, userRef, config) as
-                | HTMLElement
-                | SVGElement;
-
+            ref = refCtrl._getEl(config);
             let parentEl = getElements(parent)[0];
             let targetEl = getElements(target)[0] || ref;
-
-            addEvent(ref, CLICK, handleClick);
 
             id && (root.id = id);
             toggleModifierClass(root, "dark", theme === "dark");
@@ -144,12 +136,7 @@ export const controller = (
             if (popoverInstance) {
                 popoverInstance._destroy();
             }
-            if (userRef) {
-                removeEvent(userRef, CLICK, handleClick);
-                replaceElement(ref, userRef);
-            } else {
-                ref.remove();
-            }
+            refCtrl._remove();
         },
     };
 };

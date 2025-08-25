@@ -269,6 +269,7 @@ export const createPopover = (
             }
         },
         _destroy() {
+            floatingStyle.cssText = "";
             observer.unobserve(target);
             bindEventListeners(removeEvent);
         },

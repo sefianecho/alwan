@@ -340,6 +340,11 @@ export interface IController {
     _destroy(): void;
 }
 
+export interface IRefController {
+    _getEl(config: alwanConfig): HTMLElement | SVGElement;
+    _remove(): void;
+}
+
 export interface IPopover {
     _isVisible(): boolean;
     _reposition(isOpenNow: boolean, wasOpenBefore?: boolean): void;

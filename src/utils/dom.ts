@@ -84,7 +84,6 @@ export const createButton = (
     className: string = "",
     content?: string,
     title: string = label,
-    attrs: Attrs = {},
 ) => {
     return createElement(
         BUTTON,
@@ -93,7 +92,6 @@ export const createButton = (
         {
             type: BUTTON,
             title,
-            ...attrs,
         },
         label,
     );

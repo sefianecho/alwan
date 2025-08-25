@@ -1,23 +1,49 @@
-import { alwanConfig } from "./types";
-import { createButton, getBody, replaceElement } from "./utils/dom";
+import { CLICK } from "./constants";
+import type { IRefController, alwanConfig } from "./types";
+import {
+    addEvent,
+    createButton,
+    getBody,
+    removeEvent,
+    replaceElement,
+} from "./utils/dom";
 
-export const getRef = (
-    ref: Element,
+export const refController = (
     userRef: Element | null,
-    config: alwanConfig,
-) => {
-    ref = replaceElement(
-        ref,
-        config.preset || !userRef
-            ? createButton("", "alwan__ref " + config.classname, "", "", {
-                  id: userRef ? userRef.id : "",
-              })
-            : userRef,
-    );
+    toggleFn: () => void,
+): IRefController => {
+    const button = createButton();
+    const className = button.className + " alwan__ref ";
+    let ref: Element;
 
-    if (!ref.parentElement) {
-        getBody().append(ref);
+    if (userRef && userRef.id) {
+        button.id = userRef.id;
     }
 
-    return ref;
+    return {
+        _getEl(config: alwanConfig) {
+            ref = replaceElement(
+                ref || userRef,
+                config.preset || !userRef ? button : userRef,
+            );
+            if (ref === button) {
+                ref.className = (className + config.classname).trim();
+                if (!ref.parentNode) {
+                    getBody().append(ref);
+                }
+            }
+            addEvent(ref, CLICK, toggleFn);
+
+            return ref as HTMLElement | SVGElement;
+        },
+
+        _remove() {
+            if (userRef) {
+                removeEvent(userRef, CLICK, toggleFn);
+                replaceElement(ref, userRef);
+            } else {
+                ref.remove();
+            }
+        },
+    };
 };
