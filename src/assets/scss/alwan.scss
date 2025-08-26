@@ -1,21 +1,20 @@
 @use "sass:math";
 @use "sass:color";
 @use "variables" as *;
-@use "properties" as prop;
-@use "theme/light";
-@use "theme/dark";
+@use "theme";
 @use "util";
 
 :root {
-    #{prop.$transparency-pattern}: #{$transparency-pattern-svg};
+    --alwan-pattern: #{$transparency-pattern-svg};
 }
 
 .alwan {
+    @include theme.light;
+
     width: $alwan-max-width;
     max-width: $alwan-max-width;
-    background: var(prop.$alwan-background, light.$alwan-background);
-    border: 1px solid
-        var(prop.$alwan-outer-border-color, light.$alwan-outer-border-color);
+    background: var(--bg);
+    border: 1px solid var(--outer-bc);
     overflow: hidden;
 
     & * {
@@ -51,19 +50,7 @@
     }
 
     &.alwan--dark {
-        #{prop.$alwan-background}: dark.$alwan-background;
-        #{prop.$alwan-foreground}: dark.$alwan-foreground;
-        #{prop.$alwan-outer-border-color}: dark.$alwan-outer-border-color;
-        #{prop.$button-hover-background}: dark.$button-hover-background;
-        #{prop.$alwan-border-color}: dark.$alwan-border-color;
-        #{prop.$slider-thumb-background}: dark.$slider-thumb-background;
-        #{prop.$slider-thumb-hover-background}: dark.$slider-thumb-hover-background;
-        #{prop.$slider-thumb-hover-border-color}: dark.$slider-thumb-hover-border-color;
-        #{prop.$label-color}: dark.$label-color;
-        #{prop.$input-background}: dark.$input-background;
-        #{prop.$input-hover-background}: dark.$input-hover-background;
-        #{prop.$input-hover-border-color}: dark.$input-hover-border-color;
-        #{prop.$swatches-container-background}: dark.$swatches-container-background;
+        @include theme.dark;
     }
 
     &__container {
@@ -71,8 +58,7 @@
         display: flex;
         align-items: center;
         padding: $container-padding-y $container-padding-x;
-        border-top: 1px solid
-            var(prop.$alwan-border-color, light.$alwan-border-color);
+        border-top: 1px solid var(--bc);
 
         > * {
             width: 100%;
@@ -125,8 +111,7 @@
         width: $preview-area-width;
         height: $preview-area-height;
         margin-right: $preview-area-margin-right;
-        border: $preview-area-border-width solid
-            var(prop.$alwan-border-color, light.$alwan-border-color);
+        border: $preview-area-border-width solid var(--bc);
         border-radius: $preview-border-radius;
         flex-shrink: 0;
 
@@ -217,10 +202,7 @@
             width: $slider-thumb-width;
             border: 1px solid $slider-thumb-border-color;
             border-radius: 100%;
-            background-color: var(
-                prop.$slider-thumb-background,
-                light.$slider-thumb-background
-            );
+            background-color: var(--thumb-bg);
             box-shadow: $box-shadow;
         }
 
@@ -243,14 +225,8 @@
         @include util.slider-thumb(":not(:disabled)", ":hover") {
             cursor: grab;
             cursor: -webkit-grab;
-            border-color: var(
-                prop.$slider-thumb-hover-border-color,
-                light.$slider-thumb-hover-border-color
-            );
-            background: var(
-                prop.$slider-thumb-hover-background,
-                light.$slider-thumb-hover-background
-            );
+            border-color: #555;
+            background: var(--thumb-bg-hover);
         }
 
         @include util.slider-thumb(":active:not(:disabled)") {
@@ -293,7 +269,7 @@
             text-align: center;
             margin-right: $label-margin-right;
             text-transform: uppercase;
-            color: var(prop.$label-color, light.$label-color);
+            color: var(--label-color);
             cursor: pointer;
             line-height: 1;
             font-family: $label-font-family;
@@ -309,13 +285,12 @@
         width: 100%;
         padding: $input-padding-y $input-padding-x;
         text-align: center;
-        color: var(prop.$alwan-foreground, light.$input-color);
+        color: var(--fg);
         font-size: $input-font-size;
         font-family: $input-font-family;
-        border: 1px solid
-            var(prop.$alwan-border-color, light.$alwan-border-color);
+        border: 1px solid var(--bc);
         margin-bottom: $input-margin-bottom;
-        background-color: var(prop.$input-background, light.$input-background);
+        background-color: var(--input-bg);
         line-height: $input-line-height;
         border-radius: $input-border-radius;
         transition:
@@ -330,10 +305,7 @@
         &:focus {
             outline: 0;
             border-color: $alwan-focus-color;
-            background-color: var(
-                prop.$alwan-background,
-                light.$alwan-background
-            );
+            background-color: var(--bg);
 
             + span {
                 color: $alwan-focus-color;
@@ -341,14 +313,8 @@
         }
 
         &:hover:not(:focus, :disabled) {
-            background-color: var(
-                prop.$input-hover-background,
-                light.$input-hover-background
-            );
-            border-color: var(
-                prop.$input-hover-border-color,
-                light.$input-hover-border-color
-            );
+            background-color: var(--input-bg-hover);
+            border-color: var(--input-bc-hover);
         }
 
         &:disabled,
@@ -361,22 +327,18 @@
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        background-color: var(
-            prop.$swatches-container-background,
-            light.$swatches-container-background
-        );
+        background-color: var(--swatches-bg);
         padding: $swatches-container-padding;
         max-height: $swatches-container-max-height;
         overflow-y: auto;
-        border-top: 1px solid
-            var(prop.$alwan-border-color, light.$alwan-border-color);
+        border-top: 1px solid var(--bc);
     }
 
     &__button {
         display: inline-block;
         width: auto;
         background: transparent;
-        color: var(prop.$alwan-foreground, light.$alwan-foreground);
+        color: var(--fg);
         border: 1px solid transparent;
         cursor: pointer;
         padding: $button-padding-y $button-padding-x;
@@ -389,10 +351,7 @@
         }
 
         &:hover:not(:disabled) {
-            background-color: var(
-                prop.$button-hover-background,
-                light.$button-hover-background
-            );
+            background-color: var(--btn-bg-hover);
         }
 
         &:focus-visible:not(.alwan__ref) {
@@ -468,8 +427,7 @@
         width: 100%;
         padding: 0;
         height: $swatches-toggle-button-height;
-        border-top: 1px solid
-            var(prop.$alwan-border-color, light.$alwan-border-color);
+        border-top: 1px solid var(--bc);
         overflow: hidden;
     }
 
