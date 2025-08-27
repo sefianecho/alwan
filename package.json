@@ -1,54 +1,55 @@
 {
-  "name": "alwan",
-  "version": "2.2.0",
-  "description": "A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.",
-  "main": "./dist/js/alwan.min.js",
-  "module": "./dist/js/esm/alwan.min.js",
-  "typings": "./dist/js/types/src/index.d.ts",
-  "type": "module",
-  ".": {
-    "import": "./dist/js/esm/alwan.min.js",
-    "require": "./dist/js/alwan.min.js"
-  },
-  "scripts": {
-    "start": "rollup -c -w",
-    "prebuild": "rimraf dist",
-    "build": "tsc && rollup -c"
-  },
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "color",
-    "picker",
-    "widget",
-    "ui",
-    "ux"
-  ],
-  "author": "Sefiane Chouaib",
-  "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.23.0",
-    "@babel/preset-env": "^7.22.20",
-    "@babel/preset-typescript": "^7.23.0",
-    "@rollup/plugin-babel": "^6.0.3",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.2.1",
-    "@rollup/plugin-terser": "^0.4.3",
-    "rimraf": "^5.0.5",
-    "rollup": "^3.29.4",
-    "rollup-plugin-livereload": "^2.0.5",
-    "rollup-plugin-scss": "^4.0.0",
-    "rollup-plugin-serve": "^2.0.2",
-    "sass": "^1.68.0",
-    "typescript": "^5.2.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sefianecho/alwan.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sefianecho/alwan/issues"
-  },
-  "homepage": "https://github.com/sefianecho/alwan#readme"
+    "name": "alwan",
+    "version": "2.2.0",
+    "description": "A simple, lightweight, customizable, touch friendly color picker, written in vanilla javascript with zero dependencies.",
+    "main": "./dist/js/alwan.min.js",
+    "module": "./dist/js/esm/alwan.min.js",
+    "browser": "./dist/js/iife/alwan.min.js",
+    "typings": "./dist/js/types/src/index.d.ts",
+    "type": "module",
+    ".": {
+        "import": "./dist/js/esm/alwan.min.js",
+        "require": "./dist/js/alwan.min.js"
+    },
+    "scripts": {
+        "start": "rollup -c -w",
+        "prebuild": "rimraf dist",
+        "build": "tsc && rollup -c"
+    },
+    "files": [
+        "dist"
+    ],
+    "keywords": [
+        "color",
+        "picker",
+        "widget",
+        "ui",
+        "ux"
+    ],
+    "author": "Sefiane Chouaib",
+    "license": "MIT",
+    "devDependencies": {
+        "@babel/core": "^7.23.0",
+        "@babel/preset-env": "^7.22.20",
+        "@babel/preset-typescript": "^7.23.0",
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-json": "^6.0.0",
+        "@rollup/plugin-node-resolve": "^15.2.1",
+        "@rollup/plugin-terser": "^0.4.3",
+        "rimraf": "^5.0.5",
+        "rollup": "^3.29.4",
+        "rollup-plugin-livereload": "^2.0.5",
+        "rollup-plugin-scss": "^4.0.0",
+        "rollup-plugin-serve": "^2.0.2",
+        "sass": "^1.68.0",
+        "typescript": "^5.2.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sefianecho/alwan.git"
+    },
+    "bugs": {
+        "url": "https://github.com/sefianecho/alwan/issues"
+    },
+    "homepage": "https://github.com/sefianecho/alwan#readme"
 }
