@@ -70,19 +70,19 @@ Add it to your page.
 
 ### Javascript (Choose one)
 
-#### UMD
+- UMD
 ```html
 <script src="https://cdn.jsdelivr.net/npm/alwan@2/dist/js/alwan.min.js"></script>
 ```
 
-#### ES Module
+- ES Module
 ```html
 <script type="module">
     import Alwan from "https://cdn.jsdelivr.net/npm/alwan@2/dist/js/esm/alwan.min.js";
 </script>
 ```
+- IIFE
 
-#### IIFE
 ```html
 <script src="https://unpkg.com/alwan@2/dist/js/iife/alwan.min.js"></script>
 ```
