@@ -1,442 +1,367 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<!-- Google tag (gtag.js) -->
-		<script
-			async
-			src="https://www.googletagmanager.com/gtag/js?id=G-560VHSM73N"
-		></script>
-		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() {
-				dataLayer.push(arguments);
-			}
-			gtag("js", new Date());
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-560VHSM73N"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-560VHSM73N");
+        </script>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="A simple lightweight color picker with pure vanilla javascript"
+        />
+        <meta
+            name="keywords"
+            content="color picker, web design, web, color, color chooser, js widget, demo"
+        />
+        <meta name="author" content="sefiane Chouaib" />
+        <title>Demo: Alwan color picker</title>
 
-			gtag("config", "G-560VHSM73N");
-		</script>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta
-			name="description"
-			content="A simple lightweight color picker with pure vanilla javascript"
-		/>
-		<meta
-			name="keywords"
-			content="color picker, web design, web, color, color chooser, js widget, demo"
-		/>
-		<meta name="author" content="sefiane Chouaib" />
-		<title>Demo: Alwan color picker</title>
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="https://raw.githubusercontent.com/sefianecho/alwan/main/images/favicon.ico"
+        />
 
-		<link
-			rel="icon"
-			type="image/x-icon"
-			href="https://raw.githubusercontent.com/sefianecho/alwan/main/images/favicon.ico"
-		/>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
+            rel="stylesheet"
+        />
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alwan@2/dist/js/alwan.min.js"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/alwan@2/dist/css/alwan.min.css"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <noscript>
+            <iframe
+                src="https://www.googletagmanager.com/ns.html?id=GTM-MR7JSBP"
+                height="0"
+                width="0"
+                style="display: none; visibility: hidden"
+            ></iframe>
+        </noscript>
 
-		<script
-			defer
-			src="https://cdn.jsdelivr.net/npm/alwan@2/dist/js/alwan.min.js"
-		></script>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/alwan@2/dist/css/alwan.min.css"
-		/>
-		<link rel="stylesheet" href="style.css" />
+        <div id="root">
+            <header>
+                <h1 class="sr-only">Alwan color picker</h1>
+                <!-- prettier-ignore -->
+                <pre aria-hidden="true">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~█████╗~██╗~~~~~██╗~~~~██╗~█████╗~███╗~~~██╗~
+~██╔══██╗██║~~~~~██║~~~~██║██╔══██╗████╗~~██║~
+~███████║██║~~~~~██║~█╗~██║███████║██╔██╗~██║~
+~██╔══██║██║~~~~~██║███╗██║██╔══██║██║╚██╗██║~
+~██║~~██║███████╗╚███╔███╔╝██║~~██║██║~╚████║~
+~╚═╝~~╚═╝╚══════╝~╚══╝╚══╝~╚═╝~~╚═╝╚═╝~~╚═══╝~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ </pre>
+                <p>
+                    A lightweight, customizable, and touch-friendly color picker
+                    implemented in vanilla JavaScript, with no external
+                    dependencies.
+                </p>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-			rel="stylesheet"
-		/>
-	</head>
-	<body>
-		<noscript>
-			<iframe
-				src="https://www.googletagmanager.com/ns.html?id=GTM-MR7JSBP"
-				height="0"
-				width="0"
-				style="display: none; visibility: hidden"
-			></iframe>
-		</noscript>
+                <div class="header-btns">
+                    <button type="button" class="button menu-button">
+                        <svg
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="28"
+                            viewBox="0 0 24 28"
+                        >
+                            <path
+                                d="M24 21v2c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-2c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1zM24 13v2c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-2c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1zM24 5v2c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-2c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1z"
+                            ></path>
+                        </svg>
+                        <div>Options</div>
+                    </button>
 
-		<div id="root">
-			<header>
-				<div class="logo">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 80 80"
-						width="60"
-						height="60"
-					>
-						<defs>
-							<style>
-								.cls-1 {
-									fill: blue;
-								}
-								.cls-2 {
-									fill: lime;
-								}
-								.cls-3 {
-									fill: aqua;
-								}
-								.cls-4 {
-									fill: #ff0;
-								}
-								.cls-5 {
-									fill: red;
-								}
-								.cls-6 {
-									fill: #f0f;
-								}
-							</style>
-						</defs>
-						<g id="Layer_2" data-name="Layer 2">
-							<g id="Layer_1-2" data-name="Layer 1">
-								<path
-									class="cls-1"
-									d="M25.24,32.92c-4.16-7.2-8.14-14.08-12.06-21a1.78,1.78,0,0,1,.15-1.69c9-7.9,19.5-11.35,31.48-9.93.14,0,.26.14.56.32Z"
-								/>
-								<path
-									class="cls-2"
-									d="M3.78,56.48H41.53c-.27.6-.44,1.14-.72,1.62Q35.42,67.44,30,76.8c-.55,1-1,1.82-2.4,1.32A40,40,0,0,1,3.91,57.21,3,3,0,0,1,3.78,56.48Z"
-								/>
-								<path
-									class="cls-3"
-									d="M7.45,16.68,26.06,48.92H1C-1.48,37.41.64,26.78,7.45,16.68Z"
-								/>
-								<path
-									class="cls-4"
-									d="M36.67,79.85C43,69,49.06,58.38,55.45,47.31l12.1,21.43C62.09,75.82,48,81,36.67,79.85Z"
-								/>
-								<path
-									class="cls-5"
-									d="M79,31.06c2.6,11-.12,24.68-6.4,31.81L54.73,31.06Z"
-								/>
-								<path
-									class="cls-6"
-									d="M76.28,23.51H39.78L53.07,2.32C62.38,4.7,73.52,14.88,76.28,23.51Z"
-								/>
-							</g>
-						</g>
-					</svg>
-					<h1>Alwan</h1>
-				</div>
-				<p>Simple lightweight color picker.</p>
+                    <a
+                        href="https://github.com/sefianecho/alwan"
+                        class="button github-button"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="28"
+                            height="28"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                            />
+                        </svg>
+                        <div>Github</div>
+                    </a>
+                </div>
+            </header>
 
-				<button type="button" class="button menu-button">
-					<svg
-						version="1.1"
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="28"
-						viewBox="0 0 24 28"
-					>
-						<path
-							d="M24 21v2c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-2c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1zM24 13v2c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-2c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1zM24 5v2c0 0.547-0.453 1-1 1h-22c-0.547 0-1-0.453-1-1v-2c0-0.547 0.453-1 1-1h22c0.547 0 1 0.453 1 1z"
-						></path>
-					</svg>
-					<div>Options</div>
-				</button>
+            <main>
+                <div class="main-content">
+                    <div class="sidebar">
+                        <div class="header">
+                            <button
+                                type="button"
+                                class="button close-menu"
+                                aria-label="close options sidebar"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    width="24"
+                                >
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
 
-				<a
-					href="https://github.com/sefianecho/alwan"
-					class="button github-button"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="28"
-						height="28"
-						viewBox="0 0 24 24"
-					>
-						<path
-							d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-						/>
-					</svg>
-					<div>Github</div>
-				</a>
-			</header>
+                        <h3>Options</h3>
 
-			<main>
-				<div class="main-content">
-					<div class="panel">
-						<div class="header">
-							<button
-								type="button"
-								class="button close-menu"
-								aria-label="close options panel"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									height="24"
-									viewBox="0 0 24 24"
-									width="24"
-								>
-									<path d="M0 0h24v24H0z" fill="none" />
-									<path
-										d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-									/>
-								</svg>
-							</button>
-						</div>
+                        <label class="option">
+                            Dark Theme
+                            <span class="switch">
+                                <input type="checkbox" name="theme" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<h3>Test Options</h3>
+                        <label class="option">
+                            Toggle
+                            <span class="switch">
+                                <input type="checkbox" name="toggle" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<div class="tabs">
-							<label>
-								<input
-									type="radio"
-									name="picker-choice"
-									value="bg"
-									checked
-								/>
-								<div class="tab">AlwanBG</div>
-							</label>
-							<label>
-								<input
-									type="radio"
-									name="picker-choice"
-									value="fg"
-								/>
-								<div class="tab">AlwanFG</div>
-							</label>
-						</div>
+                        <label class="option">
+                            Popover
+                            <span class="switch">
+                                <input type="checkbox" name="popover" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Theme
-							<select name="theme">
-								<option value="light">Light</option>
-								<option value="dark">Dark</option>
-							</select>
-						</label>
+                        <label class="option">
+                            Preset
+                            <span class="switch">
+                                <input type="checkbox" name="preset" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Toggle
-							<span class="switch">
-								<input type="checkbox" name="toggle" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Single Input
+                            <span class="switch">
+                                <input type="checkbox" name="singleInput" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Popover
-							<span class="switch">
-								<input type="checkbox" name="popover" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Opacity
+                            <span class="switch">
+                                <input type="checkbox" name="opacity" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Preset
-							<span class="switch">
-								<input type="checkbox" name="preset" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Preview
+                            <span class="switch">
+                                <input type="checkbox" name="preview" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Single Input
-							<span class="switch">
-								<input type="checkbox" name="singleInput" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Copy Button
+                            <span class="switch">
+                                <input type="checkbox" name="copy" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Opacity
-							<span class="switch">
-								<input type="checkbox" name="opacity" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Position
+                            <div>
+                                <select name="position">
+                                    <option value="top">Top</option>
+                                    <option value="top-start">Top-Start</option>
+                                    <option value="top-end">Top-End</option>
 
-						<label class="option">
-							Preview
-							<span class="switch">
-								<input type="checkbox" name="preview" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                                    <option value="right">Right</option>
+                                    <option value="right-start">
+                                        Right-Start
+                                    </option>
+                                    <option value="right-end">Right-End</option>
 
-						<label class="option">
-							Copy Button
-							<span class="switch">
-								<input type="checkbox" name="copy" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                                    <option value="bottom">bottom</option>
+                                    <option value="bottom-start">
+                                        Bottom-Start
+                                    </option>
+                                    <option value="bottom-end">
+                                        Bottom-End
+                                    </option>
 
-						<label class="option">
-							Position
-							<div>
-								<select name="position">
-									<option value="top">Top</option>
-									<option value="top-start">Top-Start</option>
-									<option value="top-end">Top-End</option>
+                                    <option value="left">Left</option>
+                                    <option value="left-start">
+                                        Left-Start
+                                    </option>
+                                    <option value="left-end">Left-End</option>
+                                </select>
+                            </div>
+                        </label>
 
-									<option value="right">Right</option>
-									<option value="right-start">
-										Right-Start
-									</option>
-									<option value="right-end">Right-End</option>
+                        <label class="option">
+                            Margin
+                            <span>
+                                <input type="number" name="margin" />
+                            </span>
+                        </label>
 
-									<option value="bottom">bottom</option>
-									<option value="bottom-start">
-										Bottom-Start
-									</option>
-									<option value="bottom-end">
-										Bottom-End
-									</option>
+                        <label class="option">
+                            Disable
+                            <span class="switch">
+                                <input type="checkbox" name="disabled" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-									<option value="left">Left</option>
-									<option value="left-start">
-										Left-Start
-									</option>
-									<option value="left-end">Left-End</option>
-								</select>
-							</div>
-						</label>
+                        <label class="option">
+                            Color
+                            <input type="text" name="color" />
+                        </label>
 
-						<label class="option">
-							Margin
-							<span>
-								<input type="number" name="margin" />
-							</span>
-						</label>
+                        <label class="option">
+                            Default Color
+                            <input type="text" name="default" />
+                        </label>
 
-						<label class="option">
-							Disable
-							<span class="switch">
-								<input type="checkbox" name="disabled" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Format
+                            <select name="format">
+                                <option value="hsl">HSL</option>
+                                <option value="rgb">RGB</option>
+                                <option value="hex">HEX</option>
+                            </select>
+                        </label>
 
-						<label class="option">
-							Color
-							<input type="text" name="color" />
-						</label>
+                        <label class="option">
+                            Inputs
+                            <div>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        value="hsl"
+                                        name="inputs"
+                                    />
+                                    HSL
+                                </label>
 
-						<label class="option">
-							Default Color
-							<input type="text" name="default" />
-						</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        value="rgb"
+                                        name="inputs"
+                                    />
+                                    RGB
+                                </label>
 
-						<label class="option">
-							Format
-							<select name="format">
-								<option value="hsl">HSL</option>
-								<option value="rgb">RGB</option>
-								<option value="hex">HEX</option>
-							</select>
-						</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        value="hex"
+                                        name="inputs"
+                                    />
+                                    HEX
+                                </label>
+                            </div>
+                        </label>
 
-						<label class="option">
-							Inputs
-							<div>
-								<label>
-									<input
-										type="checkbox"
-										value="hsl"
-										name="inputs"
-									/>
-									HSL
-								</label>
+                        <label class="option">
+                            Target
+                            <select name="target">
+                                <option value=""></option>
+                                <option value=".target">#Target</option>
+                            </select>
+                        </label>
 
-								<label>
-									<input
-										type="checkbox"
-										value="rgb"
-										name="inputs"
-									/>
-									RGB
-								</label>
+                        <label class="option">
+                            Parent
+                            <select name="parent">
+                                <option value=""></option>
+                                <option value=".parent">#Parent</option>
+                            </select>
+                        </label>
 
-								<label>
-									<input
-										type="checkbox"
-										value="hex"
-										name="inputs"
-									/>
-									HEX
-								</label>
-							</div>
-						</label>
+                        <label class="option">
+                            Close On scroll
+                            <span class="switch">
+                                <input type="checkbox" name="closeOnScroll" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Target
-							<select name="target">
-								<option value=""></option>
-								<option value=".target">#Target</option>
-							</select>
-						</label>
+                        <label class="option">
+                            toggleSwatches
+                            <span class="switch">
+                                <input type="checkbox" name="toggleSwatches" />
+                                <span class="slider"></span>
+                            </span>
+                        </label>
 
-						<label class="option">
-							Close On scroll
-							<span class="switch">
-								<input type="checkbox" name="closeOnScroll" />
-								<span class="slider"></span>
-							</span>
-						</label>
+                        <label class="option">
+                            Swatches
+                            <textarea
+                                class="textarea"
+                                name="swatches"
+                                placeholder="Enter a list of colors separated by a space."
+                                rows="2"
+                            ></textarea>
+                        </label>
+                    </div>
 
-						<label class="option">
-							toggleSwatches
-							<span class="switch">
-								<input type="checkbox" name="toggleSwatches" />
-								<span class="slider"></span>
-							</span>
-						</label>
-
-						<label class="option">
-							Swatches
-							<textarea
-								class="textarea"
-								name="swatches"
-								placeholder="Enter a list of colors separated by a comma."
-							></textarea>
-						</label>
-					</div>
-
-					<div class="preview">
-						<h2>DEMO</h2>
-						<div class="preview-area">
-							Lorem Ipsum is simply dummy text of the printing and
-							typesetting industry. Lorem Ipsum has been the
-							industry's standard dummy text ever since the 1500s.
-						</div>
-
-						<div class="color-pickers">
-							<div
-								id="bg-wrapper"
-								class="picker-wrapper selected"
-							>
-								<label class="picker-label" for="bg"
-									>Change background color<br /><small
-										><b>(AlwanBG)</b></small
-									></label
-								>
-								<div id="bg" class="picker"></div>
-							</div>
-
-							<div id="fg-wrapper" class="picker-wrapper">
-								<label class="picker-label" for="fg"
-									>Change text color<br /><small
-										><b>(AlwanText)</b></small
-									></label
-								>
-								<div id="fg" class="picker"></div>
-							</div>
-						</div>
-
-						<div class="target-wrapper">
-							<div class="target">Target Element</div>
-						</div>
-					</div>
-				</div>
-			</main>
-		</div>
-		<script defer src="main.js"></script>
-	</body>
+                    <div class="preview">
+                        <div class="picker-container">
+                            <label>
+                                <div style="margin-bottom: 0.5rem">
+                                    Color picker
+                                </div>
+                                <div class="picker-ref"></div>
+                            </label>
+                        </div>
+                        <div class="containers">
+                            <div class="parent">
+                                <div>Parent</div>
+                            </div>
+                            <div class="target">Target</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script defer src="main.js"></script>
+    </body>
 </html>

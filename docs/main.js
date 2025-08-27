@@ -1,123 +1,79 @@
 const previewArea = document.querySelector(".preview-area");
 const menuButton = document.querySelector(".menu-button");
-const sidePanel = document.querySelector(".panel");
-const closeButton = sidePanel.querySelector(".close-menu");
+const sidebar = document.querySelector(".sidebar");
+const closeButton = sidebar.querySelector(".close-menu");
+const root = document.documentElement;
 
 Alwan.setDefaults({ swatches: ["red", "green", "blue"] });
 
-const alwan = {
-	bg: new Alwan("#bg", { color: "red" }),
-	fg: new Alwan("#fg"),
-};
-
-let selectedPicker = alwan.bg;
-
-initialize(selectedPicker.config);
-
-/**
- * Updates options controls from color picker config object.
- *
- * @param {object} options - Color picker options.
- */
-function initialize(options) {
-	for (const option in options) {
-		if (Object.hasOwnProperty.call(options, option)) {
-			const value = options[option];
-
-			if (
-				option === "id" ||
-				option === "classname" ||
-				option === "i18n" ||
-				option === "parent"
-			) {
-				continue;
-			}
-
-			const elements = document.getElementsByName(option);
-
-			// Checkboxes.
-			if (elements.length > 1) {
-				// inputs option.
-				elements.forEach((element) => {
-					element.checked =
-						typeof value === "boolean"
-							? value
-							: value[element.value];
-				});
-			} else {
-				const element = elements[0];
-
-				if (element.tagName === "TEXTAREA") {
-					element.value = value.join("; ");
-				} else if (
-					element.tagName === "SELECT" ||
-					element.type !== "checkbox"
-				) {
-					element.value = value;
-				} else {
-					element.checked = value;
-				}
-			}
-		}
-	}
-}
-
-function updateOptions(e) {
-	const options = {};
-	const el = e.target;
-	let { type, value, checked, name } = el;
-
-	if (name === "picker-choice") {
-		document
-			.querySelector(`.picker-wrapper.selected`)
-			.classList.remove("selected");
-		document.querySelector(`#${value}-wrapper`).classList.add("selected");
-		selectedPicker = alwan[value];
-		initialize(selectedPicker.config);
-		return;
-	}
-
-	value = type === "checkbox" ? checked : value;
-
-	if (name === "swatches") {
-		value = value.trim();
-		options.swatches = value ? value.split(/\s*;\s*/) : [];
-	} else if (name === "inputs") {
-		options.inputs = {};
-
-		sidePanel.querySelectorAll("[name='inputs']").forEach((checkbox) => {
-			options.inputs[checkbox.value] = checkbox.checked;
-		});
-	} else if (name === "target") {
-		options.target = value ? document.querySelector(value) : value;
-	} else {
-		options[name] = value;
-	}
-
-	selectedPicker.setOptions(options);
-}
-
-sidePanel.addEventListener("input", updateOptions);
-
-alwan.fg.on("color", (color) => {
-	previewArea.style.color = color.rgb;
+const alwan = new Alwan(".picker-ref", {
+    color: getComputedStyle(root).getPropertyValue("--accent-color"),
 });
 
-alwan.bg.on("color", (color) => {
-	previewArea.style.backgroundColor = color.rgb;
+alwan.on("color", (color) => {
+    root.style.setProperty(
+        "--accent-color-rgb",
+        `${color.r},${color.g},${color.b}`,
+    );
 });
 
-closeButton.addEventListener("click", toggleOptionsPanel);
-menuButton.addEventListener("click", toggleOptionsPanel);
+function updateControls(options) {
+    Object.keys(options).forEach((option) => {
+        const value = options[option];
 
-function toggleOptionsPanel(e) {
-	sidePanel.classList.toggle("open");
-	e.stopPropagation();
+        if (option === "id" || option === "classname" || option === "i18n") {
+            return;
+        }
+
+        const controls = document.getElementsByName(option);
+        if (option === "inputs") {
+            controls.forEach((checkbox) => {
+                checkbox.checked =
+                    typeof value === "boolean" ? value : value[checkbox.value];
+            });
+        } else {
+            const control = controls[0];
+            if (control.tagName === "TEXTAREA") {
+                control.value = value.join(" ");
+            } else if (control.type === "checkbox") {
+                control.checked = option === "theme" ? value === "dark" : value;
+            } else {
+                control.value = value;
+            }
+        }
+    });
+}
+updateControls(alwan.config);
+
+sidebar.addEventListener("input", (e) => {
+    const control = e.target;
+    const options = {};
+    const value = control.type === "checkbox" ? control.checked : control.value;
+    const option = control.name;
+
+    if (option === "theme") {
+        options[option] = value ? "dark" : "light";
+    } else if (option === "swatches") {
+        options[option] = value.trim().split(/\s+/).filter(Boolean);
+    } else if (option === "inputs") {
+        options[option] = { [control.value]: value };
+    } else {
+        options[option] = value;
+    }
+
+    alwan.setOptions(options);
+});
+
+function toggleSideBar(e) {
+    sidebar.classList.toggle("open");
+    e.stopPropagation();
 }
 
-document.addEventListener("click", (e) => {
-	let target = e.target;
-	if (!sidePanel.contains(target) || target === closeButton) {
-		sidePanel.classList.remove("open");
-	}
+closeButton.addEventListener("click", toggleSideBar);
+menuButton.addEventListener("click", toggleSideBar);
+
+document.addEventListener("click", ({ target }) => {
+    if (!sidebar.contains(target) || target === closeButton) {
+        sidebar.classList.remove("open");
+    }
 });
