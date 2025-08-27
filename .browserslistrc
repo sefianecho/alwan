@@ -1,8 +1,8 @@
 >= 0.5%,
 last 2 major versions,
-Safari >= 11.1,
-iOS >= 11.1,
+Safari >= 13,
+iOS >= 13,
 Chrome >= 60,
-Firefox >= 55,
+Firefox >= 59,
 Firefox ESR,
 not dead
