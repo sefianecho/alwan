@@ -10,10 +10,10 @@ A lightweight, customizable, and touch-friendly color picker implemented in vani
 ---
 
 <div align="center">
-  <img alt="alwan light theme" src="https://github.com/SofianChouaib/alwan/blob/main/docs/images/alwan-light.png?raw=true">
+  <img alt="alwan light theme" src="https://github.com/sefianecho/alwan/blob/main/docs/images/alwan-light.png?raw=true">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-  <img alt="alwan dark theme" src="https://github.com/SofianChouaib/alwan/blob/main/docs/images/alwan-dark.png?raw=true">
+  <img alt="alwan dark theme" src="https://github.com/sefianecho/alwan/blob/main/docs/images/alwan-dark.png?raw=true">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 
