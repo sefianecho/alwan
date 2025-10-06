@@ -150,7 +150,7 @@ export interface alwanConfig {
      *
      * @default `[]`
      */
-    swatches: Color[];
+    swatches: Swatch[];
 
     /**
      * Adds a button to toggle the swatches container.
@@ -256,6 +256,7 @@ export interface HSLA {
 export type colorFormat = "rgb" | "hsl" | "hex";
 export interface colorDetails extends RGBA, HSLA, Record<colorFormat, string> {}
 export type Color = string | RGBA | HSLA;
+export type Swatch = Color | { color: Color, label?: string };
 export type InputFormats = Partial<Record<colorFormat, boolean>>;
 
 export type Attrs = Record<string, string | number | boolean | undefined>;

@@ -1,7 +1,7 @@
 import type Alwan from "..";
 import { caretSVG } from "../assets/svg";
 import { CLICK } from "../constants";
-import type { ISwatches } from "../types";
+import type { ISwatches, Color } from "../types";
 import {
     createButton,
     createDivElement,
@@ -12,6 +12,9 @@ import {
 import { getColorObjectFormat, isString } from "../utils";
 import { isArray } from "../utils/object";
 import { stringify } from "../stringify";
+
+export const isCombinedColorLabelObject = (value: unknown): value is { color: Color, label?: string } =>
+    typeof value === "object" && value !== null && "color" in value;
 
 export const Swatches = (alwan: Alwan): ISwatches => {
     let isCollapsed = false;
@@ -27,7 +30,10 @@ export const Swatches = (alwan: Alwan): ISwatches => {
             }
 
             container = createDivElement(
-                swatches.map((color) => {
+                swatches.map((swatch) => {
+                    const { color, label } = isCombinedColorLabelObject(swatch)
+                        ? swatch
+                        : { color: swatch as Color, label: undefined };
                     const str = isString(color)
                         ? color
                         : stringify(color, getColorObjectFormat(color as {}));
@@ -35,7 +41,7 @@ export const Swatches = (alwan: Alwan): ISwatches => {
                         buttons.swatch,
                         "alwan__swatch",
                         "",
-                        str,
+                        label ?? str,
                     );
 
                     setColorProperty(button, str);

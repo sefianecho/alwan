@@ -122,7 +122,7 @@ const alwan = new Alwan('#reference', {
 | `opacity`        | `boolean`               | `true`         | Enables alpha channel for transparency.                                                                                                                                                 |
 | `preview`        | `boolean`               | `true`         | Adds a preview element for the selected color.                                                                                                                                          |
 | `copy`           | `boolean`               | `true`         | Adds a button to copy the selected color.                                                                                                                                               |
-| `swatches`       | `Color[]`               | `[]`           | Array of predefined colors displayed as selectable swatches; invalid values default to #000.                                                                                            |
+| `swatches`       | `Swatch[]`              | `[]`           | Array of predefined colors displayed as selectable swatches; invalid values default to #000.                                                                                            |
 | `toggleSwatches` | `boolean`               | `false`        | Adds a button to toggle the swatches container.                                                                                                                                         |
 | `colorOnScroll`  | `boolean`               | `false`        | Closes the popover picker on scroll.                                                                                                                                                    |
 | `parent`         | `string\|Element`       | `""`           | Selector or HTML element that the picker container is appended to.                                                                                                                      |
@@ -245,7 +245,7 @@ alwan.on('change', (ev) => {
 -   **disable**() — Disables the color picker, preventing any user interaction.
 -   **enable**() — Enables the color picker, allowing user interaction.
 -   **reposition**() — Updates the popover’s position relative to its target element.
--   **addSwatches**(...swatches: `Array<Color>`) — Adds one or more color values to the picker's swatches array.
+-   **addSwatches**(...swatches: `Array<Swatch>`) — Adds one or more color values to the picker's swatches array.
 -   **removeSwatches**(...items: `Array<Color | number>`) — Removes one or more color swatches. Each item can be a color value or its index in the `config.swatches` array.
 -   **reset**() — Resets the color picker to its default color.
 -   **destroy**() — Completely removes the color picker functionality and frees associated memory.
