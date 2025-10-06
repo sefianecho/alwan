@@ -7,9 +7,12 @@
     "browser": "./dist/js/iife/alwan.min.js",
     "typings": "./dist/js/types/src/index.d.ts",
     "type": "module",
-    ".": {
-        "import": "./dist/js/esm/alwan.min.js",
-        "require": "./dist/js/alwan.min.js"
+    "exports": {
+        ".": {
+            "types": "./dist/js/types/src/index.d.ts",
+            "import": "./dist/js/esm/alwan.min.js",
+            "require": "./dist/js/alwan.min.js"
+        }
     },
     "scripts": {
         "start": "rollup -c -w",
