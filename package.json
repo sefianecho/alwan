@@ -5,6 +5,7 @@
     "main": "./dist/js/alwan.min.js",
     "module": "./dist/js/esm/alwan.min.js",
     "browser": "./dist/js/iife/alwan.min.js",
+    "style": "./dist/css/alwan.min.css",
     "typings": "./dist/js/types/src/index.d.ts",
     "type": "module",
     "exports": {
