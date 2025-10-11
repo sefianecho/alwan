@@ -176,7 +176,6 @@ export interface alwanConfig {
      *      buttons: {
      *          copy: 'Copy color to clipboard',
      *          changeFormat: 'Change color format',
-     *          swatch: 'Color swatch',
      *      },
      *      sliders: {
      *          hue: 'Change hue',
@@ -207,14 +206,14 @@ export interface alwanConfig {
             changeFormat: string;
 
             /**
-             * ARIA label for swatch buttons.
-             */
-            swatch: string;
-
-            /**
              * ARIA label and title for the toggle-swatches button (since v2.0.0).
              */
             toggleSwatches: string;
+
+            /**
+             * ARIA label for swatch buttons.
+             */
+            swatch: string;
         };
         sliders: {
             /**
@@ -256,7 +255,8 @@ export interface HSLA {
 export type colorFormat = "rgb" | "hsl" | "hex";
 export interface colorDetails extends RGBA, HSLA, Record<colorFormat, string> {}
 export type Color = string | RGBA | HSLA;
-export type Swatch = Color | { color: Color, label?: string };
+export type LabeledSwatch = { color: Color; label?: string };
+export type Swatch = Color | LabeledSwatch;
 export type InputFormats = Partial<Record<colorFormat, boolean>>;
 
 export type Attrs = Record<string, string | number | boolean | undefined>;

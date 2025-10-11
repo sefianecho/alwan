@@ -28,7 +28,7 @@ export const alwanDefaults: alwanConfig = {
         buttons: {
             copy: "Copy color to clipboard",
             changeFormat: "Change color format",
-            swatch: "Color swatch",
+            swatch: "Color swatch: %label%",
             toggleSwatches: "Toggle Swatches",
         },
         sliders: {

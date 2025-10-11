@@ -3,7 +3,7 @@ import type { colorFormat } from "./types";
 export const ROOT = document;
 export const DOC_ELEMENT = ROOT.documentElement;
 
-export const DEFAULT_COLOR = "#000";
+export const DEFAULT_COLOR = "#000000";
 export const BUTTON = "button";
 export const OPEN = "open";
 export const CLOSE = "close";
