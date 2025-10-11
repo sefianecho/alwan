@@ -19,7 +19,6 @@ import type {
 } from "./types";
 import {
     getBoundingRectArray,
-    getOffsetParentBoundingRect,
     getInteractiveElements,
     translate,
     addEvent,
@@ -59,6 +58,7 @@ const fallbackAlignments: Record<alignment, number[]> = {
 export const createPopover = (
     target: Element,
     floating: HTMLElement,
+    containingBlock: HTMLDivElement,
     ref: Element,
     { margin, position, closeOnScroll, toggle, disabled }: alwanConfig,
     { _toggle, _isOpen }: IController,
@@ -67,14 +67,12 @@ export const createPopover = (
     let isTargetVisible: boolean;
     let isFloatingVisible = _isOpen();
 
-    let rootNode = target.getRootNode();
-
     const [side, alignment] = (
         isString(position) ? position.split("-") : []
     ) as [side, alignment];
 
     const floatingStyle = floating.style;
-    const shadowRoot = rootNode instanceof ShadowRoot ? rootNode : null;
+    const shadowRoot = target.getRootNode();
 
     const focusableElements = getInteractiveElements(floating);
     const firstFocusableElement = focusableElements[0];
@@ -84,10 +82,7 @@ export const createPopover = (
         const viewport = [DOC_ELEMENT.clientWidth, DOC_ELEMENT.clientHeight];
         const targetRect = getBoundingRectArray(target);
         const floatingRect = getBoundingRectArray(floating);
-        const offsetParentRect = getOffsetParentBoundingRect(
-            floating,
-            shadowRoot,
-        );
+        const containingBlockRect = getBoundingRectArray(containingBlock);
 
         const coordinates: [x: number, y: number] = [-1, -1];
 
@@ -172,7 +167,7 @@ export const createPopover = (
                         ? value
                         : // center the popover relative to the viewport.
                           (viewport[axis] - floatingRect[axis + 2]) / 2) -
-                        offsetParentRect[axis],
+                        containingBlockRect[axis],
                 );
             }) as [number, number]),
         );
@@ -229,7 +224,8 @@ export const createPopover = (
 
     const updatePositionOnScroll = ({ target: t }: Event) => {
         if (
-            (shadowRoot && (t as Node).contains(shadowRoot.host)) ||
+            (shadowRoot instanceof ShadowRoot &&
+                (t as Node).contains(shadowRoot.host)) ||
             (t as Node).contains(target)
         ) {
             updatePosition();
@@ -245,10 +241,8 @@ export const createPopover = (
     const bindEventListeners = (fn: EventBinder) => {
         fn(window, RESIZE, updatePosition);
         fn(ROOT, SCROLL, updatePositionOnScroll, CAPTURE_PHASE);
+        fn(shadowRoot, SCROLL, updatePositionOnScroll, CAPTURE_PHASE);
         fn(ROOT, POINTER_DOWN, closeByPointer);
-        if (shadowRoot) {
-            fn(shadowRoot, SCROLL, updatePositionOnScroll, CAPTURE_PHASE);
-        }
     };
 
     observer.observe(target);
@@ -272,6 +266,7 @@ export const createPopover = (
             floatingStyle.cssText = "";
             observer.unobserve(target);
             bindEventListeners(removeEvent);
+            containingBlock.remove();
         },
     };
 };

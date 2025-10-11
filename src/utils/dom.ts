@@ -130,17 +130,8 @@ export const translate = (element: HTMLElement, x: number, y: number) => {
     element.style.transform = `translate(${x}px,${y}px)`;
 };
 
-export const getBoundingRectArray = (
-    element: Element,
-    isContentBox?: boolean,
-): DOMRectArray => {
-    let { x, y, width, height } = element.getBoundingClientRect();
-
-    if (isContentBox) {
-        x += element.clientLeft - element.scrollLeft;
-        y += element.clientTop - element.scrollTop;
-    }
-
+export const getBoundingRectArray = (element: Element): DOMRectArray => {
+    const { x, y, width, height } = element.getBoundingClientRect();
     return [x, y, width, height, width + x, height + y];
 };
 
@@ -151,55 +142,6 @@ export const hideElement = (
     element: HTMLElement | SVGElement,
     hidden?: boolean,
 ) => (element.style.display = hidden ? "none" : "");
-
-const isContainingBlock = ({
-    transform,
-    perspective,
-    filter,
-    containerType,
-    backdropFilter,
-    willChange,
-    contain,
-}: CSSStyleDeclaration) =>
-    transform !== "none" ||
-    perspective !== "none" ||
-    containerType !== "normal" ||
-    backdropFilter !== "none" ||
-    filter !== "none" ||
-    (willChange && /\b(transform|perspective|filter)\b/.test(willChange)) ||
-    (contain && /\b(paint|layout|strict|content)\b/.test(contain));
-
-const topLayerSelectors = [":popover-open", ":modal"] as const;
-const isTopLayer = (node: Node) =>
-    isElement(node) &&
-    topLayerSelectors.some((selector) => {
-        try {
-            return node.matches(selector);
-        } catch (_) {
-            return false;
-        }
-    });
-
-export const getOffsetParentBoundingRect = (
-    node: Node | null,
-    root: ShadowRoot | null,
-): number[] => {
-    node = node && node.parentNode;
-
-    if (!node || node === ROOT || isTopLayer(node)) {
-        return [0, 0];
-    }
-
-    if (node === root) {
-        node = root.host;
-    }
-
-    if (isElement(node) && isContainingBlock(getComputedStyle(node))) {
-        return getBoundingRectArray(node, true);
-    }
-
-    return getOffsetParentBoundingRect(node, root);
-};
 
 export const addEvent: EventBinder = (target, type, listener, options) =>
     target.addEventListener(type, listener as EventListener, options);

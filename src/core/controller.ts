@@ -24,6 +24,7 @@ export const controller = (
     let isOpen = false;
     let popoverInstance: IPopover | null = null;
     let ref: HTMLElement | SVGElement;
+    let popoverContainingBlock: HTMLDivElement;
 
     const { config, s: colorState } = alwan;
     const refCtrl = refController(userRef, () => alwan.toggle());
@@ -58,7 +59,6 @@ export const controller = (
 
             id && (root.id = id);
             toggleModifierClass(root, "dark", theme === "dark");
-            toggleModifierClass(root, "block", !popover);
 
             innerEl = replaceElement(
                 innerEl,
@@ -79,20 +79,28 @@ export const controller = (
             }
             if (popover) {
                 parentEl = parentEl || (toggle && getBody());
+                popoverContainingBlock = createDivElement(
+                    root,
+                    "alwan__popover-container",
+                );
                 popoverInstance = createPopover(
                     targetEl,
                     root,
+                    popoverContainingBlock,
                     ref,
                     config,
                     self,
                 );
             } else {
+                popoverContainingBlock = root;
                 // Open if toggle is false, or leave it as the previous state if
                 // the color picker is not disabled.
                 self._toggle(!toggle || (!disabled && isOpen), true);
             }
 
-            parentEl ? parentEl.append(root) : targetEl.after(root);
+            parentEl
+                ? parentEl.append(popoverContainingBlock)
+                : targetEl.after(popoverContainingBlock);
 
             if (disabled) {
                 [
