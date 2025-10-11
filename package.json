@@ -6,14 +6,15 @@
     "module": "./dist/js/esm/alwan.min.js",
     "browser": "./dist/js/iife/alwan.min.js",
     "style": "./dist/css/alwan.min.css",
-    "typings": "./dist/js/types/src/index.d.ts",
+    "types": "./dist/js/types/src/index.d.ts",
     "type": "module",
     "exports": {
         ".": {
             "types": "./dist/js/types/src/index.d.ts",
             "import": "./dist/js/esm/alwan.min.js",
             "require": "./dist/js/alwan.min.js"
-        }
+        },
+        "./css": "./dist/css/alwan.min.css"
     },
     "scripts": {
         "start": "rollup -c -w",
