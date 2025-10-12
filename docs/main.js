@@ -4,7 +4,14 @@ const sidebar = document.querySelector(".sidebar");
 const closeButton = sidebar.querySelector(".close-menu");
 const root = document.documentElement;
 
-Alwan.setDefaults({ swatches: ["red", "green", "blue"] });
+Alwan.setDefaults({
+    swatches: [
+        "red",
+        "green",
+        "blue",
+        { label: "mint green", color: "#98FB98" },
+    ],
+});
 
 const alwan = new Alwan(".picker-ref", {
     color: getComputedStyle(root).getPropertyValue("--accent-color"),

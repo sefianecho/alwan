@@ -1,6 +1,6 @@
 import { BUTTON, DOC_ELEMENT, INPUT, ROOT } from "../constants";
 import type { Attrs, DOMRectArray, EventBinder } from "../types";
-import { isElement, isNumber, isString } from ".";
+import { isElement, isString } from ".";
 import { ObjectForEach, isArray } from "./object";
 
 export const getBody = () => ROOT.body;
@@ -52,12 +52,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(
     }
 
     ObjectForEach(
-        ariaLabel ? { ...attributes, "aria-label": ariaLabel } : attributes,
-        (name, value) => {
-            if (isNumber(value) || value) {
-                element.setAttribute(name, value + "");
-            }
-        },
+        isString(ariaLabel)
+            ? { ...attributes, "aria-label": ariaLabel }
+            : attributes,
+        (name, value) => element.setAttribute(name, value + ""),
     );
 
     return element;

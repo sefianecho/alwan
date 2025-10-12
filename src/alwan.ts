@@ -9,6 +9,7 @@ import type {
     EventEmitter,
     IColorState,
     IController,
+    Swatch,
     alwanConfig,
     alwanEventHandler,
     alwanEventType,
@@ -82,11 +83,11 @@ export class Alwan {
         this.e._off(type, listener);
     }
 
-    addSwatches(...swatches: Color[]) {
+    addSwatches(...swatches: Swatch[]) {
         this.c._setup({ swatches: this.config.swatches.concat(swatches) });
     }
 
-    removeSwatches(...swatches: Array<number | Color>) {
+    removeSwatches(...swatches: Array<number | Swatch>) {
         this.c._setup({
             swatches: this.config.swatches.filter(
                 (swatch, index) =>
