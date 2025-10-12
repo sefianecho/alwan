@@ -53,9 +53,9 @@ Import files
 
 ```javascript
 // Import javascript.
-import alwan from 'alwan';
+import Alwan from 'alwan';
 // Import css.
-import 'alwan/dist/css/alwan.min.css';
+import 'alwan/css';
 ```
 
 ## CDN
@@ -122,18 +122,18 @@ const alwan = new Alwan('#reference', {
 | `opacity`        | `boolean`               | `true`         | Enables alpha channel for transparency.                                                                                                                                                 |
 | `preview`        | `boolean`               | `true`         | Adds a preview element for the selected color.                                                                                                                                          |
 | `copy`           | `boolean`               | `true`         | Adds a button to copy the selected color.                                                                                                                                               |
-| `swatches`       | `Swatch[]`              | `[]`           | Array of predefined colors displayed as selectable swatches; invalid values default to #000.                                                                                            |
+| `swatches`       | `Swatch[]`              | `[]`           | Array of swatches, where each item is a color or an object with a color and optional label, invalid values default to `#000`.<br>_See the [Accessibility](#accessibility) section for details about labeling._ |
 | `toggleSwatches` | `boolean`               | `false`        | Adds a button to toggle the swatches container.                                                                                                                                         |
 | `colorOnScroll`  | `boolean`               | `false`        | Closes the popover picker on scroll.                                                                                                                                                    |
 | `parent`         | `string\|Element`       | `""`           | Selector or HTML element that the picker container is appended to.                                                                                                                      |
 
 **Note:** _In the reference element you can access the CSS custom property `--color` (`--alwan-color` before `v2.0.0`) to get color value_
 
-#### Accessibility (since `v1.4`)
+### Accessibility
 
 All interactive elements include ARIA labels with default values in English. These labels can be customized through the i18n option.
 
-**ℹ️ Note:**: _The title attribute of the copy button and the change-format button is identical to their ARIA label. For swatch buttons, the title attribute is set to the corresponding color value from the swatches array._
+**ℹ️ Note:**: _title and aria-label are identical for all buttons except swatches_
 
 ```javascript
 // i18n default values.
@@ -147,10 +147,22 @@ All interactive elements include ARIA labels with default values in English. The
             buttons: {
                 // ARIA label and title for the copy button.
                 copy: 'Copy color to clipboard',
+
                 // ARIA label and title for the change-format button.
                 changeFormat: 'Change color format',
-                // ARIA label for swatch buttons.
-                swatch: 'Color swatch',
+
+                // Template for ARIA labels of swatch buttons. %label% is replaced with the swatch label or color value.
+                // The title (tooltip) shows the swatch label or color value.
+                // Ex:
+                //   { color: '#008080', label: 'teal' }
+                //     ARIA label  => 'Color swatch: teal'
+                //     Title (tooltip) => 'teal'
+                // Or a color value only:
+                //   '#008080'
+                //     ARIA label  => 'Color swatch: #008080'
+                //     Title (tooltip) => '#008080'
+                swatch: 'Color swatch: %label%',
+
                 // ARIA label and title for the toggle-swatches button (since v2.0.0).
                 toggleSwatches: 'Toggle Swatches'
             },
@@ -246,7 +258,7 @@ alwan.on('change', (ev) => {
 -   **enable**() — Enables the color picker, allowing user interaction.
 -   **reposition**() — Updates the popover’s position relative to its target element.
 -   **addSwatches**(...swatches: `Array<Swatch>`) — Adds one or more color values to the picker's swatches array.
--   **removeSwatches**(...items: `Array<Color | number>`) — Removes one or more color swatches. Each item can be a color value or its index in the `config.swatches` array.
+-   **removeSwatches**(...items: `Array<Swatch | number>`) — Removes one or more color swatches. Each item can be a color value or its index in the `config.swatches` array.
 -   **reset**() — Resets the color picker to its default color.
 -   **destroy**() — Completely removes the color picker functionality and frees associated memory.
 
