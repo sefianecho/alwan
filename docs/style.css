@@ -256,6 +256,13 @@ label {
     transform: translateX(20px);
 }
 
+.option .textarea {
+    resize: none;
+    overflow: hidden;
+    padding: 0.25rem;
+    font-size: 0.8625rem;
+}
+
 .option .textarea::placeholder {
     color: #555;
 }
