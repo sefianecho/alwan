@@ -1,21 +1,21 @@
-import { defineConfig } from 'rollup';
-import json from '@rollup/plugin-json';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import babel from '@rollup/plugin-babel';
-import scss from 'rollup-plugin-scss';
-import terser from '@rollup/plugin-terser';
-import livereload from 'rollup-plugin-livereload';
-import serve from 'rollup-plugin-serve';
+import { defineConfig } from "rollup";
+import json from "@rollup/plugin-json";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
+import terser from "@rollup/plugin-terser";
+import livereload from "rollup-plugin-livereload";
+import serve from "rollup-plugin-serve";
+import postcss from "rollup-plugin-postcss";
 
-const dir = 'dist';
-const name = 'Alwan';
-const devDir = 'test';
+const dir = "dist";
+const name = "Alwan";
+const devDir = "test";
 
 /**
  * @type {InputOption}
  */
 const input = {
-    alwan: 'src/index.ts',
+    alwan: "src/index.ts",
 };
 
 /**
@@ -32,7 +32,7 @@ function build(format, prefix) {
             {
                 dir,
                 format,
-                entryFileNames: `${prefix}[name]${minified ? '.min' : ''}.js`,
+                entryFileNames: `${prefix}[name]${minified ? ".min" : ""}.js`,
             },
             minified
                 ? {
@@ -48,31 +48,44 @@ function build(format, prefix) {
                       ],
                   }
                 : {},
-            format === 'es' ? {} : { name }
-        )
+            format === "es" ? {} : { name },
+        ),
     );
 }
 
 export default defineConfig(({ watch }) => {
-    const babelOptions = watch ? { targets: 'defaults' } : {};
+    const babelOptions = watch ? { targets: "defaults" } : {};
     const scssOptions = watch
-        ? { fileName: 'css/alwan.css' }
+        ? {
+              extract: "css/alwan.css",
+          }
         : {
-              fileName: 'css/alwan.min.css',
+              extract: "css/alwan.min.css",
               sourceMap: true,
-              outputStyle: 'compressed',
+              minimize: true,
           };
 
     const plugins = [
         json({ preferConst: true }),
-        nodeResolve({ extensions: '.ts' }),
+        nodeResolve({ extensions: ".ts" }),
         babel({
-            babelHelpers: 'bundled',
-            presets: [['@babel/env', { bugfixes: true }], '@babel/typescript'],
-            extensions: ['.ts'],
+            babelHelpers: "bundled",
+            presets: [["@babel/env", { bugfixes: true }], "@babel/typescript"],
+            extensions: [".ts"],
             ...babelOptions,
         }),
-        scss(scssOptions),
+        postcss({
+            use: [
+                [
+                    "sass",
+                    {
+                        silenceDeprecations: ["legacy-js-api"],
+                        sourceMap: true,
+                    },
+                ],
+            ],
+            ...scssOptions,
+        }),
     ];
 
     if (watch) {
@@ -81,14 +94,18 @@ export default defineConfig(({ watch }) => {
             input,
             output: {
                 dir: devDir,
-                format: 'iife',
+                format: "iife",
                 name,
-                entryFileNames: 'js/[name].js',
-                sourcemap: 'inline',
+                entryFileNames: "js/[name].js",
+                sourcemap: "inline",
             },
-            plugins: [...plugins, serve({ contentBase: devDir, port: 8080 }), livereload(devDir)],
+            plugins: [
+                ...plugins,
+                serve({ contentBase: devDir, port: 8080 }),
+                livereload(devDir),
+            ],
             watch: {
-                include: ['src/**'],
+                include: ["src/**"],
                 clearScreen: true,
             },
         };
@@ -97,7 +114,11 @@ export default defineConfig(({ watch }) => {
     // Production configuration.
     return {
         input,
-        output: [...build('es', 'js/esm/'), ...build('umd', 'js/'), ...build('iife', 'js/iife/')],
+        output: [
+            ...build("es", "js/esm/"),
+            ...build("umd", "js/"),
+            ...build("iife", "js/iife/"),
+        ],
         plugins,
     };
 });
